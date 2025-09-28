@@ -785,7 +785,7 @@
             const uploadedDiv = document.getElementById(`uploaded-${docTypeId}`);
             const filename = document.getElementById(`filename-${docTypeId}`);
             const filesize = document.getElementById(`filesize-${docTypeId}`);
-            
+
             filename.textContent = file.name;
             filesize.textContent = formatFileSize(file.size);
             uploadedDiv.classList.remove('hidden');
