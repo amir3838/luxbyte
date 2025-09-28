@@ -1,0 +1,44 @@
+{
+  "name": "luxbyte-file-management",
+  "version": "1.0.0",
+  "description": "نظام إدارة الملفات والمستندات لمنصة Luxbyte - File Management System for Luxbyte Platform",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'No build process needed for static files'",
+    "start": "npx serve . -p 3000",
+    "deploy": "vercel --prod",
+    "supabase:start": "npx supabase start",
+    "supabase:stop": "npx supabase stop",
+    "supabase:reset": "npx supabase db reset",
+    "supabase:push": "npx supabase db push",
+    "supabase:pull": "npx supabase db pull"
+  },
+  "keywords": [
+    "luxbyte",
+    "file-management",
+    "document-upload",
+    "supabase",
+    "arabic",
+    "restaurant",
+    "pharmacy",
+    "clinic",
+    "courier"
+  ],
+  "author": "Luxbyte Team",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luxbyte/luxbyte-file-management.git"
+  },
+  "homepage": "https://luxbyte-file-management.vercel.app",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
