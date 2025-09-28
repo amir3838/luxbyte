@@ -1,0 +1,16 @@
+{
+  "env": {
+    "SUPABASE_URL": {
+      "value": "https://qjsvgpvbtrcnbhcjdcci.supabase.co",
+      "description": "Supabase Project URL"
+    },
+    "SUPABASE_ANON_KEY": {
+      "value": "YOUR_SUPABASE_ANON_KEY",
+      "description": "Supabase Anonymous Key"
+    },
+    "SUPABASE_SERVICE_ROLE_KEY": {
+      "value": "YOUR_SUPABASE_SERVICE_ROLE_KEY",
+      "description": "Supabase Service Role Key"
+    }
+  }
+}
