@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXBYTE - شركة لكس بايت المحدودة المسئولية</title>
+    <meta name="description" content="بوابة تطبيق شوب إي جي وماستر درايفر">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="splash-screen active">
+        <div class="splash-content">
+            <div class="logo-animation">
+                <div class="logo-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h1 class="company-name">LUXBYTE</h1>
+                <p class="company-full-name">شركة لكس بايت المحدودة المسئولية</p>
+            </div>
+            <div class="loading-indicator">
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <p class="loading-text">جاري التحميل...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Selection Screen -->
+    <div id="service-selection" class="screen">
+        <div class="container">
+            <div class="screen-header">
+                <div class="logo">
+                    <i class="fas fa-cube"></i>
+                    <span>LUXBYTE</span>
+                </div>
+                <h2 class="screen-title">اختر الخدمة</h2>
+                <p class="screen-description">اختر الخدمة التي تريد استخدامها</p>
+            </div>
+
+            <div class="services-grid">
+                <!-- Shop EG Service -->
+                <div class="service-card" data-service="shopeg">
+                    <div class="service-header">
+                        <div class="service-icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h3 class="service-title">شوب إي جي</h3>
+                        <p class="service-subtitle">منصة شاملة للتجار ومندوبي التوصيل</p>
+                    </div>
+                    
+                    <div class="service-preview">
+                        <div class="preview-images">
+                            <div class="preview-item">
+                                <img src="pharmacy.jpg" alt="الصيدلية" class="activity-image">
+                                <span>الصيدلية</span>
+                            </div>
+                            <div class="preview-item">
+                                <img src="supermarket.jpg" alt="السوبرماركت" class="activity-image">
+                                <span>السوبرماركت</span>
+                            </div>
+                            <div class="preview-item">
+                                <img src="restaurant.jpg" alt="المطعم" class="activity-image">
+                                <span>المطعم</span>
+                            </div>
+                            <div class="preview-item">
+                                <img src="clinic.jpg" alt="العيادة" class="activity-image">
+                                <span>العيادة</span>
+                            </div>
+                            <div class="preview-item">
+                                <img src="courier.jpg" alt="مندوب التوصيل" class="activity-image">
+                                <span>مندوب التوصيل</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn--primary btn--full-width service-select-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        اختر شوب إي جي
+                    </button>
+                </div>
+
+                <!-- Master Driver Service -->
+                <div class="service-card" data-service="masterdriver">
+                    <div class="service-header">
+                        <div class="service-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <h3 class="service-title">ماستر درايفر</h3>
+                        <p class="service-subtitle">منصة نقل الركاب للسائقين</p>
+                    </div>
+                    
+                    <div class="service-preview">
+                        <div class="preview-images single-preview">
+                            <div class="preview-item large">
+                                <img src="driver.jpg" alt="ماستر درايفر" class="activity-image">
+                                <span>خدمة نقل الركاب</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn--primary btn--full-width service-select-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        اختر ماستر درايفر
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Type Selection (Shop EG) -->
+    <div id="activity-selection" class="screen">
+        <div class="container">
+            <div class="screen-header">
+                <button class="back-btn">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <h2 class="screen-title">اختر نوع النشاط</h2>
+                <p class="screen-description">اختر نوع النشاط التجاري الخاص بك</p>
+            </div>
+
+            <div class="activities-grid">
+                <div class="activity-card" data-activity="pharmacy">
+                    <div class="activity-image-container">
+                        <img src="pharmacy.jpg" alt="الصيدلية" class="activity-bg-image">
+                        <div class="activity-overlay">
+                            <div class="activity-icon">
+                                <i class="fas fa-prescription-bottle-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">الصيدلية</h3>
+                        <p class="activity-description">إدارة المخزون والطلبات الطبية</p>
+                    </div>
+                </div>
+
+                <div class="activity-card" data-activity="supermarket">
+                    <div class="activity-image-container">
+                        <img src="supermarket.jpg" alt="السوبرماركت" class="activity-bg-image">
+                        <div class="activity-overlay">
+                            <div class="activity-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">السوبرماركت</h3>
+                        <p class="activity-description">نظام نقاط البيع والمبيعات</p>
+                    </div>
+                </div>
+
+                <div class="activity-card" data-activity="restaurant">
+                    <div class="activity-image-container">
+                        <img src="restaurant.jpg" alt="المطعم" class="activity-bg-image">
+                        <div class="activity-overlay">
+                            <div class="activity-icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">المطعم</h3>
+                        <p class="activity-description">إدارة الطلبات والقوائم</p>
+                    </div>
+                </div>
+
+                <div class="activity-card" data-activity="clinic">
+                    <div class="activity-image-container">
+                        <img src="clinic.jpg" alt="العيادة" class="activity-bg-image">
+                        <div class="activity-overlay">
+                            <div class="activity-icon">
+                                <i class="fas fa-stethoscope"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">العيادة</h3>
+                        <p class="activity-description">حجز المواعيد وإدارة المرضى</p>
+                    </div>
+                </div>
+
+                <div class="activity-card" data-activity="courier">
+                    <div class="activity-image-container">
+                        <img src="courier.jpg" alt="مندوب التوصيل" class="activity-bg-image">
+                        <div class="activity-overlay">
+                            <div class="activity-icon">
+                                <i class="fas fa-motorcycle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="activity-content">
+                        <h3 class="activity-title">مندوب التوصيل</h3>
+                        <p class="activity-description">شبكة توصيل سريعة وآمنة</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen login-bg">
+        <div class="login-background">
+            <img src="screen-1.jpg" alt="خلفية تسجيل الدخول" class="bg-image">
+            <div class="bg-overlay"></div>
+        </div>
+        
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <div class="logo">
+                        <i class="fas fa-cube"></i>
+                        <span>LUXBYTE</span>
+                    </div>
+                </div>
+                
+                <div class="login-form-container">
+                    <h2 class="form-title">تسجيل الدخول</h2>
+                    <p class="form-description">أدخل بياناتك للدخول إلى حسابك</p>
+                    
+                    <form class="login-form" id="login-form">
+                        <div class="form-group">
+                            <label class="form-label">رقم الهاتف</label>
+                            <input type="tel" class="form-control" placeholder="01XXXXXXXXX" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" class="form-control" placeholder="أدخل كلمة المرور" required>
+                        </div>
+                        
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                                تذكرني
+                            </label>
+                            <a href="#" class="forgot-password">نسيت كلمة المرور؟</a>
+                        </div>
+                        
+                        <button type="submit" class="btn btn--primary btn--full-width">
+                            <i class="fas fa-sign-in-alt"></i>
+                            تسجيل الدخول
+                        </button>
+                    </form>
+                    
+                    <div class="form-footer">
+                        <p>ليس لديك حساب؟ <a href="#" class="register-link">إنشاء حساب جديد</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Screen -->
+    <div id="register-screen" class="screen">
+        <div class="container">
+            <div class="screen-header">
+                <button class="back-btn">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <h2 class="screen-title">إنشاء حساب جديد</h2>
+                <p class="screen-description">املأ البيانات المطلوبة لإنشاء حسابك</p>
+            </div>
+
+            <div class="register-form-container">
+                <form class="register-form" id="register-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">الاسم الأول</label>
+                            <input type="text" class="form-control" placeholder="أدخل اسمك الأول" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">اسم العائلة</label>
+                            <input type="text" class="form-control" placeholder="أدخل اسم العائلة" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">رقم الهاتف</label>
+                        <input type="tel" class="form-control" placeholder="01XXXXXXXXX" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">البريد الإلكتروني</label>
+                        <input type="email" class="form-control" placeholder="example@email.com" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">المحافظة</label>
+                            <select class="form-control" id="governorate-select" required>
+                                <option value="">اختر المحافظة</option>
+                                <option value="القاهرة">القاهرة</option>
+                                <option value="الجيزة">الجيزة</option>
+                                <option value="الإسكندرية">الإسكندرية</option>
+                                <option value="القليوبية">القليوبية</option>
+                                <option value="البحيرة">البحيرة</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">المدينة</label>
+                            <select class="form-control" id="city-select" required disabled>
+                                <option value="">اختر المدينة</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">العنوان التفصيلي</label>
+                        <textarea class="form-control" placeholder="أدخل عنوانك بالتفصيل" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" class="form-control" placeholder="أدخل كلمة المرور" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">تأكيد كلمة المرور</label>
+                            <input type="password" class="form-control" placeholder="أكد كلمة المرور" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" required>
+                            <span class="checkmark"></span>
+                            أوافق على <a href="#" target="_blank">الشروط والأحكام</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn--primary btn--full-width">
+                        <i class="fas fa-user-plus"></i>
+                        إنشاء الحساب
+                    </button>
+                </form>
+                
+                <div class="form-footer">
+                    <p>لديك حساب بالفعل؟ <a href="#" class="login-link">تسجيل الدخول</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboard" class="screen">
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="dashboard-nav">
+                    <div class="logo">
+                        <i class="fas fa-cube"></i>
+                        <span>LUXBYTE</span>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="user-name">أهلاً بك</span>
+                        <button class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="container">
+                <div class="dashboard-welcome">
+                    <h2>لوحة التحكم</h2>
+                    <p>إدارة حسابك وأعمالك من مكان واحد</p>
+                </div>
+
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">150</h3>
+                            <p class="stat-label">إجمالي الطلبات</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">12,500</h3>
+                            <p class="stat-label">إجمالي المبيعات</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number">85</h3>
+                            <p class="stat-label">العملاء الجدد</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-actions">
+                    <button class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>إضافة منتج جديد</h3>
+                            <p>أضف منتجات جديدة لمتجرك</p>
+                        </div>
+                    </button>
+                    
+                    <button class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>إدارة الطلبات</h3>
+                            <p>تابع وأدر طلبات العملاء</p>
+                        </div>
+                    </button>
+                    
+                    <button class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="action-content">
+                            <h3>إعدادات المتجر</h3>
+                            <p>تخصيص إعدادات متجرك</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer with Social Media -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-cube"></i>
+                        <div>
+                            <h3>LUXBYTE</h3>
+                            <p>شركة لكس بايت المحدودة المسئولية</p>
+                        </div>
+                    </div>
+                    <p class="footer-description">
+                        بوابة تطبيق شوب إي جي وماستر درايفر - منصة شاملة تربط بين التجار ومندوبي التوصيل والسائقين
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">تواصل معنا</h4>
+                    <div class="social-media-links">
+                        <a href="https://www.facebook.com/share/19zx6VUm7M/" target="_blank" class="social-link">
+                            <img src="FACEBOOK.jpg" alt="فيسبوك" class="social-icon">
+                            <span>فيسبوك</span>
+                        </a>
+                        <a href="https://www.instagram.com/luxbyte_llc1" target="_blank" class="social-link">
+                            <img src="INSTAGRAM.jpg" alt="إنستجرام" class="social-icon">
+                            <span>إنستجرام</span>
+                        </a>
+                        <a href="https://www.tiktok.com/@luxpyte.llc" target="_blank" class="social-link">
+                            <img src="TEKTOK.jpg" alt="تيك توك" class="social-icon">
+                            <span>تيك توك</span>
+                        </a>
+                        <a href="https://wa.me/201148709609" target="_blank" class="social-link">
+                            <img src="WHATSAPP.jpg" alt="واتساب" class="social-icon">
+                            <span>واتساب</span>
+                        </a>
+                        <a href="tel:01148709609" class="social-link">
+                            <img src="CALL.jpg" alt="اتصال" class="social-icon">
+                            <span>01148709609</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">روابط سريعة</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="nav-to-service">اختر الخدمة</a></li>
+                        <li><a href="#" class="nav-to-login">تسجيل الدخول</a></li>
+                        <li><a href="#" class="nav-to-register">إنشاء حساب</a></li>
+                        <li><a href="#" class="nav-to-dashboard">لوحة التحكم</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 LUXBYTE. جميع الحقوق محفوظة.</p>
+                <div class="footer-social-quick">
+                    <a href="https://www.facebook.com/share/19zx6VUm7M/" target="_blank">
+                        <img src="FACEBOOK.jpg" alt="فيسبوك" class="quick-social-icon">
+                    </a>
+                    <a href="https://www.instagram.com/luxbyte_llc1" target="_blank">
+                        <img src="INSTAGRAM.jpg" alt="إنستجرام" class="quick-social-icon">
+                    </a>
+                    <a href="https://www.tiktok.com/@luxpyte.llc" target="_blank">
+                        <img src="TEKTOK.jpg" alt="تيك توك" class="quick-social-icon">
+                    </a>
+                    <a href="https://wa.me/201148709609" target="_blank">
+                        <img src="WHATSAPP.jpg" alt="واتساب" class="quick-social-icon">
+                    </a>
+                    <a href="tel:01148709609">
+                        <img src="CALL.jpg" alt="اتصال" class="quick-social-icon">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
