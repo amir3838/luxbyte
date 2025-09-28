@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار الباك إند - Luxbyte</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            background: #f8f9fa;
+        }
+
+        .test-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .test-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .test-details {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .result-success {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .result-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .config-section {
+            background: #e8f4f8;
+            border: 1px solid #bee5eb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .config-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #0c5460;
+        }
+
+        .config-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #bee5eb;
+        }
+
+        .config-label {
+            font-weight: 500;
+            color: #0c5460;
+            margin-bottom: 5px;
+        }
+
+        .config-value {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .summary h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-vial"></i> اختبار الباك إند</h1>
+            <p>اختبار شامل لجميع أجزاء النظام الخلفي</p>
+        </div>
+
+        <div class="content">
+            <!-- إعدادات الاتصال -->
+            <div class="config-section">
+                <h2 class="config-title"><i class="fas fa-cog"></i> إعدادات الاتصال</h2>
+                <div class="config-item">
+                    <div class="config-label">Supabase URL:</div>
+                    <div class="config-value" id="supabaseUrl">جاري التحميل...</div>
+                </div>
+                <div class="config-item">
+                    <div class="config-label">Supabase Key:</div>
+                    <div class="config-value" id="supabaseKey">جاري التحميل...</div>
+                </div>
+                <div class="config-item">
+                    <div class="config-label">حالة الاتصال:</div>
+                    <div class="config-value" id="connectionStatus">غير متصل</div>
+                </div>
+            </div>
+
+            <!-- شريط التقدم -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div style="text-align: center; margin-bottom: 30px;">
+                <span id="progressText">0% - جاري التحضير...</span>
+            </div>
+
+            <!-- اختبار الاتصال الأساسي -->
+            <div class="test-section" id="connectionTest">
+                <div class="test-title">
+                    <i class="fas fa-plug"></i>
+                    اختبار الاتصال الأساسي
+                    <span class="test-status status-pending" id="connectionStatusBadge">في الانتظار</span>
+                </div>
+                <div class="test-details" id="connectionDetails">
+                    <button class="btn btn-primary" onclick="testConnection()">
+                        <i class="fas fa-play"></i>
+                        بدء الاختبار
+                    </button>
+                </div>
+            </div>
+
+            <!-- اختبار قاعدة البيانات -->
+            <div class="test-section" id="databaseTest">
+                <div class="test-title">
+                    <i class="fas fa-database"></i>
+                    اختبار قاعدة البيانات
+                    <span class="test-status status-pending" id="databaseStatusBadge">في الانتظار</span>
+                </div>
+                <div class="test-details" id="databaseDetails">
+                    <button class="btn btn-primary" onclick="testDatabase()" disabled>
+                        <i class="fas fa-play"></i>
+                        اختبار الجداول
+                    </button>
+                </div>
+            </div>
+
+            <!-- اختبار التخزين -->
+            <div class="test-section" id="storageTest">
+                <div class="test-title">
+                    <i class="fas fa-cloud"></i>
+                    اختبار التخزين
+                    <span class="test-status status-pending" id="storageStatusBadge">في الانتظار</span>
+                </div>
+                <div class="test-details" id="storageDetails">
+                    <button class="btn btn-primary" onclick="testStorage()" disabled>
+                        <i class="fas fa-play"></i>
+                        اختبار Storage
+                    </button>
+                </div>
+            </div>
+
+            <!-- اختبار المصادقة -->
+            <div class="test-section" id="authTest">
+                <div class="test-title">
+                    <i class="fas fa-lock"></i>
+                    اختبار المصادقة
+                    <span class="test-status status-pending" id="authStatusBadge">في الانتظار</span>
+                </div>
+                <div class="test-details" id="authDetails">
+                    <button class="btn btn-primary" onclick="testAuth()" disabled>
+                        <i class="fas fa-play"></i>
+                        اختبار Auth
+                    </button>
+                </div>
+            </div>
+
+            <!-- اختبار رفع الملفات -->
+            <div class="test-section" id="uploadTest">
+                <div class="test-title">
+                    <i class="fas fa-upload"></i>
+                    اختبار رفع الملفات
+                    <span class="test-status status-pending" id="uploadStatusBadge">في الانتظار</span>
+                </div>
+                <div class="test-details" id="uploadDetails">
+                    <button class="btn btn-primary" onclick="testFileUpload()" disabled>
+                        <i class="fas fa-play"></i>
+                        اختبار الرفع
+                    </button>
+                    <input type="file" id="testFile" style="display: none;" onchange="handleTestFile()">
+                </div>
+            </div>
+
+            <!-- اختبار API -->
+            <div class="test-section" id="apiTest">
+                <div class="test-title">
+                    <i class="fas fa-code"></i>
+                    اختبار API
+                    <span class="test-status status-pending" id="apiStatusBadge">في الانتظار</span>
+                </div>
+                <div class="test-details" id="apiDetails">
+                    <button class="btn btn-primary" onclick="testAPI()" disabled>
+                        <i class="fas fa-play"></i>
+                        اختبار Endpoints
+                    </button>
+                </div>
+            </div>
+
+            <!-- ملخص النتائج -->
+            <div class="summary" id="summarySection" style="display: none;">
+                <h2><i class="fas fa-chart-line"></i> ملخص النتائج</h2>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalTests">0</div>
+                        <div class="stat-label">إجمالي الاختبارات</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="passedTests">0</div>
+                        <div class="stat-label">نجح</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="failedTests">0</div>
+                        <div class="stat-label">فشل</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="successRate">0%</div>
+                        <div class="stat-label">معدل النجاح</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/file-upload-manager.js"></script>
+    <script>
+        // إعداد Supabase
+        const supabaseUrl = 'https://qjsvgpvbtrcnbhcjdcci.supabase.co';
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'; // استبدل بمفتاحك الفعلي
+        const supabase = supabaseClient(supabaseUrl, supabaseKey);
+
+        // متغيرات الاختبار
+        let testResults = {
+            connection: false,
+            database: false,
+            storage: false,
+            auth: false,
+            upload: false,
+            api: false
+        };
+
+        let currentTest = 0;
+        const totalTests = 6;
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            updateConfig();
+            updateProgress();
+        });
+
+        // تحديث الإعدادات
+        function updateConfig() {
+            document.getElementById('supabaseUrl').textContent = supabaseUrl;
+            document.getElementById('supabaseKey').textContent = supabaseKey.substring(0, 20) + '...';
+        }
+
+        // تحديث شريط التقدم
+        function updateProgress() {
+            const progress = (currentTest / totalTests) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${Math.round(progress)}% - ${currentTest}/${totalTests} اختبارات مكتملة`;
+        }
+
+        // اختبار الاتصال الأساسي
+        async function testConnection() {
+            const testElement = document.getElementById('connectionTest');
+            const statusBadge = document.getElementById('connectionStatusBadge');
+            const details = document.getElementById('connectionDetails');
+            
+            statusBadge.textContent = 'جاري الاختبار...';
+            statusBadge.className = 'test-status status-pending';
+            
+            try {
+                // اختبار الاتصال
+                const { data, error } = await supabase.from('activity_types').select('count').limit(1);
+                
+                if (error) throw error;
+                
+                testResults.connection = true;
+                statusBadge.textContent = 'نجح';
+                statusBadge.className = 'test-status status-success';
+                
+                details.innerHTML = `
+                    <div class="test-result result-success">
+                        ✅ الاتصال بـ Supabase نجح<br>
+                        ✅ قاعدة البيانات متاحة<br>
+                        ✅ الجداول موجودة
+                    </div>
+                `;
+                
+                // تفعيل الاختبار التالي
+                document.querySelector('#databaseTest button').disabled = false;
+                currentTest++;
+                updateProgress();
+                
+            } catch (error) {
+                testResults.connection = false;
+                statusBadge.textContent = 'فشل';
+                statusBadge.className = 'test-status status-error';
+                
+                details.innerHTML = `
+                    <div class="test-result result-error">
+                        ❌ فشل الاتصال<br>
+                        خطأ: ${error.message}
+                    </div>
+                `;
+                
+                currentTest++;
+                updateProgress();
+            }
+        }
+
+        // اختبار قاعدة البيانات
+        async function testDatabase() {
+            const testElement = document.getElementById('databaseTest');
+            const statusBadge = document.getElementById('databaseStatusBadge');
+            const details = document.getElementById('databaseDetails');
+            
+            statusBadge.textContent = 'جاري الاختبار...';
+            statusBadge.className = 'test-status status-pending';
+            
+            try {
+                const tests = [];
+                
+                // اختبار جدول activity_types
+                const { data: activities, error: activitiesError } = await supabase
+                    .from('activity_types')
+                    .select('*')
+                    .limit(5);
+                
+                if (activitiesError) throw new Error(`activity_types: ${activitiesError.message}`);
+                tests.push(`✅ activity_types: ${activities.length} سجل`);
+                
+                // اختبار جدول document_types
+                const { data: documents, error: documentsError } = await supabase
+                    .from('document_types')
+                    .select('*')
+                    .limit(5);
+                
+                if (documentsError) throw new Error(`document_types: ${documentsError.message}`);
+                tests.push(`✅ document_types: ${documents.length} سجل`);
+                
+                // اختبار جدول registration_requests
+                const { data: requests, error: requestsError } = await supabase
+                    .from('registration_requests')
+                    .select('*')
+                    .limit(5);
+                
+                if (requestsError) throw new Error(`registration_requests: ${requestsError.message}`);
+                tests.push(`✅ registration_requests: ${requests.length} سجل`);
+                
+                // اختبار جدول uploaded_files
+                const { data: files, error: filesError } = await supabase
+                    .from('uploaded_files')
+                    .select('*')
+                    .limit(5);
+                
+                if (filesError) throw new Error(`uploaded_files: ${filesError.message}`);
+                tests.push(`✅ uploaded_files: ${files.length} سجل`);
+                
+                testResults.database = true;
+                statusBadge.textContent = 'نجح';
+                statusBadge.className = 'test-status status-success';
+                
+                details.innerHTML = `
+                    <div class="test-result result-success">
+                        ${tests.join('<br>')}
+                    </div>
+                `;
+                
+                // تفعيل الاختبار التالي
+                document.querySelector('#storageTest button').disabled = false;
+                currentTest++;
+                updateProgress();
+                
+            } catch (error) {
+                testResults.database = false;
+                statusBadge.textContent = 'فشل';
+                statusBadge.className = 'test-status status-error';
+                
+                details.innerHTML = `
+                    <div class="test-result result-error">
+                        ❌ فشل اختبار قاعدة البيانات<br>
+                        خطأ: ${error.message}
+                    </div>
+                `;
+                
+                currentTest++;
+                updateProgress();
+            }
+        }
+
+        // اختبار التخزين
+        async function testStorage() {
+            const testElement = document.getElementById('storageTest');
+            const statusBadge = document.getElementById('storageStatusBadge');
+            const details = document.getElementById('storageDetails');
+            
+            statusBadge.textContent = 'جاري الاختبار...';
+            statusBadge.className = 'test-status status-pending';
+            
+            try {
+                const tests = [];
+                
+                // اختبار قائمة Buckets
+                const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
+                
+                if (bucketsError) throw new Error(`Buckets: ${bucketsError.message}`);
+                tests.push(`✅ Buckets: ${buckets.length} bucket موجود`);
+                
+                // اختبار documents bucket
+                const { data: documentsList, error: documentsListError } = await supabase.storage
+                    .from('documents')
+                    .list('', { limit: 1 });
+                
+                if (documentsListError) {
+                    tests.push(`⚠️ documents bucket: ${documentsListError.message}`);
+                } else {
+                    tests.push(`✅ documents bucket: متاح`);
+                }
+                
+                // اختبار public-images bucket
+                const { data: imagesList, error: imagesListError } = await supabase.storage
+                    .from('public-images')
+                    .list('', { limit: 1 });
+                
+                if (imagesListError) {
+                    tests.push(`⚠️ public-images bucket: ${imagesListError.message}`);
+                } else {
+                    tests.push(`✅ public-images bucket: متاح`);
+                }
+                
+                testResults.storage = true;
+                statusBadge.textContent = 'نجح';
+                statusBadge.className = 'test-status status-success';
+                
+                details.innerHTML = `
+                    <div class="test-result result-success">
+                        ${tests.join('<br>')}
+                    </div>
+                `;
+                
+                // تفعيل الاختبار التالي
+                document.querySelector('#authTest button').disabled = false;
+                currentTest++;
+                updateProgress();
+                
+            } catch (error) {
+                testResults.storage = false;
+                statusBadge.textContent = 'فشل';
+                statusBadge.className = 'test-status status-error';
+                
+                details.innerHTML = `
+                    <div class="test-result result-error">
+                        ❌ فشل اختبار التخزين<br>
+                        خطأ: ${error.message}
+                    </div>
+                `;
+                
+                currentTest++;
+                updateProgress();
+            }
+        }
+
+        // اختبار المصادقة
+        async function testAuth() {
+            const testElement = document.getElementById('authTest');
+            const statusBadge = document.getElementById('authStatusBadge');
+            const details = document.getElementById('authDetails');
+            
+            statusBadge.textContent = 'جاري الاختبار...';
+            statusBadge.className = 'test-status status-pending';
+            
+            try {
+                const tests = [];
+                
+                // اختبار الحصول على المستخدم الحالي
+                const { data: { user }, error: userError } = await supabase.auth.getUser();
+                
+                if (userError) throw new Error(`getUser: ${userError.message}`);
+                
+                if (user) {
+                    tests.push(`✅ المستخدم مسجل: ${user.email || 'بدون إيميل'}`);
+                } else {
+                    tests.push(`ℹ️ لا يوجد مستخدم مسجل حالياً`);
+                }
+                
+                // اختبار جلسة المصادقة
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                
+                if (sessionError) throw new Error(`getSession: ${sessionError.message}`);
+                
+                if (session) {
+                    tests.push(`✅ الجلسة نشطة`);
+                } else {
+                    tests.push(`ℹ️ لا توجد جلسة نشطة`);
+                }
+                
+                // اختبار تسجيل الخروج
+                const { error: signOutError } = await supabase.auth.signOut();
+                
+                if (signOutError) throw new Error(`signOut: ${signOutError.message}`);
+                tests.push(`✅ تسجيل الخروج يعمل`);
+                
+                testResults.auth = true;
+                statusBadge.textContent = 'نجح';
+                statusBadge.className = 'test-status status-success';
+                
+                details.innerHTML = `
+                    <div class="test-result result-success">
+                        ${tests.join('<br>')}
+                    </div>
+                `;
+                
+                // تفعيل الاختبار التالي
+                document.querySelector('#uploadTest button').disabled = false;
+                currentTest++;
+                updateProgress();
+                
+            } catch (error) {
+                testResults.auth = false;
+                statusBadge.textContent = 'فشل';
+                statusBadge.className = 'test-status status-error';
+                
+                details.innerHTML = `
+                    <div class="test-result result-error">
+                        ❌ فشل اختبار المصادقة<br>
+                        خطأ: ${error.message}
+                    </div>
+                `;
+                
+                currentTest++;
+                updateProgress();
+            }
+        }
+
+        // اختبار رفع الملفات
+        async function testFileUpload() {
+            const testElement = document.getElementById('uploadTest');
+            const statusBadge = document.getElementById('uploadStatusBadge');
+            const details = document.getElementById('uploadDetails');
+            
+            statusBadge.textContent = 'جاري الاختبار...';
+            statusBadge.className = 'test-status status-pending';
+            
+            try {
+                // إنشاء ملف تجريبي
+                const testContent = 'This is a test file for Luxbyte File Management System';
+                const testFile = new File([testContent], 'test-file.txt', { type: 'text/plain' });
+                
+                // رفع الملف
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('documents')
+                    .upload('test/test-file.txt', testFile);
+                
+                if (uploadError) throw new Error(`Upload: ${uploadError.message}`);
+                
+                // الحصول على رابط التحميل
+                const { data: downloadData, error: downloadError } = await supabase.storage
+                    .from('documents')
+                    .createSignedUrl('test/test-file.txt', 60);
+                
+                if (downloadError) throw new Error(`Download: ${downloadError.message}`);
+                
+                // حذف الملف التجريبي
+                const { error: deleteError } = await supabase.storage
+                    .from('documents')
+                    .remove(['test/test-file.txt']);
+                
+                if (deleteError) throw new Error(`Delete: ${deleteError.message}`);
+                
+                testResults.upload = true;
+                statusBadge.textContent = 'نجح';
+                statusBadge.className = 'test-status status-success';
+                
+                details.innerHTML = `
+                    <div class="test-result result-success">
+                        ✅ رفع الملف نجح<br>
+                        ✅ رابط التحميل متاح<br>
+                        ✅ حذف الملف نجح
+                    </div>
+                `;
+                
+                // تفعيل الاختبار التالي
+                document.querySelector('#apiTest button').disabled = false;
+                currentTest++;
+                updateProgress();
+                
+            } catch (error) {
+                testResults.upload = false;
+                statusBadge.textContent = 'فشل';
+                statusBadge.className = 'test-status status-error';
+                
+                details.innerHTML = `
+                    <div class="test-result result-error">
+                        ❌ فشل اختبار رفع الملفات<br>
+                        خطأ: ${error.message}
+                    </div>
+                `;
+                
+                currentTest++;
+                updateProgress();
+            }
+        }
+
+        // اختبار API
+        async function testAPI() {
+            const testElement = document.getElementById('apiTest');
+            const statusBadge = document.getElementById('apiStatusBadge');
+            const details = document.getElementById('apiDetails');
+            
+            statusBadge.textContent = 'جاري الاختبار...';
+            statusBadge.className = 'test-status status-pending';
+            
+            try {
+                const tests = [];
+                
+                // اختبار API للأنشطة
+                const { data: activities, error: activitiesError } = await supabase
+                    .from('activity_types')
+                    .select('id, name_ar, name_en')
+                    .eq('is_active', true);
+                
+                if (activitiesError) throw new Error(`Activities API: ${activitiesError.message}`);
+                tests.push(`✅ Activities API: ${activities.length} نشاط`);
+                
+                // اختبار API للمستندات
+                const { data: documents, error: documentsError } = await supabase
+                    .from('document_types')
+                    .select('id, name_ar, is_required')
+                    .limit(10);
+                
+                if (documentsError) throw new Error(`Documents API: ${documentsError.message}`);
+                tests.push(`✅ Documents API: ${documents.length} نوع مستند`);
+                
+                // اختبار API للطلبات
+                const { data: requests, error: requestsError } = await supabase
+                    .from('registration_requests')
+                    .select('id, status, created_at')
+                    .limit(5);
+                
+                if (requestsError) throw new Error(`Requests API: ${requestsError.message}`);
+                tests.push(`✅ Requests API: ${requests.length} طلب`);
+                
+                // اختبار API للملفات
+                const { data: files, error: filesError } = await supabase
+                    .from('uploaded_files')
+                    .select('id, original_filename, upload_status')
+                    .limit(5);
+                
+                if (filesError) throw new Error(`Files API: ${filesError.message}`);
+                tests.push(`✅ Files API: ${files.length} ملف`);
+                
+                testResults.api = true;
+                statusBadge.textContent = 'نجح';
+                statusBadge.className = 'test-status status-success';
+                
+                details.innerHTML = `
+                    <div class="test-result result-success">
+                        ${tests.join('<br>')}
+                    </div>
+                `;
+                
+                currentTest++;
+                updateProgress();
+                
+                // عرض الملخص
+                showSummary();
+                
+            } catch (error) {
+                testResults.api = false;
+                statusBadge.textContent = 'فشل';
+                statusBadge.className = 'test-status status-error';
+                
+                details.innerHTML = `
+                    <div class="test-result result-error">
+                        ❌ فشل اختبار API<br>
+                        خطأ: ${error.message}
+                    </div>
+                `;
+                
+                currentTest++;
+                updateProgress();
+                showSummary();
+            }
+        }
+
+        // عرض الملخص
+        function showSummary() {
+            const totalTests = Object.keys(testResults).length;
+            const passedTests = Object.values(testResults).filter(result => result === true).length;
+            const failedTests = totalTests - passedTests;
+            const successRate = Math.round((passedTests / totalTests) * 100);
+            
+            document.getElementById('totalTests').textContent = totalTests;
+            document.getElementById('passedTests').textContent = passedTests;
+            document.getElementById('failedTests').textContent = failedTests;
+            document.getElementById('successRate').textContent = successRate + '%';
+            
+            document.getElementById('summarySection').style.display = 'block';
+            
+            // تحديث حالة الاتصال
+            const connectionStatus = document.getElementById('connectionStatus');
+            if (passedTests === totalTests) {
+                connectionStatus.textContent = 'متصل - جميع الاختبارات نجحت';
+                connectionStatus.style.color = '#28a745';
+            } else {
+                connectionStatus.textContent = `متصل جزئياً - ${failedTests} اختبار فشل`;
+                connectionStatus.style.color = '#ffc107';
+            }
+        }
+
+        // معالجة ملف الاختبار
+        function handleTestFile() {
+            const file = document.getElementById('testFile').files[0];
+            if (file) {
+                alert(`تم اختيار ملف: ${file.name} (${file.size} bytes)`);
+            }
+        }
+    </script>
+</body>
+</html>
