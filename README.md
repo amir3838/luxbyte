@@ -27,7 +27,7 @@ Luxbyte File Management System هو نظام متطور لإدارة رفع ال
 
 ### 1. استنساخ المشروع
 ```bash
-git clone https://github.com/luxbyte/luxbyte-file-management.git
+git clone https://github.com/YOUR_USERNAME/luxbyte-file-management.git
 cd luxbyte-file-management
 ```
 
@@ -39,7 +39,7 @@ npm install
 ### 3. إعداد Supabase
 ```bash
 # ربط المشروع
-npx supabase link --project-ref YOUR_PROJECT_REF
+npx supabase link --project-ref qjsvgpvbtrcnbhcjdcci
 
 # تطبيق المايجريشن
 npx supabase db push
@@ -51,12 +51,24 @@ npx supabase db reset
 ### 4. تشغيل المشروع محلياً
 ```bash
 npm run dev
+# أو
+npx serve . -p 3000
 ```
 
 ### 5. النشر على Vercel
 ```bash
 npm run deploy
+# أو
+vercel --prod
 ```
+
+## 🌐 النشر المباشر
+
+### Vercel (مستحسن)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/luxbyte-file-management)
+
+### Netlify
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/YOUR_USERNAME/luxbyte-file-management)
 
 ## 📁 هيكل المشروع
 

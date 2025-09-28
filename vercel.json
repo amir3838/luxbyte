@@ -17,6 +17,10 @@
     {
       "src": "assets/**/*",
       "use": "@vercel/static"
+    },
+    {
+      "src": "test-*.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -29,6 +33,14 @@
       "dest": "/file-upload.html"
     },
     {
+      "src": "/test",
+      "dest": "/test-frontend.html"
+    },
+    {
+      "src": "/test-backend",
+      "dest": "/test-backend.html"
+    },
+    {
       "src": "/js/(.*)",
       "dest": "/js/$1"
     },
@@ -39,6 +51,10 @@
     {
       "src": "/assets/(.*)",
       "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|webp|svg|ico|pdf))",
+      "dest": "/$1"
     }
   ],
   "headers": [
@@ -51,11 +67,15 @@
         },
         {
           "key": "X-Frame-Options",
-          "value": "DENY"
+          "value": "SAMEORIGIN"
         },
         {
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     },
@@ -65,6 +85,10 @@
         {
           "key": "Content-Type",
           "value": "application/javascript; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     },
@@ -74,6 +98,19 @@
         {
           "key": "Content-Type",
           "value": "text/css; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     }
@@ -82,5 +119,10 @@
     "app.js": {
       "maxDuration": 10
     }
+  },
+  "env": {
+    "SUPABASE_URL": "@supabase_url",
+    "SUPABASE_ANON_KEY": "@supabase_anon_key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key"
   }
 }
