@@ -479,20 +479,20 @@
             const testElement = document.getElementById('connectionTest');
             const statusBadge = document.getElementById('connectionStatusBadge');
             const details = document.getElementById('connectionDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 // اختبار الاتصال
                 const { data, error } = await supabase.from('activity_types').select('count').limit(1);
-                
+
                 if (error) throw error;
-                
+
                 testResults.connection = true;
                 statusBadge.textContent = 'نجح';
                 statusBadge.className = 'test-status status-success';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-success">
                         ✅ الاتصال بـ Supabase نجح<br>
@@ -500,24 +500,24 @@
                         ✅ الجداول موجودة
                     </div>
                 `;
-                
+
                 // تفعيل الاختبار التالي
                 document.querySelector('#databaseTest button').disabled = false;
                 currentTest++;
                 updateProgress();
-                
+
             } catch (error) {
                 testResults.connection = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل الاتصال<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
             }
@@ -528,76 +528,76 @@
             const testElement = document.getElementById('databaseTest');
             const statusBadge = document.getElementById('databaseStatusBadge');
             const details = document.getElementById('databaseDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 const tests = [];
-                
+
                 // اختبار جدول activity_types
                 const { data: activities, error: activitiesError } = await supabase
                     .from('activity_types')
                     .select('*')
                     .limit(5);
-                
+
                 if (activitiesError) throw new Error(`activity_types: ${activitiesError.message}`);
                 tests.push(`✅ activity_types: ${activities.length} سجل`);
-                
+
                 // اختبار جدول document_types
                 const { data: documents, error: documentsError } = await supabase
                     .from('document_types')
                     .select('*')
                     .limit(5);
-                
+
                 if (documentsError) throw new Error(`document_types: ${documentsError.message}`);
                 tests.push(`✅ document_types: ${documents.length} سجل`);
-                
+
                 // اختبار جدول registration_requests
                 const { data: requests, error: requestsError } = await supabase
                     .from('registration_requests')
                     .select('*')
                     .limit(5);
-                
+
                 if (requestsError) throw new Error(`registration_requests: ${requestsError.message}`);
                 tests.push(`✅ registration_requests: ${requests.length} سجل`);
-                
+
                 // اختبار جدول uploaded_files
                 const { data: files, error: filesError } = await supabase
                     .from('uploaded_files')
                     .select('*')
                     .limit(5);
-                
+
                 if (filesError) throw new Error(`uploaded_files: ${filesError.message}`);
                 tests.push(`✅ uploaded_files: ${files.length} سجل`);
-                
+
                 testResults.database = true;
                 statusBadge.textContent = 'نجح';
                 statusBadge.className = 'test-status status-success';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-success">
                         ${tests.join('<br>')}
                     </div>
                 `;
-                
+
                 // تفعيل الاختبار التالي
                 document.querySelector('#storageTest button').disabled = false;
                 currentTest++;
                 updateProgress();
-                
+
             } catch (error) {
                 testResults.database = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل اختبار قاعدة البيانات<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
             }
@@ -608,68 +608,68 @@
             const testElement = document.getElementById('storageTest');
             const statusBadge = document.getElementById('storageStatusBadge');
             const details = document.getElementById('storageDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 const tests = [];
-                
+
                 // اختبار قائمة Buckets
                 const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
-                
+
                 if (bucketsError) throw new Error(`Buckets: ${bucketsError.message}`);
                 tests.push(`✅ Buckets: ${buckets.length} bucket موجود`);
-                
+
                 // اختبار documents bucket
                 const { data: documentsList, error: documentsListError } = await supabase.storage
                     .from('documents')
                     .list('', { limit: 1 });
-                
+
                 if (documentsListError) {
                     tests.push(`⚠️ documents bucket: ${documentsListError.message}`);
                 } else {
                     tests.push(`✅ documents bucket: متاح`);
                 }
-                
+
                 // اختبار public-images bucket
                 const { data: imagesList, error: imagesListError } = await supabase.storage
                     .from('public-images')
                     .list('', { limit: 1 });
-                
+
                 if (imagesListError) {
                     tests.push(`⚠️ public-images bucket: ${imagesListError.message}`);
                 } else {
                     tests.push(`✅ public-images bucket: متاح`);
                 }
-                
+
                 testResults.storage = true;
                 statusBadge.textContent = 'نجح';
                 statusBadge.className = 'test-status status-success';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-success">
                         ${tests.join('<br>')}
                     </div>
                 `;
-                
+
                 // تفعيل الاختبار التالي
                 document.querySelector('#authTest button').disabled = false;
                 currentTest++;
                 updateProgress();
-                
+
             } catch (error) {
                 testResults.storage = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل اختبار التخزين<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
             }
@@ -680,68 +680,68 @@
             const testElement = document.getElementById('authTest');
             const statusBadge = document.getElementById('authStatusBadge');
             const details = document.getElementById('authDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 const tests = [];
-                
+
                 // اختبار الحصول على المستخدم الحالي
                 const { data: { user }, error: userError } = await supabase.auth.getUser();
-                
+
                 if (userError) throw new Error(`getUser: ${userError.message}`);
-                
+
                 if (user) {
                     tests.push(`✅ المستخدم مسجل: ${user.email || 'بدون إيميل'}`);
                 } else {
                     tests.push(`ℹ️ لا يوجد مستخدم مسجل حالياً`);
                 }
-                
+
                 // اختبار جلسة المصادقة
                 const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-                
+
                 if (sessionError) throw new Error(`getSession: ${sessionError.message}`);
-                
+
                 if (session) {
                     tests.push(`✅ الجلسة نشطة`);
                 } else {
                     tests.push(`ℹ️ لا توجد جلسة نشطة`);
                 }
-                
+
                 // اختبار تسجيل الخروج
                 const { error: signOutError } = await supabase.auth.signOut();
-                
+
                 if (signOutError) throw new Error(`signOut: ${signOutError.message}`);
                 tests.push(`✅ تسجيل الخروج يعمل`);
-                
+
                 testResults.auth = true;
                 statusBadge.textContent = 'نجح';
                 statusBadge.className = 'test-status status-success';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-success">
                         ${tests.join('<br>')}
                     </div>
                 `;
-                
+
                 // تفعيل الاختبار التالي
                 document.querySelector('#uploadTest button').disabled = false;
                 currentTest++;
                 updateProgress();
-                
+
             } catch (error) {
                 testResults.auth = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل اختبار المصادقة<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
             }
@@ -752,40 +752,40 @@
             const testElement = document.getElementById('uploadTest');
             const statusBadge = document.getElementById('uploadStatusBadge');
             const details = document.getElementById('uploadDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 // إنشاء ملف تجريبي
                 const testContent = 'This is a test file for Luxbyte File Management System';
                 const testFile = new File([testContent], 'test-file.txt', { type: 'text/plain' });
-                
+
                 // رفع الملف
                 const { data: uploadData, error: uploadError } = await supabase.storage
                     .from('documents')
                     .upload('test/test-file.txt', testFile);
-                
+
                 if (uploadError) throw new Error(`Upload: ${uploadError.message}`);
-                
+
                 // الحصول على رابط التحميل
                 const { data: downloadData, error: downloadError } = await supabase.storage
                     .from('documents')
                     .createSignedUrl('test/test-file.txt', 60);
-                
+
                 if (downloadError) throw new Error(`Download: ${downloadError.message}`);
-                
+
                 // حذف الملف التجريبي
                 const { error: deleteError } = await supabase.storage
                     .from('documents')
                     .remove(['test/test-file.txt']);
-                
+
                 if (deleteError) throw new Error(`Delete: ${deleteError.message}`);
-                
+
                 testResults.upload = true;
                 statusBadge.textContent = 'نجح';
                 statusBadge.className = 'test-status status-success';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-success">
                         ✅ رفع الملف نجح<br>
@@ -793,24 +793,24 @@
                         ✅ حذف الملف نجح
                     </div>
                 `;
-                
+
                 // تفعيل الاختبار التالي
                 document.querySelector('#apiTest button').disabled = false;
                 currentTest++;
                 updateProgress();
-                
+
             } catch (error) {
                 testResults.upload = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل اختبار رفع الملفات<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
             }
@@ -821,77 +821,77 @@
             const testElement = document.getElementById('apiTest');
             const statusBadge = document.getElementById('apiStatusBadge');
             const details = document.getElementById('apiDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 const tests = [];
-                
+
                 // اختبار API للأنشطة
                 const { data: activities, error: activitiesError } = await supabase
                     .from('activity_types')
                     .select('id, name_ar, name_en')
                     .eq('is_active', true);
-                
+
                 if (activitiesError) throw new Error(`Activities API: ${activitiesError.message}`);
                 tests.push(`✅ Activities API: ${activities.length} نشاط`);
-                
+
                 // اختبار API للمستندات
                 const { data: documents, error: documentsError } = await supabase
                     .from('document_types')
                     .select('id, name_ar, is_required')
                     .limit(10);
-                
+
                 if (documentsError) throw new Error(`Documents API: ${documentsError.message}`);
                 tests.push(`✅ Documents API: ${documents.length} نوع مستند`);
-                
+
                 // اختبار API للطلبات
                 const { data: requests, error: requestsError } = await supabase
                     .from('registration_requests')
                     .select('id, status, created_at')
                     .limit(5);
-                
+
                 if (requestsError) throw new Error(`Requests API: ${requestsError.message}`);
                 tests.push(`✅ Requests API: ${requests.length} طلب`);
-                
+
                 // اختبار API للملفات
                 const { data: files, error: filesError } = await supabase
                     .from('uploaded_files')
                     .select('id, original_filename, upload_status')
                     .limit(5);
-                
+
                 if (filesError) throw new Error(`Files API: ${filesError.message}`);
                 tests.push(`✅ Files API: ${files.length} ملف`);
-                
+
                 testResults.api = true;
                 statusBadge.textContent = 'نجح';
                 statusBadge.className = 'test-status status-success';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-success">
                         ${tests.join('<br>')}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
-                
+
                 // عرض الملخص
                 showSummary();
-                
+
             } catch (error) {
                 testResults.api = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل اختبار API<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
                 showSummary();
@@ -904,14 +904,14 @@
             const passedTests = Object.values(testResults).filter(result => result === true).length;
             const failedTests = totalTests - passedTests;
             const successRate = Math.round((passedTests / totalTests) * 100);
-            
+
             document.getElementById('totalTests').textContent = totalTests;
             document.getElementById('passedTests').textContent = passedTests;
             document.getElementById('failedTests').textContent = failedTests;
             document.getElementById('successRate').textContent = successRate + '%';
-            
+
             document.getElementById('summarySection').style.display = 'block';
-            
+
             // تحديث حالة الاتصال
             const connectionStatus = document.getElementById('connectionStatus');
             if (passedTests === totalTests) {

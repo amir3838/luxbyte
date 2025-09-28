@@ -424,59 +424,59 @@
             const testElement = document.getElementById('homepageTest');
             const statusBadge = document.getElementById('homepageStatusBadge');
             const details = document.getElementById('homepageDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 // اختبار تحميل الصفحة
                 const response = await fetch('index.html');
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
+
                 const html = await response.text();
-                
+
                 // اختبار العناصر الأساسية
                 const tests = [];
-                
+
                 if (html.includes('<!DOCTYPE html>')) {
                     tests.push('✅ DOCTYPE صحيح');
                 } else {
                     tests.push('❌ DOCTYPE مفقود');
                 }
-                
+
                 if (html.includes('LUXBYTE')) {
                     tests.push('✅ عنوان LUXBYTE موجود');
                 } else {
                     tests.push('❌ عنوان LUXBYTE مفقود');
                 }
-                
+
                 if (html.includes('lang="ar"')) {
                     tests.push('✅ اللغة العربية محددة');
                 } else {
                     tests.push('❌ اللغة العربية غير محددة');
                 }
-                
+
                 if (html.includes('dir="rtl"')) {
                     tests.push('✅ اتجاه RTL محدد');
                 } else {
                     tests.push('❌ اتجاه RTL غير محدد');
                 }
-                
+
                 if (html.includes('Cairo')) {
                     tests.push('✅ خط Cairo محدد');
                 } else {
                     tests.push('❌ خط Cairo غير محدد');
                 }
-                
+
                 if (html.includes('app.js')) {
                     tests.push('✅ ملف app.js محدد');
                 } else {
                     tests.push('❌ ملف app.js غير محدد');
                 }
-                
+
                 const passedTests = tests.filter(test => test.includes('✅')).length;
                 const totalPageTests = tests.length;
-                
+
                 if (passedTests === totalPageTests) {
                     testResults.homepage = true;
                     statusBadge.textContent = 'نجح';
@@ -486,7 +486,7 @@
                     statusBadge.textContent = 'فشل جزئي';
                     statusBadge.className = 'test-status status-error';
                 }
-                
+
                 details.innerHTML = `
                     <div class="test-result ${testResults.homepage ? 'result-success' : 'result-error'}">
                         ${tests.join('<br>')}
@@ -498,22 +498,22 @@
                         عرض الصفحة
                     </button>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
-                
+
             } catch (error) {
                 testResults.homepage = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل تحميل الصفحة الرئيسية<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
             }
@@ -524,59 +524,59 @@
             const testElement = document.getElementById('uploadTest');
             const statusBadge = document.getElementById('uploadStatusBadge');
             const details = document.getElementById('uploadDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 // اختبار تحميل الصفحة
                 const response = await fetch('file-upload.html');
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
+
                 const html = await response.text();
-                
+
                 // اختبار العناصر الأساسية
                 const tests = [];
-                
+
                 if (html.includes('رفع المستندات')) {
                     tests.push('✅ عنوان الصفحة موجود');
                 } else {
                     tests.push('❌ عنوان الصفحة مفقود');
                 }
-                
+
                 if (html.includes('file-upload-manager.js')) {
                     tests.push('✅ مدير الملفات محدد');
                 } else {
                     tests.push('❌ مدير الملفات غير محدد');
                 }
-                
+
                 if (html.includes('@supabase/supabase-js')) {
                     tests.push('✅ Supabase محدد');
                 } else {
                     tests.push('❌ Supabase غير محدد');
                 }
-                
+
                 if (html.includes('activity-card')) {
                     tests.push('✅ بطاقات الأنشطة موجودة');
                 } else {
                     tests.push('❌ بطاقات الأنشطة مفقودة');
                 }
-                
+
                 if (html.includes('document-card')) {
                     tests.push('✅ بطاقات المستندات موجودة');
                 } else {
                     tests.push('❌ بطاقات المستندات مفقودة');
                 }
-                
+
                 if (html.includes('file-upload-area')) {
                     tests.push('✅ مناطق رفع الملفات موجودة');
                 } else {
                     tests.push('❌ مناطق رفع الملفات مفقودة');
                 }
-                
+
                 const passedTests = tests.filter(test => test.includes('✅')).length;
                 const totalPageTests = tests.length;
-                
+
                 if (passedTests === totalPageTests) {
                     testResults.upload = true;
                     statusBadge.textContent = 'نجح';
@@ -586,7 +586,7 @@
                     statusBadge.textContent = 'فشل جزئي';
                     statusBadge.className = 'test-status status-error';
                 }
-                
+
                 details.innerHTML = `
                     <div class="test-result ${testResults.upload ? 'result-success' : 'result-error'}">
                         ${tests.join('<br>')}
@@ -598,22 +598,22 @@
                         عرض الصفحة
                     </button>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
-                
+
             } catch (error) {
                 testResults.upload = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل تحميل صفحة رفع الملفات<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
             }
@@ -624,59 +624,59 @@
             const testElement = document.getElementById('javascriptTest');
             const statusBadge = document.getElementById('javascriptStatusBadge');
             const details = document.getElementById('javascriptDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 // اختبار تحميل ملف JavaScript
                 const response = await fetch('js/file-upload-manager.js');
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
+
                 const js = await response.text();
-                
+
                 // اختبار العناصر الأساسية
                 const tests = [];
-                
+
                 if (js.includes('class FileUploadManager')) {
                     tests.push('✅ كلاس FileUploadManager موجود');
                 } else {
                     tests.push('❌ كلاس FileUploadManager مفقود');
                 }
-                
+
                 if (js.includes('uploadFile')) {
                     tests.push('✅ دالة uploadFile موجودة');
                 } else {
                     tests.push('❌ دالة uploadFile مفقودة');
                 }
-                
+
                 if (js.includes('validateFile')) {
                     tests.push('✅ دالة validateFile موجودة');
                 } else {
                     tests.push('❌ دالة validateFile مفقودة');
                 }
-                
+
                 if (js.includes('supabase')) {
                     tests.push('✅ تكامل Supabase موجود');
                 } else {
                     tests.push('❌ تكامل Supabase مفقود');
                 }
-                
+
                 if (js.includes('async')) {
                     tests.push('✅ استخدام async/await');
                 } else {
                     tests.push('❌ لا يستخدم async/await');
                 }
-                
+
                 if (js.includes('error')) {
                     tests.push('✅ معالجة الأخطاء موجودة');
                 } else {
                     tests.push('❌ معالجة الأخطاء مفقودة');
                 }
-                
+
                 const passedTests = tests.filter(test => test.includes('✅')).length;
                 const totalJSTests = tests.length;
-                
+
                 if (passedTests === totalJSTests) {
                     testResults.javascript = true;
                     statusBadge.textContent = 'نجح';
@@ -686,7 +686,7 @@
                     statusBadge.textContent = 'فشل جزئي';
                     statusBadge.className = 'test-status status-error';
                 }
-                
+
                 details.innerHTML = `
                     <div class="test-result ${testResults.javascript ? 'result-success' : 'result-error'}">
                         ${tests.join('<br>')}
@@ -694,22 +694,22 @@
                         <strong>النتيجة: ${passedTests}/${totalJSTests} اختبارات نجحت</strong>
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
-                
+
             } catch (error) {
                 testResults.javascript = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل تحميل ملف JavaScript<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
             }
@@ -720,59 +720,59 @@
             const testElement = document.getElementById('cssTest');
             const statusBadge = document.getElementById('cssStatusBadge');
             const details = document.getElementById('cssDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 // اختبار تحميل ملف CSS
                 const response = await fetch('style.css');
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
+
                 const css = await response.text();
-                
+
                 // اختبار العناصر الأساسية
                 const tests = [];
-                
+
                 if (css.includes('@media')) {
                     tests.push('✅ استعلامات الوسائط موجودة');
                 } else {
                     tests.push('❌ استعلامات الوسائط مفقودة');
                 }
-                
+
                 if (css.includes('flexbox') || css.includes('flex')) {
                     tests.push('✅ Flexbox مستخدم');
                 } else {
                     tests.push('❌ Flexbox غير مستخدم');
                 }
-                
+
                 if (css.includes('grid')) {
                     tests.push('✅ CSS Grid مستخدم');
                 } else {
                     tests.push('❌ CSS Grid غير مستخدم');
                 }
-                
+
                 if (css.includes('transition')) {
                     tests.push('✅ الانتقالات موجودة');
                 } else {
                     tests.push('❌ الانتقالات مفقودة');
                 }
-                
+
                 if (css.includes('gradient')) {
                     tests.push('✅ التدرجات موجودة');
                 } else {
                     tests.push('❌ التدرجات مفقودة');
                 }
-                
+
                 if (css.includes('border-radius')) {
                     tests.push('✅ الزوايا المدورة موجودة');
                 } else {
                     tests.push('❌ الزوايا المدورة مفقودة');
                 }
-                
+
                 const passedTests = tests.filter(test => test.includes('✅')).length;
                 const totalCSSTests = tests.length;
-                
+
                 if (passedTests >= totalCSSTests * 0.8) {
                     testResults.css = true;
                     statusBadge.textContent = 'نجح';
@@ -782,7 +782,7 @@
                     statusBadge.textContent = 'فشل جزئي';
                     statusBadge.className = 'test-status status-error';
                 }
-                
+
                 details.innerHTML = `
                     <div class="test-result ${testResults.css ? 'result-success' : 'result-error'}">
                         ${tests.join('<br>')}
@@ -790,22 +790,22 @@
                         <strong>النتيجة: ${passedTests}/${totalCSSTests} اختبارات نجحت</strong>
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
-                
+
             } catch (error) {
                 testResults.css = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل تحميل ملف CSS<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
             }
@@ -816,51 +816,51 @@
             const testElement = document.getElementById('responsiveTest');
             const statusBadge = document.getElementById('responsiveStatusBadge');
             const details = document.getElementById('responsiveDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 const tests = [];
-                
+
                 // اختبار عرض الشاشة
                 const screenWidth = window.innerWidth;
                 const screenHeight = window.innerHeight;
-                
+
                 tests.push(`✅ عرض الشاشة: ${screenWidth}px`);
                 tests.push(`✅ ارتفاع الشاشة: ${screenHeight}px`);
-                
+
                 // اختبار دعم اللمس
                 if ('ontouchstart' in window) {
                     tests.push('✅ دعم اللمس متاح');
                 } else {
                     tests.push('⚠️ دعم اللمس غير متاح');
                 }
-                
+
                 // اختبار دعم CSS Grid
                 if (CSS.supports('display', 'grid')) {
                     tests.push('✅ CSS Grid مدعوم');
                 } else {
                     tests.push('❌ CSS Grid غير مدعوم');
                 }
-                
+
                 // اختبار دعم Flexbox
                 if (CSS.supports('display', 'flex')) {
                     tests.push('✅ Flexbox مدعوم');
                 } else {
                     tests.push('❌ Flexbox غير مدعوم');
                 }
-                
+
                 // اختبار دعم CSS Variables
                 if (CSS.supports('color', 'var(--test)')) {
                     tests.push('✅ CSS Variables مدعومة');
                 } else {
                     tests.push('❌ CSS Variables غير مدعومة');
                 }
-                
+
                 const passedTests = tests.filter(test => test.includes('✅')).length;
                 const totalResponsiveTests = tests.length;
-                
+
                 if (passedTests >= totalResponsiveTests * 0.8) {
                     testResults.responsive = true;
                     statusBadge.textContent = 'نجح';
@@ -870,7 +870,7 @@
                     statusBadge.textContent = 'فشل جزئي';
                     statusBadge.className = 'test-status status-error';
                 }
-                
+
                 details.innerHTML = `
                     <div class="test-result ${testResults.responsive ? 'result-success' : 'result-error'}">
                         ${tests.join('<br>')}
@@ -878,22 +878,22 @@
                         <strong>النتيجة: ${passedTests}/${totalResponsiveTests} اختبارات نجحت</strong>
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
-                
+
             } catch (error) {
                 testResults.responsive = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل اختبار الاستجابة<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
             }
@@ -904,33 +904,33 @@
             const testElement = document.getElementById('performanceTest');
             const statusBadge = document.getElementById('performanceStatusBadge');
             const details = document.getElementById('performanceDetails');
-            
+
             statusBadge.textContent = 'جاري الاختبار...';
             statusBadge.className = 'test-status status-pending';
-            
+
             try {
                 const tests = [];
-                
+
                 // اختبار وقت التحميل
                 const loadTime = performance.now();
                 tests.push(`✅ وقت التحميل: ${Math.round(loadTime)}ms`);
-                
+
                 // اختبار عدد العناصر
                 const elements = document.querySelectorAll('*').length;
                 tests.push(`✅ عدد العناصر: ${elements}`);
-                
+
                 // اختبار عدد الصور
                 const images = document.querySelectorAll('img').length;
                 tests.push(`✅ عدد الصور: ${images}`);
-                
+
                 // اختبار عدد الروابط
                 const links = document.querySelectorAll('a').length;
                 tests.push(`✅ عدد الروابط: ${links}`);
-                
+
                 // اختبار عدد الأزرار
                 const buttons = document.querySelectorAll('button').length;
                 tests.push(`✅ عدد الأزرار: ${buttons}`);
-                
+
                 // اختبار الذاكرة
                 if (performance.memory) {
                     const memory = performance.memory;
@@ -939,10 +939,10 @@
                 } else {
                     tests.push('⚠️ معلومات الذاكرة غير متاحة');
                 }
-                
+
                 const passedTests = tests.filter(test => test.includes('✅')).length;
                 const totalPerformanceTests = tests.length;
-                
+
                 if (passedTests >= totalPerformanceTests * 0.8) {
                     testResults.performance = true;
                     statusBadge.textContent = 'نجح';
@@ -952,7 +952,7 @@
                     statusBadge.textContent = 'فشل جزئي';
                     statusBadge.className = 'test-status status-error';
                 }
-                
+
                 details.innerHTML = `
                     <div class="test-result ${testResults.performance ? 'result-success' : 'result-error'}">
                         ${tests.join('<br>')}
@@ -960,25 +960,25 @@
                         <strong>النتيجة: ${passedTests}/${totalPerformanceTests} اختبارات نجحت</strong>
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
-                
+
                 // عرض الملخص
                 showSummary();
-                
+
             } catch (error) {
                 testResults.performance = false;
                 statusBadge.textContent = 'فشل';
                 statusBadge.className = 'test-status status-error';
-                
+
                 details.innerHTML = `
                     <div class="test-result result-error">
                         ❌ فشل اختبار الأداء<br>
                         خطأ: ${error.message}
                     </div>
                 `;
-                
+
                 currentTest++;
                 updateProgress();
                 showSummary();
@@ -1001,12 +1001,12 @@
             const passedTests = Object.values(testResults).filter(result => result === true).length;
             const failedTests = totalTests - passedTests;
             const successRate = Math.round((passedTests / totalTests) * 100);
-            
+
             document.getElementById('totalTests').textContent = totalTests;
             document.getElementById('passedTests').textContent = passedTests;
             document.getElementById('failedTests').textContent = failedTests;
             document.getElementById('successRate').textContent = successRate + '%';
-            
+
             document.getElementById('summarySection').style.display = 'block';
         }
     </script>

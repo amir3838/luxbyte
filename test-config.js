@@ -8,14 +8,14 @@ const config = {
     supabaseUrl: 'https://qjsvgpvbtrcnbhcjdcci.supabase.co',
     supabaseAnonKey: 'YOUR_SUPABASE_ANON_KEY', // يجب استبدالها بالمفتاح الفعلي
     supabaseServiceKey: 'YOUR_SUPABASE_SERVICE_KEY', // يجب استبدالها بالمفتاح الفعلي
-    
+
     // إعدادات الاختبار
     testSettings: {
         timeout: 10000, // 10 ثواني
         retries: 3,
         delay: 1000 // 1 ثانية بين الاختبارات
     },
-    
+
     // إعدادات الملفات التجريبية
     testFiles: {
         small: {
