@@ -575,7 +575,7 @@ function injectNavbar(active){
   bar.innerHTML = `
     <div class="navbar-inner">
       <div class="brand">
-        <img src="assets/app_icon/LUXBYTE.png" alt="LUXBYTE Logo" class="brand-logo" 
+        <img src="assets/app_icon/LUXBYTE.png" alt="LUXBYTE Logo" class="brand-logo"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"
              style="height: 32px; width: auto; margin-right: 8px;">
         <div class="brand-fallback" style="display: none; width: 32px; height: 32px; background: linear-gradient(45deg, #10b981, #059669); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; margin-right: 8px;">L</div>
