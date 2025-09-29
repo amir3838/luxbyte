@@ -510,13 +510,35 @@ const i18n = {
 function t(key){ return (i18n.dict[i18n.lang] && i18n.dict[i18n.lang][key]) || key; }
 
 function applyI18n(){
-  // النصوص
+  // النصوص مع fallback
   document.querySelectorAll('[data-i18n]').forEach(el=>{
-    el.textContent = t(el.getAttribute('data-i18n'));
+    const key = el.getAttribute('data-i18n');
+    const fallback = el.textContent || el.innerText || '';
+    const translation = t(key);
+    
+    // Use fallback if translation is same as key or empty
+    if (!translation || translation === key) {
+      el.textContent = fallback;
+    } else {
+      el.textContent = translation;
+    }
+    
+    // Set aria-label if not already set
+    if (!el.getAttribute('aria-label')) {
+      el.setAttribute('aria-label', el.textContent);
+    }
   });
   // Placeholder
   document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
-    el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph')));
+    const key = el.getAttribute('data-i18n-ph');
+    const fallback = el.getAttribute('placeholder') || '';
+    const translation = t(key);
+    
+    if (!translation || translation === key) {
+      el.setAttribute('placeholder', fallback);
+    } else {
+      el.setAttribute('placeholder', translation);
+    }
   });
   // Title/Tooltip
   document.querySelectorAll('[data-i18n-title]').forEach(el=>{
@@ -552,7 +574,7 @@ function injectNavbar(active){
       <nav class="nav-links">
         <a class="nav-btn ${active==='home'?'nav-primary':''}" href="index.html" data-i18n="nav.home">الرئيسية</a>
         <a class="nav-btn ${active==='platform'?'nav-primary':''}" href="choose-platform.html" data-i18n="nav.choose_platform">اختر منصتك</a>
-        <a class="nav-btn ${active==='signup'?'nav-primary':''}" href="account-type-selection.html" data-i18n="nav.signup">التسجيل</a>
+        <a class="nav-btn ${active==='signup'?'nav-primary':''}" href="account-type-selection.html" data-i18n="nav.signup" aria-label="إنشاء حساب" dir="rtl">إنشاء حساب</a>
         <a class="nav-btn ${active==='dash'?'nav-primary':''}" href="dashboard.html" data-i18n="nav.dashboard">لوحة المراجعة</a>
         <a class="nav-btn" href="social.html" data-i18n="nav.contact">التواصل</a>
         <a class="nav-btn" href="auth.html" data-i18n="nav.login">تسجيل الدخول</a>

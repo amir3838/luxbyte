@@ -18,7 +18,7 @@ git add .
 git commit -m "feat: إضافة نظام Firebase Cloud Messaging للإشعارات
 
 - إضافة جدول push_tokens في Supabase
-- إعداد Firebase configuration و Service Worker  
+- إعداد Firebase configuration و Service Worker
 - إنشاء API endpoints للإشعارات
 - إضافة واجهة تفعيل الإشعارات في لوحة التحكم
 - دعم إشعارات Web Push مع أمان عالي

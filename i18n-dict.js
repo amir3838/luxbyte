@@ -5,7 +5,7 @@ const i18nDict = {
     "brand.luxbyte":"لوكس بايت","brand.luxbyte_llc":"شركة لوكس بايت المحدودة المسئولية","brand.shop_eg":"شوب إي جي","brand.master_driver":"ماستر درايفر",
 
     // Navigation
-    "nav.home":"الرئيسية","nav.choose_platform":"اختر منصتك","nav.dashboard":"لوحة المراجعة","nav.logout":"تسجيل الخروج","nav.contact":"التواصل","nav.login":"تسجيل الدخول","nav.start_now":"ابدأ الآن",
+    "nav.home":"الرئيسية","nav.choose_platform":"اختر منصتك","nav.dashboard":"لوحة المراجعة","nav.logout":"تسجيل الخروج","nav.contact":"التواصل","nav.login":"تسجيل الدخول","nav.signup":"إنشاء حساب","nav.start_now":"ابدأ الآن",
 
     // Home Page
     "home.company_full":"شركة لوكس بايت المحدودة المسئولية","home.tagline":"منصة شاملة للتجارة الإلكترونية وخدمات التوصيل، تقدم حلول متكاملة للمنشآت التجارية والأفراد في مصر. انضم إلينا واكتشف عالمًا جديدًا من الفرص التجارية.","home.cta_start_journey":"ابدأ رحلتك الآن","home.choose_platform":"اختر منصتك",
@@ -58,7 +58,7 @@ const i18nDict = {
     "brand.luxbyte":"LUXBYTE","brand.luxbyte_llc":"LUXBYTE LLC","brand.shop_eg":"ShopEG","brand.master_driver":"Master Driver",
 
     // Navigation
-    "nav.home":"Home","nav.choose_platform":"Choose your platform","nav.dashboard":"Review Panel","nav.logout":"Sign out","nav.contact":"Contact","nav.login":"Sign in","nav.start_now":"Get started",
+    "nav.home":"Home","nav.choose_platform":"Choose your platform","nav.dashboard":"Review Panel","nav.logout":"Sign out","nav.contact":"Contact","nav.login":"Sign in","nav.signup":"Sign Up","nav.start_now":"Get started",
 
     // Home Page
     "home.company_full":"LUXBYTE LLC","home.tagline":"A comprehensive platform for e-commerce and delivery services, offering integrated solutions for businesses and individuals in Egypt. Join us and discover a new world of business opportunities.","home.cta_start_journey":"Start your journey now","home.choose_platform":"Choose your platform",

@@ -31,7 +31,8 @@ Write-Status "التحقق من الأدوات المطلوبة..."
 try {
     git --version | Out-Null
     Write-Success "Git متوفر"
-} catch {
+}
+catch {
     Write-Error "Git غير مثبت"
     exit 1
 }
@@ -42,12 +43,12 @@ Write-Status "نشر التحديثات على GitHub..."
 try {
     # إضافة الملفات
     git add .
-    
+
     # إنشاء commit
     git commit -m "feat: إضافة نظام Firebase Cloud Messaging للإشعارات
 
 - إضافة جدول push_tokens في Supabase
-- إعداد Firebase configuration و Service Worker  
+- إعداد Firebase configuration و Service Worker
 - إنشاء API endpoints للإشعارات
 - إضافة واجهة تفعيل الإشعارات في لوحة التحكم
 - دعم إشعارات Web Push مع أمان عالي
@@ -55,17 +56,18 @@ try {
 
     # رفع التحديثات
     git push origin main
-    
+
     Write-Success "تم رفع التحديثات إلى GitHub بنجاح"
-    
+
     # إنشاء tag
     Write-Status "إنشاء tag للإصدار..."
     git tag -a v1.1.0 -m "إصدار 1.1.0 - نظام الإشعارات"
     git push origin v1.1.0
-    
+
     Write-Success "تم إنشاء tag v1.1.0 بنجاح"
-    
-} catch {
+
+}
+catch {
     Write-Error "فشل في رفع التحديثات إلى GitHub: $_"
     exit 1
 }
@@ -75,7 +77,7 @@ Write-Status "فحص الملفات المطلوبة..."
 
 $files = @(
     "firebase-messaging-sw.js",
-    "js/firebase-config.js", 
+    "js/firebase-config.js",
     "js/push-notifications.js",
     "api/push/register.js",
     "api/push/send.js",
@@ -85,7 +87,8 @@ $files = @(
 foreach ($file in $files) {
     if (Test-Path $file) {
         Write-Success "$file موجود"
-    } else {
+    }
+    else {
         Write-Error "$file مفقود"
     }
 }
