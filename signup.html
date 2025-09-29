@@ -158,7 +158,7 @@
                 <div class="step-content" id="step-3">
                     <h3 style="margin-bottom: 24px; color: #333;">رفع المستندات المطلوبة</h3>
                     <p style="color: #666; margin-bottom: 24px;">ارفع المستندات المطلوبة حسب نوع النشاط. يمكنك النقر أو السحب والإفلات لرفع الملفات.</p>
-                    
+
                     <div style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <i class="fas fa-info-circle" style="color: #0ea5e9; font-size: 20px;"></i>
@@ -172,7 +172,10 @@
                     </div>
 
                     <div id="file-upload-container">
-                        <!-- Will be populated by JavaScript -->
+                        <div style="text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
+                            <p>جاري تحميل أزرار رفع الملفات...</p>
+                        </div>
                     </div>
                 </div>
 
@@ -234,6 +237,9 @@
             // Get role from URL parameter
             selectedRole = LUXBYTE.getUrlParam('role');
 
+            console.log('Selected role from URL:', selectedRole);
+            console.log('Available roles:', Object.keys(window.CONFIG.ROLES));
+
             if (!selectedRole || !window.CONFIG.ROLES[selectedRole]) {
                 LUXBYTE.notifyErr('نوع النشاط غير صحيح');
                 window.location.href = 'choose-role.html';
@@ -252,6 +258,13 @@
             // Setup GPS location
             setupGPSLocation();
 
+            // Force generate file upload fields
+            setTimeout(() => {
+                if (selectedRole && window.CONFIG.ROLES[selectedRole]) {
+                    generateFileUploadFields();
+                }
+            }, 100);
+
             // Initialize common elements
             applyI18n();
         });
@@ -266,8 +279,10 @@
             // Generate role-specific fields
             generateRoleFields();
 
-            // Generate file upload fields
-            generateFileUploadFields();
+            // Generate file upload fields only if role is selected
+            if (selectedRole && window.CONFIG.ROLES[selectedRole]) {
+                generateFileUploadFields();
+            }
         }
 
         function generateRoleFields() {
@@ -332,7 +347,16 @@
             const roleConfig = window.CONFIG.ROLES[selectedRole];
             const container = document.getElementById('file-upload-container');
 
+            console.log('Generating file upload fields for role:', selectedRole);
+            console.log('Role config:', roleConfig);
+
             container.innerHTML = '';
+
+            if (!roleConfig || !roleConfig.files) {
+                console.error('No role config or files found for:', selectedRole);
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom: 12px;"></i><p>لا توجد ملفات مطلوبة لهذا النشاط</p></div>';
+                return;
+            }
 
             roleConfig.files.forEach(file => {
                 const fileDiv = document.createElement('div');
@@ -377,7 +401,7 @@
                 uploadDiv.addEventListener('drop', (e) => {
                     e.preventDefault();
                     uploadDiv.classList.remove('dragover');
-                    
+
                     const files = e.dataTransfer.files;
                     if (files.length > 0) {
                         const fileInput = uploadDiv.querySelector('.file-input');
@@ -393,6 +417,13 @@
                 fileDiv.appendChild(uploadDiv);
                 container.appendChild(fileDiv);
             });
+
+            console.log(`Generated ${roleConfig.files.length} file upload fields`);
+
+            // Show success message
+            if (roleConfig.files.length > 0) {
+                LUXBYTE.notifyOk(`تم تحميل ${roleConfig.files.length} أزرار رفع ملفات`);
+            }
         }
 
         function handleFileUpload(event, fileConfig, container) {
@@ -556,6 +587,11 @@
                 if (validateCurrentStep()) {
                     currentStep++;
                     updateStepDisplay();
+
+                    // Regenerate file upload fields when reaching step 3
+                    if (currentStep === 3 && selectedRole && window.CONFIG.ROLES[selectedRole]) {
+                        generateFileUploadFields();
+                    }
                 }
             }
         }
