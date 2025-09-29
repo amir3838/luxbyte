@@ -15,13 +15,13 @@ function tr(key, fallback) {
   if (typeof window !== 'undefined' && window.i18nDict) {
     const currentLang = getCurrentLanguage();
     const translation = window.i18nDict[currentLang]?.[key];
-    
+
     // Return translation if valid, otherwise fallback
     if (translation && translation !== key) {
       return translation;
     }
   }
-  
+
   // Return fallback if no valid translation found
   return fallback;
 }
@@ -39,7 +39,7 @@ function getCurrentLanguage() {
       return htmlLang.startsWith('ar') ? 'ar' : 'en';
     }
   }
-  
+
   // Check localStorage
   if (typeof localStorage !== 'undefined') {
     const storedLang = localStorage.getItem('language');
@@ -47,7 +47,7 @@ function getCurrentLanguage() {
       return storedLang.startsWith('ar') ? 'ar' : 'en';
     }
   }
-  
+
   // Default to Arabic
   return 'ar';
 }
@@ -63,7 +63,7 @@ function getCurrentLanguage() {
 function trWithOptions(key, fallback, options = {}) {
   const text = tr(key, fallback);
   const isRTL = getCurrentLanguage() === 'ar';
-  
+
   return {
     text: text,
     dir: isRTL ? 'rtl' : 'ltr',
@@ -82,25 +82,25 @@ function trWithOptions(key, fallback, options = {}) {
  */
 function applyTranslation(element, key, fallback, options = {}) {
   const translation = trWithOptions(key, fallback, options);
-  
+
   // Set text content
   element.textContent = translation.text;
-  
+
   // Set direction
   if (translation.dir) {
     element.setAttribute('dir', translation.dir);
   }
-  
+
   // Set language
   if (translation.lang) {
     element.setAttribute('lang', translation.lang);
   }
-  
+
   // Set aria-label
   if (translation['aria-label']) {
     element.setAttribute('aria-label', translation['aria-label']);
   }
-  
+
   // Set data attribute for i18n
   element.setAttribute('data-i18n', key);
 }
@@ -115,7 +115,7 @@ function initTranslation() {
   window.trWithOptions = trWithOptions;
   window.applyTranslation = applyTranslation;
   window.getCurrentLanguage = getCurrentLanguage;
-  
+
   console.log('Translation system initialized with fallback support');
 }
 

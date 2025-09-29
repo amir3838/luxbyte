@@ -15,7 +15,7 @@ const supabase = createClient(
  * Register FCM token for push notifications
  * تسجيل توكن FCM للإشعارات
  */
-async function registerToken(req, res) {
+export default async function handler(req, res) {
   try {
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -29,9 +29,9 @@ async function registerToken(req, res) {
 
     // Only allow POST requests
     if (req.method !== 'POST') {
-      return res.status(405).json({
-        success: false,
-        error: 'Method not allowed'
+      return res.status(405).json({ 
+        success: false, 
+        error: 'Method not allowed' 
       });
     }
 
@@ -39,24 +39,24 @@ async function registerToken(req, res) {
 
     // Validate required fields
     if (!token) {
-      return res.status(400).json({
-        success: false,
-        error: 'Token is required'
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Token is required' 
       });
     }
 
     if (!user_id) {
-      return res.status(400).json({
-        success: false,
-        error: 'User ID is required'
+      return res.status(400).json({ 
+        success: false, 
+        error: 'User ID is required' 
       });
     }
 
     // Validate platform
     if (!['web', 'android', 'ios'].includes(platform)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid platform'
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Invalid platform' 
       });
     }
 
@@ -74,9 +74,9 @@ async function registerToken(req, res) {
 
     if (error) {
       console.error('Database error:', error);
-      return res.status(500).json({
-        success: false,
-        error: 'Database error: ' + error.message
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Database error: ' + error.message 
       });
     }
 
@@ -90,12 +90,9 @@ async function registerToken(req, res) {
 
   } catch (error) {
     console.error('Error in registerToken:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Internal server error: ' + error.message
+    return res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error: ' + error.message 
     });
   }
 }
-
-// Export for Vercel
-module.exports = registerToken;

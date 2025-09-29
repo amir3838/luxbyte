@@ -32,7 +32,7 @@ Write-Status "إصلاح مشكلة الترجمة..."
 # التحقق من الملفات المحدثة
 $files = @(
     "i18n-dict.js",
-    "common.js", 
+    "common.js",
     "js/translation-utils.js",
     "index.html",
     "dashboard.html",
@@ -46,7 +46,8 @@ $files = @(
 foreach ($file in $files) {
     if (Test-Path $file) {
         Write-Success "$file موجود ومحدث"
-    } else {
+    }
+    else {
         Write-Error "$file مفقود"
     }
 }
@@ -56,16 +57,17 @@ Write-Status "فحص التغييرات..."
 
 try {
     git status --porcelain | ForEach-Object {
-        $status = $_.Substring(0,2)
+        $status = $_.Substring(0, 2)
         $file = $_.Substring(3)
-        
+
         switch ($status) {
             "M " { Write-Host "  Modified: $file" -ForegroundColor Yellow }
             "A " { Write-Host "  Added: $file" -ForegroundColor Green }
             "??" { Write-Host "  Untracked: $file" -ForegroundColor Cyan }
         }
     }
-} catch {
+}
+catch {
     Write-Warning "لا يمكن فحص حالة Git"
 }
 
@@ -75,7 +77,8 @@ Write-Status "إضافة الملفات إلى Git..."
 try {
     git add .
     Write-Success "تم إضافة جميع الملفات"
-} catch {
+}
+catch {
     Write-Error "فشل في إضافة الملفات: $_"
     exit 1
 }
@@ -95,9 +98,10 @@ try {
 
 Fixes: زر 'إنشاء حساب' يعرض النص الصحيح الآن
 Improves: نظام ترجمة أكثر قوة وموثوقية"
-    
+
     Write-Success "تم إنشاء commit بنجاح"
-} catch {
+}
+catch {
     Write-Error "فشل في إنشاء commit: $_"
     exit 1
 }
@@ -108,7 +112,8 @@ Write-Status "رفع التحديثات إلى GitHub..."
 try {
     git push origin main
     Write-Success "تم رفع التحديثات إلى GitHub بنجاح"
-} catch {
+}
+catch {
     Write-Error "فشل في رفع التحديثات: $_"
     exit 1
 }
@@ -128,7 +133,8 @@ try {
 
     git push origin v1.1.1
     Write-Success "تم إنشاء tag v1.1.1 بنجاح"
-} catch {
+}
+catch {
     Write-Warning "فشل في إنشاء tag: $_"
 }
 
@@ -139,7 +145,7 @@ Write-Status "فحص النظام..."
 $criticalFiles = @(
     "firebase-messaging-sw.js",
     "js/firebase-config.js",
-    "js/push-notifications.js", 
+    "js/push-notifications.js",
     "js/translation-utils.js",
     "api/push/register.js",
     "api/push/send.js",
@@ -149,7 +155,8 @@ $criticalFiles = @(
 foreach ($file in $criticalFiles) {
     if (Test-Path $file) {
         Write-Success "✓ $file"
-    } else {
+    }
+    else {
         Write-Error "✗ $file مفقود"
     }
 }

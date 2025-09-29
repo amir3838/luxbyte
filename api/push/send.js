@@ -19,7 +19,7 @@ if (process.env.FIREBASE_ADMIN_SA_BASE64) {
     const serviceAccount = JSON.parse(
       Buffer.from(process.env.FIREBASE_ADMIN_SA_BASE64, 'base64').toString('utf8')
     );
-
+    
     adminApp = admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
     });
@@ -32,7 +32,7 @@ if (process.env.FIREBASE_ADMIN_SA_BASE64) {
  * Send push notification to user
  * إرسال إشعار للمستخدم
  */
-async function sendNotification(req, res) {
+export default async function handler(req, res) {
   try {
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -46,9 +46,9 @@ async function sendNotification(req, res) {
 
     // Only allow POST requests
     if (req.method !== 'POST') {
-      return res.status(405).json({
-        success: false,
-        error: 'Method not allowed'
+      return res.status(405).json({ 
+        success: false, 
+        error: 'Method not allowed' 
       });
     }
 
@@ -56,16 +56,16 @@ async function sendNotification(req, res) {
 
     // Validate required fields
     if (!userId) {
-      return res.status(400).json({
-        success: false,
-        error: 'User ID is required'
+      return res.status(400).json({ 
+        success: false, 
+        error: 'User ID is required' 
       });
     }
 
     if (!title) {
-      return res.status(400).json({
-        success: false,
-        error: 'Title is required'
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Title is required' 
       });
     }
 
@@ -77,16 +77,16 @@ async function sendNotification(req, res) {
 
     if (tokenError) {
       console.error('Database error:', tokenError);
-      return res.status(500).json({
-        success: false,
-        error: 'Database error: ' + tokenError.message
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Database error: ' + tokenError.message 
       });
     }
 
     if (!tokens || tokens.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'No tokens found for user'
+      return res.status(404).json({ 
+        success: false, 
+        error: 'No tokens found for user' 
       });
     }
 
@@ -145,13 +145,13 @@ async function sendNotification(req, res) {
 
         const response = await admin.messaging().send(message);
         results.push({ token: tokenData.token, success: true, messageId: response });
-
+        
       } catch (error) {
         console.error(`Error sending to token ${tokenData.token}:`, error);
-        results.push({
-          token: tokenData.token,
-          success: false,
-          error: error.message
+        results.push({ 
+          token: tokenData.token, 
+          success: false, 
+          error: error.message 
         });
       }
     }
@@ -174,12 +174,9 @@ async function sendNotification(req, res) {
 
   } catch (error) {
     console.error('Error in sendNotification:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Internal server error: ' + error.message
+    return res.status(500).json({ 
+      success: false, 
+      error: 'Internal server error: ' + error.message 
     });
   }
 }
-
-// Export for Vercel
-module.exports = sendNotification;

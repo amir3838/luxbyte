@@ -515,14 +515,14 @@ function applyI18n(){
     const key = el.getAttribute('data-i18n');
     const fallback = el.textContent || el.innerText || '';
     const translation = t(key);
-    
+
     // Use fallback if translation is same as key or empty
     if (!translation || translation === key) {
       el.textContent = fallback;
     } else {
       el.textContent = translation;
     }
-    
+
     // Set aria-label if not already set
     if (!el.getAttribute('aria-label')) {
       el.setAttribute('aria-label', el.textContent);
@@ -533,7 +533,7 @@ function applyI18n(){
     const key = el.getAttribute('data-i18n-ph');
     const fallback = el.getAttribute('placeholder') || '';
     const translation = t(key);
-    
+
     if (!translation || translation === key) {
       el.setAttribute('placeholder', fallback);
     } else {
