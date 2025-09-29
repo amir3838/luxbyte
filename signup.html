@@ -260,8 +260,11 @@
 
             // Force generate file upload fields
             setTimeout(() => {
+                console.log('Force generating file upload fields...');
                 if (selectedRole && window.CONFIG.ROLES[selectedRole]) {
                     generateFileUploadFields();
+                } else {
+                    console.error('Cannot generate file upload fields:', { selectedRole, roles: window.CONFIG.ROLES });
                 }
             }, 100);
 
@@ -522,7 +525,15 @@
             const addressField = document.getElementById('address');
             const locationStatus = document.getElementById('locationStatus');
 
+            console.log('Setting up GPS location:', { getLocationBtn, addressField, locationStatus });
+
+            if (!getLocationBtn) {
+                console.error('GPS button not found!');
+                return;
+            }
+
             getLocationBtn.addEventListener('click', () => {
+                console.log('GPS button clicked!');
                 if (!navigator.geolocation) {
                     locationStatus.innerHTML = '<span style="color: #ef4444;">المتصفح لا يدعم GPS</span>';
                     return;
