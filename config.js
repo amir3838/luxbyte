@@ -36,12 +36,12 @@ window.CONFIG = {
         { name: "health_certificate", label: "شهادة صحية", accept: ".pdf,.jpg,.jpeg", required: true, description: "لصاحب النشاط وجميع العاملين" },
         { name: "civil_defense_approval", label: "موافقة الدفاع المدني", accept: ".pdf,.jpg,.jpeg", required: true, description: "اشتراطات مكافحة الحريق والتهوية" },
         { name: "environmental_file", label: "ملف بيئي", accept: ".pdf,.jpg,.jpeg", required: false, description: "التزام اشتراطات بيئية" },
-        
+
         // حسب الحالة
         { name: "industrial_register", label: "سجل صناعي", accept: ".pdf,.jpg,.jpeg", required: false, description: "للتجهيزات الصناعية/توريد شامل" },
         { name: "import_register", label: "سجل استيراد", accept: ".pdf,.jpg,.jpeg", required: false, description: "للاستيراد مواد خام" },
         { name: "tourism_license", label: "ترخيص سياحي", accept: ".pdf,.jpg,.jpeg", required: false, description: "للمطاعم السياحية/الفنادق" },
-        
+
         // صور إضافية
         { name: "facade_photo", label: "صورة واجهة المحل", accept: "image/*", required: true, description: "JPG 1280px+" },
         { name: "interior_photo", label: "صورة داخلية", accept: "image/*", required: false, description: "JPG 1280px+" }
@@ -68,11 +68,11 @@ window.CONFIG = {
         { name: "civil_defense_approval", label: "موافقة الدفاع المدني", accept: ".pdf,.jpg,.jpeg", required: true, description: "اشتراطات الحريق" },
         { name: "health_approvals", label: "موافقات صحية عامة", accept: ".pdf,.jpg,.jpeg", required: true, description: "خاصة بالأغذية المعبأة والاشتراطات الصحية" },
         { name: "worker_health_certificates", label: "شهادات صحية للعاملين", accept: ".pdf,.jpg,.jpeg", required: true, description: "للعاملين المتعاملين مع المواد الغذائية" },
-        
+
         // حسب النشاط
         { name: "food_safety_approval", label: "موافقة جهاز سلامة الغذاء", accept: ".pdf,.jpg,.jpeg", required: false, description: "لحوم/ألبان طازجة" },
         { name: "import_register", label: "سجل استيراد", accept: ".pdf,.jpg,.jpeg", required: false, description: "للاستيراد المباشر" },
-        
+
         // صور
         { name: "facade_photo", label: "صورة واجهة المحل", accept: "image/*", required: true, description: "JPG 1280px+" },
         { name: "interior_photo", label: "صورة داخلية/أرفف", accept: "image/*", required: false, description: "JPG 1280px+" }
@@ -99,11 +99,11 @@ window.CONFIG = {
         { name: "tax_card", label: "البطاقة الضريبية", accept: ".pdf,.jpg,.jpeg", required: true, description: "PDF أو JPG واضحة" },
         { name: "contract_document", label: "عقد مقر موثق", accept: ".pdf,.jpg,.jpeg", required: true, description: "بالمواصفات المعتمدة للصيدليات" },
         { name: "civil_defense_approval", label: "موافقة الدفاع المدني", accept: ".pdf,.jpg,.jpeg", required: true, description: "سلامة الحريق" },
-        
+
         // حسب الحالة
         { name: "drug_warehouse_license", label: "تصريح تداول ومخزن أدوية", accept: ".pdf,.jpg,.jpeg", required: false, description: "إن وُجد مخزن منفصل" },
         { name: "psychiatric_drugs_approval", label: "موافقات الأدوية النفسية", accept: ".pdf,.jpg,.jpeg", required: false, description: "سجل خاص وإجراءات رقابية" },
-        
+
         // صور
         { name: "facade_photo", label: "صورة واجهة الصيدلية", accept: "image/*", required: true, description: "JPG 1280px+" },
         { name: "interior_photo", label: "صورة داخلية/كونتر", accept: "image/*", required: false, description: "JPG 1280px+" }
@@ -130,11 +130,11 @@ window.CONFIG = {
         { name: "civil_defense_approval", label: "موافقة الدفاع المدني", accept: ".pdf,.jpg,.jpeg", required: true, description: "سلامة الحريق" },
         { name: "commercial_register", label: "السجل التجاري", accept: ".pdf,.jpg,.jpeg", required: false, description: "لو عيادة كشخص اعتباري/شركة مهنية" },
         { name: "tax_card", label: "البطاقة الضريبية", accept: ".pdf,.jpg,.jpeg", required: false, description: "لو عيادة كشخص اعتباري/شركة مهنية" },
-        
+
         // حسب التخصص
         { name: "special_equipment_license", label: "تراخيص أجهزة خاصة", accept: ".pdf,.jpg,.jpeg", required: false, description: "أشعة/ليزر/معمل وموافقات إضافية" },
         { name: "medical_waste_license", label: "ترخيص نفايات طبية", accept: ".pdf,.jpg,.jpeg", required: false, description: "خدمة تعاقد مع شركة معتمدة للتخلص الآمن" },
-        
+
         // صور
         { name: "facade_photo", label: "صورة واجهة العيادة", accept: "image/*", required: true, description: "JPG 1280px+" },
         { name: "interior_photo", label: "صورة داخلية/الاستقبال", accept: "image/*", required: false, description: "JPG 1280px+" }
@@ -160,12 +160,12 @@ window.CONFIG = {
         { name: "vehicle_license", label: "رخصة مركبة/توكتوك/دراجة نارية", accept: ".pdf,.jpg,.jpeg", required: true, description: "سارية (لو بيستخدم مركبة)" },
         { name: "criminal_record", label: "صحيفة حالة جنائية حديثة", accept: ".pdf,.jpg,.jpeg", required: true, description: "فيش وتشبيه" },
         { name: "personal_photos", label: "صور شخصية حديثة", accept: "image/*", required: true, description: "JPG واضحة" },
-        
+
         // مستحسن/قد يُطلب
         { name: "civil_insurance", label: "تأمين مسؤولية مدنية", accept: ".pdf,.jpg,.jpeg", required: false, description: "تأمين على المركبة" },
         { name: "vehicle_insurance", label: "تأمين المركبة", accept: ".pdf,.jpg,.jpeg", required: false, description: "تأمين شامل" },
         { name: "activity_license", label: "رخصة مزاولة نشاط نقل خفيف", accept: ".pdf,.jpg,.jpeg", required: false, description: "إن طُلب من الحي (نادِرًا للأفراد)" },
-        
+
         // صور إضافية
         { name: "vehicle_photo", label: "صورة المركبة + اللوحة", accept: "image/*", required: true, description: "JPG واضحة" }
       ]
@@ -192,11 +192,11 @@ window.CONFIG = {
         { name: "drivers_files", label: "ملفات السائقين", accept: ".pdf,.jpg,.jpeg", required: true, description: "رخص مهنية/صحيفة جنائية/كشف مخدرات" },
         { name: "civil_defense_approval", label: "موافقة الدفاع المدني", accept: ".pdf,.jpg,.jpeg", required: true, description: "على الجراج/مقر التشغيل" },
         { name: "maintenance_contracts", label: "عقود صيانة/تشغيل", accept: ".pdf,.jpg,.jpeg", required: false, description: "إن لزم" },
-        
+
         // حسب النشاط
         { name: "heavy_transport_license", label: "تراخيص تشغيل نقل بضائع", accept: ".pdf,.jpg,.jpeg", required: false, description: "بين المحافظات (نقل تجاري ثقيل)" },
         { name: "import_export_register", label: "سجل مستورد/مصدر", accept: ".pdf,.jpg,.jpeg", required: false, description: "لو خدمات لوجستية موسّعة" },
-        
+
         // صور
         { name: "fleet_photos", label: "صور الأسطول", accept: "image/*", required: true, description: "JPG واضحة للمركبات" },
         { name: "facility_photos", label: "صور المقر/الجراج", accept: "image/*", required: false, description: "JPG 1280px+" }
