@@ -172,14 +172,7 @@
                     </div>
 
                     <div id="file-upload-container">
-                        <div style="text-align: center; padding: 40px; color: #666;">
-                            <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
-                            <p>جاري تحميل أزرار رفع الملفات...</p>
-                            <button type="button" onclick="testGenerateFiles()" style="margin-top: 16px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                                <i class="fas fa-wrench"></i>
-                                اختبار توليد الأزرار
-                            </button>
-                        </div>
+                        <!-- سيتم توليد أزرار رفع الملفات هنا تلقائياً -->
                     </div>
                 </div>
 
@@ -226,42 +219,48 @@
         // Initialize page
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('🚀 Starting signup page initialization...');
-            
+
             try {
-                // Initialize LUXBYTE
+            // Initialize LUXBYTE
                 if (typeof LUXBYTE !== 'undefined' && LUXBYTE.init) {
-                    await LUXBYTE.init();
+            await LUXBYTE.init();
                 }
 
-                // Check if user is already logged in
-                const session = await LUXBYTE.getSession();
-                if (session) {
+            // Check if user is already logged in
+            const session = await LUXBYTE.getSession();
+            if (session) {
                     console.log('✅ User already logged in, proceeding with registration');
-                } else {
+            } else {
                     console.log('ℹ️ User not logged in, will need to create account first');
-                }
+            }
 
-                injectNavbar('signup');
+            injectNavbar('signup');
 
                 // Get role from URL parameter
                 selectedRole = LUXBYTE.getUrlParam('role');
                 console.log('🎯 Selected role from URL:', selectedRole);
                 console.log('📋 Available roles:', Object.keys(window.CONFIG.ROLES));
-
-                if (!selectedRole || !window.CONFIG.ROLES[selectedRole]) {
-                    LUXBYTE.notifyErr('نوع النشاط غير صحيح');
-                    window.location.href = 'choose-role.html';
-                    return;
+                
+                // If no role from URL, try to get from localStorage or default
+                if (!selectedRole) {
+                    selectedRole = localStorage.getItem('selectedRole') || 'restaurant';
+                    console.log('🔄 Using fallback role:', selectedRole);
                 }
 
-                // Update page header
-                updatePageHeader();
+            if (!selectedRole || !window.CONFIG.ROLES[selectedRole]) {
+                LUXBYTE.notifyErr('نوع النشاط غير صحيح');
+                window.location.href = 'choose-role.html';
+                return;
+            }
 
-                // Setup form
-                setupForm();
+            // Update page header
+            updatePageHeader();
 
-                // Setup location dropdowns
-                setupLocationDropdowns();
+            // Setup form
+            setupForm();
+
+            // Setup location dropdowns
+            setupLocationDropdowns();
 
                 // Setup GPS location
                 setupGPSLocation();
@@ -269,35 +268,9 @@
                 // Initialize common elements
                 applyI18n();
 
-                // Force generate file upload fields with multiple attempts
-                let attempts = 0;
-                const maxAttempts = 5;
-                
-                const tryGenerateFiles = () => {
-                    attempts++;
-                    console.log(`🔄 Attempt ${attempts} to generate file upload fields...`);
-                    
-                    if (selectedRole && window.CONFIG.ROLES[selectedRole]) {
-                        generateFileUploadFields();
-                        console.log('✅ File upload fields generated successfully');
-                    } else {
-                        console.error('❌ Cannot generate file upload fields:', { 
-                            selectedRole, 
-                            roles: window.CONFIG.ROLES,
-                            attempt: attempts 
-                        });
-                        
-                        if (attempts < maxAttempts) {
-                            setTimeout(tryGenerateFiles, 200);
-                        } else {
-                            console.error('❌ Failed to generate file upload fields after', maxAttempts, 'attempts');
-                            LUXBYTE.notifyErr('فشل في تحميل أزرار رفع الملفات. يرجى إعادة تحميل الصفحة.');
-                        }
-                    }
-                };
-
-                // Try immediately
-                tryGenerateFiles();
+                // Generate file upload fields immediately
+                console.log('🚀 Generating file upload fields immediately...');
+                generateFileUploadFields();
 
             } catch (error) {
                 console.error('❌ Error during page initialization:', error);
@@ -317,7 +290,7 @@
 
             // Generate file upload fields only if role is selected
             if (selectedRole && window.CONFIG.ROLES[selectedRole]) {
-                generateFileUploadFields();
+            generateFileUploadFields();
             }
         }
 
@@ -381,6 +354,8 @@
 
         function generateFileUploadFields() {
             console.log('🔧 Starting generateFileUploadFields...');
+            console.log('🎯 Current selectedRole:', selectedRole);
+            console.log('📋 Available roles:', Object.keys(window.CONFIG.ROLES));
             
             const roleConfig = window.CONFIG.ROLES[selectedRole];
             const container = document.getElementById('file-upload-container');
@@ -449,10 +424,10 @@
 
             // Generate file upload fields
             console.log('🔄 Starting to generate', roleConfig.files.length, 'file upload fields...');
-            
+
             roleConfig.files.forEach((file, index) => {
                 console.log(`📁 Creating field ${index + 1}/${roleConfig.files.length}:`, file.name);
-                
+
                 const fileDiv = document.createElement('div');
                 fileDiv.className = 'form-group';
                 fileDiv.style.cssText = 'margin-bottom: 24px;';
@@ -792,15 +767,15 @@
 
         function setupGPSLocation() {
             console.log('🗺️ Setting up GPS location...');
-            
+
             const getLocationBtn = document.getElementById('getLocationBtn');
             const addressField = document.getElementById('address');
             const locationStatus = document.getElementById('locationStatus');
 
-            console.log('🔍 GPS Elements found:', { 
-                getLocationBtn: !!getLocationBtn, 
-                addressField: !!addressField, 
-                locationStatus: !!locationStatus 
+            console.log('🔍 GPS Elements found:', {
+                getLocationBtn: !!getLocationBtn,
+                addressField: !!addressField,
+                locationStatus: !!locationStatus
             });
 
             if (!getLocationBtn) {
@@ -836,8 +811,8 @@
                         });
                     });
 
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
 
                     console.log('Location obtained:', { lat, lng });
 
@@ -845,35 +820,35 @@
                     await getAddressFromCoordinates(lat, lng);
 
                     // Show success message
-                    locationStatus.innerHTML = `<span style="color: #10b981;"><i class="fas fa-check"></i> تم الحصول على الموقع: ${lat.toFixed(6)}, ${lng.toFixed(6)}</span>`;
+                        locationStatus.innerHTML = `<span style="color: #10b981;"><i class="fas fa-check"></i> تم الحصول على الموقع: ${lat.toFixed(6)}, ${lng.toFixed(6)}</span>`;
                     LUXBYTE.notifyOk('تم الحصول على الموقع بنجاح');
 
                 } catch (error) {
                     console.error('GPS Error:', error);
 
-                    let errorMessage = 'حدث خطأ في الحصول على الموقع';
+                        let errorMessage = 'حدث خطأ في الحصول على الموقع';
                     let errorIcon = 'fas fa-exclamation-triangle';
 
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
                             errorMessage = 'تم رفض إذن الوصول للموقع. يرجى السماح بالوصول للموقع في إعدادات المتصفح';
                             errorIcon = 'fas fa-ban';
-                            break;
-                        case error.POSITION_UNAVAILABLE:
+                                break;
+                            case error.POSITION_UNAVAILABLE:
                             errorMessage = 'الموقع غير متاح حالياً. تأكد من تشغيل GPS';
                             errorIcon = 'fas fa-map-marker-slash';
-                            break;
-                        case error.TIMEOUT:
+                                break;
+                            case error.TIMEOUT:
                             errorMessage = 'انتهت مهلة الطلب. حاول مرة أخرى';
                             errorIcon = 'fas fa-clock';
-                            break;
-                    }
+                                break;
+                        }
 
                     locationStatus.innerHTML = `<span style="color: #ef4444;"><i class="${errorIcon}"></i> ${errorMessage}</span>`;
                     LUXBYTE.notifyErr(errorMessage);
                 } finally {
                     // Reset button state
-                    getLocationBtn.disabled = false;
+                        getLocationBtn.disabled = false;
                     getLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i> GPS';
                 }
             });
@@ -883,7 +858,7 @@
             try {
                 console.log('Getting address for coordinates:', { lat, lng });
 
-                // استخدام Nominatim API للحصول على العنوان
+            // استخدام Nominatim API للحصول على العنوان
                 const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar&addressdetails=1`);
 
                 if (!response.ok) {
@@ -893,8 +868,8 @@
                 const data = await response.json();
                 console.log('Address data received:', data);
 
-                if (data && data.display_name) {
-                    const address = data.display_name;
+                    if (data && data.display_name) {
+                        const address = data.display_name;
                     const addressField = document.getElementById('address');
                     if (addressField) {
                         addressField.value = address;
@@ -911,7 +886,7 @@
 
         function nextStep() {
             console.log('➡️ Moving to next step from step', currentStep);
-            
+
             if (currentStep < 4) {
                 if (validateCurrentStep()) {
                     currentStep++;
@@ -964,13 +939,13 @@
             if (currentStep === 3) {
                 const roleConfig = window.CONFIG.ROLES[selectedRole];
                 if (roleConfig && roleConfig.files) {
-                    const requiredFiles = roleConfig.files.filter(f => f.required);
+                const requiredFiles = roleConfig.files.filter(f => f.required);
                     console.log('Required files:', requiredFiles.map(f => f.name));
                     console.log('Uploaded files:', Object.keys(uploadedFiles));
 
-                    for (const file of requiredFiles) {
-                        if (!uploadedFiles[file.name]) {
-                            LUXBYTE.notifyErr(`يرجى رفع الملف المطلوب: ${file.label}`);
+                for (const file of requiredFiles) {
+                    if (!uploadedFiles[file.name]) {
+                        LUXBYTE.notifyErr(`يرجى رفع الملف المطلوب: ${file.label}`);
 
                             // Scroll to the file upload section
                             const fileContainer = document.getElementById('file-upload-container');
@@ -978,7 +953,7 @@
                                 fileContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             }
 
-                            return false;
+                        return false;
                         }
                     }
                 }
@@ -1199,20 +1174,6 @@
             }, 2000);
         });
 
-        // Test function for debugging
-        function testGenerateFiles() {
-            console.log('🧪 Testing file generation...');
-            console.log('Selected role:', selectedRole);
-            console.log('CONFIG.ROLES:', window.CONFIG.ROLES);
-            console.log('Role config:', window.CONFIG.ROLES[selectedRole]);
-            
-            if (selectedRole && window.CONFIG.ROLES[selectedRole]) {
-                generateFileUploadFields();
-                LUXBYTE.notifyOk('تم اختبار توليد الأزرار');
-            } else {
-                LUXBYTE.notifyErr('خطأ: لم يتم العثور على إعدادات النشاط');
-            }
-        }
 
         // Logout function
         async function logout() {
