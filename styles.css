@@ -53,10 +53,13 @@ body{
   margin:0;
   color:var(--text);
   background:var(--bg-body);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
   direction: rtl;
   min-height: 100vh;
+  font-smooth: antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* خلفية ثابتة FULLSCREEN */
@@ -87,6 +90,8 @@ main {
   position: sticky;
   top: 0;
   z-index: 100;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .header-content {
@@ -138,11 +143,29 @@ main {
   box-shadow: 0 10px 24px rgba(0,0,0,.14);
   transition: .25s transform, .25s box-shadow, .25s border-color;
   color: #000000 !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6b7cff, #7a3cff);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover::before {
+  opacity: 1;
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  box-shadow: 0 20px 40px rgba(107, 124, 255, 0.2);
 }
 
 /* Light mode card styling */
@@ -210,11 +233,29 @@ main {
   align-items: center;
   gap: 8px;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(107, 124, 255, 0.3);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 20px rgba(107, 124, 255, 0.4);
 }
 
 /* Light mode button styling */
@@ -259,8 +300,9 @@ main {
 /* Grid */
 .grid {
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-bottom: 24px;
 }
 
 .grid-2 {
@@ -842,6 +884,19 @@ a{color:inherit}
   opacity:0;
   transform:translateY(30px);
   animation:fadeUp 1.2s ease forwards;
+}
+
+.reveal{
+  opacity:0;
+  transform:translateY(30px);
+  animation:revealUp 1s ease forwards;
+}
+
+@keyframes revealUp{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 @keyframes fadeUp{
