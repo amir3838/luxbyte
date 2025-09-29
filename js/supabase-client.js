@@ -36,14 +36,14 @@ function getSupabaseClient() {
           }
         }
       );
-      
+
       console.log('Supabase client initialized successfully');
     } catch (error) {
       console.error('Failed to initialize Supabase client:', error);
       return null;
     }
   }
-  
+
   return supabaseClient;
 }
 
@@ -137,7 +137,7 @@ async function signOut() {
     if (error) {
       throw error;
     }
-    
+
     // Clear local storage
     localStorage.removeItem('luxbyte-auth');
     return true;

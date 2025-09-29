@@ -156,8 +156,20 @@
 
                 <!-- Step 3: File Upload -->
                 <div class="step-content" id="step-3">
-                    <h3 style="margin-bottom: 24px; color: #333;">رفع المستندات</h3>
-                    <p style="color: #666; margin-bottom: 24px;">ارفع المستندات المطلوبة حسب نوع النشاط</p>
+                    <h3 style="margin-bottom: 24px; color: #333;">رفع المستندات المطلوبة</h3>
+                    <p style="color: #666; margin-bottom: 24px;">ارفع المستندات المطلوبة حسب نوع النشاط. يمكنك النقر أو السحب والإفلات لرفع الملفات.</p>
+                    
+                    <div style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <i class="fas fa-info-circle" style="color: #0ea5e9; font-size: 20px;"></i>
+                            <div>
+                                <h4 style="margin: 0 0 4px 0; color: #0c4a6e; font-size: 16px;">معلومات مهمة</h4>
+                                <p style="margin: 0; color: #075985; font-size: 14px;">
+                                    تأكد من وضوح المستندات وجودتها. الملفات المطلوبة م marked بـ (*)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
                     <div id="file-upload-container">
                         <!-- Will be populated by JavaScript -->
@@ -341,11 +353,37 @@
                     </div>
                     <div class="upload-text">اضغط لرفع ${file.label}</div>
                     <div class="upload-requirement">${file.description}</div>
+                    <div class="upload-button">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        رفع الملف
+                    </div>
                     <input type="file" class="file-input" accept="${file.accept}" ${file.required ? 'required' : ''}>
                 `;
 
                 uploadDiv.addEventListener('click', () => {
                     uploadDiv.querySelector('.file-input').click();
+                });
+
+                // Drag and drop support
+                uploadDiv.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadDiv.classList.add('dragover');
+                });
+
+                uploadDiv.addEventListener('dragleave', () => {
+                    uploadDiv.classList.remove('dragover');
+                });
+
+                uploadDiv.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadDiv.classList.remove('dragover');
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        const fileInput = uploadDiv.querySelector('.file-input');
+                        fileInput.files = files;
+                        handleFileUpload({ target: fileInput }, file, uploadDiv);
+                    }
                 });
 
                 uploadDiv.querySelector('.file-input').addEventListener('change', (e) => {
@@ -366,6 +404,14 @@
                 LUXBYTE.notifyErr('نوع الملف أو الحجم غير مناسب');
                 return;
             }
+
+            // Update container appearance
+            container.classList.add('uploaded');
+            container.querySelector('.upload-text').textContent = `تم رفع: ${file.name}`;
+            container.querySelector('.upload-button').innerHTML = `
+                <i class="fas fa-check"></i>
+                تم الرفع
+            `;
 
             // Show preview
             showFilePreview(file, container);
