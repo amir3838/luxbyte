@@ -771,6 +771,25 @@ body:not([data-color-scheme="dark"]) .brand {
   color: var(--color-charcoal-700) !important;
 }
 
+/* Brand logo styling */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.brand-logo:hover {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
 @font-face {
   font-family: 'FKGroteskNeue';
   src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
