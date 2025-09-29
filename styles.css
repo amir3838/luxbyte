@@ -1491,14 +1491,196 @@ a{color:inherit}
   cursor: not-allowed;
 }
 
+.btn-info {
+  background-color: #17a2b8;
+  color: white;
+  border: 1px solid #17a2b8;
+}
+
+.btn-info:hover {
+  background-color: #138496;
+  border-color: #117a8b;
+}
+
 /* Responsive notification controls */
 @media (max-width: 768px) {
   .notification-controls {
     flex-direction: column;
     align-items: stretch;
   }
-
+  
   .notification-controls .btn {
     justify-content: center;
+  }
+}
+
+/* Engagement Notification Styles */
+.engagement-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Cairo', sans-serif;
+}
+
+.engagement-notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.engagement-notification.hide {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.engagement-notification-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.engagement-notification-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #6b7cff, #4f46e5);
+  border-radius: 50%;
+  color: white;
+  font-size: 20px;
+  margin: 0 auto;
+}
+
+.engagement-notification-text {
+  text-align: center;
+  color: white;
+}
+
+.engagement-notification-text h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.engagement-notification-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+.engagement-notification-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.engagement-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  font-family: 'Cairo', sans-serif;
+}
+
+.engagement-btn-primary {
+  background: linear-gradient(135deg, #6b7cff, #4f46e5);
+  color: white;
+}
+
+.engagement-btn-primary:hover {
+  background: linear-gradient(135deg, #5a6bff, #3d36e5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(107, 124, 255, 0.3);
+}
+
+.engagement-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.engagement-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.engagement-btn-close {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  padding: 8px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.engagement-btn-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Responsive design for engagement notification */
+@media (max-width: 768px) {
+  .engagement-notification {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    padding: 16px;
+  }
+  
+  .engagement-notification-actions {
+    flex-direction: column;
+  }
+  
+  .engagement-btn {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* Animation for engagement notification */
+@keyframes engagementSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes engagementSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
   }
 }

@@ -17,9 +17,9 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ 
-      success: false, 
-      error: 'Method not allowed' 
+    return res.status(405).json({
+      success: false,
+      error: 'Method not allowed'
     });
   }
 
@@ -27,9 +27,9 @@ export default async function handler(req, res) {
     const { userId, title, body, url } = req.body;
 
     if (!userId || !title) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'User ID and title are required' 
+      return res.status(400).json({
+        success: false,
+        error: 'User ID and title are required'
       });
     }
 
@@ -41,16 +41,16 @@ export default async function handler(req, res) {
 
     if (tokenError) {
       console.error('Database error:', tokenError);
-      return res.status(500).json({ 
-        success: false, 
-        error: 'Database error: ' + tokenError.message 
+      return res.status(500).json({
+        success: false,
+        error: 'Database error: ' + tokenError.message
       });
     }
 
     if (!tokens || tokens.length === 0) {
-      return res.status(404).json({ 
-        success: false, 
-        error: 'No tokens found for user' 
+      return res.status(404).json({
+        success: false,
+        error: 'No tokens found for user'
       });
     }
 
@@ -68,9 +68,9 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Error in sendNotification:', error);
-    return res.status(500).json({ 
-      success: false, 
-      error: 'Internal server error: ' + error.message 
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error: ' + error.message
     });
   }
 }

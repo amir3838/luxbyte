@@ -17,9 +17,9 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ 
-      success: false, 
-      error: 'Method not allowed' 
+    return res.status(405).json({
+      success: false,
+      error: 'Method not allowed'
     });
   }
 
@@ -27,9 +27,9 @@ export default async function handler(req, res) {
     const { token, platform = 'web', user_id } = req.body;
 
     if (!token || !user_id) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Token and user_id are required' 
+      return res.status(400).json({
+        success: false,
+        error: 'Token and user_id are required'
       });
     }
 
@@ -46,9 +46,9 @@ export default async function handler(req, res) {
 
     if (error) {
       console.error('Database error:', error);
-      return res.status(500).json({ 
-        success: false, 
-        error: 'Database error: ' + error.message 
+      return res.status(500).json({
+        success: false,
+        error: 'Database error: ' + error.message
       });
     }
 
@@ -60,9 +60,9 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Error in registerToken:', error);
-    return res.status(500).json({ 
-      success: false, 
-      error: 'Internal server error: ' + error.message 
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error: ' + error.message
     });
   }
 }
