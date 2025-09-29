@@ -1,19 +1,5 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "outputDirectory": ".",
-  "functions": {
-    "api/push/register.js": {
-      "runtime": "nodejs18.x"
-    },
-    "api/push/send.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
-  ]
+  "outputDirectory": "."
 }
