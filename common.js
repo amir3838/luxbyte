@@ -425,31 +425,6 @@ function initLogoGlow() {
 }
 
 
-// ====== Social Media Bar ======
-function injectSocialBar(){
-  const socialBar = document.createElement('div');
-  socialBar.className = 'social-bar';
-  socialBar.innerHTML = `
-    <div class="social-links">
-      <a href="https://www.facebook.com/share/19zx6VUm7M/" target="_blank" rel="noopener" class="social-link" title="فيسبوك">
-        <img src="./assets/icons/social/FACEBOOK.webp" alt="فيسبوك">
-      </a>
-      <a href="https://www.instagram.com/luxbyte_llc1?igsh=MTJlemY1ZjFvNzd0eA==" target="_blank" rel="noopener" class="social-link" title="إنستجرام">
-        <img src="./assets/icons/social/INSTAGRAM.webp" alt="إنستجرام">
-      </a>
-      <a href="https://www.tiktok.com/@luxpyte.llc?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener" class="social-link" title="تيك توك">
-        <img src="./assets/icons/social/TEKTOK.webp" alt="تيك توك">
-      </a>
-      <a href="https://wa.me/201148709609" target="_blank" rel="noopener" class="social-link" title="واتساب">
-        <img src="./assets/icons/social/WHATSAPP.webp" alt="واتساب">
-      </a>
-      <a href="tel:+201148709609" class="social-link" title="اتصال">
-        <img src="./assets/icons/social/CALL.webp" alt="اتصال">
-      </a>
-    </div>
-  `;
-  document.body.appendChild(socialBar);
-}
 
 // ====== Al-Hareth Indicator ======
 function injectAlHareth(){
