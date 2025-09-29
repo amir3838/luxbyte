@@ -1,33 +1,18 @@
 // LUXBYTE Common Utilities
 window.LUXBYTE = {
-  // Supabase Client
-  supabase: null,
-
-  // Initialize Supabase
-  init() {
-    if (typeof window.supabase === 'undefined') {
-      console.error('Supabase SDK not loaded');
-      return;
+  // Supabase Client - Use unified client
+  get supabase() {
+    if (window.LUXBYTE && window.LUXBYTE.supabase && window.LUXBYTE.supabase.getClient) {
+      return window.LUXBYTE.supabase.getClient();
     }
-
-    this.supabase = window.supabase.createClient(
-      window.CONFIG.SUPABASE_URL,
-      window.CONFIG.SUPABASE_ANON_KEY,
-      {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true
-        }
-      }
-    );
-
-    console.log('Supabase initialized');
+    return null;
   },
 
   // Get current session
   async getSession() {
     if (!this.supabase) {
-      this.init();
+      console.warn('Supabase client not available');
+      return null;
     }
 
     const { data: { session }, error } = await this.supabase.auth.getSession();
@@ -51,7 +36,8 @@ window.LUXBYTE = {
   // Upload file to Supabase Storage
   async uploadToBucket(bucket, prefix, file) {
     if (!this.supabase) {
-      this.init();
+      console.warn('Supabase client not available');
+      return null;
     }
 
     try {
@@ -452,7 +438,7 @@ function toggleTheme() {
     if (themeText) themeText.textContent = 'الوضع الليلي';
     if (themeBtn) themeBtn.setAttribute('aria-label', 'التبديل للوضع الليلي');
     localStorage.setItem('theme', 'dark');
-    
+
     // Update CSS variables for dark theme
     document.documentElement.style.setProperty('--text-primary', '#ffffff');
     document.documentElement.style.setProperty('--text-secondary', '#e5e5e5');
@@ -468,7 +454,7 @@ function toggleTheme() {
     if (themeText) themeText.textContent = 'الوضع النهاري';
     if (themeBtn) themeBtn.setAttribute('aria-label', 'التبديل للوضع النهاري');
     localStorage.setItem('theme', 'light');
-    
+
     // Update CSS variables for light theme
     document.documentElement.style.setProperty('--text-primary', '#1a1a1a');
     document.documentElement.style.setProperty('--text-secondary', '#333333');
@@ -478,10 +464,10 @@ function toggleTheme() {
     document.documentElement.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.95)');
     document.documentElement.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.1)');
   }
-  
+
   // Trigger custom event for theme change
-  window.dispatchEvent(new CustomEvent('themeChanged', { 
-    detail: { isLight: body.classList.contains('light-theme') } 
+  window.dispatchEvent(new CustomEvent('themeChanged', {
+    detail: { isLight: body.classList.contains('light-theme') }
   }));
 }
 
@@ -630,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('light-theme');
     const themeIcon = document.getElementById('theme-icon');
     if (themeIcon) themeIcon.className = 'fas fa-sun';
-    
+
     // Apply light theme CSS variables
     document.documentElement.style.setProperty('--text-primary', '#1a1a1a');
     document.documentElement.style.setProperty('--text-secondary', '#333333');

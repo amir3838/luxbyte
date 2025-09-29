@@ -104,11 +104,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">كلمة المرور</label>
-                            <input type="password" class="form-control" id="signup-password" name="password" data-i18n-ph="auth.password_ph" placeholder="أدخل كلمة المرور" required>
+                            <input type="password" class="form-control" id="signup-password" name="password" data-i18n-ph="auth.password_ph" placeholder="أدخل كلمة المرور" dir="ltr" autocomplete="new-password" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label">تأكيد كلمة المرور</label>
-                            <input type="password" class="form-control" id="signup-confirm-password" name="confirmPassword" data-i18n-ph="auth.confirm_password_ph" placeholder="أكد كلمة المرور" required>
+                            <input type="password" class="form-control" id="signup-confirm-password" name="confirmPassword" data-i18n-ph="auth.confirm_password_ph" placeholder="أكد كلمة المرور" dir="ltr" autocomplete="new-password" required>
                         </div>
                     </div>
 
@@ -221,12 +221,25 @@
             const termsAccepted = document.getElementById('terms-acceptance').checked;
             const submitBtn = e.target.querySelector('button[type="submit"]');
 
+            // تشخيص سريع (يمكن حذفه في الإنتاج)
+            console.debug('Password validation debug:', {
+                password, confirmPassword,
+                len1: password.length, len2: confirmPassword.length,
+                codes1: [...password].map(c => c.charCodeAt(0)),
+                codes2: [...confirmPassword].map(c => c.charCodeAt(0)),
+            });
+
             if (!email || !password || !confirmPassword) {
                 LUXBYTE.notifyErr('يرجى ملء جميع الحقول');
                 return;
             }
 
-            if (password !== confirmPassword) {
+            // تنظيف محارف الاتجاه غير المرئية
+            const stripBidi = (s) => s.replace(/[\u200E\u200F\u061C]/g, '').normalize('NFC');
+            const passwordClean = stripBidi(password);
+            const confirmClean = stripBidi(confirmPassword);
+
+            if (passwordClean !== confirmClean) {
                 LUXBYTE.notifyErr('كلمة المرور وتأكيدها غير متطابقتين');
                 return;
             }
@@ -241,7 +254,7 @@
             try {
                 const { data, error } = await LUXBYTE.supabase.auth.signUp({
                     email: email,
-                    password: password,
+                    password: passwordClean,
                     options: {
                         emailRedirectTo: window.location.origin + '/choose-platform.html'
                     }

@@ -19,16 +19,16 @@ class EngagementNotificationManager {
   init() {
     // Check if user is already logged in
     this.checkUserStatus();
-    
+
     // Start engagement timer
     this.startEngagementTimer();
-    
+
     // Listen for user interactions
     this.setupInteractionListeners();
-    
+
     // Listen for theme changes
     this.setupThemeListener();
-    
+
     console.log('Engagement notification system initialized');
   }
 
@@ -55,19 +55,19 @@ class EngagementNotificationManager {
     if (!notification) return;
 
     const isLight = document.body.classList.contains('light-theme');
-    
+
     if (isLight) {
       // Light theme colors
       notification.style.background = 'linear-gradient(135deg, #ffffff, #f8f9fa)';
       notification.style.borderColor = 'rgba(0, 0, 0, 0.1)';
       notification.style.color = '#1a1a1a';
-      
+
       // Update text colors
       const h3 = notification.querySelector('h3');
       const p = notification.querySelector('p');
       if (h3) h3.style.color = '#1a1a1a';
       if (p) p.style.color = '#333333';
-      
+
       // Update button colors
       const secondaryBtn = notification.querySelector('.engagement-btn-secondary');
       const closeBtn = notification.querySelector('.engagement-btn-close');
@@ -85,13 +85,13 @@ class EngagementNotificationManager {
       notification.style.background = 'linear-gradient(135deg, #1a1a1a, #2a2a2a)';
       notification.style.borderColor = 'rgba(255, 255, 255, 0.1)';
       notification.style.color = '#ffffff';
-      
+
       // Update text colors
       const h3 = notification.querySelector('h3');
       const p = notification.querySelector('p');
       if (h3) h3.style.color = '#ffffff';
       if (p) p.style.color = '#e5e5e5';
-      
+
       // Update button colors
       const secondaryBtn = notification.querySelector('.engagement-btn-secondary');
       const closeBtn = notification.querySelector('.engagement-btn-close');

@@ -12,14 +12,14 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="./assets/app_icon/LUXBYTEICON.PNG" type="image/png">
+    <link rel="icon" href="/assets/app_icon/LUXBYTEICON.PNG" type="image/png">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <img src="./assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE Logo">
+                <img src="/assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE Logo">
                 <span>LUXBYTE</span>
             </div>
             <nav class="nav">
@@ -107,11 +107,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label">كلمة المرور</label>
-                            <input type="password" class="form-control" name="password" placeholder="أدخل كلمة المرور" required>
+                            <input type="password" class="form-control" name="password" placeholder="أدخل كلمة المرور" dir="ltr" autocomplete="new-password" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label">تأكيد كلمة المرور</label>
-                            <input type="password" class="form-control" name="confirm_password" placeholder="أكد كلمة المرور" required>
+                            <input type="password" class="form-control" name="confirm_password" placeholder="أكد كلمة المرور" dir="ltr" autocomplete="new-password" required>
                         </div>
                     </div>
                 </div>
@@ -668,16 +668,33 @@
                     // Create account first
                     const formData = new FormData(e.target);
                     const email = formData.get('email');
-                    const password = formData.get('password');
-                    const confirmPassword = formData.get('confirmPassword');
+                    const password = (formData.get('password') ?? '').toString();
+                    const confirmPassword = (formData.get('confirm_password') ?? '').toString();
 
-                    if (password !== confirmPassword) {
+                    // تشخيص سريع (يمكن حذفه في الإنتاج)
+                    console.debug('Password validation debug:', {
+                        password, confirmPassword,
+                        len1: password.length, len2: confirmPassword.length,
+                        codes1: [...password].map(c => c.charCodeAt(0)),
+                        codes2: [...confirmPassword].map(c => c.charCodeAt(0)),
+                    });
+
+                    // تنظيف محارف الاتجاه غير المرئية
+                    const stripBidi = (s) => s.replace(/[\u200E\u200F\u061C]/g, '').normalize('NFC');
+                    const passwordClean = stripBidi(password);
+                    const confirmClean = stripBidi(confirmPassword);
+
+                    if (!passwordClean || !confirmClean) {
+                        throw new Error('أدخل كلمة المرور والتأكيد');
+                    }
+
+                    if (passwordClean !== confirmClean) {
                         throw new Error('كلمات المرور غير متطابقة');
                     }
 
                     const { data: authData, error: authError } = await LUXBYTE.supabase.auth.signUp({
                         email: email,
-                        password: password
+                        password: passwordClean
                     });
 
                     if (authError) {
