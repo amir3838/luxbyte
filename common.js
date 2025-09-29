@@ -427,30 +427,10 @@ function initLogoGlow() {
 
 
 // ====== Al-Hareth Indicator ======
-function injectAlHareth(){
-  const alhareth = document.createElement('div');
-  alhareth.className = 'alhareth-indicator';
-  alhareth.innerHTML = `
-    <i class="fas fa-robot"></i> الحارث متصل
-  `;
-  document.body.appendChild(alhareth);
-}
+// تم إزالة مؤشر الحارث حسب طلب المستخدم
 
 // ====== Theme Toggle ======
-function injectThemeToggle(){
-  const themeToggle = document.createElement('div');
-  themeToggle.className = 'theme-toggle';
-  themeToggle.innerHTML = `
-    <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="تبديل الوضع">
-      <span class="theme-icon" id="theme-icon">
-        <i class="fas fa-moon"></i>
-      </span>
-      <span class="theme-text" id="theme-text">الوضع الليلي</span>
-    </button>
-  `;
-  themeToggle.onclick = toggleTheme;
-  document.body.appendChild(themeToggle);
-}
+// تم إزالة زر تبديل الثيم حسب طلب المستخدم
 
 // ====== Language Toggle ======
 function injectLanguageToggle(){
@@ -566,9 +546,7 @@ function injectNavbar(active){
     <div class="navbar-inner">
       <div class="brand">
         <img src="./assets/app_icon/LUXBYTE.png" alt="LUXBYTE Logo" class="brand-logo"
-             style="height: 45px; width: auto; margin-right: 12px; object-fit: contain; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);"
-             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="brand-fallback" style="display: none; width: 45px; height: 45px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px; margin-right: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">L</div>
+             style="height: 45px; width: auto; margin-right: 12px; object-fit: contain; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
         <span>LUXBYTE</span>
       </div>
       <nav class="nav-links">
@@ -579,12 +557,10 @@ function injectNavbar(active){
         <a class="nav-btn" href="social.html" data-i18n="nav.contact">التواصل</a>
         <a class="nav-btn" href="auth.html" data-i18n="nav.login">تسجيل الدخول</a>
         <button class="nav-btn" id="btnLang">AR</button>
-        <button class="nav-btn" id="btnTheme" title="Toggle theme">🌓</button>
       </nav>
     </div>`;
   document.body.prepend(bar);
 
-  document.getElementById('btnTheme')?.addEventListener('click', toggleTheme);
   document.getElementById('btnLang')?.addEventListener('click', switchLang);
 }
 
