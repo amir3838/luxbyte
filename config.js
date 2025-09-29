@@ -24,9 +24,6 @@ window.CONFIG = {
         { name: "restaurant_name", label: "اسم المطعم", type: "text", required: true },
         { name: "owner_name", label: "اسم المالك", type: "text", required: true },
         { name: "phone", label: "رقم الهاتف", type: "tel", required: true },
-        { name: "address", label: "العنوان", type: "textarea", required: true },
-        { name: "governorate", label: "المحافظة", type: "select", required: true },
-        { name: "city", label: "المدينة", type: "select", required: true },
         { name: "description", label: "وصف المطعم", type: "textarea", required: false }
       ],
       files: [
@@ -48,9 +45,6 @@ window.CONFIG = {
         { name: "market_name", label: "اسم السوبر ماركت", type: "text", required: true },
         { name: "owner_name", label: "اسم المالك", type: "text", required: true },
         { name: "phone", label: "رقم الهاتف", type: "tel", required: true },
-        { name: "address", label: "العنوان", type: "textarea", required: true },
-        { name: "governorate", label: "المحافظة", type: "select", required: true },
-        { name: "city", label: "المدينة", type: "select", required: true },
         { name: "description", label: "وصف السوبر ماركت", type: "textarea", required: false }
       ],
       files: [
@@ -71,9 +65,6 @@ window.CONFIG = {
         { name: "pharmacy_name", label: "اسم الصيدلية", type: "text", required: true },
         { name: "pharmacist_name", label: "اسم الصيدلي", type: "text", required: true },
         { name: "phone", label: "رقم الهاتف", type: "tel", required: true },
-        { name: "address", label: "العنوان", type: "textarea", required: true },
-        { name: "governorate", label: "المحافظة", type: "select", required: true },
-        { name: "city", label: "المدينة", type: "select", required: true },
         { name: "license_number", label: "رقم الترخيص", type: "text", required: true }
       ],
       files: [
@@ -95,9 +86,6 @@ window.CONFIG = {
         { name: "doctor_name", label: "اسم الطبيب", type: "text", required: true },
         { name: "specialization", label: "التخصص", type: "text", required: true },
         { name: "phone", label: "رقم الهاتف", type: "tel", required: true },
-        { name: "address", label: "العنوان", type: "textarea", required: true },
-        { name: "governorate", label: "المحافظة", type: "select", required: true },
-        { name: "city", label: "المدينة", type: "select", required: true },
         { name: "license_number", label: "رقم ترخيص العيادة", type: "text", required: true }
       ],
       files: [
@@ -119,9 +107,6 @@ window.CONFIG = {
         { name: "full_name", label: "الاسم الكامل", type: "text", required: true },
         { name: "national_id", label: "رقم البطاقة", type: "text", required: true },
         { name: "phone", label: "رقم الهاتف", type: "tel", required: true },
-        { name: "address", label: "العنوان", type: "textarea", required: true },
-        { name: "governorate", label: "المحافظة", type: "select", required: true },
-        { name: "city", label: "المدينة", type: "select", required: true },
         { name: "vehicle_type", label: "نوع المركبة", type: "select", required: true, options: ["دراجة نارية", "سيارة", "دراجة هوائية"] },
         { name: "license_number", label: "رقم رخصة القيادة", type: "text", required: true }
       ],
@@ -144,9 +129,6 @@ window.CONFIG = {
         { name: "full_name", label: "الاسم الكامل", type: "text", required: true },
         { name: "national_id", label: "رقم البطاقة", type: "text", required: true },
         { name: "phone", label: "رقم الهاتف", type: "tel", required: true },
-        { name: "address", label: "العنوان", type: "textarea", required: true },
-        { name: "governorate", label: "المحافظة", type: "select", required: true },
-        { name: "city", label: "المدينة", type: "select", required: true },
         { name: "vehicle_type", label: "نوع المركبة", type: "select", required: true, options: ["سيارة", "فان", "شاحنة صغيرة"] },
         { name: "license_number", label: "رقم رخصة القيادة", type: "text", required: true },
         { name: "experience_years", label: "سنوات الخبرة", type: "number", required: true }
