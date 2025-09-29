@@ -35,9 +35,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/amir-luxbyte/luxbyte-platform.git"
+    "url": "https://github.com/amir3838/luxbyte.git"
   },
-  "homepage": "https://luxbyte-platform.vercel.app",
+  "homepage": "https://amir3838.github.io/luxbyte",
   "engines": {
     "node": ">=16.0.0"
   }
