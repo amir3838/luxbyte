@@ -557,11 +557,13 @@ function injectNavbar(active){
         <a class="nav-btn" href="social.html" data-i18n="nav.contact">التواصل</a>
         <a class="nav-btn" href="auth.html" data-i18n="nav.login">تسجيل الدخول</a>
         <button class="nav-btn" id="btnLang">AR</button>
+        <button class="nav-btn" id="btnTheme" title="Toggle theme">🌓</button>
       </nav>
     </div>`;
   document.body.prepend(bar);
 
   document.getElementById('btnLang')?.addEventListener('click', switchLang);
+  document.getElementById('btnTheme')?.addEventListener('click', toggleTheme);
 }
 
 // ====== Initialize Enhanced Features ======
