@@ -240,7 +240,7 @@
                 selectedRole = LUXBYTE.getUrlParam('role');
                 console.log('🎯 Selected role from URL:', selectedRole);
                 console.log('📋 Available roles:', Object.keys(window.CONFIG.ROLES));
-                
+
                 // If no role from URL, try to get from localStorage or default
                 if (!selectedRole) {
                     selectedRole = localStorage.getItem('selectedRole') || 'restaurant';
@@ -356,7 +356,7 @@
             console.log('🔧 Starting generateFileUploadFields...');
             console.log('🎯 Current selectedRole:', selectedRole);
             console.log('📋 Available roles:', Object.keys(window.CONFIG.ROLES));
-            
+
             const roleConfig = window.CONFIG.ROLES[selectedRole];
             const container = document.getElementById('file-upload-container');
 
