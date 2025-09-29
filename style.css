@@ -46,7 +46,7 @@
   /* Semantic Color Tokens (Light Mode) */
   --color-background: var(--color-cream-50);
   --color-surface: var(--color-cream-100);
-  --color-text: var(--color-slate-900);
+  --color-text: var(--color-charcoal-700);
   --color-text-secondary: var(--color-slate-500);
   --color-primary: var(--color-teal-500);
   --color-primary-hover: var(--color-teal-600);
@@ -272,7 +272,7 @@
   /* Semantic Color Tokens (Light Mode) */
   --color-background: var(--color-cream-50);
   --color-surface: var(--color-cream-100);
-  --color-text: var(--color-slate-900);
+  --color-text: var(--color-charcoal-700);
   --color-text-secondary: var(--color-slate-500);
   --color-primary: var(--color-teal-500);
   --color-primary-hover: var(--color-teal-600);
@@ -729,6 +729,46 @@ select.form-control {
 /* Dark mode specifics */
 [data-color-scheme="dark"] .btn--outline {
   border: 1px solid var(--color-border-secondary);
+}
+
+/* Ensure text visibility in light mode */
+body:not([data-color-scheme="dark"]) {
+  color: var(--color-charcoal-700) !important;
+}
+
+body:not([data-color-scheme="dark"]) h1,
+body:not([data-color-scheme="dark"]) h2,
+body:not([data-color-scheme="dark"]) h3,
+body:not([data-color-scheme="dark"]) h4,
+body:not([data-color-scheme="dark"]) h5,
+body:not([data-color-scheme="dark"]) h6 {
+  color: var(--color-charcoal-700) !important;
+}
+
+body:not([data-color-scheme="dark"]) p,
+body:not([data-color-scheme="dark"]) span,
+body:not([data-color-scheme="dark"]) div {
+  color: var(--color-charcoal-700) !important;
+}
+
+body:not([data-color-scheme="dark"]) .form-label {
+  color: var(--color-charcoal-700) !important;
+}
+
+body:not([data-color-scheme="dark"]) .card-title {
+  color: var(--color-charcoal-700) !important;
+}
+
+body:not([data-color-scheme="dark"]) .card-text {
+  color: var(--color-charcoal-700) !important;
+}
+
+body:not([data-color-scheme="dark"]) .navbar-text {
+  color: var(--color-charcoal-700) !important;
+}
+
+body:not([data-color-scheme="dark"]) .brand {
+  color: var(--color-charcoal-700) !important;
 }
 
 @font-face {
@@ -1892,7 +1932,7 @@ textarea.form-control {
     .services-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .footer-content {
         grid-template-columns: 1fr 1fr;
     }
@@ -1902,29 +1942,29 @@ textarea.form-control {
     .form-row {
         grid-template-columns: 1fr;
     }
-    
+
     .activities-grid {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
-    
+
     .dashboard-stats {
         grid-template-columns: 1fr;
     }
-    
+
     .dashboard-actions {
         grid-template-columns: 1fr;
     }
-    
+
     .footer-content {
         grid-template-columns: 1fr;
         text-align: center;
     }
-    
+
     .footer-bottom {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .social-media-links {
         align-items: center;
     }
@@ -1938,37 +1978,37 @@ textarea.form-control {
     .container {
         padding: 0 var(--space-12);
     }
-    
+
     .screen-header,
     .login-form-container,
     .register-form-container {
         padding: var(--space-20);
     }
-    
+
     .services-grid,
     .activities-grid {
         gap: var(--space-16);
     }
-    
+
     .service-card,
     .activity-card,
     .login-card {
         margin: 0 var(--space-8);
     }
-    
+
     .preview-images {
         grid-template-columns: 1fr 1fr;
         gap: var(--space-6);
     }
-    
+
     .company-name {
         font-size: var(--font-size-3xl);
     }
-    
+
     .logo-icon {
         font-size: 4rem;
     }
-    
+
     .company-logo {
         width: 60px;
         height: 60px;
@@ -2153,11 +2193,11 @@ textarea.form-control {
         margin: var(--space-16);
         padding: var(--space-24);
     }
-    
+
     .verification-actions {
         flex-direction: column;
     }
-    
+
     .email-info {
         flex-direction: column;
         text-align: center;

@@ -117,25 +117,32 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">المحافظة</label>
+                            <label class="form-label" data-i18n="reg.governorate">المحافظة</label>
                             <select class="form-control" name="governorate" id="governorate" required>
-                                <option value="">اختر المحافظة</option>
-                                <option value="القاهرة">القاهرة</option>
-                                <option value="الجيزة">الجيزة</option>
-                                <option value="القليوبية">القليوبية</option>
+                                <option value="" data-i18n="reg.governorate_ph">اختر المحافظة</option>
+                                <option value="القاهرة" data-i18n="reg.gov.cairo">القاهرة</option>
+                                <option value="الجيزة" data-i18n="reg.gov.giza">الجيزة</option>
+                                <option value="القليوبية" data-i18n="reg.gov.qalyubia">القليوبية</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">المدينة</label>
+                            <label class="form-label" data-i18n="reg.city">المدينة</label>
                             <select class="form-control" name="city" id="city" required disabled>
-                                <option value="">اختر المدينة</option>
+                                <option value="" data-i18n="reg.city_ph">اختر المدينة</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">العنوان التفصيلي</label>
-                        <textarea class="form-control" name="address" placeholder="أدخل عنوانك بالتفصيل" rows="3" required></textarea>
+                        <div style="display: flex; gap: 8px; align-items: flex-start;">
+                            <textarea class="form-control" name="address" id="address" placeholder="أدخل عنوانك بالتفصيل" rows="3" required style="flex: 1;"></textarea>
+                            <button type="button" id="getLocationBtn" class="btn btn-outline" style="padding: 12px; white-space: nowrap;" title="الحصول على الموقع الحالي" data-i18n="reg.get_location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                GPS
+                            </button>
+                        </div>
+                        <div id="locationStatus" style="margin-top: 8px; font-size: 14px; color: #666;"></div>
                     </div>
 
                     <!-- Dynamic Role Fields -->
@@ -225,6 +232,9 @@
 
             // Setup location dropdowns
             setupLocationDropdowns();
+            
+            // Setup GPS location
+            setupGPSLocation();
 
             // Initialize common elements
             injectSocialBar();
@@ -424,6 +434,71 @@
             governorateSelect.addEventListener('change', () => {
                 LUXBYTE.updateCityDropdown(governorateSelect, citySelect);
             });
+        }
+
+        function setupGPSLocation() {
+            const getLocationBtn = document.getElementById('getLocationBtn');
+            const addressField = document.getElementById('address');
+            const locationStatus = document.getElementById('locationStatus');
+
+            getLocationBtn.addEventListener('click', () => {
+                if (!navigator.geolocation) {
+                    locationStatus.innerHTML = '<span style="color: #ef4444;">المتصفح لا يدعم GPS</span>';
+                    return;
+                }
+
+                locationStatus.innerHTML = '<span style="color: #6b7280;"><i class="fas fa-spinner fa-spin"></i> جاري الحصول على الموقع...</span>';
+                getLocationBtn.disabled = true;
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        // استخدام reverse geocoding للحصول على العنوان
+                        getAddressFromCoordinates(lat, lng);
+                        
+                        locationStatus.innerHTML = `<span style="color: #10b981;"><i class="fas fa-check"></i> تم الحصول على الموقع: ${lat.toFixed(6)}, ${lng.toFixed(6)}</span>`;
+                        getLocationBtn.disabled = false;
+                    },
+                    (error) => {
+                        let errorMessage = 'حدث خطأ في الحصول على الموقع';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage = 'تم رفض إذن الوصول للموقع';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage = 'الموقع غير متاح';
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage = 'انتهت مهلة الطلب';
+                                break;
+                        }
+                        locationStatus.innerHTML = `<span style="color: #ef4444;"><i class="fas fa-exclamation-triangle"></i> ${errorMessage}</span>`;
+                        getLocationBtn.disabled = false;
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
+                    }
+                );
+            });
+        }
+
+        function getAddressFromCoordinates(lat, lng) {
+            // استخدام Nominatim API للحصول على العنوان
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.display_name) {
+                        const address = data.display_name;
+                        document.getElementById('address').value = address;
+                    }
+                })
+                .catch(error => {
+                    console.log('خطأ في الحصول على العنوان:', error);
+                });
         }
 
         function nextStep() {

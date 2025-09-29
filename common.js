@@ -574,7 +574,10 @@ function injectNavbar(active){
   bar.className = 'navbar';
   bar.innerHTML = `
     <div class="navbar-inner">
-      <div class="brand"><span class="badge-dot"></span><span>LUXBYTE</span></div>
+      <div class="brand">
+        <img src="./assets/app_icon/LUXBYTE.png" alt="LUXBYTE Logo" class="brand-logo" style="height: 32px; width: auto; margin-right: 8px;">
+        <span>LUXBYTE</span>
+      </div>
       <nav class="nav-links">
         <a class="nav-btn ${active==='home'?'nav-primary':''}" href="index.html" data-i18n="nav.home">الرئيسية</a>
         <a class="nav-btn ${active==='platform'?'nav-primary':''}" href="choose-platform.html" data-i18n="nav.choose_platform">اختر منصتك</a>
