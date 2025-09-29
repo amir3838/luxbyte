@@ -575,8 +575,10 @@ function injectNavbar(active){
   bar.innerHTML = `
     <div class="navbar-inner">
       <div class="brand">
-        <img src="assets/app_icon/LUXBYTE.png" alt="LUXBYTE Logo" class="brand-logo" 
-             style="height: 40px; width: auto; margin-right: 8px; object-fit: contain;">
+        <img src="./assets/app_icon/LUXBYTE.png" alt="LUXBYTE Logo" class="brand-logo" 
+             style="height: 45px; width: auto; margin-right: 12px; object-fit: contain; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="brand-fallback" style="display: none; width: 45px; height: 45px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px; margin-right: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">L</div>
         <span>LUXBYTE</span>
       </div>
       <nav class="nav-links">
