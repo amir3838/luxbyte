@@ -13,6 +13,14 @@ class FileUploadManager {
         this.allowedImageFormats = ['jpg', 'jpeg', 'png'];
         this.allowedDocumentFormats = ['pdf', 'jpg', 'jpeg'];
         this.uploadProgress = new Map();
+        this.init();
+    }
+
+    /**
+     * تهيئة النظام
+     */
+    init() {
+        // تهيئة النظام
     }
 
     /**

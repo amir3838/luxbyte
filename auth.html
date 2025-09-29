@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - LUXBYTE</title>
+    <meta name="description" content="تسجيل الدخول أو إنشاء حساب جديد في LUXBYTE">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="./assets/app_icon/LUXBYTEICON.PNG" type="image/png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="./assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE Logo">
+                <span>LUXBYTE</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    الرئيسية
+                </a>
+                <a href="social.html">
+                    <i class="fas fa-share-alt"></i>
+                    التواصل
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div style="max-width: 500px; margin: 64px auto;">
+            <!-- Login Form -->
+            <div class="card" id="login-form">
+                <div class="card-header" style="justify-content: center;">
+                    <div class="card-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div>
+                        <h2 class="card-title">تسجيل الدخول</h2>
+                        <p style="color: #666;">مرحباً بك في LUXBYTE</p>
+                    </div>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">البريد الإلكتروني</label>
+                        <input type="email" class="form-control" id="login-email" name="email" data-i18n-ph="auth.email" placeholder="example@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">كلمة المرور</label>
+                        <input type="password" class="form-control" id="login-password" name="password" data-i18n-ph="auth.password_ph" placeholder="أدخل كلمة المرور" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember-me">
+                            <span>تذكرني</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-bottom: 16px;" data-i18n="auth.sign_in">
+                        <i class="fas fa-sign-in-alt"></i>
+                        تسجيل الدخول
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+                    <p style="color: #666; margin-bottom: 16px;">ليس لديك حساب؟</p>
+                    <button class="btn btn-outline" onclick="goToAccountSelection()" style="width: 100%;" data-i18n="auth.create_account">
+                        <i class="fas fa-user-plus"></i>
+                        إنشاء حساب جديد
+                    </button>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="card hidden" id="signup-form">
+                <div class="card-header" style="justify-content: center;">
+                    <div class="card-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h2 class="card-title">إنشاء حساب جديد</h2>
+                        <p style="color: #666;">انضم إلى LUXBYTE اليوم</p>
+                    </div>
+                </div>
+
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label class="form-label">البريد الإلكتروني</label>
+                        <input type="email" class="form-control" id="signup-email" name="email" data-i18n-ph="auth.email" placeholder="example@email.com" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" class="form-control" id="signup-password" name="password" data-i18n-ph="auth.password_ph" placeholder="أدخل كلمة المرور" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">تأكيد كلمة المرور</label>
+                            <input type="password" class="form-control" id="signup-confirm-password" name="confirmPassword" data-i18n-ph="auth.confirm_password_ph" placeholder="أكد كلمة المرور" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="terms-acceptance" required>
+                            <span>أوافق على <a href="terms-conditions.html" target="_blank" rel="noopener" style="color: #6b7cff;">الشروط والأحكام</a></span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-bottom: 16px;" data-i18n="auth.create_account">
+                        <i class="fas fa-user-plus"></i>
+                        إنشاء الحساب
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+                    <p style="color: #666; margin-bottom: 16px;">لديك حساب بالفعل؟</p>
+                    <button class="btn btn-outline" onclick="showLoginForm()" style="width: 100%;" data-i18n="auth.signin">
+                        <i class="fas fa-sign-in-alt"></i>
+                        تسجيل الدخول
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="i18n-dict.js"></script>
+    <script src="common.js"></script>
+    <script>
+        // Form switching
+        function showLoginForm() {
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('signup-form').classList.add('hidden');
+        }
+
+        function showSignupForm() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('signup-form').classList.remove('hidden');
+        }
+
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await LUXBYTE.getSession();
+            if (session) {
+                // Check for return URL
+                const returnUrl = new URLSearchParams(window.location.search).get('return');
+                if (returnUrl) {
+                    window.location.href = returnUrl;
+                } else {
+                    window.location.href = 'choose-platform.html';
+                }
+            }
+        });
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+
+            if (!email || !password) {
+                LUXBYTE.notifyErr('يرجى ملء جميع الحقول');
+                return;
+            }
+
+            LUXBYTE.showLoading(submitBtn.id, 'جاري تسجيل الدخول...');
+
+            try {
+                const { data, error } = await LUXBYTE.supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                LUXBYTE.notifyOk('تم تسجيل الدخول بنجاح');
+
+                // Check for return URL
+                const returnUrl = new URLSearchParams(window.location.search).get('return');
+                if (returnUrl) {
+                    window.location.href = returnUrl;
+                } else {
+                    window.location.href = 'choose-platform.html';
+                }
+
+            } catch (error) {
+                console.error('Login error:', error);
+                LUXBYTE.notifyErr('خطأ في تسجيل الدخول: ' + error.message);
+            } finally {
+                LUXBYTE.hideLoading(submitBtn.id, '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول');
+            }
+        });
+
+        // Signup form submission
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            const termsAccepted = document.getElementById('terms-acceptance').checked;
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+
+            if (!email || !password || !confirmPassword) {
+                LUXBYTE.notifyErr('يرجى ملء جميع الحقول');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                LUXBYTE.notifyErr('كلمة المرور وتأكيدها غير متطابقتين');
+                return;
+            }
+
+            if (!termsAccepted) {
+                LUXBYTE.notifyErr('يجب الموافقة على الشروط والأحكام');
+                return;
+            }
+
+            LUXBYTE.showLoading(submitBtn.id, 'جاري إنشاء الحساب...');
+
+            try {
+                const { data, error } = await LUXBYTE.supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        emailRedirectTo: window.location.origin + '/choose-platform.html'
+                    }
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                if (data.user && !data.user.email_confirmed_at) {
+                    LUXBYTE.notifyOk('تم إنشاء الحساب! يرجى التحقق من بريدك الإلكتروني لتفعيل الحساب');
+                } else {
+                    LUXBYTE.notifyOk('تم إنشاء الحساب بنجاح');
+                    window.location.href = 'choose-platform.html';
+                }
+
+            } catch (error) {
+                console.error('Signup error:', error);
+                LUXBYTE.notifyErr('خطأ في إنشاء الحساب: ' + error.message);
+            } finally {
+                LUXBYTE.hideLoading(submitBtn.id, '<i class="fas fa-user-plus"></i> إنشاء الحساب');
+            }
+        });
+
+        // Logout functionality (if user is logged in)
+        async function logout() {
+            try {
+                await LUXBYTE.supabase.auth.signOut();
+                LUXBYTE.notifyOk('تم تسجيل الخروج بنجاح');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                LUXBYTE.notifyErr('خطأ في تسجيل الخروج');
+            }
+        }
+
+        // Go to account type selection
+        function goToAccountSelection() {
+            window.location.href = 'account-type-selection.html';
+        }
+
+        // Add logout button if user is logged in
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await LUXBYTE.getSession();
+            if (session) {
+                const nav = document.querySelector('.nav');
+                const logoutBtn = document.createElement('a');
+                logoutBtn.href = '#';
+                logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> تسجيل الخروج';
+                logoutBtn.onclick = (e) => {
+                    e.preventDefault();
+                    logout();
+                };
+                nav.appendChild(logoutBtn);
+            }
+
+            // Initialize common elements
+            injectNavbar('auth');
+            injectSocialBar();
+            injectAlHareth();
+            injectThemeToggle();
+            injectLanguageToggle();
+            applyI18n();
+        });
+    </script>
+</body>
+</html>

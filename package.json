@@ -35,9 +35,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/luxbyte/luxbyte-file-management.git"
+    "url": "https://github.com/amir-luxbyte/luxbyte-platform.git"
   },
-  "homepage": "https://luxbyte-file-management.vercel.app",
+  "homepage": "https://luxbyte-platform.vercel.app",
   "engines": {
     "node": ">=16.0.0"
   }

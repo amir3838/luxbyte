@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل البيانات - LUXBYTE</title>
+    <meta name="description" content="تسجيل البيانات والمستندات المطلوبة">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="./assets/app_icon/LUXBYTEICON.PNG" type="image/png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="./assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE Logo">
+                <span>LUXBYTE</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    الرئيسية
+                </a>
+                <a href="dashboard.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    لوحة المراجعة
+                </a>
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    تسجيل الخروج
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Page Header -->
+        <div class="card text-center mb-8" id="page-header">
+            <div class="card-header" style="justify-content: center;">
+                <div class="card-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div>
+                    <h1 class="card-title" style="font-size: 32px; margin-bottom: 8px;" data-i18n="reg.title">تسجيل البيانات</h1>
+                    <p style="color: #666; font-size: 18px;" id="page-description" data-i18n="reg.helper">املأ البيانات المطلوبة</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="card mb-8">
+            <div style="display: flex; justify-content: center; margin-bottom: 24px;">
+                <div class="step active" data-step="1">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="step" data-step="2">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="step" data-step="3">
+                    <i class="fas fa-file-upload"></i>
+                </div>
+                <div class="step" data-step="4">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <h3 id="current-step-title">البيانات الشخصية</h3>
+                <p id="current-step-description" style="color: #666;">املأ البيانات الشخصية الأساسية</p>
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div class="card">
+            <form id="signupForm">
+                <!-- Step 1: Personal Information -->
+                <div class="step-content active" id="step-1">
+                    <h3 style="margin-bottom: 24px; color: #333;">البيانات الشخصية</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">الاسم الأول</label>
+                            <input type="text" class="form-control" name="first_name" placeholder="أدخل اسمك الأول" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">اسم العائلة</label>
+                            <input type="text" class="form-control" name="last_name" placeholder="أدخل اسم العائلة" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">البريد الإلكتروني</label>
+                        <input type="email" class="form-control" name="email" placeholder="example@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">رقم الهاتف</label>
+                        <input type="tel" class="form-control" name="phone" placeholder="01XXXXXXXXX" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" class="form-control" name="password" placeholder="أدخل كلمة المرور" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">تأكيد كلمة المرور</label>
+                            <input type="password" class="form-control" name="confirm_password" placeholder="أكد كلمة المرور" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Location Information -->
+                <div class="step-content" id="step-2">
+                    <h3 style="margin-bottom: 24px; color: #333;">الموقع والنشاط</h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">المحافظة</label>
+                            <select class="form-control" name="governorate" id="governorate" required>
+                                <option value="">اختر المحافظة</option>
+                                <option value="القاهرة">القاهرة</option>
+                                <option value="الجيزة">الجيزة</option>
+                                <option value="القليوبية">القليوبية</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">المدينة</label>
+                            <select class="form-control" name="city" id="city" required disabled>
+                                <option value="">اختر المدينة</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">العنوان التفصيلي</label>
+                        <textarea class="form-control" name="address" placeholder="أدخل عنوانك بالتفصيل" rows="3" required></textarea>
+                    </div>
+
+                    <!-- Dynamic Role Fields -->
+                    <div id="role-fields">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Step 3: File Upload -->
+                <div class="step-content" id="step-3">
+                    <h3 style="margin-bottom: 24px; color: #333;">رفع المستندات</h3>
+                    <p style="color: #666; margin-bottom: 24px;">ارفع المستندات المطلوبة حسب نوع النشاط</p>
+
+                    <div id="file-upload-container">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Step 4: Review and Submit -->
+                <div class="step-content" id="step-4">
+                    <h3 style="margin-bottom: 24px; color: #333;">مراجعة البيانات</h3>
+                    <p style="color: #666; margin-bottom: 24px;">راجع بياناتك قبل الإرسال</p>
+
+                    <div id="review-data">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div style="display: flex; gap: 16px; margin-top: 32px; justify-content: space-between;">
+                    <button type="button" class="btn btn-outline" id="prev-btn" onclick="prevStep()" style="display: none;">
+                        <i class="fas fa-arrow-right"></i>
+                        السابق
+                    </button>
+                    <button type="button" class="btn" id="next-btn" onclick="nextStep()">
+                        التالي
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button type="submit" class="btn" id="submit-btn" style="display: none;">
+                        <i class="fas fa-check"></i>
+                        إرسال الطلب
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="i18n-dict.js"></script>
+    <script src="common.js"></script>
+    <script>
+        let currentStep = 1;
+        let selectedRole = null;
+        let uploadedFiles = {};
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize LUXBYTE
+            await LUXBYTE.init();
+
+            // Check if user is already logged in
+            const session = await LUXBYTE.getSession();
+            if (session) {
+                console.log('User already logged in, proceeding with registration');
+            } else {
+                console.log('User not logged in, will need to create account first');
+            }
+
+            injectNavbar('signup');
+
+            // Get role from URL parameter
+            selectedRole = LUXBYTE.getUrlParam('role');
+
+            if (!selectedRole || !window.CONFIG.ROLES[selectedRole]) {
+                LUXBYTE.notifyErr('نوع النشاط غير صحيح');
+                window.location.href = 'choose-role.html';
+                return;
+            }
+
+            // Update page header
+            updatePageHeader();
+
+            // Setup form
+            setupForm();
+
+            // Setup location dropdowns
+            setupLocationDropdowns();
+
+            // Initialize common elements
+            injectSocialBar();
+            injectAlHareth();
+            injectThemeToggle();
+            injectLanguageToggle();
+            applyI18n();
+        });
+
+        function updatePageHeader() {
+            const roleConfig = window.CONFIG.ROLES[selectedRole];
+            const pageDescription = document.getElementById('page-description');
+            pageDescription.textContent = `تسجيل بيانات ${roleConfig.name}`;
+        }
+
+        function setupForm() {
+            // Generate role-specific fields
+            generateRoleFields();
+
+            // Generate file upload fields
+            generateFileUploadFields();
+        }
+
+        function generateRoleFields() {
+            const roleConfig = window.CONFIG.ROLES[selectedRole];
+            const container = document.getElementById('role-fields');
+
+            container.innerHTML = '';
+
+            roleConfig.fields.forEach(field => {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.className = 'form-group';
+
+                const label = document.createElement('label');
+                label.className = 'form-label';
+                label.textContent = field.label + (field.required ? ' *' : '');
+                fieldDiv.appendChild(label);
+
+                if (field.type === 'select') {
+                    const select = document.createElement('select');
+                    select.className = 'form-control';
+                    select.name = field.name;
+                    select.required = field.required;
+
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.textContent = `اختر ${field.label}`;
+                    select.appendChild(defaultOption);
+
+                    if (field.options) {
+                        field.options.forEach(option => {
+                            const optionElement = document.createElement('option');
+                            optionElement.value = option;
+                            optionElement.textContent = option;
+                            select.appendChild(optionElement);
+                        });
+                    }
+
+                    fieldDiv.appendChild(select);
+                } else if (field.type === 'textarea') {
+                    const textarea = document.createElement('textarea');
+                    textarea.className = 'form-control';
+                    textarea.name = field.name;
+                    textarea.placeholder = `أدخل ${field.label}`;
+                    textarea.required = field.required;
+                    textarea.rows = 3;
+                    fieldDiv.appendChild(textarea);
+                } else {
+                    const input = document.createElement('input');
+                    input.type = field.type;
+                    input.className = 'form-control';
+                    input.name = field.name;
+                    input.placeholder = `أدخل ${field.label}`;
+                    input.required = field.required;
+                    fieldDiv.appendChild(input);
+                }
+
+                container.appendChild(fieldDiv);
+            });
+        }
+
+        function generateFileUploadFields() {
+            const roleConfig = window.CONFIG.ROLES[selectedRole];
+            const container = document.getElementById('file-upload-container');
+
+            container.innerHTML = '';
+
+            roleConfig.files.forEach(file => {
+                const fileDiv = document.createElement('div');
+                fileDiv.className = 'form-group';
+
+                const label = document.createElement('label');
+                label.className = 'form-label';
+                label.textContent = file.label + (file.required ? ' *' : '');
+                fileDiv.appendChild(label);
+
+                const uploadDiv = document.createElement('div');
+                uploadDiv.className = 'file-upload';
+                uploadDiv.setAttribute('data-file-name', file.name);
+
+                uploadDiv.innerHTML = `
+                    <div class="upload-icon">
+                        <i class="fas fa-${file.accept.startsWith('image') ? 'image' : 'file'}"></i>
+                    </div>
+                    <div class="upload-text">اضغط لرفع ${file.label}</div>
+                    <div class="upload-requirement">${file.description}</div>
+                    <input type="file" class="file-input" accept="${file.accept}" ${file.required ? 'required' : ''}>
+                `;
+
+                uploadDiv.addEventListener('click', () => {
+                    uploadDiv.querySelector('.file-input').click();
+                });
+
+                uploadDiv.querySelector('.file-input').addEventListener('change', (e) => {
+                    handleFileUpload(e, file, uploadDiv);
+                });
+
+                fileDiv.appendChild(uploadDiv);
+                container.appendChild(fileDiv);
+            });
+        }
+
+        function handleFileUpload(event, fileConfig, container) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file
+            if (!validateFile(file, fileConfig)) {
+                LUXBYTE.notifyErr('نوع الملف أو الحجم غير مناسب');
+                return;
+            }
+
+            // Show preview
+            showFilePreview(file, container);
+
+            // Store file
+            uploadedFiles[fileConfig.name] = file;
+        }
+
+        function validateFile(file, fileConfig) {
+            // Check file type
+            if (fileConfig.accept.startsWith('image')) {
+                if (!file.type.startsWith('image/')) return false;
+            } else {
+                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+                if (!allowedTypes.includes(file.type)) return false;
+            }
+
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) return false;
+
+            return true;
+        }
+
+        function showFilePreview(file, container) {
+            container.innerHTML = '';
+
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.className = 'file-preview';
+                img.style.width = '100%';
+                img.style.height = '120px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '8px';
+                container.appendChild(img);
+            } else {
+                const icon = document.createElement('div');
+                icon.className = 'upload-icon';
+                icon.innerHTML = '<i class="fas fa-file"></i>';
+                container.appendChild(icon);
+            }
+
+            const info = document.createElement('div');
+            info.className = 'file-info';
+            info.innerHTML = `
+                <div class="file-name">${file.name}</div>
+                <div class="file-size">${LUXBYTE.formatFileSize(file.size)}</div>
+            `;
+            container.appendChild(info);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-file';
+            removeBtn.innerHTML = '<i class="fas fa-trash"></i> إزالة';
+            removeBtn.onclick = () => {
+                container.innerHTML = '';
+                generateFileUploadFields();
+                delete uploadedFiles[file.name];
+            };
+            container.appendChild(removeBtn);
+        }
+
+        function setupLocationDropdowns() {
+            const governorateSelect = document.getElementById('governorate');
+            const citySelect = document.getElementById('city');
+
+            governorateSelect.addEventListener('change', () => {
+                LUXBYTE.updateCityDropdown(governorateSelect, citySelect);
+            });
+        }
+
+        function nextStep() {
+            if (currentStep < 4) {
+                if (validateCurrentStep()) {
+                    currentStep++;
+                    updateStepDisplay();
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepDisplay();
+            }
+        }
+
+        function validateCurrentStep() {
+            const currentStepElement = document.getElementById(`step-${currentStep}`);
+            const requiredFields = currentStepElement.querySelectorAll('[required]');
+
+            for (const field of requiredFields) {
+                if (!field.value.trim()) {
+                    LUXBYTE.notifyErr(`يرجى ملء حقل ${field.previousElementSibling.textContent}`);
+                    field.focus();
+                    return false;
+                }
+            }
+
+            // Special validation for step 2 (files)
+            if (currentStep === 3) {
+                const roleConfig = window.CONFIG.ROLES[selectedRole];
+                const requiredFiles = roleConfig.files.filter(f => f.required);
+
+                for (const file of requiredFiles) {
+                    if (!uploadedFiles[file.name]) {
+                        LUXBYTE.notifyErr(`يرجى رفع الملف المطلوب: ${file.label}`);
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        function updateStepDisplay() {
+            // Update step indicators
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Update step content
+            document.querySelectorAll('.step-content').forEach((content, index) => {
+                content.classList.remove('active');
+                if (index + 1 === currentStep) {
+                    content.classList.add('active');
+                }
+            });
+
+            // Update step title and description
+            const titles = [
+                'البيانات الشخصية',
+                'الموقع والنشاط',
+                'رفع المستندات',
+                'مراجعة البيانات'
+            ];
+
+            const descriptions = [
+                'املأ البيانات الشخصية الأساسية',
+                'اختر موقعك ونوع النشاط',
+                'ارفع المستندات المطلوبة',
+                'راجع بياناتك قبل الإرسال'
+            ];
+
+            document.getElementById('current-step-title').textContent = titles[currentStep - 1];
+            document.getElementById('current-step-description').textContent = descriptions[currentStep - 1];
+
+            // Update navigation buttons
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+
+            prevBtn.style.display = currentStep > 1 ? 'block' : 'none';
+
+            if (currentStep === 4) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+                generateReviewData();
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        function generateReviewData() {
+            const formData = new FormData(document.getElementById('signupForm'));
+            const reviewContainer = document.getElementById('review-data');
+
+            reviewContainer.innerHTML = '';
+
+            // Personal info
+            const personalDiv = document.createElement('div');
+            personalDiv.innerHTML = `
+                <h4 style="color: #333; margin-bottom: 12px;">البيانات الشخصية</h4>
+                <p><strong>الاسم:</strong> ${formData.get('first_name')} ${formData.get('last_name')}</p>
+                <p><strong>البريد الإلكتروني:</strong> ${formData.get('email')}</p>
+                <p><strong>رقم الهاتف:</strong> ${formData.get('phone')}</p>
+            `;
+            reviewContainer.appendChild(personalDiv);
+
+            // Location
+            const locationDiv = document.createElement('div');
+            locationDiv.innerHTML = `
+                <h4 style="color: #333; margin-bottom: 12px; margin-top: 20px;">الموقع</h4>
+                <p><strong>المحافظة:</strong> ${formData.get('governorate')}</p>
+                <p><strong>المدينة:</strong> ${formData.get('city')}</p>
+                <p><strong>العنوان:</strong> ${formData.get('address')}</p>
+            `;
+            reviewContainer.appendChild(locationDiv);
+
+            // Role-specific fields
+            const roleConfig = window.CONFIG.ROLES[selectedRole];
+            const roleDiv = document.createElement('div');
+            roleDiv.innerHTML = `<h4 style="color: #333; margin-bottom: 12px; margin-top: 20px;">بيانات ${roleConfig.name}</h4>`;
+
+            roleConfig.fields.forEach(field => {
+                const value = formData.get(field.name);
+                if (value) {
+                    const p = document.createElement('p');
+                    p.innerHTML = `<strong>${field.label}:</strong> ${value}`;
+                    roleDiv.appendChild(p);
+                }
+            });
+            reviewContainer.appendChild(roleDiv);
+
+            // Files
+            const filesDiv = document.createElement('div');
+            filesDiv.innerHTML = `<h4 style="color: #333; margin-bottom: 12px; margin-top: 20px;">الملفات المرفوعة</h4>`;
+
+            Object.keys(uploadedFiles).forEach(fileName => {
+                const file = uploadedFiles[fileName];
+                const p = document.createElement('p');
+                p.innerHTML = `<strong>${fileName}:</strong> ${file.name} (${LUXBYTE.formatFileSize(file.size)})`;
+                filesDiv.appendChild(p);
+            });
+            reviewContainer.appendChild(filesDiv);
+        }
+
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            await withLoader(async () => {
+                // Check if user is logged in, if not create account first
+                let session = await LUXBYTE.getSession();
+                if (!session) {
+                    // Create account first
+                    const formData = new FormData(e.target);
+                    const email = formData.get('email');
+                    const password = formData.get('password');
+                    const confirmPassword = formData.get('confirmPassword');
+
+                    if (password !== confirmPassword) {
+                        throw new Error('كلمات المرور غير متطابقة');
+                    }
+
+                    const { data: authData, error: authError } = await LUXBYTE.supabase.auth.signUp({
+                        email: email,
+                        password: password
+                    });
+
+                    if (authError) {
+                        throw authError;
+                    }
+
+                    // Wait a moment for the session to be established
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    session = await LUXBYTE.getSession();
+                }
+
+                // Upload files
+                const fileUrls = {};
+                const roleConfig = window.CONFIG.ROLES[selectedRole];
+
+                for (const [fileName, file] of Object.entries(uploadedFiles)) {
+                    const url = await LUXBYTE.uploadToBucket(roleConfig.bucket, fileName, file);
+                    fileUrls[fileName] = url;
+                }
+
+                // Prepare data for database
+                const formData = new FormData(e.target);
+                const data = {};
+
+                // Add form fields
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+
+                // Add file URLs
+                Object.assign(data, fileUrls);
+
+                // Add metadata
+                data.role = selectedRole;
+                data.created_at = new Date().toISOString();
+                data.status = 'pending';
+                data.user_id = session.user.id;
+
+                // Insert into database
+                const { data: result, error } = await LUXBYTE.supabase
+                    .from(roleConfig.table)
+                    .insert([data]);
+
+                if (error) {
+                    throw error;
+                }
+
+                return result;
+            }, 'تم إرسال طلبك بنجاح! سيتم مراجعته قريباً');
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        });
+
+        // Logout function
+        async function logout() {
+            try {
+                await LUXBYTE.supabase.auth.signOut();
+                LUXBYTE.notifyOk('تم تسجيل الخروج بنجاح');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                LUXBYTE.notifyErr('خطأ في تسجيل الخروج');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم السوبر ماركت - Luxbyte</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/supermarket-dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="../assets/app_icon/LUXBYTEicon.png" alt="Luxbyte" class="logo">
+                    <h1>لوحة تحكم السوبر ماركت</h1>
+                </div>
+                <div class="user-section">
+                    <div class="user-info">
+                        <span class="user-name">محمد أحمد</span>
+                        <span class="user-role">مدير السوبر ماركت</span>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="dashboard-nav">
+            <ul class="nav-list">
+                <li><a href="#overview" class="nav-link active">نظرة عامة</a></li>
+                <li><a href="#documents" class="nav-link">المستندات</a></li>
+                <li><a href="#products" class="nav-link">المنتجات</a></li>
+                <li><a href="#orders" class="nav-link">الطلبات</a></li>
+                <li><a href="#customers" class="nav-link">العملاء</a></li>
+                <li><a href="#reports" class="nav-link">التقارير</a></li>
+                <li><a href="#settings" class="nav-link">الإعدادات</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Overview Section -->
+            <section id="overview" class="dashboard-section active">
+                <div class="section-header">
+                    <h2>نظرة عامة</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="uploadDocuments()">رفع مستندات جديدة</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-content">
+                            <h3>المستندات المطلوبة</h3>
+                            <div class="stat-value">4/4</div>
+                            <div class="stat-progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <h3>حالة التفعيل</h3>
+                            <div class="stat-value active">مفعل</div>
+                            <div class="stat-description">جميع المستندات مكتملة</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">🛒</div>
+                        <div class="stat-content">
+                            <h3>الطلبات اليوم</h3>
+                            <div class="stat-value">28</div>
+                            <div class="stat-description">+5 من أمس</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <h3>الإيرادات اليوم</h3>
+                            <div class="stat-value">5,750 ج.م</div>
+                            <div class="stat-description">+22% من أمس</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-content">
+                            <h3>المنتجات</h3>
+                            <div class="stat-value">2,450</div>
+                            <div class="stat-description">منتجات مختلفة</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <h3>العملاء النشطين</h3>
+                            <div class="stat-value">1,250</div>
+                            <div class="stat-description">عميل نشط</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3>إجراءات سريعة</h3>
+                    <div class="actions-grid">
+                        <button class="action-btn" onclick="viewDocuments()">
+                            <i class="icon">📄</i>
+                            <span>عرض المستندات</span>
+                        </button>
+                        <button class="action-btn" onclick="manageProducts()">
+                            <i class="icon">📦</i>
+                            <span>إدارة المنتجات</span>
+                        </button>
+                        <button class="action-btn" onclick="viewOrders()">
+                            <i class="icon">🛒</i>
+                            <span>الطلبات الجديدة</span>
+                        </button>
+                        <button class="action-btn" onclick="viewCustomers()">
+                            <i class="icon">👥</i>
+                            <span>إدارة العملاء</span>
+                        </button>
+                        <button class="action-btn" onclick="generateReport()">
+                            <i class="icon">📊</i>
+                            <span>تقرير المبيعات</span>
+                        </button>
+                        <button class="action-btn" onclick="manageInventory()">
+                            <i class="icon">📋</i>
+                            <span>إدارة المخزون</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Documents Section -->
+            <section id="documents" class="dashboard-section">
+                <div class="section-header">
+                    <h2>إدارة المستندات</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="uploadNewDocument()">رفع مستند جديد</button>
+                    </div>
+                </div>
+
+                <div class="documents-grid">
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>لوجو السوبر ماركت</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>PNG 512×512</p>
+                            <p class="file-name">market_logo.png</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>واجهة/أرفف المتجر</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>JPG 1280px+</p>
+                            <p class="file-name">market_shelves.jpg</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>السجل التجاري</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>PDF/JPG</p>
+                            <p class="file-name">market_cr.pdf</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>رخصة النشاط</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>PDF/JPG</p>
+                            <p class="file-name">market_activity_license.pdf</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card optional">
+                        <div class="document-header">
+                            <h4>صورة خارجية للمحل</h4>
+                            <span class="status-badge pending">اختياري</span>
+                        </div>
+                        <div class="document-info">
+                            <p>JPG</p>
+                            <p class="file-name">غير مرفوع</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-primary">رفع</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Section -->
+            <section id="products" class="dashboard-section">
+                <div class="section-header">
+                    <h2>إدارة المنتجات</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="addProduct()">إضافة منتج</button>
+                        <button class="btn btn-secondary" onclick="importProducts()">استيراد منتجات</button>
+                        <button class="btn btn-secondary" onclick="exportProducts()">تصدير المنتجات</button>
+                    </div>
+                </div>
+
+                <div class="products-filters">
+                    <div class="filter-group">
+                        <select class="filter-select">
+                            <option value="all">جميع الفئات</option>
+                            <option value="food">أطعمة</option>
+                            <option value="beverages">مشروبات</option>
+                            <option value="household">منتجات منزلية</option>
+                            <option value="personal">منتجات شخصية</option>
+                        </select>
+                        <input type="text" placeholder="البحث في المنتجات..." class="search-input">
+                        <button class="btn btn-secondary">بحث</button>
+                    </div>
+                </div>
+
+                <div class="products-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">إجمالي المنتجات:</span>
+                        <span class="stat-value">2,450</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">منتجات ناقصة:</span>
+                        <span class="stat-value warning">25</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">منتجات منتهية الصلاحية:</span>
+                        <span class="stat-value error">12</span>
+                    </div>
+                </div>
+
+                <div class="products-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الصورة</th>
+                                <th>اسم المنتج</th>
+                                <th>الفئة</th>
+                                <th>السعر</th>
+                                <th>الكمية</th>
+                                <th>تاريخ الانتهاء</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><img src="../assets/images/products/milk.jpg" alt="حليب" class="product-thumb"></td>
+                                <td>حليب طازج 1 لتر</td>
+                                <td>مشروبات</td>
+                                <td>15 ج.م</td>
+                                <td>50</td>
+                                <td>2025-10-15</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">تعديل</button>
+                                    <button class="btn btn-sm btn-danger">حذف</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><img src="../assets/images/products/bread.jpg" alt="خبز" class="product-thumb"></td>
+                                <td>خبز أبيض</td>
+                                <td>أطعمة</td>
+                                <td>5 ج.م</td>
+                                <td>100</td>
+                                <td>2025-10-10</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">تعديل</button>
+                                    <button class="btn btn-sm btn-danger">حذف</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders" class="dashboard-section">
+                <div class="section-header">
+                    <h2>إدارة الطلبات</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="refreshOrders()">تحديث</button>
+                        <button class="btn btn-secondary" onclick="exportOrders()">تصدير الطلبات</button>
+                    </div>
+                </div>
+
+                <div class="orders-filters">
+                    <select class="filter-select">
+                        <option value="all">جميع الطلبات</option>
+                        <option value="pending">في الانتظار</option>
+                        <option value="processing">قيد التحضير</option>
+                        <option value="ready">جاهز للاستلام</option>
+                        <option value="delivered">تم التوصيل</option>
+                        <option value="cancelled">ملغي</option>
+                    </select>
+                    <input type="date" class="date-input" placeholder="من تاريخ">
+                    <input type="date" class="date-input" placeholder="إلى تاريخ">
+                </div>
+
+                <div class="orders-list">
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">#ORD-001</span>
+                            <span class="order-status pending">في الانتظار</span>
+                            <span class="order-time">منذ 5 دقائق</span>
+                        </div>
+                        <div class="order-details">
+                            <p><strong>العميل:</strong> أحمد محمد</p>
+                            <p><strong>الهاتف:</strong> 01234567890</p>
+                            <p><strong>العنوان:</strong> شارع التحرير، القاهرة</p>
+                            <p><strong>المنتجات:</strong> حليب، خبز، بيض</p>
+                            <p><strong>المجموع:</strong> 45 ج.م</p>
+                        </div>
+                        <div class="order-actions">
+                            <button class="btn btn-sm btn-primary">قبول</button>
+                            <button class="btn btn-sm btn-secondary">عرض التفاصيل</button>
+                            <button class="btn btn-sm btn-danger">رفض</button>
+                        </div>
+                    </div>
+
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">#ORD-002</span>
+                            <span class="order-status processing">قيد التحضير</span>
+                            <span class="order-time">منذ 15 دقيقة</span>
+                        </div>
+                        <div class="order-details">
+                            <p><strong>العميل:</strong> فاطمة أحمد</p>
+                            <p><strong>الهاتف:</strong> 01234567891</p>
+                            <p><strong>العنوان:</strong> شارع الهرم، الجيزة</p>
+                            <p><strong>المنتجات:</strong> خضروات، فواكه، لحم</p>
+                            <p><strong>المجموع:</strong> 120 ج.م</p>
+                        </div>
+                        <div class="order-actions">
+                            <button class="btn btn-sm btn-success">جاهز</button>
+                            <button class="btn btn-sm btn-secondary">عرض التفاصيل</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customers Section -->
+            <section id="customers" class="dashboard-section">
+                <div class="section-header">
+                    <h2>إدارة العملاء</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="addCustomer()">إضافة عميل</button>
+                        <button class="btn btn-secondary" onclick="exportCustomers()">تصدير العملاء</button>
+                    </div>
+                </div>
+
+                <div class="customers-filters">
+                    <input type="text" placeholder="البحث في العملاء..." class="search-input">
+                    <select class="filter-select">
+                        <option value="all">جميع العملاء</option>
+                        <option value="active">نشطين</option>
+                        <option value="inactive">غير نشطين</option>
+                        <option value="vip">عملاء VIP</option>
+                    </select>
+                </div>
+
+                <div class="customers-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">إجمالي العملاء:</span>
+                        <span class="stat-value">1,250</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">عملاء نشطين:</span>
+                        <span class="stat-value success">850</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">عملاء جدد اليوم:</span>
+                        <span class="stat-value info">15</span>
+                    </div>
+                </div>
+
+                <div class="customers-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الهاتف</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>عدد الطلبات</th>
+                                <th>إجمالي المشتريات</th>
+                                <th>آخر طلب</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>أحمد محمد</td>
+                                <td>01234567890</td>
+                                <td>ahmed@example.com</td>
+                                <td>25</td>
+                                <td>1,250 ج.م</td>
+                                <td>2025-09-28</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">عرض</button>
+                                    <button class="btn btn-sm btn-primary">تعديل</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>فاطمة أحمد</td>
+                                <td>01234567891</td>
+                                <td>fatma@example.com</td>
+                                <td>18</td>
+                                <td>890 ج.م</td>
+                                <td>2025-09-27</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">عرض</button>
+                                    <button class="btn btn-sm btn-primary">تعديل</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="dashboard-section">
+                <div class="section-header">
+                    <h2>التقارير والإحصائيات</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="generateReport()">توليد تقرير</button>
+                        <button class="btn btn-secondary" onclick="exportData()">تصدير البيانات</button>
+                    </div>
+                </div>
+
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h4>تقرير المبيعات اليومية</h4>
+                        <div class="report-chart">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <h4>أكثر المنتجات مبيعاً</h4>
+                        <div class="report-list">
+                            <div class="report-item">
+                                <span>حليب طازج</span>
+                                <span>150 قطعة</span>
+                            </div>
+                            <div class="report-item">
+                                <span>خبز أبيض</span>
+                                <span>200 قطعة</span>
+                            </div>
+                            <div class="report-item">
+                                <span>بيض</span>
+                                <span>100 صينية</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <h4>إحصائيات العملاء</h4>
+                        <div class="report-stats">
+                            <div class="report-stat">
+                                <span>عملاء جدد</span>
+                                <span>15</span>
+                            </div>
+                            <div class="report-stat">
+                                <span>عملاء نشطين</span>
+                                <span>850</span>
+                            </div>
+                            <div class="report-stat">
+                                <span>متوسط الطلب</span>
+                                <span>65 ج.م</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="dashboard-section">
+                <div class="section-header">
+                    <h2>الإعدادات</h2>
+                </div>
+
+                <div class="settings-sections">
+                    <div class="settings-section">
+                        <h4>معلومات السوبر ماركت</h4>
+                        <form class="settings-form">
+                            <div class="form-group">
+                                <label>اسم السوبر ماركت</label>
+                                <input type="text" value="سوبر ماركت النور">
+                            </div>
+                            <div class="form-group">
+                                <label>العنوان</label>
+                                <textarea>شارع التحرير، القاهرة</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>رقم الهاتف</label>
+                                <input type="tel" value="01234567890">
+                            </div>
+                            <div class="form-group">
+                                <label>ساعات العمل</label>
+                                <input type="text" value="8:00 ص - 12:00 م">
+                            </div>
+                            <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h4>إعدادات النظام</h4>
+                        <div class="settings-options">
+                            <div class="setting-item">
+                                <label>إشعارات الطلبات الجديدة</label>
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="setting-item">
+                                <label>تذكير انتهاء الصلاحية</label>
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="setting-item">
+                                <label>إشعارات العملاء</label>
+                                <input type="checkbox" checked>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../supabase-dashboard-config.js"></script>
+    <script src="../js/supabase-dashboard.js"></script>
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/supermarket-dashboard.js"></script>
+</body>
+</html>

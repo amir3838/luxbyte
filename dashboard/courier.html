@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم مندوب التوصيل - Luxbyte</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/courier-dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="../assets/app_icon/LUXBYTEicon.png" alt="Luxbyte" class="logo">
+                    <h1>لوحة تحكم مندوب التوصيل</h1>
+                </div>
+                <div class="user-section">
+                    <div class="user-info">
+                        <span class="user-name">محمد أحمد</span>
+                        <span class="user-role">مندوب توصيل</span>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="dashboard-nav">
+            <ul class="nav-list">
+                <li><a href="#overview" class="nav-link active">نظرة عامة</a></li>
+                <li><a href="#documents" class="nav-link">المستندات</a></li>
+                <li><a href="#deliveries" class="nav-link">التوصيلات</a></li>
+                <li><a href="#earnings" class="nav-link">الأرباح</a></li>
+                <li><a href="#vehicle" class="nav-link">المركبة</a></li>
+                <li><a href="#reports" class="nav-link">التقارير</a></li>
+                <li><a href="#settings" class="nav-link">الإعدادات</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Overview Section -->
+            <section id="overview" class="dashboard-section active">
+                <div class="section-header">
+                    <h2>نظرة عامة</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="uploadDocuments()">رفع مستندات جديدة</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-content">
+                            <h3>المستندات المطلوبة</h3>
+                            <div class="stat-value">4/4</div>
+                            <div class="stat-progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <h3>حالة التفعيل</h3>
+                            <div class="stat-value active">مفعل</div>
+                            <div class="stat-description">جميع المستندات مكتملة</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">🚚</div>
+                        <div class="stat-content">
+                            <h3>التوصيلات اليوم</h3>
+                            <div class="stat-value">12</div>
+                            <div class="stat-description">+2 من أمس</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <h3>الأرباح اليوم</h3>
+                            <div class="stat-value">450 ج.م</div>
+                            <div class="stat-description">+15% من أمس</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⏰</div>
+                        <div class="stat-content">
+                            <h3>ساعات العمل</h3>
+                            <div class="stat-value">8.5</div>
+                            <div class="stat-description">ساعة اليوم</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-content">
+                            <h3>التقييم</h3>
+                            <div class="stat-value">4.8</div>
+                            <div class="stat-description">من 5 نجوم</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3>إجراءات سريعة</h3>
+                    <div class="actions-grid">
+                        <button class="action-btn" onclick="viewDocuments()">
+                            <i class="icon">📄</i>
+                            <span>عرض المستندات</span>
+                        </button>
+                        <button class="action-btn" onclick="viewDeliveries()">
+                            <i class="icon">🚚</i>
+                            <span>التوصيلات الجديدة</span>
+                        </button>
+                        <button class="action-btn" onclick="startShift()">
+                            <i class="icon">▶️</i>
+                            <span>بدء الدوام</span>
+                        </button>
+                        <button class="action-btn" onclick="endShift()">
+                            <i class="icon">⏹️</i>
+                            <span>إنهاء الدوام</span>
+                        </button>
+                        <button class="action-btn" onclick="viewEarnings()">
+                            <i class="icon">💰</i>
+                            <span>عرض الأرباح</span>
+                        </button>
+                        <button class="action-btn" onclick="updateLocation()">
+                            <i class="icon">📍</i>
+                            <span>تحديث الموقع</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Documents Section -->
+            <section id="documents" class="dashboard-section">
+                <div class="section-header">
+                    <h2>إدارة المستندات</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="uploadNewDocument()">رفع مستند جديد</button>
+                    </div>
+                </div>
+
+                <div class="documents-grid">
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>صورة البطاقة (الوجه الأمامي)</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>JPG</p>
+                            <p class="file-name">id_front.jpg</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>صورة البطاقة (الوجه الخلفي)</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>JPG</p>
+                            <p class="file-name">id_back.jpg</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>رخصة القيادة</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>JPG/PDF</p>
+                            <p class="file-name">driving_license.jpg</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>صورة المركبة + اللوحة</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>JPG واضحة</p>
+                            <p class="file-name">vehicle_photo.jpg</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card optional">
+                        <div class="document-header">
+                            <h4>صحيفة الحالة الجنائية</h4>
+                            <span class="status-badge pending">اختياري</span>
+                        </div>
+                        <div class="document-info">
+                            <p>PDF/JPG</p>
+                            <p class="file-name">غير مرفوع</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-primary">رفع</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card optional">
+                        <div class="document-header">
+                            <h4>رخصة المركبة/ترخيص السير</h4>
+                            <span class="status-badge pending">اختياري</span>
+                        </div>
+                        <div class="document-info">
+                            <p>PDF/JPG</p>
+                            <p class="file-name">غير مرفوع</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-primary">رفع</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Deliveries Section -->
+            <section id="deliveries" class="dashboard-section">
+                <div class="section-header">
+                    <h2>إدارة التوصيلات</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="refreshDeliveries()">تحديث</button>
+                        <button class="btn btn-secondary" onclick="viewMap()">عرض الخريطة</button>
+                    </div>
+                </div>
+
+                <div class="deliveries-filters">
+                    <select class="filter-select">
+                        <option value="all">جميع التوصيلات</option>
+                        <option value="pending">في الانتظار</option>
+                        <option value="picked-up">تم الاستلام</option>
+                        <option value="in-transit">قيد التوصيل</option>
+                        <option value="delivered">تم التوصيل</option>
+                        <option value="cancelled">ملغي</option>
+                    </select>
+                    <input type="date" class="date-input" placeholder="من تاريخ">
+                    <input type="date" class="date-input" placeholder="إلى تاريخ">
+                </div>
+
+                <div class="deliveries-list">
+                    <div class="delivery-card">
+                        <div class="delivery-header">
+                            <span class="delivery-id">#DEL-001</span>
+                            <span class="delivery-status pending">في الانتظار</span>
+                            <span class="delivery-time">منذ 5 دقائق</span>
+                        </div>
+                        <div class="delivery-details">
+                            <p><strong>من:</strong> مطعم النور</p>
+                            <p><strong>إلى:</strong> أحمد محمد - شارع التحرير</p>
+                            <p><strong>الهاتف:</strong> 01234567890</p>
+                            <p><strong>المسافة:</strong> 2.5 كم</p>
+                            <p><strong>الرسوم:</strong> 25 ج.م</p>
+                        </div>
+                        <div class="delivery-actions">
+                            <button class="btn btn-sm btn-primary">قبول</button>
+                            <button class="btn btn-sm btn-secondary">عرض التفاصيل</button>
+                            <button class="btn btn-sm btn-danger">رفض</button>
+                        </div>
+                    </div>
+
+                    <div class="delivery-card">
+                        <div class="delivery-header">
+                            <span class="delivery-id">#DEL-002</span>
+                            <span class="delivery-status in-transit">قيد التوصيل</span>
+                            <span class="delivery-time">منذ 20 دقيقة</span>
+                        </div>
+                        <div class="delivery-details">
+                            <p><strong>من:</strong> سوبر ماركت النور</p>
+                            <p><strong>إلى:</strong> فاطمة أحمد - شارع الهرم</p>
+                            <p><strong>الهاتف:</strong> 01234567891</p>
+                            <p><strong>المسافة:</strong> 3.2 كم</p>
+                            <p><strong>الرسوم:</strong> 30 ج.م</p>
+                        </div>
+                        <div class="delivery-actions">
+                            <button class="btn btn-sm btn-success">تم التوصيل</button>
+                            <button class="btn btn-sm btn-secondary">عرض التفاصيل</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Earnings Section -->
+            <section id="earnings" class="dashboard-section">
+                <div class="section-header">
+                    <h2>الأرباح والمكافآت</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="requestPayout()">طلب سحب</button>
+                        <button class="btn btn-secondary" onclick="viewEarningsHistory()">عرض السجل</button>
+                    </div>
+                </div>
+
+                <div class="earnings-summary">
+                    <div class="earnings-card">
+                        <h3>الأرباح اليوم</h3>
+                        <div class="earnings-amount">450 ج.م</div>
+                        <div class="earnings-breakdown">
+                            <p>التوصيلات: 12 × 25 ج.م = 300 ج.م</p>
+                            <p>المكافآت: 150 ج.م</p>
+                        </div>
+                    </div>
+
+                    <div class="earnings-card">
+                        <h3>الأرباح هذا الأسبوع</h3>
+                        <div class="earnings-amount">2,850 ج.م</div>
+                        <div class="earnings-breakdown">
+                            <p>التوصيلات: 85 × 25 ج.م = 2,125 ج.م</p>
+                            <p>المكافآت: 725 ج.م</p>
+                        </div>
+                    </div>
+
+                    <div class="earnings-card">
+                        <h3>الأرباح هذا الشهر</h3>
+                        <div class="earnings-amount">11,200 ج.م</div>
+                        <div class="earnings-breakdown">
+                            <p>التوصيلات: 350 × 25 ج.م = 8,750 ج.م</p>
+                            <p>المكافآت: 2,450 ج.م</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="earnings-chart">
+                    <h3>رسم بياني للأرباح</h3>
+                    <div class="chart-container">
+                        <canvas id="earningsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="payout-section">
+                    <h3>طلب سحب الأرباح</h3>
+                    <div class="payout-form">
+                        <div class="form-group">
+                            <label>المبلغ المطلوب</label>
+                            <input type="number" placeholder="أدخل المبلغ" max="11200">
+                        </div>
+                        <div class="form-group">
+                            <label>طريقة السحب</label>
+                            <select>
+                                <option value="bank">حساب بنكي</option>
+                                <option value="wallet">محفظة إلكترونية</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary">طلب السحب</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vehicle Section -->
+            <section id="vehicle" class="dashboard-section">
+                <div class="section-header">
+                    <h2>إدارة المركبة</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="updateVehicleInfo()">تحديث معلومات المركبة</button>
+                    </div>
+                </div>
+
+                <div class="vehicle-info">
+                    <div class="vehicle-card">
+                        <div class="vehicle-image">
+                            <img src="../assets/images/vehicles/motorcycle.jpg" alt="الدراجة النارية">
+                        </div>
+                        <div class="vehicle-details">
+                            <h3>دراجة نارية - ياماها</h3>
+                            <p><strong>رقم اللوحة:</strong> أ ب ج 1234</p>
+                            <p><strong>الموديل:</strong> 2020</p>
+                            <p><strong>اللون:</strong> أحمر</p>
+                            <p><strong>حالة المركبة:</strong> <span class="status-good">جيدة</span></p>
+                        </div>
+                    </div>
+
+                    <div class="vehicle-maintenance">
+                        <h3>صيانة المركبة</h3>
+                        <div class="maintenance-item">
+                            <span>آخر صيانة</span>
+                            <span>2025-08-15</span>
+                        </div>
+                        <div class="maintenance-item">
+                            <span>الصيانة القادمة</span>
+                            <span>2025-11-15</span>
+                        </div>
+                        <div class="maintenance-item">
+                            <span>عدد الكيلومترات</span>
+                            <span>25,000 كم</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="dashboard-section">
+                <div class="section-header">
+                    <h2>التقارير والإحصائيات</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="generateReport()">توليد تقرير</button>
+                        <button class="btn btn-secondary" onclick="exportData()">تصدير البيانات</button>
+                    </div>
+                </div>
+
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h4>تقرير التوصيلات اليومية</h4>
+                        <div class="report-chart">
+                            <canvas id="deliveriesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <h4>إحصائيات الأداء</h4>
+                        <div class="report-stats">
+                            <div class="report-stat">
+                                <span>متوسط التوصيلات/يوم</span>
+                                <span>12</span>
+                            </div>
+                            <div class="report-stat">
+                                <span>متوسط المسافة/يوم</span>
+                                <span>45 كم</span>
+                            </div>
+                            <div class="report-stat">
+                                <span>معدل الرضا</span>
+                                <span>4.8/5</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <h4>أكثر المناطق توصيلاً</h4>
+                        <div class="report-list">
+                            <div class="report-item">
+                                <span>شارع التحرير</span>
+                                <span>25 توصيلة</span>
+                            </div>
+                            <div class="report-item">
+                                <span>شارع الهرم</span>
+                                <span>18 توصيلة</span>
+                            </div>
+                            <div class="report-item">
+                                <span>مدينة نصر</span>
+                                <span>15 توصيلة</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="dashboard-section">
+                <div class="section-header">
+                    <h2>الإعدادات</h2>
+                </div>
+
+                <div class="settings-sections">
+                    <div class="settings-section">
+                        <h4>معلومات المندوب</h4>
+                        <form class="settings-form">
+                            <div class="form-group">
+                                <label>الاسم الكامل</label>
+                                <input type="text" value="محمد أحمد">
+                            </div>
+                            <div class="form-group">
+                                <label>رقم الهاتف</label>
+                                <input type="tel" value="01234567890">
+                            </div>
+                            <div class="form-group">
+                                <label>العنوان</label>
+                                <textarea>شارع التحرير، القاهرة</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>ساعات العمل المفضلة</label>
+                                <input type="text" value="9:00 ص - 6:00 م">
+                            </div>
+                            <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h4>إعدادات النظام</h4>
+                        <div class="settings-options">
+                            <div class="setting-item">
+                                <label>إشعارات التوصيلات الجديدة</label>
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="setting-item">
+                                <label>تحديث الموقع التلقائي</label>
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="setting-item">
+                                <label>إشعارات الأرباح</label>
+                                <input type="checkbox" checked>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../supabase-dashboard-config.js"></script>
+    <script src="../js/supabase-dashboard.js"></script>
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/courier-dashboard.js"></script>
+</body>
+</html>

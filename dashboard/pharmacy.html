@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الصيدلية - Luxbyte</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/pharmacy-dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="../assets/app_icon/LUXBYTEicon.png" alt="Luxbyte" class="logo">
+                    <h1>لوحة تحكم الصيدلية</h1>
+                </div>
+                <div class="user-section">
+                    <div class="user-info">
+                        <span class="user-name">د. أحمد محمد</span>
+                        <span class="user-role">صيدلي</span>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="dashboard-nav">
+            <ul class="nav-list">
+                <li><a href="#overview" class="nav-link active">نظرة عامة</a></li>
+                <li><a href="#documents" class="nav-link">المستندات</a></li>
+                <li><a href="#inventory" class="nav-link">المخزون</a></li>
+                <li><a href="#orders" class="nav-link">الطلبات</a></li>
+                <li><a href="#reports" class="nav-link">التقارير</a></li>
+                <li><a href="#settings" class="nav-link">الإعدادات</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Overview Section -->
+            <section id="overview" class="dashboard-section active">
+                <div class="section-header">
+                    <h2>نظرة عامة</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="uploadDocuments()">رفع مستندات جديدة</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-content">
+                            <h3>المستندات المطلوبة</h3>
+                            <div class="stat-value">4/4</div>
+                            <div class="stat-progress">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <h3>حالة التفعيل</h3>
+                            <div class="stat-value active">مفعل</div>
+                            <div class="stat-description">جميع المستندات مكتملة</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-content">
+                            <h3>الطلبات اليوم</h3>
+                            <div class="stat-value">12</div>
+                            <div class="stat-description">+3 من أمس</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <h3>الإيرادات اليوم</h3>
+                            <div class="stat-value">2,450 ج.م</div>
+                            <div class="stat-description">+15% من أمس</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3>إجراءات سريعة</h3>
+                    <div class="actions-grid">
+                        <button class="action-btn" onclick="viewDocuments()">
+                            <i class="icon">📄</i>
+                            <span>عرض المستندات</span>
+                        </button>
+                        <button class="action-btn" onclick="manageInventory()">
+                            <i class="icon">📦</i>
+                            <span>إدارة المخزون</span>
+                        </button>
+                        <button class="action-btn" onclick="viewOrders()">
+                            <i class="icon">🛒</i>
+                            <span>الطلبات الجديدة</span>
+                        </button>
+                        <button class="action-btn" onclick="generateReport()">
+                            <i class="icon">📊</i>
+                            <span>تقرير المبيعات</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Documents Section -->
+            <section id="documents" class="dashboard-section">
+                <div class="section-header">
+                    <h2>إدارة المستندات</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="uploadNewDocument()">رفع مستند جديد</button>
+                    </div>
+                </div>
+
+                <div class="documents-grid">
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>لوجو الصيدلية</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>PNG 512×512</p>
+                            <p class="file-name">pharmacy_logo.png</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>واجهة الصيدلية</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>JPG 1280px+</p>
+                            <p class="file-name">pharmacy_facade.jpg</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>ترخيص مزاولة المهنة</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>PDF/JPG</p>
+                            <p class="file-name">pharmacy_practice_license.pdf</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card required">
+                        <div class="document-header">
+                            <h4>السجل التجاري</h4>
+                            <span class="status-badge completed">مكتمل</span>
+                        </div>
+                        <div class="document-info">
+                            <p>PDF/JPG</p>
+                            <p class="file-name">pharmacy_cr.pdf</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-secondary">عرض</button>
+                            <button class="btn btn-sm btn-primary">تحديث</button>
+                        </div>
+                    </div>
+
+                    <div class="document-card optional">
+                        <div class="document-header">
+                            <h4>لافتة داخلية/كونتر</h4>
+                            <span class="status-badge pending">اختياري</span>
+                        </div>
+                        <div class="document-info">
+                            <p>JPG</p>
+                            <p class="file-name">غير مرفوع</p>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-primary">رفع</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inventory Section -->
+            <section id="inventory" class="dashboard-section">
+                <div class="section-header">
+                    <h2>إدارة المخزون</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="addMedicine()">إضافة دواء</button>
+                        <button class="btn btn-secondary" onclick="importInventory()">استيراد مخزون</button>
+                    </div>
+                </div>
+
+                <div class="inventory-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">إجمالي الأدوية:</span>
+                        <span class="stat-value">1,250</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">منتهية الصلاحية:</span>
+                        <span class="stat-value warning">15</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">ناقصة المخزون:</span>
+                        <span class="stat-value error">8</span>
+                    </div>
+                </div>
+
+                <div class="inventory-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>اسم الدواء</th>
+                                <th>الكمية</th>
+                                <th>تاريخ الانتهاء</th>
+                                <th>السعر</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>باراسيتامول 500mg</td>
+                                <td>150</td>
+                                <td>2025-12-15</td>
+                                <td>25 ج.م</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">تعديل</button>
+                                    <button class="btn btn-sm btn-danger">حذف</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>أموكسيسيلين 250mg</td>
+                                <td>75</td>
+                                <td>2025-11-20</td>
+                                <td>45 ج.م</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">تعديل</button>
+                                    <button class="btn btn-sm btn-danger">حذف</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders" class="dashboard-section">
+                <div class="section-header">
+                    <h2>إدارة الطلبات</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="refreshOrders()">تحديث</button>
+                    </div>
+                </div>
+
+                <div class="orders-filters">
+                    <select class="filter-select">
+                        <option value="all">جميع الطلبات</option>
+                        <option value="pending">في الانتظار</option>
+                        <option value="processing">قيد التحضير</option>
+                        <option value="ready">جاهز للاستلام</option>
+                        <option value="completed">مكتمل</option>
+                    </select>
+                </div>
+
+                <div class="orders-list">
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">#ORD-001</span>
+                            <span class="order-status pending">في الانتظار</span>
+                        </div>
+                        <div class="order-details">
+                            <p><strong>العميل:</strong> أحمد محمد</p>
+                            <p><strong>الهاتف:</strong> 01234567890</p>
+                            <p><strong>الأدوية:</strong> باراسيتامول، أموكسيسيلين</p>
+                            <p><strong>المجموع:</strong> 70 ج.م</p>
+                        </div>
+                        <div class="order-actions">
+                            <button class="btn btn-sm btn-primary">قبول</button>
+                            <button class="btn btn-sm btn-secondary">رفض</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="dashboard-section">
+                <div class="section-header">
+                    <h2>التقارير والإحصائيات</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="generateReport()">توليد تقرير</button>
+                        <button class="btn btn-secondary" onclick="exportData()">تصدير البيانات</button>
+                    </div>
+                </div>
+
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h4>تقرير المبيعات اليومية</h4>
+                        <div class="report-chart">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <h4>أكثر الأدوية مبيعاً</h4>
+                        <div class="report-list">
+                            <div class="report-item">
+                                <span>باراسيتامول</span>
+                                <span>150 قطعة</span>
+                            </div>
+                            <div class="report-item">
+                                <span>أموكسيسيلين</span>
+                                <span>75 قطعة</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="dashboard-section">
+                <div class="section-header">
+                    <h2>الإعدادات</h2>
+                </div>
+
+                <div class="settings-sections">
+                    <div class="settings-section">
+                        <h4>معلومات الصيدلية</h4>
+                        <form class="settings-form">
+                            <div class="form-group">
+                                <label>اسم الصيدلية</label>
+                                <input type="text" value="صيدلية النور">
+                            </div>
+                            <div class="form-group">
+                                <label>العنوان</label>
+                                <textarea>شارع التحرير، القاهرة</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>رقم الهاتف</label>
+                                <input type="tel" value="01234567890">
+                            </div>
+                            <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h4>إعدادات النظام</h4>
+                        <div class="settings-options">
+                            <div class="setting-item">
+                                <label>إشعارات الطلبات الجديدة</label>
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="setting-item">
+                                <label>تذكير انتهاء الصلاحية</label>
+                                <input type="checkbox" checked>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../supabase-dashboard-config.js"></script>
+    <script src="../js/supabase-dashboard.js"></script>
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/pharmacy-dashboard.js"></script>
+</body>
+</html>

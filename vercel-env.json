@@ -5,11 +5,11 @@
       "description": "Supabase Project URL"
     },
     "SUPABASE_ANON_KEY": {
-      "value": "YOUR_SUPABASE_ANON_KEY",
+      "value": "sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e",
       "description": "Supabase Anonymous Key"
     },
     "SUPABASE_SERVICE_ROLE_KEY": {
-      "value": "YOUR_SUPABASE_SERVICE_ROLE_KEY",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjIzMTM3MiwiZXhwIjoyMDcxODA3MzcyfQ.3CjojpXtRhvs8AJRh9b4PAMfo6SUPKQBJOVjAP9Qxos",
       "description": "Supabase Service Role Key"
     }
   }

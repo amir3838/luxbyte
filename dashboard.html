@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المراجعة - LUXBYTE</title>
+    <meta name="description" content="لوحة مراجعة طلبات التسجيل في LUXBYTE">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="./assets/app_icon/LUXBYTEICON.PNG" type="image/png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="./assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE Logo">
+                <span>LUXBYTE</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    الرئيسية
+                </a>
+                <a href="choose-platform.html">
+                    <i class="fas fa-plus"></i>
+                    تسجيل جديد
+                </a>
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    تسجيل الخروج
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Page Header -->
+        <div class="card text-center mb-8">
+            <div class="card-header" style="justify-content: center;">
+                <div class="card-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <div>
+                    <h1 class="card-title" style="font-size: 32px; margin-bottom: 8px;" data-i18n="dashboard.title">لوحة المراجعة</h1>
+                    <p style="color: #666; font-size: 18px;" data-i18n="dashboard.subtitle">مراجعة وإدارة طلبات التسجيل</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid mb-8" id="stats-container">
+            <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- Tabs -->
+        <div class="card">
+            <div class="tabs" id="role-tabs">
+                <div class="tab active" data-role="courier" onclick="switchTab('courier')">
+                    <i class="fas fa-motorcycle"></i>
+                    مندوب توصيل
+                </div>
+                <div class="tab" data-role="clinic" onclick="switchTab('clinic')">
+                    <i class="fas fa-stethoscope"></i>
+                    عيادة
+                </div>
+                <div class="tab" data-role="pharmacy" onclick="switchTab('pharmacy')">
+                    <i class="fas fa-pills"></i>
+                    صيدلية
+                </div>
+                <div class="tab" data-role="supermarket" onclick="switchTab('supermarket')">
+                    <i class="fas fa-shopping-cart"></i>
+                    سوبر ماركت
+                </div>
+                <div class="tab" data-role="restaurant" onclick="switchTab('restaurant')">
+                    <i class="fas fa-utensils"></i>
+                    مطعم
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content active" id="tab-courier">
+                <div id="courier-data">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-clinic">
+                <div id="clinic-data">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-pharmacy">
+                <div id="pharmacy-data">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-supermarket">
+                <div id="supermarket-data">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-restaurant">
+                <div id="restaurant-data">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="i18n-dict.js"></script>
+    <script src="common.js"></script>
+    <script>
+        // Auth guard
+        (async ()=>{ await LUXBYTE.requireAuthOrRedirect(); })();
+    </script>
+    <script>
+        let currentTab = 'courier';
+        let allData = {};
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', async () => {
+            injectNavbar('dash');
+            injectSocialBar();
+            injectAlHareth();
+            injectThemeToggle();
+            injectLanguageToggle();
+            applyI18n();
+            await loadAllData();
+            updateStats();
+            switchTab('courier');
+        });
+
+        async function loadAllData() {
+            const roles = ['courier', 'clinic', 'pharmacy', 'supermarket', 'restaurant'];
+
+            for (const role of roles) {
+                try {
+                    const roleConfig = window.CONFIG.ROLES[role];
+                    const { data, error } = await LUXBYTE.supabase
+                        .from(roleConfig.table)
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (error) {
+                        console.error(`Error loading ${role} data:`, error);
+                        allData[role] = [];
+                    } else {
+                        allData[role] = data || [];
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${role} data:`, error);
+                    allData[role] = [];
+                }
+            }
+        }
+
+        function updateStats() {
+            const statsContainer = document.getElementById('stats-container');
+            const totalRequests = Object.values(allData).reduce((sum, data) => sum + data.length, 0);
+
+            statsContainer.innerHTML = `
+                <div class="card text-center">
+                    <div class="card-icon" style="margin: 0 auto 16px; background: linear-gradient(90deg, #10b981, #059669);">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h3 style="color: #333; margin-bottom: 8px;">إجمالي الطلبات</h3>
+                    <p style="font-size: 32px; font-weight: bold; color: #10b981; margin: 0;">${totalRequests}</p>
+                </div>
+
+                <div class="card text-center">
+                    <div class="card-icon" style="margin: 0 auto 16px; background: linear-gradient(90deg, #3b82f6, #1d4ed8);">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 style="color: #333; margin-bottom: 8px;">في الانتظار</h3>
+                    <p style="font-size: 32px; font-weight: bold; color: #3b82f6; margin: 0;">${getPendingCount()}</p>
+                </div>
+
+                <div class="card text-center">
+                    <div class="card-icon" style="margin: 0 auto 16px; background: linear-gradient(90deg, #f59e0b, #d97706);">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 style="color: #333; margin-bottom: 8px;">مقبولة</h3>
+                    <p style="font-size: 32px; font-weight: bold; color: #f59e0b; margin: 0;">${getApprovedCount()}</p>
+                </div>
+
+                <div class="card text-center">
+                    <div class="card-icon" style="margin: 0 auto 16px; background: linear-gradient(90deg, #ef4444, #dc2626);">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <h3 style="color: #333; margin-bottom: 8px;">مرفوضة</h3>
+                    <p style="font-size: 32px; font-weight: bold; color: #ef4444; margin: 0;">${getRejectedCount()}</p>
+                </div>
+            `;
+        }
+
+        function getPendingCount() {
+            return Object.values(allData).reduce((sum, data) =>
+                sum + data.filter(item => item.status === 'pending').length, 0);
+        }
+
+        function getApprovedCount() {
+            return Object.values(allData).reduce((sum, data) =>
+                sum + data.filter(item => item.status === 'approved').length, 0);
+        }
+
+        function getRejectedCount() {
+            return Object.values(allData).reduce((sum, data) =>
+                sum + data.filter(item => item.status === 'rejected').length, 0);
+        }
+
+        function switchTab(role) {
+            // Update tab appearance
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-role="${role}"]`).classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`tab-${role}`).classList.add('active');
+
+            currentTab = role;
+            displayRoleData(role);
+        }
+
+        function displayRoleData(role) {
+            const container = document.getElementById(`${role}-data`);
+            const data = allData[role] || [];
+            const roleConfig = window.CONFIG.ROLES[role];
+
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 48px; color: #666;">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 16px; color: #d1d5db;"></i>
+                        <h3 style="color: #666; margin-bottom: 8px;">لا توجد طلبات</h3>
+                        <p>لا توجد طلبات ${roleConfig.name} حالياً</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Create table
+            const table = document.createElement('table');
+            table.className = 'table';
+
+            // Table header
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th>البريد الإلكتروني</th>
+                    <th>تاريخ الطلب</th>
+                    <th>الحالة</th>
+                    <th>البيانات</th>
+                    <th>الملفات</th>
+                    <th>الإجراءات</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+
+            // Table body
+            const tbody = document.createElement('tbody');
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.email || 'غير محدد'}</td>
+                    <td>${formatDate(item.created_at)}</td>
+                    <td>${getStatusBadge(item.status)}</td>
+                    <td>
+                        <button class="btn btn-outline" onclick="viewDetails('${role}', ${item.id})" style="padding: 4px 8px; font-size: 12px;">
+                            <i class="fas fa-eye"></i>
+                            عرض
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline" onclick="viewFiles('${role}', ${item.id})" style="padding: 4px 8px; font-size: 12px;">
+                            <i class="fas fa-file"></i>
+                            ملفات
+                        </button>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 4px;">
+                            <button class="btn" onclick="updateStatus('${role}', ${item.id}, 'approved')" style="padding: 4px 8px; font-size: 12px; background: #10b981;">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-danger" onclick="updateStatus('${role}', ${item.id}, 'rejected')" style="padding: 4px 8px; font-size: 12px;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+
+            container.innerHTML = '';
+            container.appendChild(table);
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                pending: '<span style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 12px; font-size: 12px;">في الانتظار</span>',
+                approved: '<span style="background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 12px; font-size: 12px;">مقبول</span>',
+                rejected: '<span style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 12px; font-size: 12px;">مرفوض</span>'
+            };
+            return badges[status] || '<span style="background: #f3f4f6; color: #374151; padding: 4px 8px; border-radius: 12px; font-size: 12px;">غير محدد</span>';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ar-EG', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        async function updateStatus(role, id, status) {
+            try {
+                const roleConfig = window.CONFIG.ROLES[role];
+                const { error } = await LUXBYTE.supabase
+                    .from(roleConfig.table)
+                    .update({ status: status })
+                    .eq('id', id);
+
+                if (error) {
+                    throw error;
+                }
+
+                LUXBYTE.notifyOk(`تم تحديث حالة الطلب إلى ${status === 'approved' ? 'مقبول' : 'مرفوض'}`);
+
+                // Reload data
+                await loadAllData();
+                updateStats();
+                displayRoleData(role);
+
+            } catch (error) {
+                console.error('Update status error:', error);
+                LUXBYTE.notifyErr('خطأ في تحديث حالة الطلب');
+            }
+        }
+
+        function viewDetails(role, id) {
+            const data = allData[role].find(item => item.id === id);
+            if (!data) return;
+
+            const roleConfig = window.CONFIG.ROLES[role];
+            let details = `
+                <h3>تفاصيل طلب ${roleConfig.name}</h3>
+                <div style="display: grid; gap: 16px; margin-top: 16px;">
+            `;
+
+            // Personal info
+            details += `
+                <div>
+                    <h4>البيانات الشخصية</h4>
+                    <p><strong>الاسم:</strong> ${data.first_name || ''} ${data.last_name || ''}</p>
+                    <p><strong>البريد الإلكتروني:</strong> ${data.email || ''}</p>
+                    <p><strong>رقم الهاتف:</strong> ${data.phone || ''}</p>
+                </div>
+            `;
+
+            // Location
+            details += `
+                <div>
+                    <h4>الموقع</h4>
+                    <p><strong>المحافظة:</strong> ${data.governorate || ''}</p>
+                    <p><strong>المدينة:</strong> ${data.city || ''}</p>
+                    <p><strong>العنوان:</strong> ${data.address || ''}</p>
+                </div>
+            `;
+
+            // Role-specific fields
+            roleConfig.fields.forEach(field => {
+                const value = data[field.name];
+                if (value) {
+                    details += `<p><strong>${field.label}:</strong> ${value}</p>`;
+                }
+            });
+
+            details += '</div>';
+
+            // Show modal or alert
+            alert(details);
+        }
+
+        function viewFiles(role, id) {
+            const data = allData[role].find(item => item.id === id);
+            if (!data) return;
+
+            const roleConfig = window.CONFIG.ROLES[role];
+            let files = `<h3>ملفات ${roleConfig.name}</h3><div style="display: grid; gap: 12px; margin-top: 16px;">`;
+
+            roleConfig.files.forEach(file => {
+                const url = data[file.name];
+                if (url) {
+                    files += `
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8fafc; border-radius: 8px;">
+                            <i class="fas fa-${file.accept.startsWith('image') ? 'image' : 'file'}" style="color: #6b7280;"></i>
+                            <span style="flex: 1;">${file.label}</span>
+                            <a href="${url}" target="_blank" class="btn btn-outline" style="padding: 4px 8px; font-size: 12px;">
+                                <i class="fas fa-external-link-alt"></i>
+                                فتح
+                            </a>
+                        </div>
+                    `;
+                }
+            });
+
+            files += '</div>';
+
+            // Show modal or alert
+            alert(files);
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                await LUXBYTE.supabase.auth.signOut();
+                LUXBYTE.notifyOk('تم تسجيل الخروج بنجاح');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                LUXBYTE.notifyErr('خطأ في تسجيل الخروج');
+            }
+        }
+    </script>
+</body>
+</html>

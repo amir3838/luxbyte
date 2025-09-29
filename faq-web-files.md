@@ -238,7 +238,7 @@
     <div class="app-subtitle">بوابة تطبيق شوب إي جي وماستر درايفر</div>
     <div class="spinner"></div>
     <div class="loading-text">جاري التحميل...</div>
-    <div class="company-info">تطوير شركة لكس بايت المحدودة المسئولية</div>
+    <div class="company-info">تطوير شركة لوكس بايت المحدودة المسئولية</div>
   </div>
 
   <!-- Flutter App Container -->

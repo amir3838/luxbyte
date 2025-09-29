@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXBYTE - التدفق الموحد</title>
+    <meta name="description" content="تدفق موحد لاختيار الدور وتسجيل الحساب وتسجيل الدخول">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .unified-flow {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--luxbyte-primary), var(--luxbyte-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-16);
+        }
+
+        .flow-container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--color-white);
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+
+        .flow-header {
+            background: var(--luxbyte-gradient);
+            color: var(--color-white);
+            padding: var(--space-32);
+            text-align: center;
+        }
+
+        .flow-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-16);
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-3xl);
+        }
+
+        .flow-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-8);
+        }
+
+        .flow-subtitle {
+            font-size: var(--font-size-lg);
+            opacity: 0.9;
+        }
+
+        .flow-content {
+            padding: var(--space-32);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--space-32);
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--color-gray-200);
+            color: var(--color-text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+            margin: 0 var(--space-8);
+            position: relative;
+        }
+
+        .step.active {
+            background: var(--luxbyte-primary);
+            color: var(--color-white);
+        }
+
+        .step.completed {
+            background: var(--color-green-500);
+            color: var(--color-white);
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            width: 20px;
+            height: 2px;
+            background: var(--color-gray-200);
+            transform: translateY(-50%);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step.completed::after {
+            background: var(--color-green-500);
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text);
+            margin-bottom: var(--space-16);
+            text-align: center;
+        }
+
+        .step-description {
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-24);
+            text-align: center;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-16);
+            margin-bottom: var(--space-24);
+        }
+
+        .role-card {
+            border: 2px solid var(--color-gray-200);
+            border-radius: var(--border-radius-lg);
+            padding: var(--space-16);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .role-card:hover {
+            border-color: var(--luxbyte-primary);
+            background: var(--color-bg-1);
+        }
+
+        .role-card.selected {
+            border-color: var(--luxbyte-primary);
+            background: var(--color-bg-1);
+        }
+
+        .role-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto var(--space-8);
+            background: var(--luxbyte-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-white);
+            font-size: var(--font-size-xl);
+        }
+
+        .role-name {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-24);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text);
+            margin-bottom: var(--space-8);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--space-12) var(--space-16);
+            border: 2px solid var(--color-gray-300);
+            border-radius: var(--border-radius-lg);
+            font-size: var(--font-size-base);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--luxbyte-primary);
+            box-shadow: 0 0 0 3px rgba(33, 128, 141, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-16);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-8);
+            padding: var(--space-12) var(--space-24);
+            border: none;
+            border-radius: var(--border-radius-lg);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn--primary {
+            background: var(--luxbyte-gradient);
+            color: var(--color-white);
+            width: 100%;
+            padding: var(--space-16);
+            font-size: var(--font-size-lg);
+        }
+
+        .btn--primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn--secondary {
+            background: transparent;
+            color: var(--luxbyte-primary);
+            border: 2px solid var(--luxbyte-primary);
+        }
+
+        .btn--secondary:hover {
+            background: var(--luxbyte-primary);
+            color: var(--color-white);
+        }
+
+        .btn--outline {
+            background: transparent;
+            color: var(--color-text-secondary);
+            border: 2px solid var(--color-gray-300);
+        }
+
+        .btn--outline:hover {
+            background: var(--color-gray-100);
+        }
+
+        .flow-actions {
+            display: flex;
+            gap: var(--space-12);
+            margin-top: var(--space-24);
+        }
+
+        .login-options {
+            text-align: center;
+            margin-top: var(--space-24);
+            padding-top: var(--space-24);
+            border-top: 1px solid var(--color-gray-200);
+        }
+
+        .login-options p {
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-16);
+        }
+
+        .login-link {
+            color: var(--luxbyte-primary);
+            text-decoration: none;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        .image-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-16);
+            margin-bottom: var(--space-24);
+        }
+
+        .image-upload-item {
+            border: 2px dashed var(--color-gray-300);
+            border-radius: var(--border-radius-lg);
+            padding: var(--space-16);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .image-upload-item:hover {
+            border-color: var(--luxbyte-primary);
+            background: var(--color-bg-1);
+        }
+
+        .image-upload-item.uploaded {
+            border-color: var(--color-green-500);
+            background: var(--color-bg-3);
+        }
+
+        .upload-icon {
+            font-size: var(--font-size-3xl);
+            color: var(--color-gray-400);
+            margin-bottom: var(--space-8);
+        }
+
+        .upload-text {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-4);
+        }
+
+        .upload-requirement {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+        }
+
+        .upload-button {
+            background: var(--luxbyte-primary);
+            color: var(--color-white);
+            padding: var(--space-8) var(--space-12);
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            margin-top: var(--space-8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-4);
+            transition: all 0.3s ease;
+        }
+
+        .upload-button:hover {
+            background: var(--luxbyte-secondary);
+            transform: translateY(-1px);
+        }
+
+        .uploaded-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--space-8);
+        }
+
+        .remove-image {
+            background: var(--color-red-500);
+            color: var(--color-white);
+            border: none;
+            border-radius: var(--border-radius-md);
+            padding: var(--space-4) var(--space-8);
+            font-size: var(--font-size-xs);
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--color-gray-200);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: var(--space-8);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--luxbyte-primary);
+            transition: width 0.3s ease;
+        }
+
+        .upload-instructions {
+            background: var(--color-gray-200);
+            padding: var(--space-16);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: var(--space-16);
+            text-align: center;
+        }
+
+        .upload-instructions p {
+            color: var(--color-text-secondary);
+            margin: 0;
+            font-style: italic;
+        }
+
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-16);
+        }
+
+        .modal-content {
+            background: var(--color-white);
+            border-radius: var(--border-radius-xl);
+            max-width: 450px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-24);
+            border-bottom: 1px solid var(--color-gray-200);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--color-text);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: var(--font-size-2xl);
+            cursor: pointer;
+            color: var(--color-text-secondary);
+        }
+
+        .modal-body {
+            padding: var(--space-24);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--luxbyte-primary);
+        }
+
+        @media (max-width: 768px) {
+            .unified-flow {
+                padding: var(--space-8);
+            }
+
+            .flow-content {
+                padding: var(--space-24);
+            }
+
+            .role-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-actions {
+                flex-direction: column;
+            }
+
+            .image-upload-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="unified-flow">
+        <div class="flow-container">
+            <div class="flow-header">
+                <div class="flow-logo">
+                    <img src="./assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE Logo" class="company-logo">
+                </div>
+                <h1 class="flow-title">LUXBYTE</h1>
+                <p class="flow-subtitle">شركة لوكس بايت المحدودة المسئولية</p>
+            </div>
+
+            <div class="flow-content">
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step active" data-step="1">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="step" data-step="2">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="step" data-step="3">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <div class="step" data-step="4">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+
+                <!-- Step 1: Choose Service -->
+                <div class="step-content active" id="step-1">
+                    <h2 class="step-title">اختر نوع الخدمة</h2>
+                    <p class="step-description">اختر الخدمة المناسبة لك</p>
+
+                    <div class="role-grid">
+                        <div class="role-card" data-service="shopeg">
+                            <div class="role-icon">
+                                <img src="./assets/images/shopeg_logo.webp" alt="شوب إي جي" style="width: 30px; height: 30px; object-fit: contain;">
+                            </div>
+                            <div class="role-name">شوب إي جي</div>
+                        </div>
+                        <div class="role-card" data-service="masterdriver">
+                            <div class="role-icon">
+                                <img src="./assets/images/activities/driver.png" alt="ماستر درايفر" style="width: 30px; height: 30px; object-fit: contain;">
+                            </div>
+                            <div class="role-name">ماستر درايفر</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-actions">
+                        <button class="btn btn--primary" id="next-to-role" disabled>
+                            <i class="fas fa-arrow-left"></i>
+                            التالي
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Choose Role -->
+                <div class="step-content" id="step-2">
+                    <h2 class="step-title">اختر نوع النشاط</h2>
+                    <p class="step-description">اختر نوع النشاط المناسب لك</p>
+
+                    <div class="role-grid" id="role-grid">
+                        <!-- سيتم ملؤها بواسطة JavaScript -->
+                    </div>
+
+                    <div class="flow-actions">
+                        <button class="btn btn--outline" id="back-to-service">
+                            <i class="fas fa-arrow-right"></i>
+                            السابق
+                        </button>
+                        <button class="btn btn--primary" id="next-to-registration" disabled>
+                            <i class="fas fa-arrow-left"></i>
+                            التالي
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Registration Form -->
+                <div class="step-content" id="step-3">
+                    <h2 class="step-title">إنشاء الحساب</h2>
+                    <p class="step-description">املأ البيانات المطلوبة لإنشاء حسابك</p>
+
+                    <form id="registration-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">الاسم الأول</label>
+                                <input type="text" class="form-control" id="first-name" placeholder="أدخل اسمك الأول" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">اسم العائلة</label>
+                                <input type="text" class="form-control" id="last-name" placeholder="أدخل اسم العائلة" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="email" placeholder="example@email.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">رقم الهاتف</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="01XXXXXXXXX" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">المحافظة</label>
+                                <select class="form-control" id="governorate" required>
+                                    <option value="">اختر المحافظة</option>
+                                    <option value="القاهرة">القاهرة</option>
+                                    <option value="الجيزة">الجيزة</option>
+                                    <option value="القليوبية">القليوبية</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">المدينة</label>
+                                <select class="form-control" id="city" required disabled>
+                                    <option value="">اختر المدينة</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">العنوان التفصيلي</label>
+                            <textarea class="form-control" id="address" placeholder="أدخل عنوانك بالتفصيل" rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">كلمة المرور</label>
+                                <input type="password" class="form-control" id="password" placeholder="أدخل كلمة المرور" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">تأكيد كلمة المرور</label>
+                                <input type="password" class="form-control" id="confirm-password" placeholder="أكد كلمة المرور" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="terms-acceptance" required>
+                                <span class="checkmark"></span>
+                                أوافق على <a href="terms-conditions.html" target="_blank" rel="noopener">الشروط والأحكام</a>
+                            </label>
+                        </div>
+                    </form>
+
+                    <div class="flow-actions">
+                        <button class="btn btn--outline" id="back-to-role">
+                            <i class="fas fa-arrow-right"></i>
+                            السابق
+                        </button>
+                        <button class="btn btn--primary" id="next-to-upload">
+                            <i class="fas fa-arrow-left"></i>
+                            التالي
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Upload Documents -->
+                <div class="step-content" id="step-4">
+                    <h2 class="step-title">رفع المستندات</h2>
+                    <p class="step-description">ارفع المستندات المطلوبة حسب نوع النشاط</p>
+
+                    <div class="upload-instructions">
+                        <p>سيتم عرض المستندات المطلوبة حسب نوع النشاط المختار</p>
+                    </div>
+
+                    <div class="image-upload-grid" id="image-upload-grid">
+                        <!-- سيتم ملؤها بواسطة JavaScript -->
+                    </div>
+
+                    <div class="flow-actions">
+                        <button class="btn btn--outline" id="back-to-registration">
+                            <i class="fas fa-arrow-right"></i>
+                            السابق
+                        </button>
+                        <button class="btn btn--primary" id="complete-registration">
+                            <i class="fas fa-check"></i>
+                            إنشاء الحساب
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Login Option -->
+                <div class="login-options">
+                    <p>لديك حساب بالفعل؟</p>
+                    <a href="#" class="login-link" id="show-login">
+                        <i class="fas fa-sign-in-alt"></i>
+                        تسجيل الدخول
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="login-modal" style="display: none;">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>تسجيل الدخول</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label class="form-label">البريد الإلكتروني</label>
+                            <input type="email" class="form-control" id="login-email" placeholder="example@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">كلمة المرور</label>
+                            <input type="password" class="form-control" id="login-password" placeholder="أدخل كلمة المرور" required>
+                        </div>
+                        <button type="submit" class="btn btn--primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            تسجيل الدخول
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/unified-flow.js"></script>
+</body>
+</html>

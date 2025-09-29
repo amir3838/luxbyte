@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختيار النشاط - LUXBYTE</title>
+    <meta name="description" content="اختر نوع النشاط المناسب لك في منصة شوب إي جي">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="./assets/app_icon/LUXBYTEICON.PNG" type="image/png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="./assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE Logo">
+                <span>LUXBYTE</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    الرئيسية
+                </a>
+                <a href="choose-platform.html">
+                    <i class="fas fa-arrow-right"></i>
+                    العودة لاختيار المنصة
+                </a>
+                <a href="dashboard.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    لوحة المراجعة
+                </a>
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    تسجيل الخروج
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Page Header -->
+        <div class="card text-center mb-8">
+            <div class="card-header" style="justify-content: center;">
+                <div class="card-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div>
+                    <h1 class="card-title" style="font-size: 32px; margin-bottom: 8px;" data-i18n="choose_role.heading">اختر نوع النشاط</h1>
+                    <p style="color: #666; font-size: 18px;" data-i18n="choose_role.helper">اختر النشاط المناسب لك في منصة شوب إي جي</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Role Cards -->
+        <div class="grid">
+            <!-- Restaurant Card -->
+            <div class="card role-card" data-role="restaurant">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title" data-i18n="choose_role.restaurant.title">مطعم</h3>
+                        <p style="color: #666; font-size: 14px;">إدارة المطاعم والوجبات</p>
+                    </div>
+                </div>
+
+                <p class="card-description">
+                    منصة متكاملة لإدارة المطاعم، تتيح لك إدارة قائمة الطعام، الطلبات،
+                    العملاء، والتوصيل بسهولة ومرونة.
+                </p>
+
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #333; margin-bottom: 12px; font-size: 16px;">المميزات:</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            إدارة قائمة الطعام
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            تتبع الطلبات
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            إدارة العملاء
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            تقارير المبيعات
+                        </li>
+                    </ul>
+                </div>
+
+                <a href="signup.html?role=restaurant" class="btn" style="width: 100%; display: block; text-align: center;">
+                    <i class="fas fa-utensils"></i>
+                    اختر المطعم
+                </a>
+            </div>
+
+            <!-- Supermarket Card -->
+            <div class="card role-card" data-role="supermarket">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title" data-i18n="choose_role.supermarket.title">سوبر ماركت</h3>
+                        <p style="color: #666; font-size: 14px;">إدارة المتاجر الكبرى</p>
+                    </div>
+                </div>
+
+                <p class="card-description">
+                    حل متكامل لإدارة السوبر ماركت، يتضمن إدارة المخزون،
+                    المبيعات، العملاء، والتوصيل المنزلي.
+                </p>
+
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #333; margin-bottom: 12px; font-size: 16px;">المميزات:</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            إدارة المخزون
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            نظام نقاط البيع
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            التوصيل المنزلي
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            تقارير مالية
+                        </li>
+                    </ul>
+                </div>
+
+                <a href="signup.html?role=supermarket" class="btn" style="width: 100%; display: block; text-align: center;">
+                    <i class="fas fa-shopping-cart"></i>
+                    اختر السوبر ماركت
+                </a>
+            </div>
+
+            <!-- Pharmacy Card -->
+            <div class="card role-card" data-role="pharmacy">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title" data-i18n="choose_role.pharmacy.title">صيدلية</h3>
+                        <p style="color: #666; font-size: 14px;">إدارة الصيدليات</p>
+                    </div>
+                </div>
+
+                <p class="card-description">
+                    نظام متخصص لإدارة الصيدليات، يتضمن إدارة الأدوية،
+                    الوصفات الطبية، العملاء، والتوصيل السريع.
+                </p>
+
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #333; margin-bottom: 12px; font-size: 16px;">المميزات:</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            إدارة الأدوية
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            نظام الوصفات
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            التوصيل السريع
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            تتبع الصلاحية
+                        </li>
+                    </ul>
+                </div>
+
+                <a href="signup.html?role=pharmacy" class="btn" style="width: 100%; display: block; text-align: center;">
+                    <i class="fas fa-pills"></i>
+                    اختر الصيدلية
+                </a>
+            </div>
+
+            <!-- Clinic Card -->
+            <div class="card role-card" data-role="clinic">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title" data-i18n="choose_role.clinic.title">عيادة</h3>
+                        <p style="color: #666; font-size: 14px;">إدارة العيادات الطبية</p>
+                    </div>
+                </div>
+
+                <p class="card-description">
+                    نظام متكامل لإدارة العيادات الطبية، يتضمن إدارة المواعيد،
+                    المرضى، السجلات الطبية، والوصفات الطبية.
+                </p>
+
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #333; margin-bottom: 12px; font-size: 16px;">المميزات:</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            إدارة المواعيد
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            السجلات الطبية
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            نظام الوصفات
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            تقارير طبية
+                        </li>
+                    </ul>
+                </div>
+
+                <a href="signup.html?role=clinic" class="btn" style="width: 100%; display: block; text-align: center;">
+                    <i class="fas fa-stethoscope"></i>
+                    اختر العيادة
+                </a>
+            </div>
+
+            <!-- Courier Card -->
+            <div class="card role-card" data-role="courier">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-motorcycle"></i>
+                    </div>
+                    <div>
+                        <h3 class="card-title" data-i18n="choose_role.courier.title">مندوب توصيل</h3>
+                        <p style="color: #666; font-size: 14px;">خدمات التوصيل</p>
+                    </div>
+                </div>
+
+                <p class="card-description">
+                    منصة متخصصة لمندوبي التوصيل، تتيح لك إدارة الطلبات،
+                    التتبع، الأرباح، والتواصل مع العملاء.
+                </p>
+
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #333; margin-bottom: 12px; font-size: 16px;">المميزات:</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            إدارة الطلبات
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            تتبع GPS
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            حساب الأرباح
+                        </li>
+                        <li style="margin-bottom: 6px; color: #666; font-size: 14px;">
+                            <i class="fas fa-check" style="color: #10b981; margin-left: 6px; font-size: 12px;"></i>
+                            تقييم العملاء
+                        </li>
+                    </ul>
+                </div>
+
+                <a href="signup.html?role=courier" class="btn" style="width: 100%; display: block; text-align: center;">
+                    <i class="fas fa-motorcycle"></i>
+                    اختر مندوب التوصيل
+                </a>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-8">
+            <a href="choose-platform.html" class="btn btn-outline">
+                <i class="fas fa-arrow-right"></i>
+                العودة لاختيار المنصة
+            </a>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="i18n-dict.js"></script>
+    <script src="common.js"></script>
+    <script>
+        // Role selection
+        function selectRole(role) {
+            // Store selected role
+            LUXBYTE.setStorage('selectedRole', role);
+
+            // Redirect to signup with role parameter
+            window.location.href = `signup.html?role=${role}`;
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                await LUXBYTE.supabase.auth.signOut();
+                LUXBYTE.notifyOk('تم تسجيل الخروج بنجاح');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                LUXBYTE.notifyErr('خطأ في تسجيل الخروج');
+            }
+        }
+
+        // Add hover effects to role cards
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize LUXBYTE
+            await LUXBYTE.init();
+
+            const roleCards = document.querySelectorAll('.role-card');
+
+            roleCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-8px)';
+                    card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)';
+                });
+            });
+
+            // Check if user came from ShopEG platform
+            const selectedPlatform = LUXBYTE.getStorage('selectedPlatform');
+            if (selectedPlatform !== 'shopeg') {
+                // Redirect to platform selection if not from ShopEG
+                window.location.href = 'choose-platform.html';
+            }
+
+            // Initialize common elements
+            injectNavbar('signup');
+            injectSocialBar();
+            injectAlHareth();
+            injectThemeToggle();
+            injectLanguageToggle();
+            applyI18n();
+        });
+    </script>
+</body>
+</html>

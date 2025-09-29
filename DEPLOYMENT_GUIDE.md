@@ -1,194 +1,438 @@
-# 🚀 دليل النشر - Luxbyte File Management System
+# دليل النشر - LUXBYTE MPA
 
-## ✅ التحقق من المشروع
+## 🚀 نظرة عامة
 
-تم التحقق من جميع الملفات والتأكد من عدم وجود أخطاء:
+هذا الدليل يوضح كيفية نشر تطبيق LUXBYTE Multi-Page Application على Vercel مع Supabase كخلفية.
 
-### ✅ الملفات المُتحقق منها:
-- [x] `file-upload.html` - واجهة رفع الملفات (بدون أخطاء)
-- [x] `js/file-upload-manager.js` - مدير الملفات
-- [x] `supabase/migrations/001_create_file_management_tables.sql` - قاعدة البيانات
-- [x] `supabase/storage-setup.sql` - إعداد التخزين
-- [x] `package.json` - تكوين المشروع
-- [x] `vercel.json` - تكوين Vercel
-- [x] `.gitignore` - ملفات مستبعدة
-- [x] `README.md` - دليل المشروع
+## 📋 المتطلبات
 
-## 🔧 إعداد GitHub
+### 1. الحسابات المطلوبة
+- **Vercel Account**: [vercel.com](https://vercel.com)
+- **Supabase Account**: [supabase.com](https://supabase.com)
+- **GitHub Account**: [github.com](https://github.com) (اختياري)
 
-### 1. إنشاء Repository
+### 2. الأدوات المطلوبة
+- **Node.js**: 16+ (لـ Vercel CLI)
+- **Git**: لإدارة الكود
+- **Supabase CLI**: لإدارة قاعدة البيانات
+
+## 🔧 إعداد Supabase
+
+### 1. إنشاء مشروع Supabase
+
 ```bash
-# اذهب إلى https://github.com/new
-# اسم Repository: luxbyte-file-management
-# الوصف: نظام إدارة الملفات والمستندات الشامل لمنصة Luxbyte
-# Public repository
+# تسجيل الدخول
+supabase login
+
+# إنشاء مشروع جديد
+supabase projects create luxbyte-mpa
+
+# أو استخدام مشروع موجود
+supabase link --project-ref YOUR_PROJECT_REF
 ```
 
-### 2. ربط Repository المحلي
-```bash
-# إضافة remote
-git remote add origin https://github.com/YOUR_USERNAME/luxbyte-file-management.git
+### 2. إعداد قاعدة البيانات
 
-# تغيير اسم الفرع
-git branch -M main
+```sql
+-- إنشاء الجداول
+CREATE TABLE restaurant_requests (
+  id SERIAL PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  governorate TEXT NOT NULL,
+  city TEXT NOT NULL,
+  address TEXT NOT NULL,
+  restaurant_name TEXT NOT NULL,
+  owner_name TEXT NOT NULL,
+  description TEXT,
+  logo TEXT,
+  cover TEXT,
+  facade TEXT,
+  commercial_register TEXT,
+  operating_license TEXT,
+  menu TEXT,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT NOW()
+);
 
-# رفع الكود
-git push -u origin main
+-- جداول مماثلة للأدوار الأخرى
+CREATE TABLE supermarket_requests (
+  id SERIAL PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  governorate TEXT NOT NULL,
+  city TEXT NOT NULL,
+  address TEXT NOT NULL,
+  market_name TEXT NOT NULL,
+  owner_name TEXT NOT NULL,
+  description TEXT,
+  logo TEXT,
+  shelves TEXT,
+  commercial_register TEXT,
+  activity_license TEXT,
+  facade TEXT,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE pharmacy_requests (
+  id SERIAL PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  governorate TEXT NOT NULL,
+  city TEXT NOT NULL,
+  address TEXT NOT NULL,
+  pharmacy_name TEXT NOT NULL,
+  pharmacist_name TEXT NOT NULL,
+  license_number TEXT NOT NULL,
+  logo TEXT,
+  facade TEXT,
+  practice_license TEXT,
+  commercial_register TEXT,
+  interior TEXT,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE clinic_requests (
+  id SERIAL PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  governorate TEXT NOT NULL,
+  city TEXT NOT NULL,
+  address TEXT NOT NULL,
+  clinic_name TEXT NOT NULL,
+  doctor_name TEXT NOT NULL,
+  specialization TEXT NOT NULL,
+  license_number TEXT NOT NULL,
+  logo TEXT,
+  facade TEXT,
+  clinic_license TEXT,
+  doctor_id_front TEXT,
+  doctor_id_back TEXT,
+  certificate TEXT,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE courier_requests (
+  id SERIAL PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  governorate TEXT NOT NULL,
+  city TEXT NOT NULL,
+  address TEXT NOT NULL,
+  national_id TEXT NOT NULL,
+  vehicle_type TEXT NOT NULL,
+  license_number TEXT NOT NULL,
+  id_front TEXT,
+  id_back TEXT,
+  driving_license TEXT,
+  vehicle_photo TEXT,
+  background_check TEXT,
+  vehicle_license TEXT,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+### 3. إعداد Row Level Security (RLS)
+
+```sql
+-- تفعيل RLS على جميع الجداول
+ALTER TABLE restaurant_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE supermarket_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pharmacy_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE clinic_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE courier_requests ENABLE ROW LEVEL SECURITY;
+
+-- سياسات القراءة العامة
+CREATE POLICY "Allow public read" ON restaurant_requests
+  FOR SELECT USING (true);
+
+CREATE POLICY "Allow public read" ON supermarket_requests
+  FOR SELECT USING (true);
+
+CREATE POLICY "Allow public read" ON pharmacy_requests
+  FOR SELECT USING (true);
+
+CREATE POLICY "Allow public read" ON clinic_requests
+  FOR SELECT USING (true);
+
+CREATE POLICY "Allow public read" ON courier_requests
+  FOR SELECT USING (true);
+
+-- سياسات الإدراج للمستخدمين المسجلين
+CREATE POLICY "Allow authenticated insert" ON restaurant_requests
+  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated insert" ON supermarket_requests
+  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated insert" ON pharmacy_requests
+  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated insert" ON clinic_requests
+  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated insert" ON courier_requests
+  FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+```
+
+### 4. إعداد Storage Buckets
+
+```sql
+-- إنشاء Buckets للتخزين
+INSERT INTO storage.buckets (id, name, public) VALUES
+  ('restaurant', 'restaurant', true),
+  ('supermarket', 'supermarket', true),
+  ('pharmacy', 'pharmacy', true),
+  ('clinic', 'clinic', true),
+  ('courier', 'courier', true);
+
+-- سياسات Storage
+CREATE POLICY "Allow public upload" ON storage.objects
+  FOR INSERT WITH CHECK (bucket_id IN ('restaurant', 'supermarket', 'pharmacy', 'clinic', 'courier'));
+
+CREATE POLICY "Allow public read" ON storage.objects
+  FOR SELECT USING (bucket_id IN ('restaurant', 'supermarket', 'pharmacy', 'clinic', 'courier'));
+```
+
+### 5. إعداد Authentication
+
+```sql
+-- تفعيل Email Authentication
+-- في Supabase Dashboard > Authentication > Settings
+-- تفعيل "Enable email confirmations"
+-- إضافة Redirect URLs:
+-- - https://your-domain.vercel.app/auth.html
+-- - http://localhost:8080/auth.html
 ```
 
 ## 🚀 نشر على Vercel
 
-### الطريقة الأولى - Vercel Dashboard
-1. اذهب إلى https://vercel.com
-2. سجل الدخول بحساب GitHub
-3. اضغط "New Project"
-4. اختر `luxbyte-file-management`
-5. اضغط "Deploy"
+### 1. إعداد Vercel CLI
 
-### الطريقة الثانية - Vercel CLI
 ```bash
 # تثبيت Vercel CLI
-npm install -g vercel
+npm i -g vercel
 
 # تسجيل الدخول
 vercel login
-
-# النشر
-vercel --prod
 ```
 
-## ⚙️ إعداد متغيرات البيئة
+### 2. ربط المشروع
 
-### في Vercel Dashboard:
-1. اذهب إلى Project Settings
-2. اختر Environment Variables
+```bash
+# في مجلد المشروع
+vercel link
+
+# أو إنشاء مشروع جديد
+vercel
+```
+
+### 3. تحديث الإعدادات
+
+قم بتحديث `config.js`:
+
+```javascript
+window.CONFIG = {
+  SUPABASE_URL: "https://YOUR_PROJECT_REF.supabase.co",
+  SUPABASE_ANON_KEY: "YOUR_ANON_KEY",
+  // ... باقي الإعدادات
+};
+```
+
+### 4. النشر
+
+```bash
+# النشر للإنتاج
+vercel deploy --prod
+
+# أو النشر التلقائي من Git
+git push origin main
+```
+
+## 🔐 إعداد متغيرات البيئة
+
+### 1. في Vercel Dashboard
+
+1. اذهب إلى مشروعك في Vercel
+2. Settings > Environment Variables
 3. أضف المتغيرات التالية:
 
 ```
-SUPABASE_URL = https://qjsvgpvbtrcnbhcjdcci.supabase.co
-SUPABASE_ANON_KEY = your_actual_anon_key
-SUPABASE_SERVICE_ROLE_KEY = your_actual_service_role_key
+SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+SUPABASE_ANON_KEY=YOUR_ANON_KEY
 ```
 
-## 🗄️ إعداد قاعدة البيانات
+### 2. في Supabase Dashboard
 
-### 1. تطبيق المايجريشن
+1. اذهب إلى مشروعك في Supabase
+2. Settings > API
+3. انسخ:
+   - Project URL
+   - anon public key
+
+## 🌐 إعداد النطاق المخصص
+
+### 1. في Vercel Dashboard
+
+1. اذهب إلى مشروعك
+2. Settings > Domains
+3. أضف نطاقك المخصص
+4. اتبع التعليمات لإعداد DNS
+
+### 2. تحديث Supabase Auth
+
+1. اذهب إلى Supabase Dashboard
+2. Authentication > URL Configuration
+3. أضف نطاقك المخصص:
+   - Site URL: https://your-domain.com
+   - Redirect URLs: https://your-domain.com/auth.html
+
+## 🔍 اختبار النشر
+
+### 1. اختبار الصفحات
+
 ```bash
-# ربط المشروع
-npx supabase link --project-ref qjsvgpvbtrcnbhcjdcci
+# اختبار الصفحة الرئيسية
+curl https://your-domain.vercel.app/
 
-# تطبيق المايجريشن
-npx supabase db push
+# اختبار صفحة التسجيل
+curl https://your-domain.vercel.app/auth.html
+
+# اختبار API
+curl https://your-domain.vercel.app/api/health
 ```
 
-### 2. إعداد Storage
-```bash
-# تشغيل Storage setup
-npx supabase db reset
-```
+### 2. اختبار الوظائف
 
-## 🔑 تحديث مفاتيح Supabase
+1. **تسجيل الدخول**: تأكد من عمل تسجيل الدخول
+2. **رفع الملفات**: اختبر رفع المستندات
+3. **حفظ البيانات**: تأكد من حفظ البيانات في Supabase
+4. **الحماية**: تأكد من حماية الصفحات المحمية
 
-### في ملف file-upload.html:
+## 🐛 استكشاف الأخطاء
+
+### 1. مشاكل شائعة
+
+#### خطأ CORS
 ```javascript
-// استبدل هذا السطر:
-const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
-
-// بمفتاحك الفعلي:
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+// في Supabase Dashboard > Settings > API
+// أضف نطاقك إلى CORS origins
 ```
 
-## 📱 اختبار النظام
-
-### 1. اختبار الواجهة
-- افتح الموقع المنشور
-- تأكد من تحميل الصفحة بشكل صحيح
-- جرب اختيار نوع النشاط
-
-### 2. اختبار رفع الملفات
-- ارفع ملف تجريبي
-- تأكد من التحقق من الصيغة والحجم
-- تحقق من حفظ الملف في Storage
-
-### 3. اختبار قاعدة البيانات
-- تأكد من إنشاء الطلبات
-- تحقق من حفظ معلومات الملفات
-- تأكد من عمل سياسات RLS
-
-## 🔍 استكشاف الأخطاء
-
-### مشاكل شائعة:
-
-#### 1. خطأ في مفاتيح Supabase
+#### خطأ في Authentication
+```javascript
+// تحقق من Redirect URLs في Supabase
+// تأكد من صحة SUPABASE_URL و SUPABASE_ANON_KEY
 ```
-Error: Invalid API key
-```
-**الحل**: تأكد من صحة مفتاح ANON_KEY
 
-#### 2. خطأ في قاعدة البيانات
+#### خطأ في Storage
+```javascript
+// تحقق من سياسات Storage
+// تأكد من إنشاء Buckets بشكل صحيح
 ```
-Error: relation does not exist
-```
-**الحل**: قم بتشغيل المايجريشن
 
-#### 3. خطأ في Storage
-```
-Error: Bucket not found
-```
-**الحل**: قم بتشغيل storage-setup.sql
+### 2. سجلات الأخطاء
 
-#### 4. خطأ في CORS
+```bash
+# عرض سجلات Vercel
+vercel logs
+
+# عرض سجلات Supabase
+# في Supabase Dashboard > Logs
 ```
-Error: CORS policy
-```
-**الحل**: أضف domain إلى Supabase settings
 
 ## 📊 مراقبة الأداء
 
-### Vercel Analytics
-- اذهب إلى Vercel Dashboard
-- اختر Analytics
-- راقب الأداء والأخطاء
+### 1. Vercel Analytics
 
-### Supabase Monitoring
-- اذهب إلى Supabase Dashboard
-- اختر Logs
-- راقب استعلامات قاعدة البيانات
+1. اذهب إلى مشروعك في Vercel
+2. Analytics
+3. راقب:
+   - عدد الزيارات
+   - وقت التحميل
+   - الأخطاء
 
-## 🔄 التحديثات المستقبلية
+### 2. Supabase Monitoring
 
-### إضافة ميزات جديدة:
-1. قم بتعديل الكود محلياً
-2. اختبر التغييرات
-3. ارفع التغييرات إلى GitHub
-4. Vercel سيقوم بالنشر التلقائي
+1. اذهب إلى Supabase Dashboard
+2. Monitor
+3. راقب:
+   - استهلاك قاعدة البيانات
+   - استهلاك Storage
+   - الأخطاء
 
-### تحديث قاعدة البيانات:
-1. أضف migration جديد
-2. اختبر محلياً
-3. ارفع إلى GitHub
-4. طبق المايجريشن على الإنتاج
+## 🔄 التحديثات
+
+### 1. تحديث الكود
+
+```bash
+# إجراء التغييرات
+git add .
+git commit -m "Update feature"
+git push origin main
+
+# Vercel سيقوم بالنشر التلقائي
+```
+
+### 2. تحديث قاعدة البيانات
+
+```bash
+# إنشاء migration جديد
+supabase migration new update_tables
+
+# تطبيق التغييرات
+supabase db push
+```
+
+## 🛡️ الأمان
+
+### 1. HTTPS
+
+- Vercel يوفر HTTPS تلقائياً
+- تأكد من استخدام HTTPS في جميع الروابط
+
+### 2. متغيرات البيئة
+
+- لا تضع مفاتيح Supabase في الكود
+- استخدم متغيرات البيئة دائماً
+
+### 3. CORS
+
+- أضف نطاقك إلى CORS origins في Supabase
+- لا تستخدم `*` في الإنتاج
 
 ## 📞 الدعم
 
-### في حالة المشاكل:
-- **GitHub Issues**: فتح issue جديد
-- **Vercel Support**: support@vercel.com
-- **Supabase Support**: support@supabase.com
-- **Luxbyte Team**: support@luxbyte.com
+### 1. Vercel Support
 
-## ✅ قائمة التحقق النهائية
+- [Vercel Documentation](https://vercel.com/docs)
+- [Vercel Community](https://github.com/vercel/vercel/discussions)
 
-- [ ] Repository منشور على GitHub
-- [ ] المشروع منشور على Vercel
-- [ ] متغيرات البيئة مُعدة
-- [ ] قاعدة البيانات مُعدة
-- [ ] Storage مُعد
-- [ ] الموقع يعمل بشكل صحيح
-- [ ] رفع الملفات يعمل
-- [ ] التحقق من الملفات يعمل
-- [ ] الأمان مُعد بشكل صحيح
+### 2. Supabase Support
+
+- [Supabase Documentation](https://supabase.com/docs)
+- [Supabase Community](https://github.com/supabase/supabase/discussions)
+
+### 3. LUXBYTE Support
+
+- **البريد الإلكتروني**: support@luxbyte.com
+- **الهاتف**: +201148709609
+- **الواتساب**: +201148709609
 
 ---
 
-**🎉 مبروك! مشروع Luxbyte File Management System جاهز للاستخدام!**
+**LUXBYTE LLC** - شركة لوكس بايت المحدودة المسئولية
