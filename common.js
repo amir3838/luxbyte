@@ -162,7 +162,7 @@ window.LUXBYTE = {
     const cities = window.CONFIG.LOCATIONS[governorate] || [];
 
     // Clear existing options
-    citySelect.innerHTML = '<option value="">اختر المدينة</option>';
+    citySelect.innerHTML = '';
 
     if (cities.length > 0) {
       cities.forEach(city => {

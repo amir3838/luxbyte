@@ -64,18 +64,18 @@
   --color-info: var(--color-slate-500);
   --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
   --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
-  
+
   /* High contrast colors for accessibility - WCAG AA compliant */
   --color-text-high-contrast: var(--color-charcoal-800);
   --color-background-high-contrast: var(--color-white);
   --color-border-high-contrast: var(--color-gray-400);
-  
+
   /* Focus and interactive states */
   --color-focus: var(--color-teal-500);
   --color-focus-ring-accessible: rgba(33, 128, 141, 0.3);
   --color-hover: rgba(33, 128, 141, 0.1);
   --color-active: rgba(33, 128, 141, 0.2);
-  
+
   /* Button states with high contrast */
   --color-button-primary: var(--color-teal-600);
   --color-button-primary-hover: var(--color-teal-700);
@@ -2300,11 +2300,11 @@ textarea.form-control {
 }
 
 @keyframes ticker {
-    0% { 
-        transform: translateX(100%); 
+    0% {
+        transform: translateX(100%);
     }
-    100% { 
-        transform: translateX(-100%); 
+    100% {
+        transform: translateX(-100%);
     }
 }
 
@@ -2341,7 +2341,7 @@ button:not(:disabled):focus,
     .ticker__track {
         animation: none;
     }
-    
+
     * {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
@@ -2369,12 +2369,12 @@ footer a[aria-label]:focus {
     footer div[style*="display: flex"] {
         gap: 12px !important;
     }
-    
+
     footer a[aria-label] {
         width: 44px !important;
         height: 44px !important;
     }
-    
+
     footer a[aria-label] i {
         font-size: 18px !important;
     }

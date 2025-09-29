@@ -119,7 +119,6 @@
                         <div class="form-group">
                             <label class="form-label" data-i18n="reg.governorate">المحافظة</label>
                             <select class="form-control" name="governorate" id="governorate" required>
-                                <option value="" data-i18n="reg.governorate_ph">اختر المحافظة</option>
                                 <option value="القاهرة" data-i18n="reg.gov.cairo">القاهرة</option>
                                 <option value="الجيزة" data-i18n="reg.gov.giza">الجيزة</option>
                                 <option value="القليوبية" data-i18n="reg.gov.qalyubia">القليوبية</option>
@@ -128,7 +127,6 @@
                         <div class="form-group">
                             <label class="form-label" data-i18n="reg.city">المدينة</label>
                             <select class="form-control" name="city" id="city" required disabled>
-                                <option value="" data-i18n="reg.city_ph">اختر المدينة</option>
                             </select>
                         </div>
                     </div>
@@ -430,6 +428,10 @@
         function setupLocationDropdowns() {
             const governorateSelect = document.getElementById('governorate');
             const citySelect = document.getElementById('city');
+
+            // Set default governorate to first option (القاهرة)
+            governorateSelect.value = 'القاهرة';
+            LUXBYTE.updateCityDropdown(governorateSelect, citySelect);
 
             governorateSelect.addEventListener('change', () => {
                 LUXBYTE.updateCityDropdown(governorateSelect, citySelect);
