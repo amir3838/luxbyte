@@ -26,7 +26,85 @@ class EngagementNotificationManager {
     // Listen for user interactions
     this.setupInteractionListeners();
     
+    // Listen for theme changes
+    this.setupThemeListener();
+    
     console.log('Engagement notification system initialized');
+  }
+
+  /**
+   * Setup theme change listener
+   * إعداد مستمع تغيير الألوان
+   */
+  setupThemeListener() {
+    window.addEventListener('themeChanged', (event) => {
+      // Update notification colors if it's currently visible
+      const notification = document.getElementById('engagement-notification');
+      if (notification) {
+        this.updateNotificationColors();
+      }
+    });
+  }
+
+  /**
+   * Update notification colors based on current theme
+   * تحديث ألوان الإشعار حسب الوضع الحالي
+   */
+  updateNotificationColors() {
+    const notification = document.getElementById('engagement-notification');
+    if (!notification) return;
+
+    const isLight = document.body.classList.contains('light-theme');
+    
+    if (isLight) {
+      // Light theme colors
+      notification.style.background = 'linear-gradient(135deg, #ffffff, #f8f9fa)';
+      notification.style.borderColor = 'rgba(0, 0, 0, 0.1)';
+      notification.style.color = '#1a1a1a';
+      
+      // Update text colors
+      const h3 = notification.querySelector('h3');
+      const p = notification.querySelector('p');
+      if (h3) h3.style.color = '#1a1a1a';
+      if (p) p.style.color = '#333333';
+      
+      // Update button colors
+      const secondaryBtn = notification.querySelector('.engagement-btn-secondary');
+      const closeBtn = notification.querySelector('.engagement-btn-close');
+      if (secondaryBtn) {
+        secondaryBtn.style.background = 'rgba(255, 255, 255, 0.95)';
+        secondaryBtn.style.color = '#1a1a1a';
+        secondaryBtn.style.borderColor = 'rgba(0, 0, 0, 0.1)';
+      }
+      if (closeBtn) {
+        closeBtn.style.background = 'rgba(255, 255, 255, 0.95)';
+        closeBtn.style.color = '#666666';
+      }
+    } else {
+      // Dark theme colors
+      notification.style.background = 'linear-gradient(135deg, #1a1a1a, #2a2a2a)';
+      notification.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+      notification.style.color = '#ffffff';
+      
+      // Update text colors
+      const h3 = notification.querySelector('h3');
+      const p = notification.querySelector('p');
+      if (h3) h3.style.color = '#ffffff';
+      if (p) p.style.color = '#e5e5e5';
+      
+      // Update button colors
+      const secondaryBtn = notification.querySelector('.engagement-btn-secondary');
+      const closeBtn = notification.querySelector('.engagement-btn-close');
+      if (secondaryBtn) {
+        secondaryBtn.style.background = 'rgba(255, 255, 255, 0.05)';
+        secondaryBtn.style.color = '#ffffff';
+        secondaryBtn.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+      }
+      if (closeBtn) {
+        closeBtn.style.background = 'rgba(255, 255, 255, 0.05)';
+        closeBtn.style.color = '#cccccc';
+      }
+    }
   }
 
   /**
@@ -67,7 +145,7 @@ class EngagementNotificationManager {
    */
   setupInteractionListeners() {
     const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-    
+
     events.forEach(event => {
       document.addEventListener(event, () => {
         this.resetTimer();
@@ -121,6 +199,9 @@ class EngagementNotificationManager {
     notification.setAttribute('dir', 'rtl');
     notification.setAttribute('lang', 'ar');
 
+    // Apply theme colors
+    this.updateNotificationColors();
+
     // Create notification content
     notification.innerHTML = `
       <div class="engagement-notification-content">
@@ -149,6 +230,11 @@ class EngagementNotificationManager {
 
     // Add to page
     document.body.appendChild(notification);
+
+    // Apply theme colors after DOM insertion
+    setTimeout(() => {
+      this.updateNotificationColors();
+    }, 50);
 
     // Show with animation
     setTimeout(() => {

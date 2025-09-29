@@ -448,18 +448,41 @@ function toggleTheme() {
   if (body.classList.contains('light-theme')) {
     // Switch to dark theme
     body.classList.remove('light-theme');
-    themeIcon.innerHTML = '<i class="fas fa-moon"></i>';
-    themeText.textContent = 'الوضع الليلي';
-    themeBtn.setAttribute('aria-label', 'التبديل للوضع الليلي');
+    if (themeIcon) themeIcon.innerHTML = '<i class="fas fa-moon"></i>';
+    if (themeText) themeText.textContent = 'الوضع الليلي';
+    if (themeBtn) themeBtn.setAttribute('aria-label', 'التبديل للوضع الليلي');
     localStorage.setItem('theme', 'dark');
+    
+    // Update CSS variables for dark theme
+    document.documentElement.style.setProperty('--text-primary', '#ffffff');
+    document.documentElement.style.setProperty('--text-secondary', '#e5e5e5');
+    document.documentElement.style.setProperty('--text-muted', '#cccccc');
+    document.documentElement.style.setProperty('--bg-primary', '#1a1a1a');
+    document.documentElement.style.setProperty('--bg-secondary', '#2a2a2a');
+    document.documentElement.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.05)');
+    document.documentElement.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.1)');
   } else {
     // Switch to light theme
     body.classList.add('light-theme');
-    themeIcon.innerHTML = '<i class="fas fa-sun"></i>';
-    themeText.textContent = 'الوضع النهاري';
-    themeBtn.setAttribute('aria-label', 'التبديل للوضع النهاري');
+    if (themeIcon) themeIcon.innerHTML = '<i class="fas fa-sun"></i>';
+    if (themeText) themeText.textContent = 'الوضع النهاري';
+    if (themeBtn) themeBtn.setAttribute('aria-label', 'التبديل للوضع النهاري');
     localStorage.setItem('theme', 'light');
+    
+    // Update CSS variables for light theme
+    document.documentElement.style.setProperty('--text-primary', '#1a1a1a');
+    document.documentElement.style.setProperty('--text-secondary', '#333333');
+    document.documentElement.style.setProperty('--text-muted', '#666666');
+    document.documentElement.style.setProperty('--bg-primary', '#ffffff');
+    document.documentElement.style.setProperty('--bg-secondary', '#f8f9fa');
+    document.documentElement.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.95)');
+    document.documentElement.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.1)');
   }
+  
+  // Trigger custom event for theme change
+  window.dispatchEvent(new CustomEvent('themeChanged', { 
+    detail: { isLight: body.classList.contains('light-theme') } 
+  }));
 }
 
 // ====== Language Toggle Function ======
@@ -607,6 +630,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('light-theme');
     const themeIcon = document.getElementById('theme-icon');
     if (themeIcon) themeIcon.className = 'fas fa-sun';
+    
+    // Apply light theme CSS variables
+    document.documentElement.style.setProperty('--text-primary', '#1a1a1a');
+    document.documentElement.style.setProperty('--text-secondary', '#333333');
+    document.documentElement.style.setProperty('--text-muted', '#666666');
+    document.documentElement.style.setProperty('--bg-primary', '#ffffff');
+    document.documentElement.style.setProperty('--bg-secondary', '#f8f9fa');
+    document.documentElement.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.95)');
+    document.documentElement.style.setProperty('--border-color', 'rgba(0, 0, 0, 0.1)');
+  } else {
+    // Apply dark theme CSS variables (default)
+    document.documentElement.style.setProperty('--text-primary', '#ffffff');
+    document.documentElement.style.setProperty('--text-secondary', '#e5e5e5');
+    document.documentElement.style.setProperty('--text-muted', '#cccccc');
+    document.documentElement.style.setProperty('--bg-primary', '#1a1a1a');
+    document.documentElement.style.setProperty('--bg-secondary', '#2a2a2a');
+    document.documentElement.style.setProperty('--bg-card', 'rgba(255, 255, 255, 0.05)');
+    document.documentElement.style.setProperty('--border-color', 'rgba(255, 255, 255, 0.1)');
   }
 
   // Apply i18n

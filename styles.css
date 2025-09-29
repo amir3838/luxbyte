@@ -1325,25 +1325,167 @@ a{color:inherit}
   background: rgba(255,255,255,0.2);
 }
 
-/* Light Theme */
+/* CSS Variables for Theme Support */
+:root {
+  /* Dark Theme Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #e5e5e5;
+  --text-muted: #cccccc;
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2a2a2a;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Light Theme Colors */
+.light-theme {
+  --text-primary: #1a1a1a;
+  --text-secondary: #333333;
+  --text-muted: #666666;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Apply theme colors */
+body {
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+.card {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Light Theme Specific Styles */
 .light-theme {
   background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('assets/images/backgrounds/screen-1.png') !important;
-  color: #333 !important;
+  color: var(--text-primary) !important;
 }
 
 .light-theme .card {
-  background: rgba(255,255,255,0.95) !important;
-  color: #333 !important;
-  border: 1px solid rgba(0,0,0,0.1) !important;
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
 }
 
 .light-theme .navbar {
   background: rgba(255,255,255,0.9) !important;
-  border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+  border-bottom: 1px solid var(--border-color) !important;
 }
 
 .light-theme .header {
   background: linear-gradient(135deg, #21808d, #2c5f63) !important;
+}
+
+/* Text color improvements for light theme */
+.light-theme h1,
+.light-theme h2,
+.light-theme h3,
+.light-theme h4,
+.light-theme h5,
+.light-theme h6 {
+  color: var(--text-primary) !important;
+}
+
+.light-theme p {
+  color: var(--text-secondary) !important;
+}
+
+.light-theme .muted {
+  color: var(--text-muted) !important;
+}
+
+/* Button improvements for light theme */
+.light-theme .btn {
+  color: var(--text-primary);
+}
+
+.light-theme .btn-outline {
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.light-theme .btn-outline:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Form elements for light theme */
+.light-theme input,
+.light-theme textarea,
+.light-theme select {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.light-theme input::placeholder,
+.light-theme textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Navigation improvements */
+.light-theme .nav-btn {
+  color: var(--text-primary);
+}
+
+.light-theme .nav-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Table improvements for light theme */
+.light-theme .table {
+  color: var(--text-primary);
+}
+
+.light-theme .table th {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.light-theme .table td {
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+
+/* Alert improvements for light theme */
+.light-theme .alert {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.light-theme .alert-info {
+  background: #e3f2fd;
+  color: #1976d2;
+  border-color: #bbdefb;
+}
+
+.light-theme .alert-success {
+  background: #e8f5e8;
+  color: #2e7d32;
+  border-color: #c8e6c9;
+}
+
+.light-theme .alert-error {
+  background: #ffebee;
+  color: #c62828;
+  border-color: #ffcdd2;
+}
+
+.light-theme .alert-warning {
+  background: #fff3e0;
+  color: #f57c00;
+  border-color: #ffcc02;
 }
 
 /* Responsive Enhancements */
@@ -1508,7 +1650,7 @@ a{color:inherit}
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .notification-controls .btn {
     justify-content: center;
   }
@@ -1519,8 +1661,8 @@ a{color:inherit}
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 20px;
   max-width: 400px;
@@ -1531,6 +1673,7 @@ a{color:inherit}
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: 'Cairo', sans-serif;
+  color: var(--text-primary);
 }
 
 .engagement-notification.show {
@@ -1564,20 +1707,20 @@ a{color:inherit}
 
 .engagement-notification-text {
   text-align: center;
-  color: white;
+  color: var(--text-primary);
 }
 
 .engagement-notification-text h3 {
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .engagement-notification-text p {
   margin: 0;
   font-size: 14px;
-  color: #ccc;
+  color: var(--text-secondary);
   line-height: 1.4;
 }
 
@@ -1615,19 +1758,19 @@ a{color:inherit}
 }
 
 .engagement-btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
 .engagement-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--bg-secondary);
   transform: translateY(-1px);
 }
 
 .engagement-btn-close {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ccc;
+  background: var(--bg-card);
+  color: var(--text-muted);
   padding: 8px;
   border-radius: 50%;
   width: 32px;
@@ -1638,8 +1781,8 @@ a{color:inherit}
 }
 
 .engagement-btn-close:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 /* Responsive design for engagement notification */
@@ -1651,11 +1794,11 @@ a{color:inherit}
     max-width: none;
     padding: 16px;
   }
-  
+
   .engagement-notification-actions {
     flex-direction: column;
   }
-  
+
   .engagement-btn {
     justify-content: center;
     width: 100%;
