@@ -236,12 +236,12 @@
                     <p class="option-description">مطعم، سوبر ماركت، صيدلية، عيادة - ابدأ تجارتك الإلكترونية</p>
                 </div>
 
-                <div class="account-option" onclick="selectAccountType('courier')">
+                <div class="account-option" onclick="selectAccountType('driver')">
                     <div class="option-icon">
-                        <i class="fas fa-motorcycle"></i>
+                        <i class="fas fa-car"></i>
                     </div>
-                    <h3 class="option-title">مندوب توصيل</h3>
-                    <p class="option-description">سائق أو مندوب توصيل - اربح من توصيل الطلبات</p>
+                    <h3 class="option-title">سائق رئيسي</h3>
+                    <p class="option-description">سائق رئيسي - اربح من توصيل الطلبات المتقدمة</p>
                 </div>
             </div>
 
@@ -294,8 +294,8 @@
         function selectAccountType(type) {
             if (type === 'merchant') {
                 window.location.href = 'choose-platform.html';
-            } else if (type === 'courier') {
-                window.location.href = 'signup.html?role=courier';
+            } else if (type === 'driver') {
+                window.location.href = 'signup.html?role=driver';
             }
         }
 

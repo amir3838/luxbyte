@@ -230,7 +230,7 @@
 
             // Setup location dropdowns
             setupLocationDropdowns();
-            
+
             // Setup GPS location
             setupGPSLocation();
 
@@ -455,10 +455,10 @@
                     (position) => {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
-                        
+
                         // استخدام reverse geocoding للحصول على العنوان
                         getAddressFromCoordinates(lat, lng);
-                        
+
                         locationStatus.innerHTML = `<span style="color: #10b981;"><i class="fas fa-check"></i> تم الحصول على الموقع: ${lat.toFixed(6)}, ${lng.toFixed(6)}</span>`;
                         getLocationBtn.disabled = false;
                     },
@@ -742,11 +742,11 @@
             }
         }
     </script>
-    
+
     <!-- Ticker Marquee -->
     <div class="ticker" role="status" aria-live="polite">
         <div class="ticker__track">
-            بث تجريبي — لا تتردد في التواصل معنا في حال ظهور أي خطأ في التسجيل — لوكس بايت (هنكبر مع بعض)
+            🚀 بث تجريبي حي 🚀 — لا تتردد في التواصل معنا في حال ظهور أي خطأ في التسجيل — لوكس بايت (هنكبر مع بعض) — منصة شوب إي جي و ماستر درايفر — التجارة الإلكترونية وخدمات التوصيل — انضم إلينا الآن — 📞 01148709609 — 🌐 www.luxbyte.com
         </div>
     </div>
 </body>

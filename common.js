@@ -440,7 +440,14 @@ function injectAlHareth(){
 function injectThemeToggle(){
   const themeToggle = document.createElement('div');
   themeToggle.className = 'theme-toggle';
-  themeToggle.innerHTML = `<i class="fas fa-moon" id="theme-icon"></i>`;
+  themeToggle.innerHTML = `
+    <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="تبديل الوضع">
+      <span class="theme-icon" id="theme-icon">
+        <i class="fas fa-moon"></i>
+      </span>
+      <span class="theme-text" id="theme-text">الوضع الليلي</span>
+    </button>
+  `;
   themeToggle.onclick = toggleTheme;
   document.body.appendChild(themeToggle);
 }
@@ -455,14 +462,22 @@ function injectLanguageToggle(){
 function toggleTheme() {
   const body = document.body;
   const themeIcon = document.getElementById('theme-icon');
+  const themeText = document.getElementById('theme-text');
+  const themeBtn = document.getElementById('theme-toggle-btn');
 
   if (body.classList.contains('light-theme')) {
+    // Switch to dark theme
     body.classList.remove('light-theme');
-    themeIcon.className = 'fas fa-moon';
+    themeIcon.innerHTML = '<i class="fas fa-moon"></i>';
+    themeText.textContent = 'الوضع الليلي';
+    themeBtn.setAttribute('aria-label', 'التبديل للوضع الليلي');
     localStorage.setItem('theme', 'dark');
   } else {
+    // Switch to light theme
     body.classList.add('light-theme');
-    themeIcon.className = 'fas fa-sun';
+    themeIcon.innerHTML = '<i class="fas fa-sun"></i>';
+    themeText.textContent = 'الوضع النهاري';
+    themeBtn.setAttribute('aria-label', 'التبديل للوضع النهاري');
     localStorage.setItem('theme', 'light');
   }
 }
@@ -501,7 +516,7 @@ window.goShopEG = function(){
 }
 window.goMasterDriver = function(){
   LUXBYTE.setStorage('selectedPlatform', 'masterdriver');
-  safeNav('signup.html?role=courier');
+  safeNav('signup.html?role=driver');
 }
 
 /* ================== i18n بسطرين إعداد ================== */
@@ -550,7 +565,7 @@ function injectNavbar(active){
   bar.innerHTML = `
     <div class="navbar-inner">
       <div class="brand">
-        <img src="./assets/app_icon/LUXBYTE.png" alt="LUXBYTE Logo" class="brand-logo" 
+        <img src="./assets/app_icon/LUXBYTE.png" alt="LUXBYTE Logo" class="brand-logo"
              style="height: 45px; width: auto; margin-right: 12px; object-fit: contain; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="brand-fallback" style="display: none; width: 45px; height: 45px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px; margin-right: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">L</div>

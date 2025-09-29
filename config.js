@@ -133,6 +133,33 @@ window.CONFIG = {
         { name: "background_check", label: "صحيفة الحالة الجنائية", accept: ".pdf,.jpg,.jpeg", required: false, description: "PDF/JPG" },
         { name: "vehicle_license", label: "رخصة المركبة/ترخيص السير", accept: ".pdf,.jpg,.jpeg", required: false, description: "PDF/JPG" }
       ]
+    },
+
+    driver: {
+      name: "سائق رئيسي",
+      table: "driver_requests",
+      bucket: "driver",
+      icon: "fas fa-car",
+      fields: [
+        { name: "full_name", label: "الاسم الكامل", type: "text", required: true },
+        { name: "national_id", label: "رقم البطاقة", type: "text", required: true },
+        { name: "phone", label: "رقم الهاتف", type: "tel", required: true },
+        { name: "address", label: "العنوان", type: "textarea", required: true },
+        { name: "governorate", label: "المحافظة", type: "select", required: true },
+        { name: "city", label: "المدينة", type: "select", required: true },
+        { name: "vehicle_type", label: "نوع المركبة", type: "select", required: true, options: ["سيارة", "فان", "شاحنة صغيرة"] },
+        { name: "license_number", label: "رقم رخصة القيادة", type: "text", required: true },
+        { name: "experience_years", label: "سنوات الخبرة", type: "number", required: true }
+      ],
+      files: [
+        { name: "id_front", label: "صورة البطاقة (الوجه الأمامي)", accept: "image/*", required: true, description: "JPG واضح" },
+        { name: "id_back", label: "صورة البطاقة (الوجه الخلفي)", accept: "image/*", required: true, description: "JPG واضح" },
+        { name: "driving_license", label: "رخصة القيادة", accept: ".pdf,.jpg,.jpeg", required: true, description: "JPG/PDF" },
+        { name: "vehicle_photo", label: "صورة المركبة + اللوحة", accept: "image/*", required: true, description: "JPG واضحة" },
+        { name: "vehicle_license", label: "رخصة المركبة/ترخيص السير", accept: ".pdf,.jpg,.jpeg", required: true, description: "PDF/JPG" },
+        { name: "insurance", label: "تأمين ساري", accept: ".pdf,.jpg,.jpeg", required: true, description: "PDF/JPG" },
+        { name: "background_check", label: "صحيفة الحالة الجنائية", accept: ".pdf,.jpg,.jpeg", required: false, description: "PDF/JPG" }
+      ]
     }
   },
 
@@ -167,7 +194,7 @@ window.CONFIG = {
       name: "ماستر درايفر",
       description: "منصة خدمات التوصيل والنقل",
       icon: "fas fa-car",
-      roles: ["courier"]
+      roles: ["driver"]
     }
   }
 };

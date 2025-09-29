@@ -57,9 +57,9 @@
         <!-- Tabs -->
         <div class="card">
             <div class="tabs" id="role-tabs">
-                <div class="tab active" data-role="courier" onclick="switchTab('courier')">
-                    <i class="fas fa-motorcycle"></i>
-                    مندوب توصيل
+                <div class="tab active" data-role="driver" onclick="switchTab('driver')">
+                    <i class="fas fa-car"></i>
+                    سائق رئيسي
                 </div>
                 <div class="tab" data-role="clinic" onclick="switchTab('clinic')">
                     <i class="fas fa-stethoscope"></i>
@@ -80,8 +80,8 @@
             </div>
 
             <!-- Tab Content -->
-            <div class="tab-content active" id="tab-courier">
-                <div id="courier-data">
+            <div class="tab-content active" id="tab-driver">
+                <div id="driver-data">
                     <!-- Will be populated by JavaScript -->
                 </div>
             </div>
@@ -122,7 +122,7 @@
         (async ()=>{ await LUXBYTE.requireAuthOrRedirect(); })();
     </script>
     <script>
-        let currentTab = 'courier';
+        let currentTab = 'driver';
         let allData = {};
 
         // Initialize dashboard
@@ -134,11 +134,11 @@
             applyI18n();
             await loadAllData();
             updateStats();
-            switchTab('courier');
+            switchTab('driver');
         });
 
         async function loadAllData() {
-            const roles = ['courier', 'clinic', 'pharmacy', 'supermarket', 'restaurant'];
+            const roles = ['driver', 'clinic', 'pharmacy', 'supermarket', 'restaurant'];
 
             for (const role of roles) {
                 try {
@@ -435,11 +435,11 @@
             }
         }
     </script>
-    
+
     <!-- Ticker Marquee -->
     <div class="ticker" role="status" aria-live="polite">
         <div class="ticker__track">
-            بث تجريبي — لا تتردد في التواصل معنا في حال ظهور أي خطأ في التسجيل — لوكس بايت (هنكبر مع بعض)
+            🚀 بث تجريبي حي 🚀 — لا تتردد في التواصل معنا في حال ظهور أي خطأ في التسجيل — لوكس بايت (هنكبر مع بعض) — منصة شوب إي جي و ماستر درايفر — التجارة الإلكترونية وخدمات التوصيل — انضم إلينا الآن — 📞 01148709609 — 🌐 www.luxbyte.com
         </div>
     </div>
 </body>
