@@ -1,44 +1,32 @@
 {
-  "name": "luxbyte-file-management",
+  "name": "luxbyte-platform",
   "version": "1.0.0",
-  "description": "نظام إدارة الملفات والمستندات لمنصة Luxbyte - File Management System for Luxbyte Platform",
+  "description": "LUXBYTE Platform - E-commerce and Delivery Services",
   "main": "index.html",
   "scripts": {
-    "dev": "npx serve .",
-    "build": "echo 'No build process needed for static files'",
-    "start": "npx serve . -p 3000",
-    "deploy": "vercel --prod",
-    "supabase:start": "npx supabase start",
-    "supabase:stop": "npx supabase stop",
-    "supabase:reset": "npx supabase db reset",
-    "supabase:push": "npx supabase db push",
-    "supabase:pull": "npx supabase db pull"
+    "start": "npx serve .",
+    "build": "echo 'Static site - no build needed'",
+    "audit:lh": "npx lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html --chrome-flags='--headless'",
+    "audit:lh-ci": "npx lighthouse-ci autorun",
+    "serve": "npx serve . -p 3000"
   },
   "keywords": [
-    "luxbyte",
-    "file-management",
-    "document-upload",
-    "supabase",
+    "ecommerce",
+    "delivery",
     "arabic",
-    "restaurant",
-    "pharmacy",
-    "clinic",
-    "courier"
+    "rtl",
+    "supabase"
   ],
-  "author": "Luxbyte Team",
+  "author": "LUXBYTE LLC",
   "license": "MIT",
   "devDependencies": {
-    "serve": "^14.2.1"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.58.0"
+    "@lhci/cli": "^0.12.0",
+    "lighthouse": "^11.0.0",
+    "serve": "^14.2.0"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/amir3838/luxbyte.git"
   },
-  "homepage": "https://amir3838.github.io/luxbyte",
-  "engines": {
-    "node": ">=16.0.0"
-  }
+  "homepage": "https://luxbyte-6zcgu6hrs-amir-saids-projects-035bbecd.vercel.app"
 }

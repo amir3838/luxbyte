@@ -64,6 +64,25 @@
   --color-info: var(--color-slate-500);
   --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
   --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+  
+  /* High contrast colors for accessibility - WCAG AA compliant */
+  --color-text-high-contrast: var(--color-charcoal-800);
+  --color-background-high-contrast: var(--color-white);
+  --color-border-high-contrast: var(--color-gray-400);
+  
+  /* Focus and interactive states */
+  --color-focus: var(--color-teal-500);
+  --color-focus-ring-accessible: rgba(33, 128, 141, 0.3);
+  --color-hover: rgba(33, 128, 141, 0.1);
+  --color-active: rgba(33, 128, 141, 0.2);
+  
+  /* Button states with high contrast */
+  --color-button-primary: var(--color-teal-600);
+  --color-button-primary-hover: var(--color-teal-700);
+  --color-button-primary-text: var(--color-white);
+  --color-button-secondary: var(--color-white);
+  --color-button-secondary-hover: var(--color-gray-200);
+  --color-button-secondary-text: var(--color-charcoal-800);
 
   /* Common style patterns */
   --focus-ring: 0 0 0 3px var(--color-focus-ring);
@@ -2249,4 +2268,155 @@ textarea.form-control {
         flex-direction: column;
         text-align: center;
     }
+}
+
+/* Ticker Marquee Styles */
+.ticker {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-charcoal-800);
+    color: var(--color-white);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    overflow: hidden;
+    z-index: 50;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 0.5rem 0;
+}
+
+.ticker__track {
+    display: inline-block;
+    padding: 0.5rem 0;
+    will-change: transform;
+    animation: ticker 20s linear infinite;
+}
+
+.ticker:hover .ticker__track {
+    animation-play-state: paused;
+}
+
+@keyframes ticker {
+    0% { 
+        transform: translateX(100%); 
+    }
+    100% { 
+        transform: translateX(-100%); 
+    }
+}
+
+/* Accessibility improvements */
+.ticker[role="status"] {
+    aria-live: polite;
+}
+
+/* Focus styles for better accessibility */
+*:focus {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+}
+
+/* Button accessibility improvements */
+button:not(:disabled):focus,
+.btn:not(:disabled):focus {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--color-focus-ring-accessible);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --color-text: var(--color-text-high-contrast);
+        --color-background: var(--color-background-high-contrast);
+        --color-border: var(--color-border-high-contrast);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .ticker__track {
+        animation: none;
+    }
+    
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Social Media Icons Hover Effects */
+footer a[aria-label] {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+footer a[aria-label]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+footer a[aria-label]:focus {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+}
+
+/* Responsive social icons */
+@media (max-width: 768px) {
+    footer div[style*="display: flex"] {
+        gap: 12px !important;
+    }
+    
+    footer a[aria-label] {
+        width: 44px !important;
+        height: 44px !important;
+    }
+    
+    footer a[aria-label] i {
+        font-size: 18px !important;
+    }
+}
+
+/* Performance optimizations */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Lazy loading images */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+img[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* Font display optimization */
+@font-face {
+    font-family: 'FontAwesome';
+    font-display: swap;
+}
+
+/* Critical CSS for above-the-fold content */
+.hero-parallax {
+    will-change: transform;
+}
+
+/* Optimize animations for performance */
+.reveal,
+.fade-in,
+.fade-in-slow {
+    will-change: opacity, transform;
+}
+
+/* Reduce repaints */
+.card,
+.btn,
+.navbar {
+    contain: layout style paint;
 }
