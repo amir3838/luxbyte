@@ -1415,3 +1415,90 @@ a{color:inherit}
     padding: 6px 10px;
   }
 }
+
+/* Push Notifications Styles */
+.notification-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.notification-controls .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alert-info {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #bbdefb;
+}
+
+.alert-success {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.alert-error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+
+.alert-warning {
+  background-color: #fff3e0;
+  color: #f57c00;
+  border: 1px solid #ffcc02;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: 1px solid #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: 1px solid #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.btn-secondary:disabled {
+  background-color: #6c757d;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive notification controls */
+@media (max-width: 768px) {
+  .notification-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .notification-controls .btn {
+    justify-content: center;
+  }
+}

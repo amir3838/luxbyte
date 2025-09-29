@@ -59,6 +59,37 @@
             <!-- Will be populated by JavaScript -->
         </div>
 
+        <!-- Push Notifications Section -->
+        <div class="card mb-8">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div>
+                    <h3 class="card-title">الإشعارات</h3>
+                    <p class="muted">تفعيل الإشعارات للحصول على التحديثات المهمة</p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="notification-status" class="mb-4">
+                    <div class="alert alert-info" id="notification-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span id="notification-message">جاري التحقق من حالة الإشعارات...</span>
+                    </div>
+                </div>
+                <div class="notification-controls">
+                    <button id="enable-notifications" class="btn btn-primary" onclick="toggleNotifications()" disabled>
+                        <i class="fas fa-bell"></i>
+                        <span id="notification-button-text">تفعيل الإشعارات</span>
+                    </button>
+                    <button id="test-notification" class="btn btn-secondary" onclick="sendTestNotification()" disabled style="margin-right: 10px;">
+                        <i class="fas fa-paper-plane"></i>
+                        إرسال إشعار تجريبي
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Tabs -->
         <div class="card">
             <div class="tabs" id="role-tabs">
@@ -122,6 +153,8 @@
     <script src="config.js"></script>
     <script src="i18n-dict.js"></script>
     <script src="common.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/push-notifications.js"></script>
     <script>
         // Auth guard
         (async ()=>{ await LUXBYTE.requireAuthOrRedirect(); })();
@@ -434,6 +467,137 @@
             } catch (error) {
                 console.error('Logout error:', error);
                 LUXBYTE.notifyErr('خطأ في تسجيل الخروج');
+            }
+        }
+
+        // Push Notifications Functions
+        let notificationManager = null;
+        let currentUser = null;
+
+        // Initialize notifications when page loads
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeNotifications();
+        });
+
+        async function initializeNotifications() {
+            try {
+                // Get current user
+                const { data: { user } } = await LUXBYTE.supabase.auth.getUser();
+                currentUser = user;
+
+                if (!user) {
+                    updateNotificationStatus('error', 'يجب تسجيل الدخول أولاً');
+                    return;
+                }
+
+                // Initialize notification manager
+                notificationManager = window.PushNotificationManager;
+                await notificationManager.initialize();
+
+                // Check current status
+                const status = notificationManager.getStatus();
+                updateNotificationUI(status);
+
+            } catch (error) {
+                console.error('Error initializing notifications:', error);
+                updateNotificationStatus('error', 'خطأ في تهيئة الإشعارات');
+            }
+        }
+
+        function updateNotificationUI(status) {
+            const button = document.getElementById('enable-notifications');
+            const buttonText = document.getElementById('notification-button-text');
+            const testButton = document.getElementById('test-notification');
+            const message = document.getElementById('notification-message');
+            const info = document.getElementById('notification-info');
+
+            if (!status.isSupported) {
+                updateNotificationStatus('error', 'الإشعارات غير مدعومة في هذا المتصفح');
+                return;
+            }
+
+            if (status.isEnabled) {
+                updateNotificationStatus('success', 'الإشعارات مفعلة');
+                buttonText.textContent = 'إلغاء تفعيل الإشعارات';
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-danger');
+                testButton.disabled = false;
+            } else {
+                updateNotificationStatus('info', 'الإشعارات غير مفعلة');
+                buttonText.textContent = 'تفعيل الإشعارات';
+                button.classList.remove('btn-danger');
+                button.classList.add('btn-primary');
+                testButton.disabled = true;
+            }
+
+            button.disabled = false;
+        }
+
+        function updateNotificationStatus(type, message) {
+            const info = document.getElementById('notification-info');
+            const messageEl = document.getElementById('notification-message');
+
+            info.className = `alert alert-${type}`;
+            messageEl.textContent = message;
+        }
+
+        async function toggleNotifications() {
+            if (!notificationManager || !currentUser) {
+                LUXBYTE.notifyErr('خطأ في تهيئة الإشعارات');
+                return;
+            }
+
+            try {
+                const button = document.getElementById('enable-notifications');
+                button.disabled = true;
+
+                if (notificationManager.isEnabled()) {
+                    // Disable notifications
+                    await notificationManager.disableNotifications();
+                    LUXBYTE.notifyOk('تم إلغاء تفعيل الإشعارات');
+                } else {
+                    // Enable notifications
+                    await notificationManager.enableNotifications();
+                    LUXBYTE.notifyOk('تم تفعيل الإشعارات بنجاح');
+                }
+
+                // Update UI
+                const status = notificationManager.getStatus();
+                updateNotificationUI(status);
+
+            } catch (error) {
+                console.error('Error toggling notifications:', error);
+                LUXBYTE.notifyErr('خطأ في تفعيل/إلغاء الإشعارات: ' + error.message);
+            } finally {
+                const button = document.getElementById('enable-notifications');
+                button.disabled = false;
+            }
+        }
+
+        async function sendTestNotification() {
+            if (!notificationManager || !currentUser) {
+                LUXBYTE.notifyErr('خطأ في تهيئة الإشعارات');
+                return;
+            }
+
+            try {
+                const button = document.getElementById('test-notification');
+                button.disabled = true;
+
+                await notificationManager.sendTestNotification(
+                    currentUser.id,
+                    'إشعار تجريبي من لوكس بايت',
+                    'هذا إشعار تجريبي للتأكد من عمل النظام بشكل صحيح'
+                );
+
+                LUXBYTE.notifyOk('تم إرسال الإشعار التجريبي');
+
+            } catch (error) {
+                console.error('Error sending test notification:', error);
+                LUXBYTE.notifyErr('خطأ في إرسال الإشعار التجريبي: ' + error.message);
+            } finally {
+                const button = document.getElementById('test-notification');
+                button.disabled = false;
             }
         }
     </script>

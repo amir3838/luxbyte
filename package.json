@@ -19,6 +19,9 @@
   ],
   "author": "LUXBYTE LLC",
   "license": "MIT",
+  "dependencies": {
+    "firebase": "^10.7.1"
+  },
   "devDependencies": {
     "@lhci/cli": "^0.12.0",
     "lighthouse": "^11.0.0",

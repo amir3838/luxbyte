@@ -178,5 +178,12 @@ window.CONFIG = {
       icon: "fas fa-car",
       roles: ["driver"]
     }
-  }
+  },
+
+  // Firebase Configuration for Push Notifications
+  FCM_API_KEY: "AIzaSyBIlSKMkFIyY1OFYqqImwx5Lo2nHW5Foss",
+  FCM_PROJECT_ID: "studio-1f95z",
+  FCM_SENDER_ID: "922681782984",
+  FCM_APP_ID: "1:922681782984:web:d3840713be209e4a60abfd",
+  FCM_VAPID_KEY: "BJ3SXe0Nof9H4KJpvgG80LVUeDTNxdh0O2z3aOIzEzrFxd3bAn4ixhhouG7VV11zmK8giQ-UUGWeAP3JK8MpbXk"
 };
