@@ -14,7 +14,7 @@
                 <i class="fas fa-upload" style="margin-left: 10px;"></i>
                 اختبار نظام رفع الصور
             </h1>
-            
+
             <!-- File Upload Area -->
             <div id="file-upload-area" style="border: 2px dashed #6b7cff; border-radius: 12px; padding: 40px; margin: 20px 0; background: #f8fafc; cursor: pointer; transition: all 0.3s ease;" onclick="document.getElementById('fileInput').click()">
                 <div style="text-align: center;">
@@ -96,7 +96,7 @@
             event.preventDefault();
             uploadArea.style.borderColor = '#6b7cff';
             uploadArea.style.backgroundColor = '#f8fafc';
-            
+
             const files = Array.from(event.dataTransfer.files);
             console.log('📁 Files dropped:', files.length);
             processFiles(files);
@@ -110,7 +110,7 @@
 
             // Filter image files
             const imageFiles = files.filter(file => file.type.startsWith('image/'));
-            
+
             if (imageFiles.length === 0) {
                 updateStatus('⚠️ يرجى اختيار ملفات صور صالحة', 'error');
                 return;
@@ -131,7 +131,7 @@
                 for (let i = 0; i < imageFiles.length; i++) {
                     const file = imageFiles[i];
                     updateProgress(i, imageFiles.length, `جاري رفع ${file.name}...`);
-                    
+
                     const result = await uploadFile(file);
                     if (result.success) {
                         uploadedFiles.push({
@@ -148,10 +148,10 @@
                 updateProgress(imageFiles.length, imageFiles.length, 'تم الرفع بنجاح!');
                 showUploadedFiles();
                 updateStatus(`تم رفع ${uploadedFiles.length} صورة بنجاح!`, 'success');
-                
+
                 // Reset file input
                 fileInput.value = '';
-                
+
             } catch (error) {
                 console.error('❌ Upload error:', error);
                 updateStatus(`خطأ في رفع الملفات: ${error.message}`, 'error');
