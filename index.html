@@ -59,7 +59,9 @@
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/themes.css">
     <link rel="icon" href="assets/app_icon/LUXBYTE.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/app_icon/LUXBYTEICON.PNG">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -125,7 +127,7 @@
                 <div class="card reveal">
                     <div class="card-header">
                         <div class="card-icon">
-                            <img src="./assets/images/shopeg_logo.webp" alt="شوب إي جي" class="logo-glow" style="width: 50px; height: 50px; object-fit: contain;" loading="lazy" decoding="async">
+                            <img src="assets/images/shopeg_logo.webp" alt="شوب إي جي" class="logo-glow" style="width: 50px; height: 50px; object-fit: contain;" loading="lazy" decoding="async">
                         </div>
                         <div>
                             <h3 class="card-title" data-i18n="home.shop_eg.title">شوب إي جي <span class="tick">✓</span></h3>
@@ -193,7 +195,7 @@
                             تغطية شاملة للمدن
                         </li>
                     </ul>
-                    <a href="unified-signup.html?role=driver" class="btn" style="width: 100%; justify-content: center;" data-i18n="home.master_driver.cta" aria-label="ابدأ مع ماستر درايفر - منصة خدمات التوصيل">
+                    <a href="simple-signup.html?role=driver" class="btn" style="width: 100%; justify-content: center;" data-i18n="home.master_driver.cta" aria-label="ابدأ مع ماستر درايفر - منصة خدمات التوصيل">
                         <img src="assets/images/activities/driver.png" alt="ماستر درايفر" style="width: 20px; height: 20px; margin-left: 8px;" loading="lazy" decoding="async">
                         ابدأ مع ماستر درايفر
                     </a>
@@ -272,19 +274,19 @@
             <!-- Social Media Icons - Centered -->
             <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
                 <a href="https://www.facebook.com/share/19zx6VUm7M/" target="_blank" rel="noopener" aria-label="تابعنا على فيسبوك" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: #1877f2; border-radius: 50%; color: white; text-decoration: none; transition: transform 0.2s ease;">
-                    <i class="fab fa-facebook-f" style="font-size: 20px;" aria-hidden="true"></i>
+                    <img src="assets/icons/social/FACEBOOK.webp" alt="Facebook" style="width: 24px; height: 24px;" aria-hidden="true">
                 </a>
                 <a href="https://www.instagram.com/luxbyte_llc1" target="_blank" rel="noopener" aria-label="تابعنا على إنستجرام" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); border-radius: 50%; color: white; text-decoration: none; transition: transform 0.2s ease;">
-                    <i class="fab fa-instagram" style="font-size: 20px;" aria-hidden="true"></i>
+                    <img src="assets/icons/social/INSTAGRAM.webp" alt="Instagram" style="width: 24px; height: 24px;" aria-hidden="true">
                 </a>
                 <a href="https://www.tiktok.com/@luxpyte.llc" target="_blank" rel="noopener" aria-label="تابعنا على تيك توك" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: #000000; border-radius: 50%; color: white; text-decoration: none; transition: transform 0.2s ease;">
-                    <i class="fab fa-tiktok" style="font-size: 20px;" aria-hidden="true"></i>
+                    <img src="assets/icons/social/TEKTOK.webp" alt="TikTok" style="width: 24px; height: 24px;" aria-hidden="true">
                 </a>
                 <a href="https://wa.me/201148709609" target="_blank" rel="noopener" aria-label="تواصل معنا على واتساب" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: #25d366; border-radius: 50%; color: white; text-decoration: none; transition: transform 0.2s ease;">
-                    <i class="fab fa-whatsapp" style="font-size: 20px;" aria-hidden="true"></i>
+                    <img src="assets/icons/social/WHATSAPP.webp" alt="WhatsApp" style="width: 24px; height: 24px;" aria-hidden="true">
                 </a>
                 <a href="tel:01148709609" aria-label="اتصل بنا على الهاتف" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: #34b7f1; border-radius: 50%; color: white; text-decoration: none; transition: transform 0.2s ease;">
-                    <i class="fas fa-phone" style="font-size: 20px;" aria-hidden="true"></i>
+                    <img src="assets/icons/social/CALL.webp" alt="Call" style="width: 24px; height: 24px;" aria-hidden="true">
                 </a>
             </div>
 
@@ -307,9 +309,13 @@
     <script src="config.js" defer></script>
     <script type="module" src="js/env.js"></script>
     <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/theme-manager.js"></script>
+    <script type="module" src="js/translation-manager.js"></script>
+    <script type="module" src="js/navigation-bar.js"></script>
+    <script type="module" src="js/system-validator.js"></script>
     <script src="i18n-dict.js" defer></script>
     <script src="js/translation-utils.js" defer></script>
-    <script src="common.js" defer></script>
+    <!-- common.js removed - using new modular system -->
     <script src="js/engagement-notification.js" defer></script>
     <script src="js/enhanced-ui.js" defer></script>
     <script src="js/comprehensive-test.js" defer></script>
@@ -318,8 +324,16 @@
         // Initialize page
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('LUXBYTE Home Page Loaded');
-            injectNavbar('home');
             applyI18n();
+
+            // Run system validation
+            try {
+                const { default: SystemValidator } = await import('./js/system-validator.js');
+                const validator = new SystemValidator();
+                await validator.validateAll();
+            } catch (error) {
+                console.warn('System validation failed:', error);
+            }
 
             // Home page is public - no authentication required
             console.log('Home page is public - no authentication required');

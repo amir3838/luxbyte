@@ -35,18 +35,20 @@ export async function ensureSupabaseReady() {
     }
 
     // Check environment variables
-    if (!window.__ENV__ || !window.__ENV__.NEXT_PUBLIC_SUPABASE_URL || !window.__ENV__.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    if (!window.__ENV__ || !window.__ENV__.SUPABASE_URL || !window.__ENV__.SUPABASE_ANON_KEY) {
         throw new Error('متغيرات البيئة غير مكتملة - تحقق من config.js');
     }
 
     // Check Supabase client
-    if (!window.supabase) {
+    if (!window.LUXBYTE?.supabase) {
         throw new Error('عميل Supabase غير متاح - تحقق من js/supabase-client.js');
     }
 
     // Test Supabase connection
     try {
-        const { data, error } = await window.supabase.auth.getSession();
+        const { getSupabase } = await import('./supabase-client.js');
+        const supabase = getSupabase();
+        const { data, error } = await supabase.auth.getSession();
         if (error) {
             console.warn('Supabase session check failed:', error);
         }
@@ -69,7 +71,7 @@ function initFileUpload() {
         return false;
     }
 
-    if (typeof window.supabase === 'undefined') {
+    if (!window.LUXBYTE?.supabase) {
         console.error('❌ Supabase client not found');
         return false;
     }
@@ -565,7 +567,9 @@ async function removeFile(documentType) {
         const fileInfo = uploadedFiles[documentType];
         if (fileInfo) {
             // Delete from storage
-            const { error } = await window.supabase.storage
+            const { getSupabase } = await import('./supabase-client.js');
+            const supabase = getSupabase();
+            const { error } = await supabase.storage
                 .from('kyc_docs')
                 .remove([fileInfo.path]);
 
@@ -576,7 +580,7 @@ async function removeFile(documentType) {
             // Delete from database
             const userId = getCurrentUserId();
             if (userId) {
-                await window.supabase
+                await supabase
                     .from('documents')
                     .delete()
                     .eq('user_id', userId)
@@ -1125,7 +1129,9 @@ async function uploadAndProcess(file, docType, userId, onDone, onError) {
         const filePath = `${userId}/${docType}_${Date.now()}.${file.name.split('.').pop()}`;
         const bucketName = 'kyc_docs';
 
-        const { data, error } = await window.supabase.storage
+        const { getSupabase } = await import('./supabase-client.js');
+        const supabase = getSupabase();
+        const { data, error } = await supabase.storage
             .from(bucketName)
             .upload(filePath, file, {
                 cacheControl: '3600',
@@ -1137,7 +1143,7 @@ async function uploadAndProcess(file, docType, userId, onDone, onError) {
         }
 
         // الحصول على الرابط العام
-        const { data: publicUrlData } = window.supabase.storage
+        const { data: publicUrlData } = supabase.storage
             .from(bucketName)
             .getPublicUrl(filePath);
 

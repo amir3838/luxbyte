@@ -332,6 +332,30 @@ export async function initAutoGuard() {
 }
 
 /**
+ * تهيئة الحماية الفورية للداشبورد
+ */
+export async function initDashboardGuard() {
+    try {
+        console.log('🛡️ Initializing dashboard guard...');
+        
+        // التحقق من المصادقة فوراً
+        const isAuthenticated = await requireAuth();
+        if (!isAuthenticated) {
+            console.log('❌ Dashboard access denied - not authenticated');
+            return false;
+        }
+
+        console.log('✅ Dashboard access granted');
+        return true;
+
+    } catch (error) {
+        console.error('❌ Dashboard guard initialization error:', error);
+        redirectToAuth();
+        return false;
+    }
+}
+
+/**
  * تهيئة الحماية للصفحة
  * @param {string} requiredAccountType - نوع الحساب المطلوب (اختياري)
  */

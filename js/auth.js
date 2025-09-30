@@ -1,4 +1,5 @@
-import { supabase } from './supabase-client.js';
+import { getSupabase } from './supabase-client.js';
+import { AUTH_CALLBACKS, SUPABASE_AUTH_CONFIG, getDashboardPath } from './auth-config.js';
 
 /**
  * معالجة تسجيل المستخدم الجديد
@@ -12,10 +13,12 @@ export async function handleRegister(email, password, account, additionalData = 
         console.log('🔐 Starting registration process...', { email, account });
 
         // تسجيل المستخدم في Supabase Auth
+        const supabase = getSupabase();
         const { data: { user }, error: authError } = await supabase.auth.signUp({
             email,
             password,
             options: {
+                emailRedirectTo: AUTH_CALLBACKS.EMAIL_CONFIRMATION,
                 data: {
                     account,
                     ...additionalData
@@ -77,6 +80,7 @@ export async function handleLogin(email, password) {
     try {
         console.log('🔐 Starting login process...', { email });
 
+        const supabase = getSupabase();
         const { data: { user }, error: authError } = await supabase.auth.signInWithPassword({
             email,
             password
@@ -123,12 +127,44 @@ export async function handleLogin(email, password) {
 }
 
 /**
+ * إعادة تعيين كلمة المرور
+ * @param {string} email - البريد الإلكتروني
+ * @returns {Promise<Object>} نتيجة العملية
+ */
+export async function handlePasswordReset(email) {
+    try {
+        console.log('🔐 Starting password reset process...', { email });
+
+        const supabase = getSupabase();
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: AUTH_CALLBACKS.PASSWORD_RESET
+        });
+
+        if (error) {
+            console.error('❌ Password reset failed:', error);
+            throw new Error(error.message);
+        }
+
+        console.log('✅ Password reset email sent successfully');
+        return {
+            success: true,
+            message: 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني'
+        };
+
+    } catch (error) {
+        console.error('❌ Password reset error:', error);
+        throw new Error(error.message);
+    }
+}
+
+/**
  * تسجيل الخروج
  */
 export async function handleLogout() {
     try {
         console.log('🔐 Starting logout process...');
 
+        const supabase = getSupabase();
         const { error } = await supabase.auth.signOut();
 
         if (error) {
@@ -156,6 +192,7 @@ export async function checkAuthAndRedirect() {
     try {
         console.log('🔍 Checking authentication status...');
 
+        const supabase = getSupabase();
         const { data: { session } } = await supabase.auth.getSession();
 
         if (!session) {
@@ -223,19 +260,9 @@ export async function checkAuthAndRedirect() {
  * @param {string} accountType - نوع الحساب
  */
 export function redirectByAccount(accountType) {
-    const DASHBOARD = {
-        pharmacy: 'dashboard/pharmacy.html',
-        supermarket: 'dashboard/supermarket.html',
-        restaurant: 'dashboard/restaurant.html',
-        clinic: 'dashboard/clinic.html',
-        courier: 'dashboard/courier.html',
-        driver: 'dashboard/driver.html',
-        admin: 'dashboard.html'
-    };
+    const url = getDashboardPath(accountType);
 
-    const url = DASHBOARD[accountType];
-
-    if (url) {
+    if (url && url !== 'auth.html') {
         console.log(`🔄 Redirecting to ${accountType} dashboard: ${url}`);
         window.location.href = url;
     } else {
@@ -250,6 +277,7 @@ export function redirectByAccount(accountType) {
  */
 export async function getCurrentUser() {
     try {
+        const supabase = getSupabase();
         const { data: { user } } = await supabase.auth.getUser();
         return user;
     } catch (error) {
@@ -263,6 +291,7 @@ export async function getCurrentUser() {
  */
 export async function getCurrentProfile() {
     try {
+        const supabase = getSupabase();
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return null;
 
@@ -306,6 +335,7 @@ function showEmailConfirmationMessage() {
  */
 export async function checkEmailConfirmation() {
     try {
+        const supabase = getSupabase();
         const { data: { user } } = await supabase.auth.getUser();
         if (user && !user.email_confirmed_at) {
             showEmailConfirmationMessage();

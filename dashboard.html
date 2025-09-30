@@ -153,16 +153,14 @@
     </main>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="i18n-dict.js"></script>
     <script src="js/translation-utils.js"></script>
-    <script src="common.js"></script>
+    <!-- common.js removed - using new modular system -->
     <script src="js/firebase-config.js"></script>
     <script src="js/push-notifications.js"></script>
     <script>
-        // Auth guard
-        (async ()=>{ await LUXBYTE.requireAuthOrRedirect(); })();
+        // Auth guard - will be handled by the new guard system below
     </script>
     <script>
         let currentTab = 'driver';
@@ -170,7 +168,6 @@
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', async () => {
-            injectNavbar('dash');
             applyI18n();
             await loadAllData();
             updateStats();
@@ -623,8 +620,29 @@
         </div>
     </div>
 
+    <!-- Navigation and Theme Scripts -->
+    <script type="module" src="js/theme-manager.js"></script>
+    <script type="module" src="js/navigation-bar.js"></script>
+    
     <!-- Guard Scripts -->
     <script type="module" src="js/guard.js"></script>
     <script type="module" src="js/supabase-client.js"></script>
+    
+    <script>
+        // Initialize dashboard with guard protection
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🛡️ Dashboard loaded - initializing guard protection...');
+            
+            try {
+                // Use the already loaded guard module
+                await window.initAutoGuard();
+                console.log('✅ Guard protection activated for dashboard');
+            } catch (error) {
+                console.error('❌ Failed to initialize guard:', error);
+                // Redirect to login if guard fails
+                window.location.href = 'auth.html';
+            }
+        });
+    </script>
 </body>
 </html>

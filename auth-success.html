@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تم تسجيل الدخول بنجاح - LUXBYTE</title>
+    <meta name="description" content="تم تسجيل الدخول بنجاح في LUXBYTE">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="icon" href="assets/app_icon/LUXBYTE.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/app_icon/LUXBYTEICON.PNG">
+
+    <style>
+        .success-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .success-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            animation: bounce 2s infinite;
+        }
+
+        .success-icon i {
+            font-size: 32px;
+            color: white;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .success-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .user-info {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            text-align: right;
+        }
+
+        .user-info h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .user-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .user-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-detail-label {
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .user-detail-value {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .redirect-info {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: #92400e;
+        }
+
+        .redirect-countdown {
+            font-weight: 600;
+            color: #d97706;
+        }
+
+        .success-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #6b7cff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f4f6;
+            border-top: 2px solid #6b7cff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 640px) {
+            .success-card {
+                padding: 24px;
+            }
+
+            .user-details {
+                grid-template-columns: 1fr;
+            }
+
+            .success-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="success-container">
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <h1 class="success-title">مرحباً بك في LUXBYTE!</h1>
+            <p class="success-message">
+                تم تسجيل الدخول بنجاح. سنوجهك إلى لوحة التحكم الخاصة بك خلال لحظات.
+            </p>
+
+            <!-- User Information -->
+            <div class="user-info" id="userInfo" style="display: none;">
+                <h3>معلومات حسابك</h3>
+                <div class="user-details">
+                    <div class="user-detail">
+                        <span class="user-detail-label">الاسم:</span>
+                        <span class="user-detail-value" id="userName">-</span>
+                    </div>
+                    <div class="user-detail">
+                        <span class="user-detail-label">البريد الإلكتروني:</span>
+                        <span class="user-detail-value" id="userEmail">-</span>
+                    </div>
+                    <div class="user-detail">
+                        <span class="user-detail-label">نوع الحساب:</span>
+                        <span class="user-detail-value" id="userRole">-</span>
+                    </div>
+                    <div class="user-detail">
+                        <span class="user-detail-label">تاريخ آخر دخول:</span>
+                        <span class="user-detail-value" id="lastSignIn">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Redirect Information -->
+            <div class="redirect-info">
+                <i class="fas fa-info-circle" style="margin-left: 8px;"></i>
+                <span>سيتم توجيهك إلى لوحة التحكم خلال <span class="redirect-countdown" id="countdown">5</span> ثوانٍ</span>
+            </div>
+
+            <!-- Actions -->
+            <div class="success-actions">
+                <button id="goToDashboard" class="btn btn-primary">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>الذهاب للوحة التحكم</span>
+                    <div class="loading-spinner" style="display: none;"></div>
+                </button>
+                <a href="index.html" class="btn btn-secondary">
+                    <i class="fas fa-home"></i>
+                    الصفحة الرئيسية
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js" defer></script>
+    <script type="module" src="js/env.js"></script>
+    <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/auth-config.js"></script>
+    <script type="module" src="js/theme-manager.js"></script>
+    <script type="module" src="js/translation-manager.js"></script>
+    <script type="module" src="js/navigation-bar.js"></script>
+
+    <script>
+        let countdownInterval;
+        let redirectUrl = '/dashboard.html';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🎉 Auth success page loaded');
+
+            try {
+                // Initialize Supabase
+                const supabase = getSupabase();
+
+                // Get current user
+                const { data: { user }, error } = await supabase.auth.getUser();
+
+                if (error || !user) {
+                    throw new Error('لم يتم العثور على معلومات المستخدم');
+                }
+
+                // Display user information
+                displayUserInfo(user);
+
+                // Get user profile to check registration completion
+                const { data: profile, error: profileError } = await supabase
+                    .from('profiles')
+                    .select('account, registration_completed')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (profileError) {
+                    console.warn('Profile not found, redirecting to signup');
+                    window.location.href = 'simple-signup.html';
+                    return;
+                }
+
+                // Check if registration is completed
+                if (!profile.registration_completed) {
+                    console.log('Registration not completed, redirecting to complete registration');
+                    window.location.href = 'complete-registration.html';
+                    return;
+                }
+
+                // Determine redirect URL based on user role
+                redirectUrl = window.getDashboardPath ? window.getDashboardPath(profile.account) : '/dashboard.html';
+
+                console.log('User role:', profile.account, 'Redirect URL:', redirectUrl);
+
+                // Start countdown
+                startCountdown();
+
+                // Set up manual redirect button
+                document.getElementById('goToDashboard').addEventListener('click', () => {
+                    redirectToDashboard();
+                });
+
+            } catch (error) {
+                console.error('Auth success error:', error);
+                // Redirect to login on error
+                setTimeout(() => {
+                    window.location.href = 'auth.html';
+                }, 3000);
+            }
+        });
+
+        function displayUserInfo(user) {
+            const userName = document.getElementById('userName');
+            const userEmail = document.getElementById('userEmail');
+            const userRole = document.getElementById('userRole');
+            const lastSignIn = document.getElementById('lastSignIn');
+
+            // Set user information
+            userName.textContent = `${user.user_metadata?.first_name || ''} ${user.user_metadata?.last_name || ''}`.trim() || 'غير محدد';
+            userEmail.textContent = user.email || 'غير محدد';
+            userRole.textContent = getUserRoleDisplay(user);
+            lastSignIn.textContent = new Date(user.last_sign_in_at).toLocaleString('ar-EG') || 'الآن';
+
+            // Show user info
+            document.getElementById('userInfo').style.display = 'block';
+        }
+
+        function getUserRole(user) {
+            return user?.user_metadata?.account_type ||
+                   user?.user_metadata?.role ||
+                   user?.app_metadata?.role ||
+                   'admin';
+        }
+
+        function getUserRoleDisplay(user) {
+            const role = getUserRole(user);
+            const roleNames = {
+                'pharmacy': 'صيدلية',
+                'supermarket': 'سوبر ماركت',
+                'restaurant': 'مطعم',
+                'clinic': 'عيادة',
+                'courier': 'مندوب توصيل',
+                'driver': 'سائق',
+                'admin': 'مدير'
+            };
+            return roleNames[role] || role;
+        }
+
+        function startCountdown() {
+            let count = 5;
+            const countdownElement = document.getElementById('countdown');
+
+            countdownInterval = setInterval(() => {
+                countdownElement.textContent = count;
+                count--;
+
+                if (count < 0) {
+                    clearInterval(countdownInterval);
+                    redirectToDashboard();
+                }
+            }, 1000);
+        }
+
+        function redirectToDashboard() {
+            // Clear countdown
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+
+            // Show loading state
+            const button = document.getElementById('goToDashboard');
+            const spinner = button.querySelector('.loading-spinner');
+            const text = button.querySelector('span');
+
+            button.disabled = true;
+            spinner.style.display = 'block';
+            text.textContent = 'جاري التوجيه...';
+
+            // Redirect
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 1000);
+        }
+
+        // Handle page visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Page is hidden, clear countdown
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
+            } else {
+                // Page is visible again, restart countdown if needed
+                const countdownElement = document.getElementById('countdown');
+                const currentCount = parseInt(countdownElement.textContent);
+                if (currentCount > 0) {
+                    startCountdown();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

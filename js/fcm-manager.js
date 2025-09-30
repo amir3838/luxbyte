@@ -1,7 +1,7 @@
 // FCM Manager for Push Notifications
 // Handles device registration and notification sending
 
-import { supabase } from './supabase-client.js';
+import { getSupabase } from './supabase-client.js';
 
 class FCMManager {
     constructor() {
@@ -206,6 +206,7 @@ class FCMManager {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return [];
 
+            const supabase = getSupabase();
             const { data, error } = await supabase
                 .from('notifications')
                 .select('*')

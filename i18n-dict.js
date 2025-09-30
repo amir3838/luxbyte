@@ -1,11 +1,14 @@
-// قاموس الترجمة الجديد
+// قاموس الترجمة الجديد - محدث ومحسن
 const i18nDict = {
   ar: {
     // Brand
     "brand.luxbyte":"لوكس بايت","brand.luxbyte_llc":"شركة لوكس بايت المحدودة المسئولية","brand.shop_eg":"شوب إي جي","brand.master_driver":"ماستر درايفر",
 
     // Navigation
-    "nav.home":"الرئيسية","nav.choose_platform":"اختر منصتك","nav.dashboard":"لوحة المراجعة","nav.logout":"تسجيل الخروج","nav.contact":"التواصل","nav.login":"تسجيل الدخول","nav.signup":"إنشاء حساب","nav.start_now":"ابدأ الآن",
+    "nav.home":"الرئيسية","nav.choose_platform":"اختر منصتك","nav.dashboard":"لوحة المراجعة","nav.logout":"تسجيل الخروج","nav.contact":"التواصل","nav.login":"تسجيل الدخول","nav.signup":"إنشاء حساب","nav.start_now":"ابدأ الآن","nav.profile":"الملف الشخصي","nav.settings":"الإعدادات","nav.back_home":"العودة للرئيسية","nav.join_us":"انضم إلينا",
+
+    // Theme & Language
+    "theme.toggle":"تبديل الثيم","theme.light":"الوضع النهاري","theme.dark":"الوضع الليلي","lang.toggle":"تبديل اللغة","lang.ar":"العربية","lang.en":"English",
 
     // Home Page
     "home.company_full":"شركة لوكس بايت المحدودة المسئولية","home.tagline":"منصة شاملة للتجارة الإلكترونية وخدمات التوصيل، تقدم حلول متكاملة للمنشآت التجارية والأفراد في مصر. انضم إلينا واكتشف عالمًا جديدًا من الفرص التجارية.","home.cta_start_journey":"ابدأ رحلتك الآن","home.choose_platform":"اختر منصتك",
@@ -23,7 +26,7 @@ const i18nDict = {
     "home.cta_block.title":"جاهز للبدء؟","home.cta_block.desc":"انضم إلى آلاف العملاء الذين يثقون في لوكس بايت لتطوير أعمالهم","home.cta_block.start_now":"ابدأ الآن","home.cta_block.contact_us":"تواصل معنا",
 
     // Social
-    "home.social.title":"روابط التواصل","home.social.facebook":"فيسبوك","home.social.instagram":"إنستجرام","home.social.tiktok":"تيك توك","home.social.whatsapp":"واتساب","home.social.call_us":"اتصل بنا",
+    "home.social.title":"روابط التواصل","home.social.facebook":"فيسبوك","home.social.instagram":"إنستجرام","home.social.tiktok":"تيك توك","home.social.whatsapp":"واتساب","home.social.call_us":"اتصل بنا","home.social.linkedin":"لينكد إن","home.social.youtube":"يوتيوب","home.social.telegram":"تيليجرام",
 
     // Footer
     "home.footer.copyright":"© 2024 شركة لوكس بايت المحدودة المسئولية. جميع الحقوق محفوظة.","home.footer.company_line":"شركة لوكس بايت المحدودة المسئولية - مصر",
@@ -31,34 +34,75 @@ const i18nDict = {
     // Choose Platform
     "choose_platform.title":"اختيار المنصة - لوكس بايت","choose_platform.heading":"اختر منصة لوكس بايت المناسبة لك","choose_platform.subheading":"اختر منصتك","choose_platform.helper":"اختر المنصة المناسبة لاحتياجاتك",
     "choose_platform.shop_eg.subtitle":"منصة التجارة الإلكترونية","choose_platform.shop_eg.desc":"منصة متكاملة للتجارة الإلكترونية تتيح للمنشآت التجارية إنشاء متاجرها الإلكترونية وإدارة طلباتها بسهولة. مناسب للمطاعم، السوبر ماركت، الصيدليات، العيادات، ومندوبي التوصيل.","choose_platform.shop_eg.roles_title":"الأدوار المتاحة:","choose_platform.shop_eg.roles":"مطعم, سوبر ماركت, صيدلية, عيادة, مندوب توصيل","choose_platform.shop_eg.features":"إدارة طلبات متقدمة, نظام دفع آمن, تقارير مفصلة, دعم فني 24/7","choose_platform.shop_eg.cta":"ابدأ مع شوب إي جي",
-    "choose_platform.master_driver.subtitle":"منصة خدمات التوصيل","choose_platform.master_driver.desc":"منصة متخصصة في خدمات التوصيل والنقل...","choose_platform.master_driver.roles_title":"الأدوار المتاحة:","choose_platform.master_driver.roles":"سائق رئيسي","choose_platform.master_driver.features":"تتبع الطلبات في الوقت الفعلي, نظام تقييم متقدم","choose_platform.master_driver.cta":"ابدأ مع ماستر درايفر",
+    "choose_platform.master_driver.subtitle":"منصة خدمات التوصيل","choose_platform.master_driver.desc":"منصة متخصصة في خدمات التوصيل والنقل، تربط بين العملاء ومندوبي التوصيل لتقديم خدمة توصيل سريعة وموثوقة في جميع أنحاء مصر.","choose_platform.master_driver.roles_title":"الأدوار المتاحة:","choose_platform.master_driver.roles":"سائق رئيسي","choose_platform.master_driver.features":"تتبع الطلبات في الوقت الفعلي, نظام تقييم متقدم, دفع آمن ومضمون, تغطية شاملة للمدن","choose_platform.master_driver.cta":"ابدأ مع ماستر درايفر",
 
     // Choose Role
     "choose_role.title":"اختيار النشاط - لوكس بايت","choose_role.heading":"اختر نوع النشاط المناسب لك في منصة شوب إي جي","choose_role.breadcrumb_back":"العودة لاختيار المنصة","choose_role.panel":"لوحة المراجعة","choose_role.logout":"تسجيل الخروج","choose_role.choose_activity":"اختر نوع النشاط","choose_role.helper":"اختر النشاط المناسب لك في منصة شوب إي جي",
-    "choose_role.restaurant.title":"مطعم","choose_role.restaurant.subtitle":"إدارة المطاعم والوجبات","choose_role.restaurant.desc":"منصة متكاملة لإدارة المطاعم...","choose_role.restaurant.features_title":"المميزات:","choose_role.restaurant.features":"إدارة قائمة الطعام, تتبع الطلبات, إدارة العملاء, تقارير المبيعات","choose_role.restaurant.cta":"اختر المطعم",
-    "choose_role.supermarket.title":"سوبر ماركت","choose_role.supermarket.subtitle":"إدارة المتاجر الكبرى","choose_role.supermarket.desc":"حل متكامل لإدارة السوبر ماركت...","choose_role.supermarket.features":"إدارة المخزون, نظام نقاط البيع, التوصيل المنزلي, تقارير مالية","choose_role.supermarket.cta":"اختر السوبر ماركت",
-    "choose_role.pharmacy.title":"صيدلية",
+    "choose_role.restaurant.title":"مطعم","choose_role.restaurant.subtitle":"إدارة المطاعم والوجبات","choose_role.restaurant.desc":"منصة متكاملة لإدارة المطاعم تشمل قائمة الطعام، الطلبات، العملاء، والتوصيل.","choose_role.restaurant.features_title":"المميزات:","choose_role.restaurant.features":"إدارة قائمة الطعام, تتبع الطلبات, إدارة العملاء, تقارير المبيعات","choose_role.restaurant.cta":"اختر المطعم",
+    "choose_role.supermarket.title":"سوبر ماركت","choose_role.supermarket.subtitle":"إدارة المتاجر الكبرى","choose_role.supermarket.desc":"حل متكامل لإدارة السوبر ماركت يشمل المخزون، المبيعات، العملاء، والتوصيل المنزلي.","choose_role.supermarket.features":"إدارة المخزون, نظام نقاط البيع, التوصيل المنزلي, تقارير مالية","choose_role.supermarket.cta":"اختر السوبر ماركت",
+    "choose_role.pharmacy.title":"صيدلية","choose_role.pharmacy.subtitle":"إدارة الصيدليات","choose_role.pharmacy.desc":"منصة متخصصة لإدارة الصيدليات تشمل المخزون، الوصفات الطبية، العملاء، والتوصيل.","choose_role.pharmacy.features":"إدارة المخزون, إدارة الوصفات, تتبع الطلبات, تقارير مالية","choose_role.pharmacy.cta":"اختر الصيدلية",
+    "choose_role.clinic.title":"عيادة","choose_role.clinic.subtitle":"إدارة العيادات الطبية","choose_role.clinic.desc":"حل متكامل لإدارة العيادات يشمل المواعيد، المرضى، السجلات الطبية، والموظفين.","choose_role.clinic.features":"إدارة المواعيد, سجلات المرضى, إدارة الموظفين, تقارير طبية","choose_role.clinic.cta":"اختر العيادة",
+    "choose_role.courier.title":"مندوب توصيل","choose_role.courier.subtitle":"خدمات التوصيل","choose_role.courier.desc":"منصة متخصصة لمندوبي التوصيل تشمل إدارة الطلبات، التتبع، الأرباح، والمركبة.","choose_role.courier.features":"إدارة التوصيلات, تتبع الطلبات, إدارة الأرباح, إدارة المركبة","choose_role.courier.cta":"اختر مندوب التوصيل",
 
     // Auth
     "auth.title":"تسجيل الدخول - لوكس بايت","auth.subtitle":"تسجيل الدخول أو إنشاء حساب جديد في لوكس بايت","auth.welcome":"مرحباً بك في لوكس بايت","auth.email":"البريد الإلكتروني","auth.password":"كلمة المرور","auth.password_ph":"أدخل كلمة المرور","auth.remember_me":"تذكرني","auth.sign_in":"تسجيل الدخول","auth.no_account":"ليس لديك حساب؟","auth.create_account":"إنشاء حساب جديد",
     "auth.signup_title":"تسجيل البيانات - لوكس بايت","auth.signup_subtitle":"تسجيل البيانات والمستندات المطلوبة","auth.join_today":"انضم إلى لوكس بايت اليوم","auth.confirm_password":"تأكيد كلمة المرور","auth.confirm_password_ph":"أكد كلمة المرور","auth.agree_terms":"أوافق على الشروط والأحكام","auth.have_account":"لديك حساب بالفعل؟","auth.signin":"تسجيل الدخول",
-    "auth.fill_all_fields":"يرجى ملء جميع الحقول","auth.signing_in":"جاري تسجيل الدخول...","auth.success":"تم تسجيل الدخول بنجاح","auth.error":"خطأ في تسجيل الدخول",
+    "auth.fill_all_fields":"يرجى ملء جميع الحقول","auth.signing_in":"جاري تسجيل الدخول...","auth.success":"تم تسجيل الدخول بنجاح","auth.error":"خطأ في تسجيل الدخول","auth.invalid_credentials":"بيانات الدخول غير صحيحة","auth.account_not_found":"الحساب غير موجود","auth.password_incorrect":"كلمة المرور غير صحيحة",
 
-    // Registration
-    "reg.title":"تسجيل البيانات - لوكس بايت","reg.heading":"تسجيل البيانات","reg.helper":"املأ البيانات المطلوبة","reg.personal.title":"البيانات الشخصية","reg.personal.helper":"املأ البيانات الشخصية الأساسية","reg.first_name":"الاسم الأول","reg.first_name_ph":"أدخل اسمك الأول","reg.last_name":"اسم العائلة","reg.last_name_ph":"أدخل اسم العائلة","reg.email":"البريد الإلكتروني","reg.phone":"رقم الهاتف","reg.password":"كلمة المرور","reg.password_ph":"أدخل كلمة المرور","reg.password_confirm":"تأكيد كلمة المرور","reg.password_confirm_ph":"أكد كلمة المرور","reg.location_activity_title":"الموقع والنشاط","reg.governorate":"المحافظة","reg.governorate_ph":"اختر المحافظة","reg.gov.cairo":"القاهرة","reg.gov.giza":"الجيزة","reg.gov.qalyubia":"القليوبية","reg.city":"المدينة","reg.city_ph":"اختر المدينة","reg.address":"العنوان التفصيلي","reg.get_location":"GPS",
+    // Registration - Unified Signup
+    "reg.title":"إنشاء حساب جديد - لوكس بايت","reg.heading":"إنشاء حساب جديد","reg.subheading":"انضم إلى LUXBYTE وابدأ استخدام منصّتنا الآن. رجاءً املأ البيانات بدقّة وارفع المستندات المطلوبة لمراجعة طلبك بسرعة.","reg.helper":"املأ البيانات المطلوبة",
+    
+    // Personal Information
+    "reg.personal.title":"البيانات الشخصية","reg.personal.helper":"املأ البيانات الشخصية الأساسية","reg.first_name":"الاسم الأول","reg.first_name_ph":"أدخل اسمك الأول","reg.last_name":"اسم العائلة","reg.last_name_ph":"أدخل اسم العائلة","reg.email":"البريد الإلكتروني","reg.phone":"رقم الهاتف (موبايل واتساب إن أمكن)","reg.phone_ph":"01xxxxxxxxx","reg.user_role":"صفة المتقدّم","reg.user_role_ph":"اختر صفتك","reg.user_role.owner":"مالك","reg.user_role.manager":"مدير مسؤول","reg.user_role.delegate":"مفوض",
+    
+    // Business Information
+    "reg.business.title":"بيانات النشاط","reg.business.helper":"املأ بيانات النشاط التجاري","reg.account_type":"نوع الحساب","reg.account_type_ph":"اختر نوع الحساب","reg.business_name":"اسم النشاط التجاري","reg.business_name_ph":"أدخل اسم النشاط التجاري","reg.commercial_register":"رقم السجل التجاري (إن وجد)","reg.commercial_register_ph":"رقم السجل التجاري","reg.tax_number":"رقم البطاقة الضريبية (إن وجدت للكيان)","reg.tax_number_ph":"رقم البطاقة الضريبية",
+    
+    // Location
+    "reg.location.title":"الموقع","reg.location.helper":"املأ بيانات الموقع","reg.governorate":"المحافظة","reg.governorate_ph":"اختر المحافظة","reg.city":"المدينة/الحي","reg.city_ph":"أدخل المدينة أو الحي","reg.address":"العنوان التفصيلي","reg.address_ph":"أدخل العنوان التفصيلي","reg.google_maps_url":"رابط الموقع على خرائط جوجل (اختياري لكنه مفيد)","reg.google_maps_url_ph":"https://maps.google.com/...","reg.working_hours":"مواعيد العمل (اختياري)","reg.working_hours_ph":"مثال: 9 صباحاً - 11 مساءً",
+    
+    // Security
+    "reg.security.title":"الأمان (كلمة المرور)","reg.security.helper":"اختر كلمة مرور قوية","reg.password":"كلمة المرور","reg.password_ph":"أدخل كلمة المرور","reg.password_confirm":"تأكيد كلمة المرور","reg.password_confirm_ph":"أكد كلمة المرور","reg.enable_2fa":"تفعيل المصادقة عبر البريد لاحقًا",
+    
+    // Documents
+    "reg.documents.title":"المستندات المطلوبة","reg.documents.helper":"ارفع المستندات المطلوبة بوضوح","reg.documents.instructions":"إرشادات الرفع: JPG/PNG أو PDF – الحد الأقصى 5MB للملف – صور حديثة وواضحة.","reg.documents.national_id":"بطاقة الهوية – وجه/ظهر","reg.documents.contract_document":"عقد مقر (إيجار موثق أو تمليك)","reg.documents.utility_bill":"إيصال مرافق حديث","reg.documents.facade_photo":"صورة الواجهة + اللافتة","reg.documents.interior_photo":"صورة داخلية","reg.documents.personal_photo":"صورة شخصية للمسؤول أمام الواجهة",
+    
+    // Review
+    "reg.review.title":"تأكيد ومراجعة","reg.review.helper":"راجع بياناتك قبل الإرسال","reg.review.summary":"ملخص بياناتك:","reg.review.agree_terms":"أوافق على الشروط والأحكام وسياسة الخصوصية","reg.review.submit":"إرسال الطلب",
+    
+    // Navigation
+    "reg.nav.previous":"السابق","reg.nav.next":"التالي","reg.nav.submit":"إرسال الطلب",
+    
+    // Form Validation
+    "validation.required":"هذا الحقل مطلوب","validation.email":"البريد الإلكتروني غير صحيح","validation.phone":"رقم الهاتف غير صحيح","validation.password_match":"كلمات المرور غير متطابقة","validation.file_type":"نوع الملف غير مدعوم","validation.file_size":"حجم الملف كبير جداً","validation.terms_required":"يجب الموافقة على الشروط والأحكام",
 
     // Dashboard
     "dashboard.title":"لوحة المراجعة - لوكس بايت","dashboard.subtitle":"مراجعة وإدارة طلبات التسجيل","dashboard.new_registration":"تسجيل جديد","dashboard.tabs.courier":"مندوب توصيل","dashboard.tabs.clinic":"عيادة","dashboard.tabs.pharmacy":"صيدلية","dashboard.tabs.supermarket":"سوبر ماركت","dashboard.tabs.restaurant":"مطعم","dashboard.cards.total_requests":"إجمالي الطلبات","dashboard.status.pending":"في الانتظار","dashboard.status.approved":"مقبولة","dashboard.status.rejected":"مرفوضة","dashboard.empty_title":"لا توجد طلبات","dashboard.empty_subtitle":"لا توجد طلبات حالياً","dashboard.table.email":"البريد الإلكتروني","dashboard.table.date":"تاريخ الطلب","dashboard.table.status":"الحالة","dashboard.table.data":"البيانات","dashboard.table.files":"الملفات","dashboard.table.actions":"الإجراءات","dashboard.action.view":"عرض","dashboard.action.files":"ملفات",
 
     // Contact
-    "contact.title":"التواصل معنا - لوكس بايت","contact.subtitle":"تواصل مع لوكس بايت عبر قنوات التواصل المختلفة","contact.start_now":"ابدأ الآن","contact.heading":"تواصل معنا","contact.help_anytime":"نحن هنا لمساعدتك في أي وقت","contact.call_us":"اتصل بنا","contact.call_desc":"تواصل معنا مباشرة عبر الهاتف للحصول على المساعدة الفورية","contact.whatsapp":"واتساب","contact.whatsapp_desc":"راسلنا على واتساب للحصول على رد سريع ومباشر","contact.message_on_whatsapp":"راسلنا على واتساب","contact.follow_us":"تابعنا على وسائل التواصل الاجتماعي","contact.company_info":"معلومات الشركة","contact.company_name_label":"اسم الشركة:","contact.company_name_value":"شركة لوكس بايت المحدودة المسئولية","contact.location_label":"الموقع:","contact.location_value":"مصر - القاهرة","contact.hours_label":"ساعات العمل:","contact.hours_value":"24/7 - خدمة عملاء على مدار الساعة","contact.services.shop_eg":"منصة شوب إي جي للتجارة الإلكترونية","contact.services.master_driver":"منصة ماستر درايفر للتوصيل","contact.services.premium_support":"دعم فني متخصص","contact.services.security":"حماية وأمان البيانات","contact.faq":"الأسئلة الشائعة"
+    "contact.title":"التواصل معنا - لوكس بايت","contact.subtitle":"تواصل مع لوكس بايت عبر قنوات التواصل المختلفة","contact.start_now":"ابدأ الآن","contact.heading":"تواصل معنا","contact.help_anytime":"نحن هنا لمساعدتك في أي وقت","contact.call_us":"اتصل بنا","contact.call_desc":"تواصل معنا مباشرة عبر الهاتف للحصول على المساعدة الفورية","contact.whatsapp":"واتساب","contact.whatsapp_desc":"راسلنا على واتساب للحصول على رد سريع ومباشر","contact.message_on_whatsapp":"راسلنا على واتساب","contact.follow_us":"تابعنا على وسائل التواصل الاجتماعي","contact.company_info":"معلومات الشركة","contact.company_name_label":"اسم الشركة:","contact.company_name_value":"شركة لوكس بايت المحدودة المسئولية","contact.location_label":"الموقع:","contact.location_value":"مصر - القاهرة","contact.hours_label":"ساعات العمل:","contact.hours_value":"24/7 - خدمة عملاء على مدار الساعة","contact.services.shop_eg":"منصة شوب إي جي للتجارة الإلكترونية","contact.services.master_driver":"منصة ماستر درايفر للتوصيل","contact.services.premium_support":"دعم فني متخصص","contact.services.security":"حماية وأمان البيانات","contact.faq":"الأسئلة الشائعة",
+
+    // File Upload
+    "upload.title":"رفع المستندات","upload.camera":"تصوير","upload.file":"رفع ملف","upload.success":"تم الرفع بنجاح","upload.error":"فشل في الرفع","upload.remove":"حذف","upload.change":"تغيير الملف","upload.progress":"جاري الرفع...","upload.max_size":"الحد الأقصى 10 ميجابايت","upload.allowed_types":"الأنواع المدعومة: JPG, PNG, PDF",
+
+    // Common Actions
+    "action.save":"حفظ","action.cancel":"إلغاء","action.delete":"حذف","action.edit":"تعديل","action.view":"عرض","action.download":"تحميل","action.upload":"رفع","action.submit":"إرسال","action.back":"رجوع","action.next":"التالي","action.previous":"السابق","action.close":"إغلاق","action.confirm":"تأكيد","action.yes":"نعم","action.no":"لا",
+
+    // Status Messages
+    "status.loading":"جاري التحميل...","status.success":"تم بنجاح","status.error":"حدث خطأ","status.warning":"تحذير","status.info":"معلومة","status.pending":"في الانتظار","status.completed":"مكتمل","status.failed":"فشل",
+
+    // Error Messages
+    "error.general":"حدث خطأ غير متوقع","error.network":"خطأ في الشبكة","error.permission":"ليس لديك صلاحية","error.not_found":"غير موجود","error.unauthorized":"غير مصرح","error.validation":"خطأ في التحقق","error.file_upload":"خطأ في رفع الملف","error.database":"خطأ في قاعدة البيانات"
   },
   en: {
     // Brand
     "brand.luxbyte":"LUXBYTE","brand.luxbyte_llc":"LUXBYTE LLC","brand.shop_eg":"ShopEG","brand.master_driver":"Master Driver",
 
     // Navigation
-    "nav.home":"Home","nav.choose_platform":"Choose your platform","nav.dashboard":"Review Panel","nav.logout":"Sign out","nav.contact":"Contact","nav.login":"Sign in","nav.signup":"Sign Up","nav.start_now":"Get started",
+    "nav.home":"Home","nav.choose_platform":"Choose your platform","nav.dashboard":"Review Panel","nav.logout":"Sign out","nav.contact":"Contact","nav.login":"Sign in","nav.signup":"Sign Up","nav.start_now":"Get started","nav.profile":"Profile","nav.settings":"Settings","nav.back_home":"Back to Home","nav.join_us":"Join Us",
+
+    // Theme & Language
+    "theme.toggle":"Toggle Theme","theme.light":"Light Mode","theme.dark":"Dark Mode","lang.toggle":"Toggle Language","lang.ar":"العربية","lang.en":"English",
 
     // Home Page
     "home.company_full":"LUXBYTE LLC","home.tagline":"A comprehensive platform for e-commerce and delivery services, offering integrated solutions for businesses and individuals in Egypt. Join us and discover a new world of business opportunities.","home.cta_start_journey":"Start your journey now","home.choose_platform":"Choose your platform",
@@ -76,7 +120,7 @@ const i18nDict = {
     "home.cta_block.title":"Ready to get started?","home.cta_block.desc":"Join thousands who trust LUXBYTE to grow their business.","home.cta_block.start_now":"Get started now","home.cta_block.contact_us":"Contact us",
 
     // Social
-    "home.social.title":"Social links","home.social.facebook":"Facebook","home.social.instagram":"Instagram","home.social.tiktok":"TikTok","home.social.whatsapp":"WhatsApp","home.social.call_us":"Call us",
+    "home.social.title":"Social links","home.social.facebook":"Facebook","home.social.instagram":"Instagram","home.social.tiktok":"TikTok","home.social.whatsapp":"WhatsApp","home.social.call_us":"Call us","home.social.linkedin":"LinkedIn","home.social.youtube":"YouTube","home.social.telegram":"Telegram",
 
     // Footer
     "home.footer.copyright":"© 2024 LUXBYTE LLC. All rights reserved.","home.footer.company_line":"LUXBYTE LLC — Egypt",
@@ -84,26 +128,69 @@ const i18nDict = {
     // Choose Platform
     "choose_platform.title":"Choose Platform — LUXBYTE","choose_platform.heading":"Choose the LUXBYTE platform that fits you","choose_platform.subheading":"Choose your platform","choose_platform.helper":"Select the platform that matches your needs",
     "choose_platform.shop_eg.subtitle":"E-commerce platform","choose_platform.shop_eg.desc":"An integrated e-commerce platform that enables businesses to create online stores and manage orders easily.","choose_platform.shop_eg.roles_title":"Available roles:","choose_platform.shop_eg.roles":"Restaurant, Supermarket, Pharmacy, Clinic, Courier","choose_platform.shop_eg.features":"Advanced order management, Secure payment system, Detailed reports, 24/7 support","choose_platform.shop_eg.cta":"Get started with ShopEG",
-    "choose_platform.master_driver.subtitle":"Delivery services platform","choose_platform.master_driver.desc":"A specialized delivery and transportation platform...","choose_platform.master_driver.roles_title":"Available roles:","choose_platform.master_driver.roles":"Lead driver","choose_platform.master_driver.features":"Real-time tracking, Advanced rating system","choose_platform.master_driver.cta":"Get started with Master Driver",
+    "choose_platform.master_driver.subtitle":"Delivery services platform","choose_platform.master_driver.desc":"A specialized delivery and transportation platform connecting customers with couriers for fast, reliable service across Egypt.","choose_platform.master_driver.roles_title":"Available roles:","choose_platform.master_driver.roles":"Lead driver","choose_platform.master_driver.features":"Real-time tracking, Advanced rating system, Secure payments, Wide city coverage","choose_platform.master_driver.cta":"Get started with Master Driver",
 
     // Choose Role
     "choose_role.title":"Choose Activity — LUXBYTE","choose_role.heading":"Choose the appropriate activity on ShopEG","choose_role.breadcrumb_back":"Back to platform selection","choose_role.panel":"Review Panel","choose_role.logout":"Sign out","choose_role.choose_activity":"Choose activity","choose_role.helper":"Pick the activity that suits you on ShopEG",
     "choose_role.restaurant.title":"Restaurant","choose_role.restaurant.subtitle":"Restaurant & meals management","choose_role.restaurant.desc":"An integrated solution for restaurants to manage menus, orders, customers, and delivery.","choose_role.restaurant.features_title":"Features:","choose_role.restaurant.features":"Menu management, Order tracking, Customer management, Sales reports","choose_role.restaurant.cta":"Choose Restaurant",
     "choose_role.supermarket.title":"Supermarket","choose_role.supermarket.subtitle":"Large-store management","choose_role.supermarket.desc":"A complete solution for supermarkets including inventory, sales, customers, and home delivery.","choose_role.supermarket.features":"Inventory management, Point of Sale (POS), Home delivery, Financial reports","choose_role.supermarket.cta":"Choose Supermarket",
-    "choose_role.pharmacy.title":"Pharmacy",
+    "choose_role.pharmacy.title":"Pharmacy","choose_role.pharmacy.subtitle":"Pharmacy management","choose_role.pharmacy.desc":"A specialized platform for pharmacy management including inventory, prescriptions, customers, and delivery.","choose_role.pharmacy.features":"Inventory management, Prescription management, Order tracking, Financial reports","choose_role.pharmacy.cta":"Choose Pharmacy",
+    "choose_role.clinic.title":"Clinic","choose_role.clinic.subtitle":"Medical clinic management","choose_role.clinic.desc":"A complete solution for clinics including appointments, patients, medical records, and staff.","choose_role.clinic.features":"Appointment management, Patient records, Staff management, Medical reports","choose_role.clinic.cta":"Choose Clinic",
+    "choose_role.courier.title":"Courier","choose_role.courier.subtitle":"Delivery services","choose_role.courier.desc":"A specialized platform for couriers including order management, tracking, earnings, and vehicle management.","choose_role.courier.features":"Delivery management, Order tracking, Earnings management, Vehicle management","choose_role.courier.cta":"Choose Courier",
 
     // Auth
     "auth.title":"Sign in — LUXBYTE","auth.subtitle":"Sign in or create a new account in LUXBYTE","auth.welcome":"Welcome to LUXBYTE","auth.email":"Email","auth.password":"Password","auth.password_ph":"Enter your password","auth.remember_me":"Remember me","auth.sign_in":"Sign in","auth.no_account":"Don't have an account?","auth.create_account":"Create a new account",
     "auth.signup_title":"Create Account — LUXBYTE","auth.signup_subtitle":"Register your information and required documents","auth.join_today":"Join LUXBYTE today","auth.confirm_password":"Confirm password","auth.confirm_password_ph":"Confirm your password","auth.agree_terms":"I agree to the Terms & Conditions","auth.have_account":"Already have an account?","auth.signin":"Sign in",
-    "auth.fill_all_fields":"Please fill in all fields","auth.signing_in":"Signing in...","auth.success":"Signed in successfully","auth.error":"Sign-in error",
+    "auth.fill_all_fields":"Please fill in all fields","auth.signing_in":"Signing in...","auth.success":"Signed in successfully","auth.error":"Sign-in error","auth.invalid_credentials":"Invalid credentials","auth.account_not_found":"Account not found","auth.password_incorrect":"Incorrect password",
 
-    // Registration
-    "reg.title":"Registration — LUXBYTE","reg.heading":"Registration","reg.helper":"Fill in the required information","reg.personal.title":"Personal information","reg.personal.helper":"Enter your basic personal details","reg.first_name":"First name","reg.first_name_ph":"Enter your first name","reg.last_name":"Last name","reg.last_name_ph":"Enter your last name","reg.email":"Email","reg.phone":"Phone number","reg.password":"Password","reg.password_ph":"Enter your password","reg.password_confirm":"Confirm password","reg.password_confirm_ph":"Confirm your password","reg.location_activity_title":"Location & activity","reg.governorate":"Governorate","reg.governorate_ph":"Select governorate","reg.gov.cairo":"Cairo","reg.gov.giza":"Giza","reg.gov.qalyubia":"Qalyubia","reg.city":"City","reg.city_ph":"Select city","reg.address":"Detailed address","reg.get_location":"GPS",
+    // Registration - Unified Signup
+    "reg.title":"Create New Account — LUXBYTE","reg.heading":"Create New Account","reg.subheading":"Join LUXBYTE and start using our platform now. Please fill in the data accurately and upload the required documents to review your request quickly.","reg.helper":"Fill in the required information",
+    
+    // Personal Information
+    "reg.personal.title":"Personal Information","reg.personal.helper":"Fill in basic personal details","reg.first_name":"First Name","reg.first_name_ph":"Enter your first name","reg.last_name":"Last Name","reg.last_name_ph":"Enter your last name","reg.email":"Email","reg.phone":"Phone Number (WhatsApp mobile if possible)","reg.phone_ph":"01xxxxxxxxx","reg.user_role":"Applicant Title","reg.user_role_ph":"Choose your title","reg.user_role.owner":"Owner","reg.user_role.manager":"Authorized Manager","reg.user_role.delegate":"Delegate",
+    
+    // Business Information
+    "reg.business.title":"Business Information","reg.business.helper":"Fill in business information","reg.account_type":"Account Type","reg.account_type_ph":"Choose account type","reg.business_name":"Business Name","reg.business_name_ph":"Enter business name","reg.commercial_register":"Commercial Register Number (if available)","reg.commercial_register_ph":"Commercial register number","reg.tax_number":"Tax Card Number (if available for entity)","reg.tax_number_ph":"Tax card number",
+    
+    // Location
+    "reg.location.title":"Location","reg.location.helper":"Fill in location information","reg.governorate":"Governorate","reg.governorate_ph":"Choose governorate","reg.city":"City/Neighborhood","reg.city_ph":"Enter city or neighborhood","reg.address":"Detailed Address","reg.address_ph":"Enter detailed address","reg.google_maps_url":"Google Maps Location Link (optional but useful)","reg.google_maps_url_ph":"https://maps.google.com/...","reg.working_hours":"Working Hours (optional)","reg.working_hours_ph":"Example: 9 AM - 11 PM",
+    
+    // Security
+    "reg.security.title":"Security (Password)","reg.security.helper":"Choose a strong password","reg.password":"Password","reg.password_ph":"Enter password","reg.password_confirm":"Confirm Password","reg.password_confirm_ph":"Confirm password","reg.enable_2fa":"Enable email authentication later",
+    
+    // Documents
+    "reg.documents.title":"Required Documents","reg.documents.helper":"Upload required documents clearly","reg.documents.instructions":"Upload instructions: JPG/PNG or PDF – Maximum 5MB per file – Recent and clear images.","reg.documents.national_id":"National ID – Front/Back","reg.documents.contract_document":"Premises Contract (certified lease or ownership)","reg.documents.utility_bill":"Recent utility bill","reg.documents.facade_photo":"Facade + Sign photo","reg.documents.interior_photo":"Interior photo","reg.documents.personal_photo":"Personal photo of manager in front of facade",
+    
+    // Review
+    "reg.review.title":"Confirmation and Review","reg.review.helper":"Review your data before submission","reg.review.summary":"Your data summary:","reg.review.agree_terms":"I agree to the Terms and Conditions and Privacy Policy","reg.review.submit":"Submit Request",
+    
+    // Navigation
+    "reg.nav.previous":"Previous","reg.nav.next":"Next","reg.nav.submit":"Submit Request",
+    
+    // Form Validation
+    "validation.required":"This field is required","validation.email":"Invalid email","validation.phone":"Invalid phone number","validation.password_match":"Passwords do not match","validation.file_type":"Unsupported file type","validation.file_size":"File size too large","validation.terms_required":"Must agree to terms and conditions",
 
     // Dashboard
     "dashboard.title":"Review Panel — LUXBYTE","dashboard.subtitle":"Review and manage registration requests","dashboard.new_registration":"New registration","dashboard.tabs.courier":"Courier","dashboard.tabs.clinic":"Clinic","dashboard.tabs.pharmacy":"Pharmacy","dashboard.tabs.supermarket":"Supermarket","dashboard.tabs.restaurant":"Restaurant","dashboard.cards.total_requests":"Total requests","dashboard.status.pending":"Pending","dashboard.status.approved":"Approved","dashboard.status.rejected":"Rejected","dashboard.empty_title":"No requests","dashboard.empty_subtitle":"No requests at the moment","dashboard.table.email":"Email","dashboard.table.date":"Request date","dashboard.table.status":"Status","dashboard.table.data":"Data","dashboard.table.files":"Files","dashboard.table.actions":"Actions","dashboard.action.view":"View","dashboard.action.files":"Files",
 
     // Contact
-    "contact.title":"Contact Us — LUXBYTE","contact.subtitle":"Get in touch with LUXBYTE through different channels","contact.start_now":"Get started","contact.heading":"Contact us","contact.help_anytime":"We're here to help you anytime","contact.call_us":"Call us","contact.call_desc":"Contact us directly by phone for immediate assistance","contact.whatsapp":"WhatsApp","contact.whatsapp_desc":"Message us on WhatsApp for a quick, direct reply","contact.message_on_whatsapp":"Message on WhatsApp","contact.follow_us":"Follow us on social media","contact.company_info":"Company information","contact.company_name_label":"Company name:","contact.company_name_value":"LUXBYTE LLC — LUXBYTE Limited Liability Company","contact.location_label":"Location:","contact.location_value":"Egypt — Cairo","contact.hours_label":"Working hours:","contact.hours_value":"24/7 — Around-the-clock customer support","contact.services.shop_eg":"ShopEG e-commerce platform","contact.services.master_driver":"Master Driver delivery platform","contact.services.premium_support":"Dedicated technical support","contact.services.security":"Data protection & security","contact.faq":"FAQ"
+    "contact.title":"Contact Us — LUXBYTE","contact.subtitle":"Get in touch with LUXBYTE through different channels","contact.start_now":"Get started","contact.heading":"Contact us","contact.help_anytime":"We're here to help you anytime","contact.call_us":"Call us","contact.call_desc":"Contact us directly by phone for immediate assistance","contact.whatsapp":"WhatsApp","contact.whatsapp_desc":"Message us on WhatsApp for a quick, direct reply","contact.message_on_whatsapp":"Message on WhatsApp","contact.follow_us":"Follow us on social media","contact.company_info":"Company information","contact.company_name_label":"Company name:","contact.company_name_value":"LUXBYTE LLC — LUXBYTE Limited Liability Company","contact.location_label":"Location:","contact.location_value":"Egypt — Cairo","contact.hours_label":"Working hours:","contact.hours_value":"24/7 — Around-the-clock customer support","contact.services.shop_eg":"ShopEG e-commerce platform","contact.services.master_driver":"Master Driver delivery platform","contact.services.premium_support":"Dedicated technical support","contact.services.security":"Data protection & security","contact.faq":"FAQ",
+
+    // File Upload
+    "upload.title":"Upload Documents","upload.camera":"Camera","upload.file":"Upload File","upload.success":"Upload successful","upload.error":"Upload failed","upload.remove":"Remove","upload.change":"Change File","upload.progress":"Uploading...","upload.max_size":"Maximum 10MB","upload.allowed_types":"Supported types: JPG, PNG, PDF",
+
+    // Common Actions
+    "action.save":"Save","action.cancel":"Cancel","action.delete":"Delete","action.edit":"Edit","action.view":"View","action.download":"Download","action.upload":"Upload","action.submit":"Submit","action.back":"Back","action.next":"Next","action.previous":"Previous","action.close":"Close","action.confirm":"Confirm","action.yes":"Yes","action.no":"No",
+
+    // Status Messages
+    "status.loading":"Loading...","status.success":"Success","status.error":"Error","status.warning":"Warning","status.info":"Info","status.pending":"Pending","status.completed":"Completed","status.failed":"Failed",
+
+    // Error Messages
+    "error.general":"An unexpected error occurred","error.network":"Network error","error.permission":"No permission","error.not_found":"Not found","error.unauthorized":"Unauthorized","error.validation":"Validation error","error.file_upload":"File upload error","error.database":"Database error"
   }
 };
+
+// Export for module usage
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = i18nDict;
+}

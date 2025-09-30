@@ -181,7 +181,7 @@
                 window.location.href = 'choose-role.html';
             } else if (platform === 'masterdriver') {
                 // Redirect directly to signup for driver
-                window.location.href = 'unified-signup.html?role=driver';
+                window.location.href = 'simple-signup.html?role=driver';
             }
         }
 
@@ -202,7 +202,7 @@
             // Initialize LUXBYTE
             await LUXBYTE.init();
 
-            injectNavbar('platform');
+            // Navigation handled by js/navigation-bar.js
             applyI18n();
         });
     </script>

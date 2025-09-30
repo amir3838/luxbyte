@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب جديد - LUXBYTE</title>
+    <title data-i18n="reg.title">إنشاء حساب جديد - LUXBYTE</title>
     <meta name="description" content="انضم إلى LUXBYTE وابدأ استخدام منصّتنا الآن. رجاءً املأ البيانات بدقّة وارفع المستندات المطلوبة لمراجعة طلبك بسرعة.">
 
     <!-- Permissions for Camera and Location -->
@@ -100,352 +100,36 @@
             border-top: 1px solid #e5e7eb;
         }
 
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
-        .btn-secondary:hover {
-            background: #4b5563;
-        }
-
-        .btn-primary {
-            background: #6b7cff;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary:hover {
-            background: #5a6fd8;
-        }
-
-        .btn-primary:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-container {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .tab {
+                min-width: auto;
+                flex-direction: row;
+                justify-content: flex-start;
+                padding: 12px 16px;
+            }
+            
+            .tab i {
+                margin-bottom: 0;
+                margin-left: 8px;
+            }
         }
     </style>
-</head>
-<body class="unified-signup">
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <img src="/assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE Logo">
-                <span>LUXBYTE</span>
-            </div>
-            <nav class="nav">
-                <a href="index.html">
-                    <i class="fas fa-home"></i>
-                    الرئيسية
-                </a>
-                <a href="auth.html">
-                    <i class="fas fa-sign-in-alt"></i>
-                    تسجيل الدخول
-                </a>
-                <a href="choose-role.html">
-                    <i class="fas fa-arrow-right"></i>
-                    اختيار النشاط
-                </a>
-                <a href="terms-conditions.html">
-                    <i class="fas fa-question-circle"></i>
-                    مركز المساعدة
-                </a>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main>
-        <!-- Page Header -->
-        <div class="card text-center mb-6" id="page-header">
-            <div class="card-header" style="justify-content: center;">
-                <div class="card-icon">
-                    <i class="fas fa-user-plus"></i>
-                </div>
-                <div>
-                    <h1 class="card-title" style="font-size: 32px; margin-bottom: 8px;">إنشاء حساب جديد</h1>
-                    <p style="color: #666; font-size: 18px; line-height: 1.6;">
-                        انضم إلى LUXBYTE وابدأ استخدام منصّتنا الآن.<br>
-                        رجاءً املأ البيانات بدقّة وارفع المستندات المطلوبة لمراجعة طلبك بسرعة.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Progress Tabs -->
-        <div class="progress-tabs mb-6">
-            <div class="tab-container">
-                <div class="tab active" data-tab="personal">
-                    <i class="fas fa-user"></i>
-                    <span>البيانات الشخصية</span>
-                </div>
-                <div class="tab" data-tab="business">
-                    <i class="fas fa-building"></i>
-                    <span>بيانات النشاط</span>
-                </div>
-                <div class="tab" data-tab="location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>الموقع</span>
-                </div>
-                <div class="tab" data-tab="security">
-                    <i class="fas fa-lock"></i>
-                    <span>الأمان</span>
-                </div>
-                <div class="tab" data-tab="documents">
-                    <i class="fas fa-file-upload"></i>
-                    <span>المستندات</span>
-                </div>
-                <div class="tab" data-tab="review">
-                    <i class="fas fa-check-circle"></i>
-                    <span>تأكيد ومراجعة</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Signup Form -->
-        <div class="card">
-            <form id="signupForm">
-                <!-- Personal Information Section -->
-                <div class="section-content active" id="personal-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-user" style="margin-left: 8px; color: #6b7cff;"></i>
-                        البيانات الشخصية
-                    </h3>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">الاسم الأول <span style="color: #ef4444;">*</span></label>
-                            <input type="text" class="form-control" name="first_name" placeholder="أدخل اسمك الأول" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">اسم العائلة <span style="color: #ef4444;">*</span></label>
-                            <input type="text" class="form-control" name="last_name" placeholder="أدخل اسم العائلة" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">البريد الإلكتروني <span style="color: #ef4444;">*</span></label>
-                            <input type="email" class="form-control" name="email" placeholder="example@email.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">رقم الهاتف (موبايل واتساب إن أمكن) <span style="color: #ef4444;">*</span></label>
-                            <input type="tel" class="form-control" name="phone" placeholder="01xxxxxxxxx" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">صفة المتقدّم <span style="color: #ef4444;">*</span></label>
-                        <select class="form-control" name="user_role" required title="اختر صفتك">
-                            <option value="">اختر صفتك</option>
-                            <option value="owner">مالك</option>
-                            <option value="manager">مدير مسؤول</option>
-                            <option value="delegate">مفوض</option>
-                        </select>
-                    </div>
-
-                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
-                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
-                        <span style="color: #0c4a6e; font-size: 14px;">سنستخدم هذه البيانات للتواصل ومتابعة طلبك فقط.</span>
-                    </div>
-                </div>
-
-                <!-- Business Information Section -->
-                <div class="section-content" id="business-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-building" style="margin-left: 8px; color: #6b7cff;"></i>
-                        بيانات النشاط
-                    </h3>
-
-                    <div class="form-group">
-                        <label class="form-label">نوع الحساب <span style="color: #ef4444;">*</span></label>
-                        <select class="form-control" name="account_type" id="accountType" required title="اختر نوع الحساب">
-                            <option value="">اختر نوع الحساب</option>
-                            <option value="pharmacy">صيدلية</option>
-                            <option value="supermarket">سوبرماركت</option>
-                            <option value="restaurant">مطعم</option>
-                            <option value="clinic">عيادة</option>
-                            <option value="courier">مندوب توصيل</option>
-                            <option value="driver">سائق</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">اسم النشاط التجاري (اسم المحل/المنشأة كما سيظهر للعملاء) <span style="color: #ef4444;">*</span></label>
-                        <input type="text" class="form-control" name="business_name" placeholder="أدخل اسم النشاط التجاري" required>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">رقم السجل التجاري (إن وجد)</label>
-                            <input type="text" class="form-control" name="commercial_register" placeholder="رقم السجل التجاري">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">رقم البطاقة الضريبية (إن وجدت للكيان)</label>
-                            <input type="text" class="form-control" name="tax_number" placeholder="رقم البطاقة الضريبية">
-                        </div>
-                    </div>
-
-                    <div class="form-note" style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-top: 16px;">
-                        <i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-left: 8px;"></i>
-                        <span style="color: #92400e; font-size: 14px;">إن لم تكن السجل/الضريبة جاهزين الآن، ارفع ما يثبت هوية المالك ومقر النشاط وسيتم قبول طلبك مبدئيًا لحين الاستكمال.</span>
-                    </div>
-                </div>
-
-                <!-- Location Section -->
-                <div class="section-content" id="location-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-map-marker-alt" style="margin-left: 8px; color: #6b7cff;"></i>
-                        الموقع
-                    </h3>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">المحافظة <span style="color: #ef4444;">*</span></label>
-                            <select class="form-control" name="governorate" id="governorate" required title="اختر المحافظة">
-                                <option value="">اختر المحافظة</option>
-                                <option value="القاهرة">القاهرة</option>
-                                <option value="الجيزة">الجيزة</option>
-                                <option value="القليوبية">القليوبية</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">المدينة/الحي <span style="color: #ef4444;">*</span></label>
-                            <input type="text" class="form-control" name="city" placeholder="أدخل المدينة أو الحي" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">العنوان التفصيلي <span style="color: #ef4444;">*</span></label>
-                        <textarea class="form-control" name="address" placeholder="أدخل العنوان التفصيلي" rows="3" required></textarea>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">رابط الموقع على خرائط جوجل (اختياري لكنه مفيد)</label>
-                            <input type="url" class="form-control" name="google_maps_url" placeholder="https://maps.google.com/...">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">مواعيد العمل (اختياري)</label>
-                            <input type="text" class="form-control" name="working_hours" placeholder="مثال: 9 صباحاً - 11 مساءً">
-                        </div>
-                    </div>
-
-                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
-                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
-                        <span style="color: #0c4a6e; font-size: 14px;">من الأفضل التقاط الصور مع تفعيل الموقع الجغرافي في الهاتف.</span>
-                    </div>
-                </div>
-
-                <!-- Security Section -->
-                <div class="section-content" id="security-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-lock" style="margin-left: 8px; color: #6b7cff;"></i>
-                        الأمان (كلمة المرور)
-                    </h3>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">كلمة المرور <span style="color: #ef4444;">*</span></label>
-                            <input type="password" class="form-control" name="password" placeholder="أدخل كلمة المرور" dir="ltr" autocomplete="new-password" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">تأكيد كلمة المرور <span style="color: #ef4444;">*</span></label>
-                            <input type="password" class="form-control" name="confirm_password" placeholder="أكد كلمة المرور" dir="ltr" autocomplete="new-password" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <input type="checkbox" name="enable_2fa" style="margin-left: 8px;">
-                            تفعيل المصادقة عبر البريد لاحقًا
-                        </label>
-                    </div>
-
-                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
-                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
-                        <span style="color: #0c4a6e; font-size: 14px;">استخدم كلمة مرور قوية لا تقل عن 8 أحرف وتحتوي على أرقام وحروف.</span>
-                    </div>
-                </div>
-
-                <!-- Documents Section -->
-                <div class="section-content" id="documents-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-file-upload" style="margin-left: 8px; color: #6b7cff;"></i>
-                        المستندات
-                    </h3>
-
-                    <!-- File Upload Section -->
-                    <div class="form-section">
-                        <!-- Error Banner - Hidden by default -->
-                        <div id="pageErrorBanner" style="display: none;"></div>
-
-                        <!-- Loading Spinner -->
-                        <div id="uploadButtonsSpinner" style="text-align: center; padding: 40px; color: var(--text-muted);">
-                            <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
-                            <p>جاري تحميل أزرار رفع الصور...</p>
-                        </div>
-
-                        <!-- Upload Buttons Container -->
-                        <div id="uploadButtonsContainer">
-                            <!-- Dynamic upload fields will be generated here -->
-                        </div>
-                    </div>
-
-                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
-                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
-                        <span style="color: #0c4a6e; font-size: 14px;">إرشادات الرفع: JPG/PNG أو PDF – الحد الأقصى 5MB للملف – صور حديثة وواضحة.</span>
-                    </div>
-                </div>
-
-                <!-- Review Section -->
-                <div class="section-content" id="review-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-check-circle" style="margin-left: 8px; color: #6b7cff;"></i>
-                        تأكيد ومراجعة
-                    </h3>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <input type="checkbox" name="terms_accepted" required style="margin-left: 8px;">
-                            أوافق على <a href="terms-conditions.html" target="_blank" style="color: #6b7cff;">الشروط والأحكام</a> و <a href="privacy-policy.html" target="_blank" style="color: #6b7cff;">سياسة الخصوصية</a> <span style="color: #ef4444;">*</span>
-                        </label>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn-secondary" id="prevBtn" onclick="changeTab('prev')">
-                            <i class="fas fa-arrow-right"></i>
-                            الرجوع
-                        </button>
-                        <button type="submit" class="btn-primary" id="submitBtn">
-                            <i class="fas fa-paper-plane"></i>
-                            إرسال الطلب ⟶
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <p>&copy; 2024 LUXBYTE. جميع الحقوق محفوظة.</p>
-        </div>
-    </footer>
 
     <!-- Inline Configuration for immediate access -->
     <script type="application/json" id="app-config">
@@ -464,6 +148,298 @@
         "FIREBASE_MEASUREMENT_ID": "G-4H0S8GB99R"
     }
     </script>
+</head>
+
+<body>
+    <main class="container">
+        <!-- Page Header -->
+        <div class="card text-center mb-8" id="page-header">
+            <div class="card-header" style="justify-content: center;">
+                <div class="card-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div>
+                    <h1 class="card-title" style="font-size: 32px; margin-bottom: 8px;" data-i18n="reg.heading">إنشاء حساب جديد</h1>
+                    <p style="color: #666; font-size: 18px; line-height: 1.6;" data-i18n="reg.subheading">
+                        انضم إلى LUXBYTE وابدأ استخدام منصّتنا الآن.<br>
+                        املأ البيانات الأساسية وسنرسل لك رابط التحقق لإكمال التسجيل.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tabs -->
+        <div class="progress-tabs mb-6">
+            <div class="tab-container">
+                <div class="tab active" data-tab="personal">
+                    <i class="fas fa-user"></i>
+                    <span data-i18n="reg.personal.title">البيانات الشخصية</span>
+                </div>
+                <div class="tab" data-tab="business">
+                    <i class="fas fa-building"></i>
+                    <span data-i18n="reg.business.title">بيانات النشاط</span>
+                </div>
+                <div class="tab" data-tab="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span data-i18n="reg.location.title">الموقع</span>
+                </div>
+                <div class="tab" data-tab="security">
+                    <i class="fas fa-lock"></i>
+                    <span data-i18n="reg.security.title">الأمان</span>
+                </div>
+                <div class="tab" data-tab="documents">
+                    <i class="fas fa-file-upload"></i>
+                    <span data-i18n="reg.documents.title">المستندات</span>
+                </div>
+                <div class="tab" data-tab="review">
+                    <i class="fas fa-check-circle"></i>
+                    <span data-i18n="reg.review.title">تأكيد ومراجعة</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signup Form -->
+        <div class="card">
+            <form id="signupForm">
+                <!-- Personal Information Section -->
+                <div class="section-content active" id="personal-section">
+                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
+                        <i class="fas fa-user" style="margin-left: 8px; color: #6b7cff;"></i>
+                        <span data-i18n="reg.personal.title">البيانات الشخصية</span>
+                    </h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.first_name">الاسم الأول <span style="color: #ef4444;">*</span></label>
+                            <input type="text" class="form-control" name="first_name" data-i18n="reg.first_name_ph" placeholder="أدخل اسمك الأول" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.last_name">اسم العائلة <span style="color: #ef4444;">*</span></label>
+                            <input type="text" class="form-control" name="last_name" data-i18n="reg.last_name_ph" placeholder="أدخل اسم العائلة" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.email">البريد الإلكتروني <span style="color: #ef4444;">*</span></label>
+                            <input type="email" class="form-control" name="email" placeholder="example@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.phone">رقم الهاتف (موبايل واتساب إن أمكن) <span style="color: #ef4444;">*</span></label>
+                            <input type="tel" class="form-control" name="phone" data-i18n="reg.phone_ph" placeholder="01xxxxxxxxx" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="reg.user_role">صفة المتقدّم <span style="color: #ef4444;">*</span></label>
+                        <select class="form-control" name="user_role" required title="اختر صفتك">
+                            <option value="" data-i18n="reg.user_role_ph">اختر صفتك</option>
+                            <option value="owner" data-i18n="reg.user_role.owner">مالك</option>
+                            <option value="manager" data-i18n="reg.user_role.manager">مدير مسؤول</option>
+                            <option value="delegate" data-i18n="reg.user_role.delegate">مفوض</option>
+                        </select>
+                    </div>
+
+                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
+                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
+                        <span style="color: #0c4a6e; font-size: 14px;">سنستخدم هذه البيانات للتواصل ومتابعة طلبك فقط.</span>
+                    </div>
+                </div>
+
+                <!-- Business Information Section -->
+                <div class="section-content" id="business-section">
+                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
+                        <i class="fas fa-building" style="margin-left: 8px; color: #6b7cff;"></i>
+                        <span data-i18n="reg.business.title">بيانات النشاط</span>
+                    </h3>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="reg.account_type">نوع الحساب <span style="color: #ef4444;">*</span></label>
+                        <select class="form-control" name="account_type" id="accountType" required title="اختر نوع الحساب">
+                            <option value="" data-i18n="reg.account_type_ph">اختر نوع الحساب</option>
+                            <option value="pharmacy" data-i18n="choose_role.pharmacy.title">صيدلية</option>
+                            <option value="supermarket" data-i18n="choose_role.supermarket.title">سوبرماركت</option>
+                            <option value="restaurant" data-i18n="choose_role.restaurant.title">مطعم</option>
+                            <option value="clinic" data-i18n="choose_role.clinic.title">عيادة</option>
+                            <option value="courier" data-i18n="choose_role.courier.title">مندوب توصيل</option>
+                            <option value="driver" data-i18n="choose_role.driver.title">سائق</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="reg.business_name">اسم النشاط التجاري (اسم المحل/المنشأة كما سيظهر للعملاء) <span style="color: #ef4444;">*</span></label>
+                        <input type="text" class="form-control" name="business_name" data-i18n="reg.business_name_ph" placeholder="أدخل اسم النشاط التجاري" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.commercial_register">رقم السجل التجاري (إن وجد)</label>
+                            <input type="text" class="form-control" name="commercial_register" data-i18n="reg.commercial_register_ph" placeholder="رقم السجل التجاري">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.tax_number">رقم البطاقة الضريبية (إن وجدت للكيان)</label>
+                            <input type="text" class="form-control" name="tax_number" data-i18n="reg.tax_number_ph" placeholder="رقم البطاقة الضريبية">
+                        </div>
+                    </div>
+
+                    <div class="form-note" style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-top: 16px;">
+                        <i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-left: 8px;"></i>
+                        <span style="color: #92400e; font-size: 14px;">إن لم تكن السجل/الضريبة جاهزين الآن، ارفع ما يثبت هوية المالك ومقر النشاط وسيتم قبول طلبك مبدئيًا لحين الاستكمال.</span>
+                    </div>
+                </div>
+
+                <!-- Location Section -->
+                <div class="section-content" id="location-section">
+                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
+                        <i class="fas fa-map-marker-alt" style="margin-left: 8px; color: #6b7cff;"></i>
+                        <span data-i18n="reg.location.title">الموقع</span>
+                    </h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.governorate">المحافظة <span style="color: #ef4444;">*</span></label>
+                            <select class="form-control" name="governorate" id="governorate" required title="اختر المحافظة">
+                                <option value="" data-i18n="reg.governorate_ph">اختر المحافظة</option>
+                                <option value="القاهرة" data-i18n="reg.gov.cairo">القاهرة</option>
+                                <option value="الجيزة" data-i18n="reg.gov.giza">الجيزة</option>
+                                <option value="القليوبية" data-i18n="reg.gov.qalyubia">القليوبية</option>
+                                <option value="الإسكندرية">الإسكندرية</option>
+                                <option value="الشرقية">الشرقية</option>
+                                <option value="الدقهلية">الدقهلية</option>
+                                <option value="البحيرة">البحيرة</option>
+                                <option value="المنيا">المنيا</option>
+                                <option value="أسيوط">أسيوط</option>
+                                <option value="سوهاج">سوهاج</option>
+                                <option value="قنا">قنا</option>
+                                <option value="الأقصر">الأقصر</option>
+                                <option value="أسوان">أسوان</option>
+                                <option value="البحر الأحمر">البحر الأحمر</option>
+                                <option value="الوادي الجديد">الوادي الجديد</option>
+                                <option value="مطروح">مطروح</option>
+                                <option value="شمال سيناء">شمال سيناء</option>
+                                <option value="جنوب سيناء">جنوب سيناء</option>
+                                <option value="كفر الشيخ">كفر الشيخ</option>
+                                <option value="الغربية">الغربية</option>
+                                <option value="المنوفية">المنوفية</option>
+                                <option value="الفيوم">الفيوم</option>
+                                <option value="بني سويف">بني سويف</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.city">المدينة/الحي <span style="color: #ef4444;">*</span></label>
+                            <input type="text" class="form-control" name="city" data-i18n="reg.city_ph" placeholder="أدخل المدينة أو الحي" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="reg.address">العنوان التفصيلي <span style="color: #ef4444;">*</span></label>
+                        <textarea class="form-control" name="address" data-i18n="reg.address_ph" placeholder="أدخل العنوان التفصيلي" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.google_maps_url">رابط الموقع على خرائط جوجل (اختياري لكنه مفيد)</label>
+                            <input type="url" class="form-control" name="google_maps_url" data-i18n="reg.google_maps_url_ph" placeholder="https://maps.google.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.working_hours">مواعيد العمل (اختياري)</label>
+                            <input type="text" class="form-control" name="working_hours" data-i18n="reg.working_hours_ph" placeholder="مثال: 9 صباحاً - 11 مساءً">
+                        </div>
+                    </div>
+
+                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
+                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
+                        <span style="color: #0c4a6e; font-size: 14px;">من الأفضل التقاط الصور مع تفعيل الموقع الجغرافي في الهاتف.</span>
+                    </div>
+                </div>
+
+                <!-- Security Section -->
+                <div class="section-content" id="security-section">
+                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
+                        <i class="fas fa-lock" style="margin-left: 8px; color: #6b7cff;"></i>
+                        <span data-i18n="reg.security.title">الأمان (كلمة المرور)</span>
+                    </h3>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.password">كلمة المرور <span style="color: #ef4444;">*</span></label>
+                            <input type="password" class="form-control" name="password" data-i18n="reg.password_ph" placeholder="أدخل كلمة المرور" dir="ltr" autocomplete="new-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="reg.password_confirm">تأكيد كلمة المرور <span style="color: #ef4444;">*</span></label>
+                            <input type="password" class="form-control" name="confirm_password" data-i18n="reg.password_confirm_ph" placeholder="أكد كلمة المرور" dir="ltr" autocomplete="new-password" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" name="enable_2fa" style="margin-left: 8px;">
+                            <span data-i18n="reg.enable_2fa">تفعيل المصادقة عبر البريد لاحقًا</span>
+                        </label>
+                    </div>
+
+                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
+                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
+                        <span style="color: #0c4a6e; font-size: 14px;">استخدم كلمة مرور قوية لا تقل عن 8 أحرف وتحتوي على أرقام وحروف.</span>
+                    </div>
+                </div>
+
+                <!-- Documents Section -->
+                <div class="section-content" id="documents-section">
+                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
+                        <i class="fas fa-file-upload" style="margin-left: 8px; color: #6b7cff;"></i>
+                        <span data-i18n="reg.documents.title">المستندات المطلوبة</span>
+                    </h3>
+                    <div id="uploadButtonsContainer">
+                        <!-- Dynamic upload fields will be generated here by js/signup-init.js -->
+                    </div>
+                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
+                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
+                        <span style="color: #0c4a6e; font-size: 14px;" data-i18n="reg.documents.instructions">إرشادات الرفع: JPG/PNG أو PDF – الحد الأقصى 5MB للملف – صور حديثة وواضحة.</span>
+                    </div>
+                </div>
+
+                <!-- Review and Submit Section -->
+                <div class="section-content" id="review-section">
+                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
+                        <i class="fas fa-check-circle" style="margin-left: 8px; color: #6b7cff;"></i>
+                        <span data-i18n="reg.review.title">تأكيد ومراجعة</span>
+                    </h3>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" name="agree_terms" required style="margin-left: 8px;">
+                            <span data-i18n="reg.review.agree_terms">أوافق على الشروط والأحكام وسياسة الخصوصية <span style="color: #ef4444;">*</span></span>
+                        </label>
+                    </div>
+
+                    <div class="review-summary" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-top: 24px;">
+                        <h4 style="color: #333; margin-bottom: 16px;" data-i18n="reg.review.summary">ملخص بياناتك:</h4>
+                        <div id="review-details">
+                            <!-- Dynamic review details will be inserted here -->
+                            <p style="color: #666;">لا توجد بيانات للمراجعة بعد. يرجى ملء الأقسام السابقة.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-actions">
+                    <button type="button" id="prevBtn" class="btn btn-secondary" style="display: none;" data-i18n="reg.nav.previous">
+                        <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+                        السابق
+                    </button>
+                    <button type="button" id="nextBtn" class="btn btn-primary" data-i18n="reg.nav.next">
+                        التالي
+                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
+                    </button>
+                    <button type="submit" id="submitBtn" class="btn btn-primary" style="display: none;" data-i18n="reg.nav.submit">
+                        إرسال الطلب
+                        <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
 
     <!-- Core Scripts - Load in correct order -->
     <script src="config.js" defer></script>
@@ -471,6 +447,12 @@
     <script type="module" src="js/supabase-client.js"></script>
     <script type="module" src="js/file-upload-manager.js"></script>
     <script type="module" src="js/signup-init.js"></script>
+    <script type="module" src="js/signup-navigation.js"></script>
+
+    <!-- Navigation and Theme Scripts -->
+    <script type="module" src="js/theme-manager.js"></script>
+    <script type="module" src="js/translation-manager.js"></script>
+    <script type="module" src="js/navigation-bar.js"></script>
 
     <!-- Auth Scripts -->
     <script type="module" src="js/auth.js"></script>
@@ -478,152 +460,9 @@
     <!-- Firebase Setup with Analytics -->
     <script type="module" src="firebase-app.js"></script>
 
-    <!-- Tab Navigation Script -->
+    <!-- Tab Navigation Script - Handled by js/signup-navigation.js -->
     <script>
-        let currentTab = 0;
-        const tabs = ['personal', 'business', 'location', 'security', 'documents', 'review'];
-
-        function changeTab(direction) {
-            if (direction === 'next' && currentTab < tabs.length - 1) {
-                currentTab++;
-            } else if (direction === 'prev' && currentTab > 0) {
-                currentTab--;
-            }
-
-            showTab(currentTab);
-        }
-
-        function showTab(tabIndex) {
-            // Hide all sections
-            document.querySelectorAll('.section-content').forEach(section => {
-                section.classList.remove('active');
-            });
-
-            // Show current section
-            const currentSection = document.getElementById(tabs[tabIndex] + '-section');
-            if (currentSection) {
-                currentSection.classList.add('active');
-            }
-
-            // Update tab indicators
-            document.querySelectorAll('.tab').forEach((tab, index) => {
-                tab.classList.toggle('active', index === tabIndex);
-            });
-
-            // Update buttons
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-
-            if (prevBtn) {
-                prevBtn.style.display = tabIndex === 0 ? 'none' : 'inline-flex';
-            }
-
-            if (nextBtn) {
-                nextBtn.style.display = tabIndex === tabs.length - 1 ? 'none' : 'inline-flex';
-            }
-        }
-
-        // Tab click handlers
-        document.querySelectorAll('.tab').forEach((tab, index) => {
-            tab.addEventListener('click', () => {
-                currentTab = index;
-                showTab(currentTab);
-            });
-        });
-
-        // Form validation
-        function validateCurrentSection() {
-            const currentSection = document.getElementById(tabs[currentTab] + '-section');
-            const requiredFields = currentSection.querySelectorAll('[required]');
-
-            for (let field of requiredFields) {
-                if (!field.value.trim()) {
-                    field.focus();
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        // Form submission
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            if (!validateCurrentSection()) {
-                alert('رجاءً املأ جميع الحقول الإلزامية');
-                return;
-            }
-
-            // Show loading
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-
-            try {
-                // Collect form data
-                const formData = new FormData(e.target);
-                const data = Object.fromEntries(formData.entries());
-
-                // Register user with Supabase
-                const { getSupabase } = await import('./js/supabase-client.js');
-                const supabase = getSupabase();
-
-                const { data: authData, error: authError } = await supabase.auth.signUp({
-                    email: data.email,
-                    password: data.password,
-                    options: {
-                        data: {
-                            first_name: data.first_name,
-                            last_name: data.last_name,
-                            phone: data.phone,
-                            user_role: data.user_role
-                        }
-                    }
-                });
-
-                if (authError) {
-                    throw new Error(authError.message);
-                }
-
-                // Save profile data
-                const { error: profileError } = await supabase
-                    .from('profiles')
-                    .insert({
-                        user_id: authData.user.id,
-                        account: data.account_type,
-                        business_name: data.business_name,
-                        commercial_register: data.commercial_register,
-                        tax_number: data.tax_number,
-                        governorate: data.governorate,
-                        city: data.city,
-                        address: data.address,
-                        google_maps_url: data.google_maps_url,
-                        working_hours: data.working_hours,
-                        created_at: new Date().toISOString()
-                    });
-
-                if (profileError) {
-                    throw new Error(profileError.message);
-                }
-
-                // Success message
-                alert('تم استلام طلبك بنجاح. سنراجع المستندات ونتواصل معك خلال 24–72 ساعة.');
-
-                // Redirect to auth page
-                window.location.href = 'auth.html';
-
-            } catch (error) {
-                console.error('Registration error:', error);
-                alert('حدث خطأ في التسجيل: ' + error.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال الطلب ⟶';
-            }
-        });
-
-        // Initialize
-        showTab(0);
+        // All tab navigation and form handling is managed by js/signup-navigation.js
     </script>
 </body>
 </html>
