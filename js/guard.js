@@ -294,23 +294,23 @@ export function isCurrentPagePublic() {
 export async function initAutoGuard() {
     try {
         console.log('🛡️ Initializing auto page guard...');
-        
+
         // إذا كانت الصفحة محمية، تحقق من المصادقة
         if (isCurrentPageProtected()) {
             console.log('🔒 Protected page detected, checking authentication...');
             const isAuthenticated = await requireAuth();
             if (!isAuthenticated) return false;
-            
+
             console.log('✅ Protected page access granted');
             return true;
         }
-        
+
         // إذا كانت الصفحة عامة، لا حاجة للتحقق
         if (isCurrentPagePublic()) {
             console.log('🌐 Public page detected, no authentication required');
             return true;
         }
-        
+
         console.log('⚠️ Unknown page type, applying default protection');
         const isAuthenticated = await requireAuth();
         return isAuthenticated;
