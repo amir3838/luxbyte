@@ -66,15 +66,14 @@
     <script src="js/supabase-client.js" defer></script>
     <script src="common.js" defer></script>
     <script type="module" src="js/auth.js"></script>
-    <script type="module" src="js/guard.js"></script>
 
     <script>
         // Initialize page
         document.addEventListener('DOMContentLoaded', () => {
             console.log('Auth Page Loaded');
 
-            // Check if user is already logged in
-            checkAuthAndRedirect();
+            // Auth page is public - no guard needed
+            console.log('Auth page is public - no guard needed');
 
             // Setup form
             const form = document.getElementById('loginForm');

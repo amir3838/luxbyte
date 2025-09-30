@@ -313,7 +313,6 @@
     <script src="js/engagement-notification.js" defer></script>
     <script src="js/enhanced-ui.js" defer></script>
     <script src="js/comprehensive-test.js" defer></script>
-    <script type="module" src="js/guard.js"></script>
     <script type="module" src="firebase-app.js"></script>
     <script>
         // Initialize page
@@ -322,12 +321,8 @@
             injectNavbar('home');
             applyI18n();
 
-            // Check authentication and redirect if logged in
-            try {
-                await checkAuthAndRedirect();
-            } catch (error) {
-                console.log('No authenticated user, staying on home page');
-            }
+            // Home page is public - no authentication required
+            console.log('Home page is public - no authentication required');
 
             // Lazy loading enhancement
             if ('IntersectionObserver' in window) {

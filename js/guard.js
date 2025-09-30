@@ -298,7 +298,7 @@ export function isCurrentPagePublic() {
 export async function initAutoGuard() {
     try {
         console.log('🛡️ Initializing auto page guard...');
-        
+
         // إذا كانت الصفحة محمية (داشبورد)، تحقق من المصادقة
         if (isCurrentPageProtected()) {
             console.log('🔒 Dashboard page detected, checking authentication...');
@@ -307,25 +307,25 @@ export async function initAutoGuard() {
                 console.log('❌ Authentication failed, redirecting to login');
                 return false;
             }
-            
+
             console.log('✅ Dashboard access granted');
             return true;
         }
-        
+
         // جميع الصفحات الأخرى (العامة وغير المعروفة) لا تحتاج تسجيل دخول
         console.log('🌐 Non-dashboard page detected, no authentication required');
         return true;
 
     } catch (error) {
         console.error('❌ Auto guard initialization error:', error);
-        
+
         // في حالة الخطأ، لا نمنع الوصول إلا للداشبورد
         if (isCurrentPageProtected()) {
             console.log('❌ Error occurred on dashboard page, redirecting to login');
             redirectToAuth();
             return false;
         }
-        
+
         console.log('🌐 Error occurred on non-dashboard page, allowing access');
         return true;
     }
