@@ -1,6 +1,7 @@
 // Import Firebase scripts
 importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js');
 
 // Initialize Firebase in service worker
 firebase.initializeApp({
@@ -9,8 +10,12 @@ firebase.initializeApp({
   projectId: "studio-1f95z",
   storageBucket: "studio-1f95z.firebasestorage.app",
   messagingSenderId: "922681782984",
-  appId: "1:922681782984:web:d3840713be209e4a60abfd"
+  appId: "1:922681782984:web:d3840713be209e4a60abfd",
+  measurementId: "G-4H0S8GB99R"
 });
+
+// Initialize Analytics
+const analytics = firebase.analytics();
 
 // Initialize Firebase Cloud Messaging
 const messaging = firebase.messaging();
@@ -18,7 +23,7 @@ const messaging = firebase.messaging();
 // Handle background messages
 messaging.onBackgroundMessage((payload) => {
   console.log('Received background message:', payload);
-  
+
   const notificationTitle = payload.notification?.title || 'LUXBYTE';
   const notificationOptions = {
     body: payload.notification?.body || 'لديك إشعار جديد',
@@ -44,9 +49,9 @@ messaging.onBackgroundMessage((payload) => {
 // Handle notification click
 self.addEventListener('notificationclick', (event) => {
   console.log('Notification clicked:', event);
-  
+
   event.notification.close();
-  
+
   if (event.action === 'open' || !event.action) {
     event.waitUntil(
       clients.openWindow('/')

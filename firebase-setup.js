@@ -46,11 +46,11 @@ class FirebaseManager {
 
     try {
       const { getToken } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js');
-      
+
       const token = await getToken(this.messaging, {
         vapidKey: "BJ3SXe0Nof9H4KJpvgG80LVUeDTNxdh0O2z3aOIzEzrFxd3bAn4ixhhouG7VV11zmK8giQ-UUGWeAP3JK8MpbXk"
       });
-      
+
       console.log('🔑 FCM Token:', token);
       return token;
     } catch (error) {
@@ -101,10 +101,10 @@ class FirebaseManager {
 
       // Store token for server use
       localStorage.setItem('fcm_token', token);
-      
+
       // Set up foreground message listener
       const { onMessage } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js');
-      
+
       onMessage(this.messaging, (payload) => {
         console.log('📱 Message received in foreground:', payload);
         this.showNotification(payload);
@@ -121,7 +121,7 @@ class FirebaseManager {
   showNotification(payload) {
     const title = payload.notification?.title || 'LUXBYTE';
     const body = payload.notification?.body || 'لديك إشعار جديد';
-    
+
     if ('serviceWorker' in navigator && 'showNotification' in ServiceWorkerRegistration.prototype) {
       navigator.serviceWorker.ready.then(registration => {
         registration.showNotification(title, {
