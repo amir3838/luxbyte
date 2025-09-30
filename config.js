@@ -276,7 +276,7 @@ async function initConfig() {
         const inlineConfig = JSON.parse(inlineEl.textContent);
         if (inlineConfig.SUPABASE_URL && inlineConfig.SUPABASE_ANON_KEY) {
           console.log('✅ Loaded environment from inline config');
-          
+
           // Update window.__ENV__ with loaded values
           window.__ENV__ = {
             NEXT_PUBLIC_SUPABASE_URL: inlineConfig.SUPABASE_URL,
@@ -289,7 +289,7 @@ async function initConfig() {
             NEXT_PUBLIC_FIREBASE_VAPID_KEY: inlineConfig.FIREBASE_VAPID_KEY,
             NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: inlineConfig.FIREBASE_MEASUREMENT_ID
           };
-          
+
           return inlineConfig;
         }
       } catch (e) {
@@ -301,7 +301,7 @@ async function initConfig() {
     if (typeof window !== 'undefined' && window.loadEnv) {
       console.log('🔄 Loading environment from new system...');
       const ENV = await window.loadEnv();
-      
+
       // Simple validation
       if (!ENV.SUPABASE_URL || !ENV.SUPABASE_ANON_KEY) {
         console.error('❌ Environment validation failed: Missing SUPABASE_URL or SUPABASE_ANON_KEY');
