@@ -310,7 +310,7 @@ async function initConfig() {
         }
         return null;
       }
-
+ارفع 
       // Update window.__ENV__ with loaded values
       window.__ENV__ = {
         NEXT_PUBLIC_SUPABASE_URL: ENV.SUPABASE_URL,
