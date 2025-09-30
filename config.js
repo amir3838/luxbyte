@@ -269,16 +269,44 @@ window.CONFIG = {
  */
 async function initConfig() {
   try {
+    // Try to load from inline config first (fastest)
+    const inlineEl = document.getElementById('app-config');
+    if (inlineEl) {
+      try {
+        const inlineConfig = JSON.parse(inlineEl.textContent);
+        if (inlineConfig.SUPABASE_URL && inlineConfig.SUPABASE_ANON_KEY) {
+          console.log('✅ Loaded environment from inline config');
+          
+          // Update window.__ENV__ with loaded values
+          window.__ENV__ = {
+            NEXT_PUBLIC_SUPABASE_URL: inlineConfig.SUPABASE_URL,
+            NEXT_PUBLIC_SUPABASE_ANON_KEY: inlineConfig.SUPABASE_ANON_KEY,
+            NEXT_PUBLIC_FIREBASE_API_KEY: inlineConfig.FIREBASE_API_KEY,
+            NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: inlineConfig.FIREBASE_AUTH_DOMAIN,
+            NEXT_PUBLIC_FIREBASE_PROJECT_ID: inlineConfig.FIREBASE_PROJECT_ID,
+            NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: inlineConfig.FIREBASE_MESSAGING_SENDER_ID,
+            NEXT_PUBLIC_FIREBASE_APP_ID: inlineConfig.FIREBASE_APP_ID,
+            NEXT_PUBLIC_FIREBASE_VAPID_KEY: inlineConfig.FIREBASE_VAPID_KEY,
+            NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: inlineConfig.FIREBASE_MEASUREMENT_ID
+          };
+          
+          return inlineConfig;
+        }
+      } catch (e) {
+        console.warn('Failed to parse inline config:', e);
+      }
+    }
+
     // Try to load from new environment system
     if (typeof window !== 'undefined' && window.loadEnv) {
       console.log('🔄 Loading environment from new system...');
       const ENV = await window.loadEnv();
-      const { ok, missing } = window.validateEnv(ENV);
-
-      if (!ok) {
-        console.error('❌ Environment validation failed:', missing);
+      
+      // Simple validation
+      if (!ENV.SUPABASE_URL || !ENV.SUPABASE_ANON_KEY) {
+        console.error('❌ Environment validation failed: Missing SUPABASE_URL or SUPABASE_ANON_KEY');
         if (window.toastError) {
-          window.toastError(`خطأ في تحميل أزرار الرفع: متغيّرات البيئة غير مكتملة (${missing.join(', ')})`);
+          window.toastError('خطأ في تحميل أزرار الرفع: متغيّرات البيئة غير مكتملة (SUPABASE_URL, SUPABASE_ANON_KEY)');
         }
         return null;
       }
@@ -292,7 +320,8 @@ async function initConfig() {
         NEXT_PUBLIC_FIREBASE_PROJECT_ID: ENV.FIREBASE_PROJECT_ID,
         NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ENV.FIREBASE_MESSAGING_SENDER_ID,
         NEXT_PUBLIC_FIREBASE_APP_ID: ENV.FIREBASE_APP_ID,
-        NEXT_PUBLIC_FIREBASE_VAPID_KEY: ENV.FIREBASE_VAPID_KEY
+        NEXT_PUBLIC_FIREBASE_VAPID_KEY: ENV.FIREBASE_VAPID_KEY,
+        NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ENV.FIREBASE_MEASUREMENT_ID
       };
 
       console.log('✅ Environment loaded successfully from new system');

@@ -249,17 +249,27 @@ async function init() {
         // 2) احصل على الدور من URL
         const urlParams = new URLSearchParams(location.search);
         const role = urlParams.get('role') || 'pharmacy';
-        
+
         if (!role) {
             console.warn('Role missing; using default pharmacy');
         }
-        
+
         const docs = requiredDocsByRole[role] || requiredDocsByRole.pharmacy;
-        
+
         console.log('🎯 الدور المحدد:', role);
         console.log('📋 المستندات المطلوبة:', docs);
 
-        // 3) تأكد من تهيئة Supabase
+        // 3) تأكد من تهيئة الإعدادات أولاً
+        try {
+            if (typeof window.initConfig === 'function') {
+                await window.initConfig();
+                console.log('✅ الإعدادات جاهزة');
+            }
+        } catch (configError) {
+            console.warn('⚠️ فشل في تحميل الإعدادات:', configError.message);
+        }
+
+        // 4) تأكد من تهيئة Supabase
         try {
             await initSupabase();
             console.log('✅ Supabase جاهز');
@@ -267,10 +277,10 @@ async function init() {
             console.warn('⚠️ Supabase غير متاح، المتابعة بدون اتصال:', supabaseError.message);
         }
 
-        // 4) ابنِ الأزرار والحقول (دوماً – حتى لو فشل أي شيء آخر)
+        // 5) ابنِ الأزرار والحقول (دوماً – حتى لو فشل أي شيء آخر)
         buildDocButtons(container, docs);
 
-        // 5) اربط الأزرار بالمدير الموحّد
+        // 6) اربط الأزرار بالمدير الموحّد
         for (const docType of docs) {
             try {
                 // استخدام bindUploadButton المحسّن

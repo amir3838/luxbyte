@@ -711,6 +711,14 @@ export async function renderUploadButtons(container, documentTypes) {
         return;
     }
 
+    // Ensure Supabase is ready before rendering
+    try {
+        await ensureSupabaseReady();
+    } catch (error) {
+        console.error('❌ Supabase not ready:', error);
+        throw new Error('خطأ في تحميل أزرار الرفع: ' + error.message);
+    }
+
     // Mark as initialized
     container.setAttribute('data-initialized', '1');
 

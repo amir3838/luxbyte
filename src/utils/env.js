@@ -40,13 +40,13 @@ export async function loadEnv() {
     return config;
   } catch (error) {
     console.error('❌ Error loading environment configuration:', error);
-    
+
     // Final fallback to window.CONFIG
     if (window.CONFIG?.__ENV__) {
       console.log('🔄 Using window.CONFIG fallback');
       return window.CONFIG.__ENV__;
     }
-    
+
     throw new Error('ENV_FETCH_FAILED: No configuration available');
   }
 }

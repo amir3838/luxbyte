@@ -6,18 +6,18 @@ let _client = null;
 
 export async function initSupabase() {
   if (_client) return _client;
-  
+
   const cfg = await loadEnv();
   const { SUPABASE_URL, SUPABASE_ANON_KEY } = cfg || {};
-  
+
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     throw new Error("ENV_INCOMPLETE: SUPABASE_URL / SUPABASE_ANON_KEY");
   }
-  
-  _client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { 
-    auth: { persistSession: false } 
+
+  _client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false }
   });
-  
+
   console.log('✅ Supabase client initialized');
   return _client;
 }
