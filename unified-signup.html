@@ -211,7 +211,7 @@
                     </div>
 
                     <!-- Camera Controls -->
-                    <div id="camera-controls" style="display: none; text-align: center; margin: 20px 0; padding: 20px; background: #f8fafc; border-radius: 12px; border: 2px dashed #cbd5e1;">
+                    <div id="camera-controls" style="display: block; text-align: center; margin: 20px 0; padding: 20px; background: #f8fafc; border-radius: 12px; border: 2px dashed #cbd5e1;">
                         <h4 style="margin-bottom: 16px; color: #334155;">
                             <i class="fas fa-camera" style="margin-left: 8px;"></i>
                             تصوير المستندات بالكاميرا
@@ -229,6 +229,10 @@
                             <button type="button" id="btnStop" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fas fa-stop"></i>
                                 إيقاف الكاميرا
+                            </button>
+                            <button type="button" id="btnTest" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-bug"></i>
+                                اختبار سريع
                             </button>
                         </div>
 
@@ -1174,68 +1178,145 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🎥 Initializing enhanced camera system...');
 
-            // Get button elements
-            const openBtn = document.getElementById('btnOpenCam');
-            const shotBtn = document.getElementById('btnShot');
-            const stopBtn = document.getElementById('btnStop');
-            const fallback = document.getElementById('fileFallback');
+            // Function to initialize camera system
+            function initializeCameraSystem() {
+                // Get button elements
+                const openBtn = document.getElementById('btnOpenCam');
+                const shotBtn = document.getElementById('btnShot');
+                const stopBtn = document.getElementById('btnStop');
+                const testBtn = document.getElementById('btnTest');
+                const fallback = document.getElementById('fileFallback');
 
-            // Remove any existing listeners by cloning elements
-            if (openBtn) {
-                const newOpenBtn = openBtn.cloneNode(true);
-                openBtn.parentNode.replaceChild(newOpenBtn, openBtn);
-            }
-            if (shotBtn) {
-                const newShotBtn = shotBtn.cloneNode(true);
-                shotBtn.parentNode.replaceChild(newShotBtn, shotBtn);
-            }
-            if (stopBtn) {
-                const newStopBtn = stopBtn.cloneNode(true);
-                stopBtn.parentNode.replaceChild(newStopBtn, stopBtn);
-            }
-            if (fallback) {
-                const newFallback = fallback.cloneNode(true);
-                fallback.parentNode.replaceChild(newFallback, fallback);
-            }
-
-            // Add single event listeners
-            const finalOpenBtn = document.getElementById('btnOpenCam');
-            const finalShotBtn = document.getElementById('btnShot');
-            const finalStopBtn = document.getElementById('btnStop');
-            const finalFallback = document.getElementById('fileFallback');
-
-            if (finalOpenBtn) {
-                finalOpenBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    console.log('📸 Camera button clicked - opening camera...');
-                    openCameraOnce();
+                console.log('🔍 Camera elements found:', {
+                    openBtn: !!openBtn,
+                    shotBtn: !!shotBtn,
+                    stopBtn: !!stopBtn,
+                    testBtn: !!testBtn,
+                    fallback: !!fallback
                 });
+
+                if (!openBtn) {
+                    console.warn('⚠️ Camera button not found, retrying in 1 second...');
+                    setTimeout(initializeCameraSystem, 1000);
+                    return;
+                }
+
+                // Remove any existing listeners by cloning elements
+                if (openBtn) {
+                    const newOpenBtn = openBtn.cloneNode(true);
+                    openBtn.parentNode.replaceChild(newOpenBtn, openBtn);
+                }
+                if (shotBtn) {
+                    const newShotBtn = shotBtn.cloneNode(true);
+                    shotBtn.parentNode.replaceChild(newShotBtn, shotBtn);
+                }
+                if (stopBtn) {
+                    const newStopBtn = stopBtn.cloneNode(true);
+                    stopBtn.parentNode.replaceChild(newStopBtn, stopBtn);
+                }
+                if (testBtn) {
+                    const newTestBtn = testBtn.cloneNode(true);
+                    testBtn.parentNode.replaceChild(newTestBtn, testBtn);
+                }
+                if (fallback) {
+                    const newFallback = fallback.cloneNode(true);
+                    fallback.parentNode.replaceChild(newFallback, fallback);
+                }
+
+                // Add single event listeners
+                const finalOpenBtn = document.getElementById('btnOpenCam');
+                const finalShotBtn = document.getElementById('btnShot');
+                const finalStopBtn = document.getElementById('btnStop');
+                const finalTestBtn = document.getElementById('btnTest');
+                const finalFallback = document.getElementById('fileFallback');
+
+                if (finalOpenBtn) {
+                    finalOpenBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        console.log('📸 Camera button clicked - opening camera...');
+                        try {
+                            await openCameraOnce();
+                        } catch (error) {
+                            console.error('❌ Camera error:', error);
+                        }
+                    });
+                }
+
+                if (finalShotBtn) {
+                    finalShotBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        console.log('📷 Capture button clicked - capturing image...');
+                        try {
+                            await captureAndUpload();
+                        } catch (error) {
+                            console.error('❌ Capture error:', error);
+                        }
+                    });
+                }
+
+                if (finalStopBtn) {
+                    finalStopBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        console.log('🛑 Stop button clicked - stopping camera...');
+                        stopStream();
+                    });
+                }
+
+                if (finalTestBtn) {
+                    finalTestBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        console.log('🧪 Test button clicked - running camera test...');
+                        
+                        // Test camera functionality
+                        try {
+                            console.log('🔍 Testing camera availability...');
+                            const isSecure = window.isSecureContext || location.hostname === 'localhost';
+                            const supports = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+                            
+                            console.log('📊 Camera test results:', {
+                                isSecure,
+                                supports,
+                                hostname: location.hostname,
+                                protocol: location.protocol
+                            });
+                            
+                            if (!isSecure) {
+                                alert('⚠️ يجب فتح الموقع عبر HTTPS أو localhost للوصول للكاميرا');
+                                return;
+                            }
+                            
+                            if (!supports) {
+                                alert('⚠️ المتصفح لا يدعم الكاميرا');
+                                return;
+                            }
+                            
+                            // Try to open camera
+                            console.log('📸 Attempting to open camera...');
+                            await openCameraOnce();
+                            
+                        } catch (error) {
+                            console.error('❌ Camera test failed:', error);
+                            alert(`خطأ في اختبار الكاميرا: ${error.message}`);
+                        }
+                    });
+                }
+
+                if (finalFallback) {
+                    finalFallback.addEventListener('change', async (e) => {
+                        console.log('📁 Fallback file selected - processing...');
+                        try {
+                            await onFallbackFile(e);
+                        } catch (error) {
+                            console.error('❌ File upload error:', error);
+                        }
+                    });
+                }
+
+                console.log('✅ Enhanced camera system initialized successfully');
             }
 
-            if (finalShotBtn) {
-                finalShotBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    console.log('📷 Capture button clicked - capturing image...');
-                    captureAndUpload();
-                });
-            }
-
-            if (finalStopBtn) {
-                finalStopBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    console.log('🛑 Stop button clicked - stopping camera...');
-                    stopStream();
-                });
-            }
-
-            if (finalFallback) {
-                finalFallback.addEventListener('change', (e) => {
-                    console.log('📁 Fallback file selected - processing...');
-                    onFallbackFile(e);
-                });
-            }
-
-            console.log('✅ Enhanced camera system initialized successfully');
+            // Initialize camera system
+            initializeCameraSystem();
         });
     </script>
 </body>

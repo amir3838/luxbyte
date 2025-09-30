@@ -20,11 +20,18 @@ let ready = false;
  * فتح الكاميرا مرة واحدة مع معالجة الأخطاء المناسبة
  */
 export async function openCameraOnce() {
-    if (opening || stream) {
-        console.log('Camera already opening or opened, ignoring duplicate request');
+    console.log('🎥 openCameraOnce called');
+    
+    if (opening) {
+        console.log('⚠️ Camera already opening, ignoring duplicate request');
         return;
     }
-
+    
+    if (stream) {
+        console.log('⚠️ Camera already opened, stopping previous stream');
+        stopStream();
+    }
+    
     opening = true;
 
     try {
@@ -37,10 +44,24 @@ export async function openCameraOnce() {
         // فحص قدرات المتصفح
         const supports = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
         const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
+        
+        console.log('🔍 Browser capabilities:', {
+            supports,
+            isiOS,
+            userAgent: navigator.userAgent,
+            mediaDevices: !!navigator.mediaDevices,
+            getUserMedia: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
+        });
+        
         if (!supports || isiOS) {
-            console.log('Camera not supported or iOS detected, using file fallback');
-            document.getElementById('fileFallback')?.click();
+            console.log('📱 Camera not supported or iOS detected, using file fallback');
+            const fallback = document.getElementById('fileFallback');
+            if (fallback) {
+                fallback.click();
+            } else {
+                console.error('❌ Fallback file input not found');
+                toastErr('عنصر اختيار الملف غير موجود');
+            }
             return;
         }
 
@@ -57,31 +78,40 @@ export async function openCameraOnce() {
 
         const video = document.getElementById('camPrev');
         if (!video) {
+            console.error('❌ Video element not found');
             throw new Error('عنصر الفيديو camPrev غير موجود');
         }
 
+        console.log('📹 Video element found:', video);
         video.srcObject = stream;
         video.style.display = 'block';
+        console.log('📹 Video stream set, display set to block');
 
         // انتظار جاهزية الفيديو قبل التشغيل
+        console.log('⏳ Waiting for video metadata...');
         await new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
+                console.error('⏰ Video metadata timeout');
                 reject(new Error('الكاميرا لم تبدأ خلال 5 ثوانٍ'));
             }, 5000);
-
+            
             video.onloadedmetadata = () => {
+                console.log('✅ Video metadata loaded');
                 clearTimeout(timeout);
                 resolve();
             };
-
-            video.onerror = () => {
+            
+            video.onerror = (error) => {
+                console.error('❌ Video error:', error);
                 clearTimeout(timeout);
                 reject(new Error('خطأ في تحميل الفيديو'));
             };
         });
 
+        console.log('▶️ Starting video playback...');
         await video.play();
         ready = true;
+        console.log('✅ Video is ready and playing');
 
         console.log('✅ Camera opened successfully');
         toastOk('تم فتح الكاميرا بنجاح ✅');
