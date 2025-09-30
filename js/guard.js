@@ -19,10 +19,10 @@ const DASHBOARD_MAP = {
 export async function checkAuthAndRedirect() {
     try {
         console.log('🔍 Checking authentication status...');
-        
+
         // التحقق من وجود جلسة نشطة
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
+
         if (sessionError) {
             console.error('❌ Session check error:', sessionError);
             redirectToAuth();
@@ -51,8 +51,9 @@ export async function checkAuthAndRedirect() {
         }
 
         if (!profile) {
-            console.log('❌ No profile found, redirecting to auth');
-            redirectToAuth();
+            console.log('❌ No profile found, redirecting to signup');
+            // إذا لم يكن هناك ملف شخصي، توجه للتسجيل لإكمال البيانات
+            window.location.href = 'unified-signup.html';
             return;
         }
 
@@ -73,7 +74,7 @@ export async function checkAuthAndRedirect() {
 export async function requireAuth() {
     try {
         const { data: { session } } = await supabase.auth.getSession();
-        
+
         if (!session) {
             console.log('❌ No active session, redirecting to auth');
             redirectToAuth();
@@ -94,7 +95,7 @@ export async function requireAuth() {
 export async function getCurrentUser() {
     try {
         const { data: { user }, error } = await supabase.auth.getUser();
-        
+
         if (error) {
             console.error('❌ Get current user error:', error);
             return null;
@@ -140,7 +141,7 @@ export async function getCurrentProfile() {
 export async function requireAccountType(requiredAccountType) {
     try {
         const profile = await getCurrentProfile();
-        
+
         if (!profile) {
             console.log('❌ No profile found');
             redirectToAuth();
@@ -167,7 +168,7 @@ export async function requireAccountType(requiredAccountType) {
  */
 export function redirectByAccount(accountType) {
     const url = DASHBOARD_MAP[accountType];
-    
+
     if (url) {
         console.log(`🔄 Redirecting to ${accountType} dashboard: ${url}`);
         window.location.href = url;
@@ -192,9 +193,9 @@ export function redirectToAuth() {
 export async function logout() {
     try {
         console.log('🔐 Starting logout process...');
-        
+
         const { error } = await supabase.auth.signOut();
-        
+
         if (error) {
             console.error('❌ Logout failed:', error);
             showError('فشل في تسجيل الخروج: ' + error.message);
@@ -203,7 +204,7 @@ export async function logout() {
 
         console.log('✅ Logout successful');
         redirectToAuth();
-        
+
     } catch (error) {
         console.error('❌ Logout error:', error);
         showError('خطأ في تسجيل الخروج: ' + error.message);
@@ -242,7 +243,7 @@ function showSuccess(message) {
 export async function initPageGuard(requiredAccountType = null) {
     try {
         console.log('🛡️ Initializing page guard...');
-        
+
         // التحقق من المصادقة
         const isAuthenticated = await requireAuth();
         if (!isAuthenticated) return;

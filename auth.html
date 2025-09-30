@@ -36,6 +36,13 @@
                 </div>
             </form>
 
+            <!-- Email Confirmation Message -->
+            <div id="emailConfirmationMessage" style="display: none; background: #e3f2fd; border: 1px solid #bbdefb; border-radius: 8px; padding: 16px; margin: 16px 0; text-align: center;">
+                <i class="fas fa-envelope" style="color: #1976d2; font-size: 24px; margin-bottom: 8px;"></i>
+                <h4 style="color: #1976d2; margin-bottom: 8px;">تحقق من بريدك الإلكتروني</h4>
+                <p style="color: #1976d2; margin: 0;">تم إرسال رابط التفعيل إلى بريدك الإلكتروني. يرجى فتح البريد والضغط على الرابط ثم العودة لتسجيل الدخول.</p>
+            </div>
+
             <div class="text-center" style="margin-top: 24px;">
                 <p style="color: var(--text-muted);">ليس لديك حساب؟</p>
                 <a href="unified-signup.html" class="btn btn-outline" style="width: 100%; justify-content: center;">
@@ -65,7 +72,7 @@
         // Initialize page
         document.addEventListener('DOMContentLoaded', () => {
             console.log('Auth Page Loaded');
-            
+
             // Check if user is already logged in
             checkAuthAndRedirect();
 

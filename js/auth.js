@@ -10,7 +10,7 @@ import { supabase } from './supabase-client.js';
 export async function handleRegister(email, password, account, additionalData = {}) {
     try {
         console.log('🔐 Starting registration process...', { email, account });
-        
+
         // تسجيل المستخدم في Supabase Auth
         const { data: { user }, error: authError } = await supabase.auth.signUp({
             email, 
@@ -34,6 +34,13 @@ export async function handleRegister(email, password, account, additionalData = 
 
         console.log('✅ User created successfully:', user.id);
 
+        // التحقق من حالة تأكيد البريد
+        if (!user.email_confirmed_at) {
+            console.log('📧 Email confirmation required');
+            showEmailConfirmationMessage();
+            return { success: true, user, requiresConfirmation: true };
+        }
+
         // إنشاء ملف شخصي في جدول profiles
         const { error: profileError } = await supabase
             .from('profiles')
@@ -52,7 +59,7 @@ export async function handleRegister(email, password, account, additionalData = 
 
         // توجيه المستخدم حسب نوع الحساب
         redirectByAccount(account);
-        
+
         return { success: true, user };
 
     } catch (error) {
@@ -69,12 +76,12 @@ export async function handleRegister(email, password, account, additionalData = 
 export async function handleLogin(email, password) {
     try {
         console.log('🔐 Starting login process...', { email });
-        
-        const { data: { user }, error: authError } = await supabase.auth.signInWithPassword({ 
-            email, 
-            password 
+
+        const { data: { user }, error: authError } = await supabase.auth.signInWithPassword({
+            email,
+            password
         });
-        
+
         if (authError) {
             console.error('❌ Auth login failed:', authError);
             throw new Error(authError.message);
@@ -106,7 +113,7 @@ export async function handleLogin(email, password) {
 
         // توجيه المستخدم حسب نوع الحساب
         redirectByAccount(profile.account);
-        
+
         return { success: true, user, profile };
 
     } catch (error) {
@@ -121,19 +128,19 @@ export async function handleLogin(email, password) {
 export async function handleLogout() {
     try {
         console.log('🔐 Starting logout process...');
-        
+
         const { error } = await supabase.auth.signOut();
-        
+
         if (error) {
             console.error('❌ Logout failed:', error);
             throw new Error(error.message);
         }
 
         console.log('✅ Logout successful');
-        
+
         // توجيه المستخدم لصفحة تسجيل الدخول
         window.location.href = 'auth.html';
-        
+
         return { success: true };
 
     } catch (error) {
@@ -148,9 +155,9 @@ export async function handleLogout() {
 export async function checkAuthAndRedirect() {
     try {
         console.log('🔍 Checking authentication status...');
-        
+
         const { data: { session } } = await supabase.auth.getSession();
-        
+
         if (!session) {
             console.log('❌ No active session, redirecting to auth');
             window.location.href = 'auth.html';
@@ -202,7 +209,7 @@ export function redirectByAccount(accountType) {
     };
 
     const url = DASHBOARD[accountType];
-    
+
     if (url) {
         console.log(`🔄 Redirecting to ${accountType} dashboard: ${url}`);
         window.location.href = url;
@@ -252,9 +259,45 @@ export async function getCurrentProfile() {
     }
 }
 
+/**
+ * عرض رسالة تأكيد البريد الإلكتروني
+ */
+function showEmailConfirmationMessage() {
+    const messageDiv = document.getElementById('emailConfirmationMessage');
+    if (messageDiv) {
+        messageDiv.style.display = 'block';
+    }
+    
+    // إخفاء الرسالة بعد 10 ثوانٍ
+    setTimeout(() => {
+        if (messageDiv) {
+            messageDiv.style.display = 'none';
+        }
+    }, 10000);
+}
+
+/**
+ * التحقق من حالة تأكيد البريد
+ */
+export async function checkEmailConfirmation() {
+    try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user && !user.email_confirmed_at) {
+            showEmailConfirmationMessage();
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error('❌ Email confirmation check error:', error);
+        return false;
+    }
+}
+
 // جعل الدوال متاحة عالمياً للاستخدام في HTML
 window.handleRegister = handleRegister;
 window.handleLogin = handleLogin;
 window.handleLogout = handleLogout;
 window.checkAuthAndRedirect = checkAuthAndRedirect;
 window.redirectByAccount = redirectByAccount;
+window.showEmailConfirmationMessage = showEmailConfirmationMessage;
+window.checkEmailConfirmation = checkEmailConfirmation;

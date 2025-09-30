@@ -1,41 +1,20 @@
 {
-  "name": "luxbyte-platform",
+  "name": "luxbyte-web",
   "version": "1.0.0",
-  "description": "LUXBYTE Platform - E-commerce and Delivery Services",
+  "description": "LUXBYTE Web Platform",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve .",
-    "build": "echo 'Static site - no build needed'",
-    "audit:lh": "npx lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html --chrome-flags='--headless'",
-    "audit:lh-ci": "npx lighthouse-ci autorun",
-    "serve": "npx serve . -p 3000",
     "dev": "vercel dev",
-    "deploy": "vercel --prod",
-    "test": "node -e \"console.log('Run comprehensive tests in browser with ?test=true')\"",
-    "setup-db": "echo 'Run the SQL schema in Supabase dashboard'"
+    "build": "echo 'No build step required'",
+    "deploy": "vercel --prod"
   },
-  "keywords": [
-    "ecommerce",
-    "delivery",
-    "arabic",
-    "rtl",
-    "supabase"
-  ],
-  "author": "LUXBYTE LLC",
-  "license": "MIT",
   "dependencies": {
-    "firebase": "^10.7.1",
-    "@supabase/supabase-js": "^2.38.0",
-    "firebase-admin": "^11.11.0"
+    "@supabase/supabase-js": "^2.39.0"
   },
   "devDependencies": {
-    "@lhci/cli": "^0.12.0",
-    "lighthouse": "^11.0.0",
-    "serve": "^14.2.0"
+    "vercel": "^32.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/amir3838/luxbyte.git"
-  },
-  "homepage": "https://luxbyte-6zcgu6hrs-amir-saids-projects-035bbecd.vercel.app"
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }
