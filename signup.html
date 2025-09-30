@@ -284,13 +284,13 @@
                     hasRoles: !!(window.CONFIG && window.CONFIG.ROLES),
                     roleConfig: window.CONFIG && window.CONFIG.ROLES ? window.CONFIG.ROLES[selectedRole] : null
                 });
-                
+
                 if (selectedRole && window.CONFIG && window.CONFIG.ROLES && window.CONFIG.ROLES[selectedRole]) {
                     generateFileUploadFields();
                 } else {
                     console.error('❌ Cannot generate file upload fields - missing role or config');
                     LUXBYTE.notifyErr('خطأ في تحديد نوع النشاط - يرجى إعادة تحميل الصفحة');
-                    
+
                     // Try again after a short delay
                     setTimeout(() => {
                         if (selectedRole && window.CONFIG && window.CONFIG.ROLES && window.CONFIG.ROLES[selectedRole]) {
@@ -1212,7 +1212,7 @@
                 hasRoles: !!(window.CONFIG && window.CONFIG.ROLES),
                 roleConfig: window.CONFIG && window.CONFIG.ROLES ? window.CONFIG.ROLES[selectedRole] : null
             });
-            
+
             if (selectedRole && window.CONFIG && window.CONFIG.ROLES && window.CONFIG.ROLES[selectedRole]) {
                 generateFileUploadFields();
                 LUXBYTE.notifyOk('تم إعادة تحميل أزرار التصوير');

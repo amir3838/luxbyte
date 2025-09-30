@@ -8,7 +8,11 @@
     "build": "echo 'Static site - no build needed'",
     "audit:lh": "npx lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html --chrome-flags='--headless'",
     "audit:lh-ci": "npx lighthouse-ci autorun",
-    "serve": "npx serve . -p 3000"
+    "serve": "npx serve . -p 3000",
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "test": "node -e \"console.log('Run comprehensive tests in browser with ?test=true')\"",
+    "setup-db": "echo 'Run the SQL schema in Supabase dashboard'"
   },
   "keywords": [
     "ecommerce",

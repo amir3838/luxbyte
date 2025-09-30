@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل البيانات - LUXBYTE</title>
     <meta name="description" content="تسجيل البيانات والمستندات المطلوبة">
+    
+    <!-- Permissions for Camera and Location -->
+    <meta name="theme-color" content="#6b7cff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -250,15 +259,54 @@
     <script src="js/translation-utils.js" defer></script>
     <script src="common.js" defer></script>
     <script src="js/engagement-notification.js" defer></script>
+    <script src="js/enhanced-ui.js" defer></script>
+    <script src="js/comprehensive-test.js" defer></script>
     <script>
         // Global variables
         let selectedRole = null;
         let uploadedFiles = {};
 
+        // Request permissions
+        async function requestPermissions() {
+            try {
+                // Request camera permission
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    stream.getTracks().forEach(track => track.stop());
+                    console.log('✅ Camera permission granted');
+                }
+                
+                // Request location permission
+                if (navigator.geolocation) {
+                    await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 5000,
+                            maximumAge: 0
+                        });
+                    });
+                    console.log('✅ Location permission granted');
+                }
+                
+                // Request notification permission
+                if ('Notification' in window && Notification.permission === 'default') {
+                    await Notification.requestPermission();
+                    console.log('✅ Notification permission:', Notification.permission);
+                }
+                
+            } catch (error) {
+                console.warn('⚠️ Some permissions denied:', error.message);
+                LUXBYTE.notifyWarn('بعض الأذونات مطلوبة للاستخدام الأمثل للتطبيق');
+            }
+        }
+
         // Initialize page
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 console.log('🚀 LUXBYTE Unified Signup Page Loaded');
+                
+                // Request permissions first
+                await requestPermissions();
 
                 // Get role from URL parameter
                 const urlParams = new URLSearchParams(window.location.search);
@@ -302,13 +350,13 @@
                     hasRoles: !!(window.CONFIG && window.CONFIG.ROLES),
                     roleConfig: window.CONFIG && window.CONFIG.ROLES ? window.CONFIG.ROLES[selectedRole] : null
                 });
-                
+
                 if (selectedRole && window.CONFIG && window.CONFIG.ROLES && window.CONFIG.ROLES[selectedRole]) {
                     generateFileUploadFields();
                 } else {
                     console.error('❌ Cannot generate file upload fields - missing role or config');
                     LUXBYTE.notifyErr('خطأ في تحديد نوع النشاط - يرجى إعادة تحميل الصفحة');
-                    
+
                     // Try again after a short delay
                     setTimeout(() => {
                         if (selectedRole && window.CONFIG && window.CONFIG.ROLES && window.CONFIG.ROLES[selectedRole]) {
@@ -811,7 +859,7 @@
                 hasRoles: !!(window.CONFIG && window.CONFIG.ROLES),
                 roleConfig: window.CONFIG && window.CONFIG.ROLES ? window.CONFIG.ROLES[selectedRole] : null
             });
-            
+
             if (selectedRole && window.CONFIG && window.CONFIG.ROLES && window.CONFIG.ROLES[selectedRole]) {
                 generateFileUploadFields();
                 LUXBYTE.notifyOk('تم إعادة تحميل أزرار التصوير');
