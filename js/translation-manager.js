@@ -104,7 +104,7 @@ class TranslationManager {
     translateElement(element) {
         const key = element.getAttribute('data-i18n');
         const translation = this.getTranslation(key);
-        
+
         if (translation) {
             if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || element.type === 'tel' || element.type === 'password')) {
                 element.placeholder = translation;
@@ -152,9 +152,9 @@ class TranslationManager {
         toggle.className = 'language-toggle';
         toggle.setAttribute('aria-label', 'Toggle language');
         toggle.innerHTML = this.getLanguageIcon();
-        
+
         toggle.addEventListener('click', () => this.toggleLanguage());
-        
+
         // Add to navbar if exists, otherwise add to body
         const navbar = document.querySelector('.navbar-user');
         if (navbar) {
@@ -169,8 +169,8 @@ class TranslationManager {
      * الحصول على الأيقونة المناسبة للغة الحالية
      */
     getLanguageIcon() {
-        return this.currentLang === 'ar' 
-            ? '<i class="fas fa-globe"></i><span>EN</span>' 
+        return this.currentLang === 'ar'
+            ? '<i class="fas fa-globe"></i><span>EN</span>'
             : '<i class="fas fa-globe"></i><span>AR</span>';
     }
 
@@ -223,10 +223,10 @@ class TranslationManager {
      * عرض إشعار تغيير اللغة
      */
     showLanguageNotification(lang) {
-        const message = lang === 'ar' 
-            ? 'تم التبديل إلى العربية 🇸🇦' 
+        const message = lang === 'ar'
+            ? 'تم التبديل إلى العربية 🇸🇦'
             : 'Switched to English 🇺🇸';
-        
+
         if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyOk) {
             LUXBYTE.notifyOk(message);
         } else {
@@ -260,12 +260,12 @@ class TranslationManager {
      */
     t(key, params = {}) {
         let translation = this.getTranslation(key);
-        
+
         // Replace parameters in translation
         Object.keys(params).forEach(param => {
             translation = translation.replace(`{${param}}`, params[param]);
         });
-        
+
         return translation;
     }
 

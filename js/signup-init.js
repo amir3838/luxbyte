@@ -44,10 +44,77 @@ function bindSimpleUpload(docType) {
     btn.parentNode.replaceChild(newBtn, btn);
     input.parentNode.replaceChild(newInput, input);
 
-    // ربط الأحداث
-    newBtn.addEventListener('click', () => {
-        newInput.click();
-    });
+        // ربط الأحداث
+        newBtn.addEventListener('click', async () => {
+            try {
+                // طلب إذن الكاميرا أولاً
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: 'environment' // استخدام الكاميرا الخلفية
+                        }
+                    });
+
+                    // إيقاف الكاميرا فوراً
+                    stream.getTracks().forEach(track => track.stop());
+
+                    // إنشاء modal للكاميرا
+                    const modal = createCameraModal(stream, docType, 'image/*');
+                    document.body.appendChild(modal);
+
+                    // إعداد زر الالتقاط
+                    const captureBtn = modal.querySelector('#capture-btn');
+                    const cancelBtn = modal.querySelector('#cancel-camera-btn');
+                    const video = modal.querySelector('#camera-feed');
+                    const canvas = modal.querySelector('#camera-canvas');
+                    const context = canvas.getContext('2d');
+
+                    video.srcObject = stream;
+
+                    captureBtn.onclick = async () => {
+                        try {
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                            // إيقاف الكاميرا
+                            stream.getTracks().forEach(track => track.stop());
+
+                            // تحويل إلى ملف
+                            canvas.toBlob(async (blob) => {
+                                const file = new File([blob], `${docType}_${Date.now()}.jpg`, {
+                                    type: 'image/jpeg'
+                                });
+
+                                // رفع الملف
+                                await uploadAndProcess(file, docType, onDone, onError);
+
+                                // إزالة الـ modal
+                                modal.remove();
+                            }, 'image/jpeg', 0.8);
+
+                        } catch (error) {
+                            console.error('خطأ في الالتقاط:', error);
+                            onError?.(error);
+                            stream.getTracks().forEach(track => track.stop());
+                            modal.remove();
+                        }
+                    };
+
+                    cancelBtn.onclick = () => {
+                        stream.getTracks().forEach(track => track.stop());
+                        modal.remove();
+                    };
+
+                } else {
+                    // fallback لاختيار الملف
+                    newInput.click();
+                }
+            } catch (error) {
+                console.warn('فشل فتح الكاميرا، استخدام اختيار الملف:', error);
+                newInput.click();
+            }
+        });
 
     newInput.addEventListener('change', (e) => {
         const file = e.target.files?.[0];
@@ -176,20 +243,90 @@ function bindUploadButton(options) {
     }
 }
 
+// دالة إنشاء modal الكاميرا
+function createCameraModal(stream, docType, accept) {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    `;
+
+    modal.innerHTML = `
+        <div style="background: white; border-radius: 12px; padding: 20px; max-width: 90%; max-height: 90%; display: flex; flex-direction: column; align-items: center;">
+            <h3 style="margin-bottom: 20px; color: #333;">التقاط صورة ${docType}</h3>
+            <video id="camera-feed" autoplay style="width: 100%; max-width: 400px; border-radius: 8px;"></video>
+            <canvas id="camera-canvas" style="display: none;"></canvas>
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button id="capture-btn" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                    <i class="fas fa-camera"></i> التقاط
+                </button>
+                <button id="cancel-camera-btn" style="background: #f44336; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </div>
+    `;
+
+    return modal;
+}
+
 // دالة رفع ومعالجة الملف
 async function uploadAndProcess(file, docType, onDone, onError) {
     try {
+        // التحقق من نوع الملف
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+        if (!allowedTypes.includes(file.type)) {
+            throw new Error('نوع الملف غير مدعوم. يرجى اختيار ملف JPG, PNG أو PDF');
+        }
+
+        // التحقق من حجم الملف (5MB)
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            throw new Error('حجم الملف كبير جداً. الحد الأقصى 5MB');
+        }
+
         // إنشاء URL مؤقت للمعاينة
         const tempUrl = URL.createObjectURL(file);
 
+        // رفع الملف إلى Supabase Storage
+        const supabase = await initSupabase();
+        const fileName = `${docType}_${Date.now()}.${file.name.split('.').pop()}`;
+        const filePath = `kyc_docs/${fileName}`;
+
+        const { data, error } = await supabase.storage
+            .from('kyc_docs')
+            .upload(filePath, file, {
+                cacheControl: '3600',
+                upsert: false
+            });
+
+        if (error) {
+            throw new Error(`فشل في رفع الملف: ${error.message}`);
+        }
+
+        // الحصول على الرابط العام
+        const { data: publicData } = supabase.storage
+            .from('kyc_docs')
+            .getPublicUrl(filePath);
+
         // استدعاء onDone مع البيانات
         onDone?.({
-            publicUrl: tempUrl,
-            path: `temp/${docType}_${Date.now()}.${file.name.split('.').pop()}`,
-            file: file
+            publicUrl: publicData.publicUrl,
+            path: filePath,
+            file: file,
+            tempUrl: tempUrl
         });
 
-        console.log(`✅ تم معالجة الملف: ${file.name}`);
+        console.log(`✅ تم رفع الملف بنجاح: ${fileName}`);
 
     } catch (error) {
         console.error('خطأ في معالجة الملف:', error);

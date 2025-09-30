@@ -153,7 +153,7 @@ class AppManager {
      */
     initializeHomePage() {
         console.log('🏠 Initializing home page...');
-        
+
         // Add any home page specific functionality here
         this.setupHomePageAnimations();
         this.setupHomePageInteractions();
@@ -165,7 +165,7 @@ class AppManager {
      */
     initializeSignupPage() {
         console.log('📝 Initializing signup page...');
-        
+
         // Signup navigation is already initialized in modules
         this.setupSignupPageValidation();
         this.setupSignupPageUploads();
@@ -177,7 +177,7 @@ class AppManager {
      */
     initializeAuthPage() {
         console.log('🔐 Initializing auth page...');
-        
+
         this.setupAuthPageValidation();
         this.setupAuthPageRedirects();
     }
@@ -188,7 +188,7 @@ class AppManager {
      */
     initializeDashboardPage() {
         console.log('📊 Initializing dashboard page...');
-        
+
         this.setupDashboardPageData();
         this.setupDashboardPageInteractions();
     }
@@ -203,7 +203,7 @@ class AppManager {
         cards.forEach((card, index) => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
-            
+
             setTimeout(() => {
                 card.style.transition = 'all 0.6s ease';
                 card.style.opacity = '1';
@@ -224,7 +224,7 @@ class AppManager {
                 card.style.transform = 'translateY(-5px)';
                 card.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)';
             });
-            
+
             card.addEventListener('mouseleave', () => {
                 card.style.transform = 'translateY(0)';
                 card.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
@@ -394,7 +394,7 @@ class AppManager {
     showFieldError(field, message) {
         field.style.borderColor = '#ef4444';
         field.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.1)';
-        
+
         // Show error message
         let errorElement = field.parentNode.querySelector('.field-error');
         if (!errorElement) {
@@ -415,7 +415,7 @@ class AppManager {
     clearFieldError(field) {
         field.style.borderColor = '';
         field.style.boxShadow = '';
-        
+
         const errorElement = field.parentNode.querySelector('.field-error');
         if (errorElement) {
             errorElement.remove();
@@ -453,7 +453,7 @@ class AppManager {
             // Import auth functions
             const { handleLogin } = await import('./auth.js');
             await handleLogin(email, password);
-            
+
             // Redirect to dashboard
             window.location.href = 'dashboard.html';
         } catch (error) {

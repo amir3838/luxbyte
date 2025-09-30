@@ -252,7 +252,7 @@ class EngagementNotificationManager {
    * الذهاب إلى صفحة التسجيل
    */
   goToSignup() {
-    window.location.href = 'account-type-selection.html';
+    window.location.href = 'choose-role.html';
   }
 
   /**

@@ -51,28 +51,28 @@ const i18nDict = {
 
     // Registration - Unified Signup
     "reg.title":"إنشاء حساب جديد - لوكس بايت","reg.heading":"إنشاء حساب جديد","reg.subheading":"انضم إلى LUXBYTE وابدأ استخدام منصّتنا الآن. رجاءً املأ البيانات بدقّة وارفع المستندات المطلوبة لمراجعة طلبك بسرعة.","reg.helper":"املأ البيانات المطلوبة",
-    
+
     // Personal Information
     "reg.personal.title":"البيانات الشخصية","reg.personal.helper":"املأ البيانات الشخصية الأساسية","reg.first_name":"الاسم الأول","reg.first_name_ph":"أدخل اسمك الأول","reg.last_name":"اسم العائلة","reg.last_name_ph":"أدخل اسم العائلة","reg.email":"البريد الإلكتروني","reg.phone":"رقم الهاتف (موبايل واتساب إن أمكن)","reg.phone_ph":"01xxxxxxxxx","reg.user_role":"صفة المتقدّم","reg.user_role_ph":"اختر صفتك","reg.user_role.owner":"مالك","reg.user_role.manager":"مدير مسؤول","reg.user_role.delegate":"مفوض",
-    
+
     // Business Information
     "reg.business.title":"بيانات النشاط","reg.business.helper":"املأ بيانات النشاط التجاري","reg.account_type":"نوع الحساب","reg.account_type_ph":"اختر نوع الحساب","reg.business_name":"اسم النشاط التجاري","reg.business_name_ph":"أدخل اسم النشاط التجاري","reg.commercial_register":"رقم السجل التجاري (إن وجد)","reg.commercial_register_ph":"رقم السجل التجاري","reg.tax_number":"رقم البطاقة الضريبية (إن وجدت للكيان)","reg.tax_number_ph":"رقم البطاقة الضريبية",
-    
+
     // Location
     "reg.location.title":"الموقع","reg.location.helper":"املأ بيانات الموقع","reg.governorate":"المحافظة","reg.governorate_ph":"اختر المحافظة","reg.city":"المدينة/الحي","reg.city_ph":"أدخل المدينة أو الحي","reg.address":"العنوان التفصيلي","reg.address_ph":"أدخل العنوان التفصيلي","reg.google_maps_url":"رابط الموقع على خرائط جوجل (اختياري لكنه مفيد)","reg.google_maps_url_ph":"https://maps.google.com/...","reg.working_hours":"مواعيد العمل (اختياري)","reg.working_hours_ph":"مثال: 9 صباحاً - 11 مساءً",
-    
+
     // Security
     "reg.security.title":"الأمان (كلمة المرور)","reg.security.helper":"اختر كلمة مرور قوية","reg.password":"كلمة المرور","reg.password_ph":"أدخل كلمة المرور","reg.password_confirm":"تأكيد كلمة المرور","reg.password_confirm_ph":"أكد كلمة المرور","reg.enable_2fa":"تفعيل المصادقة عبر البريد لاحقًا",
-    
+
     // Documents
     "reg.documents.title":"المستندات المطلوبة","reg.documents.helper":"ارفع المستندات المطلوبة بوضوح","reg.documents.instructions":"إرشادات الرفع: JPG/PNG أو PDF – الحد الأقصى 5MB للملف – صور حديثة وواضحة.","reg.documents.national_id":"بطاقة الهوية – وجه/ظهر","reg.documents.contract_document":"عقد مقر (إيجار موثق أو تمليك)","reg.documents.utility_bill":"إيصال مرافق حديث","reg.documents.facade_photo":"صورة الواجهة + اللافتة","reg.documents.interior_photo":"صورة داخلية","reg.documents.personal_photo":"صورة شخصية للمسؤول أمام الواجهة",
-    
+
     // Review
     "reg.review.title":"تأكيد ومراجعة","reg.review.helper":"راجع بياناتك قبل الإرسال","reg.review.summary":"ملخص بياناتك:","reg.review.agree_terms":"أوافق على الشروط والأحكام وسياسة الخصوصية","reg.review.submit":"إرسال الطلب",
-    
+
     // Navigation
     "reg.nav.previous":"السابق","reg.nav.next":"التالي","reg.nav.submit":"إرسال الطلب",
-    
+
     // Form Validation
     "validation.required":"هذا الحقل مطلوب","validation.email":"البريد الإلكتروني غير صحيح","validation.phone":"رقم الهاتف غير صحيح","validation.password_match":"كلمات المرور غير متطابقة","validation.file_type":"نوع الملف غير مدعوم","validation.file_size":"حجم الملف كبير جداً","validation.terms_required":"يجب الموافقة على الشروط والأحكام",
 
@@ -145,28 +145,28 @@ const i18nDict = {
 
     // Registration - Unified Signup
     "reg.title":"Create New Account — LUXBYTE","reg.heading":"Create New Account","reg.subheading":"Join LUXBYTE and start using our platform now. Please fill in the data accurately and upload the required documents to review your request quickly.","reg.helper":"Fill in the required information",
-    
+
     // Personal Information
     "reg.personal.title":"Personal Information","reg.personal.helper":"Fill in basic personal details","reg.first_name":"First Name","reg.first_name_ph":"Enter your first name","reg.last_name":"Last Name","reg.last_name_ph":"Enter your last name","reg.email":"Email","reg.phone":"Phone Number (WhatsApp mobile if possible)","reg.phone_ph":"01xxxxxxxxx","reg.user_role":"Applicant Title","reg.user_role_ph":"Choose your title","reg.user_role.owner":"Owner","reg.user_role.manager":"Authorized Manager","reg.user_role.delegate":"Delegate",
-    
+
     // Business Information
     "reg.business.title":"Business Information","reg.business.helper":"Fill in business information","reg.account_type":"Account Type","reg.account_type_ph":"Choose account type","reg.business_name":"Business Name","reg.business_name_ph":"Enter business name","reg.commercial_register":"Commercial Register Number (if available)","reg.commercial_register_ph":"Commercial register number","reg.tax_number":"Tax Card Number (if available for entity)","reg.tax_number_ph":"Tax card number",
-    
+
     // Location
     "reg.location.title":"Location","reg.location.helper":"Fill in location information","reg.governorate":"Governorate","reg.governorate_ph":"Choose governorate","reg.city":"City/Neighborhood","reg.city_ph":"Enter city or neighborhood","reg.address":"Detailed Address","reg.address_ph":"Enter detailed address","reg.google_maps_url":"Google Maps Location Link (optional but useful)","reg.google_maps_url_ph":"https://maps.google.com/...","reg.working_hours":"Working Hours (optional)","reg.working_hours_ph":"Example: 9 AM - 11 PM",
-    
+
     // Security
     "reg.security.title":"Security (Password)","reg.security.helper":"Choose a strong password","reg.password":"Password","reg.password_ph":"Enter password","reg.password_confirm":"Confirm Password","reg.password_confirm_ph":"Confirm password","reg.enable_2fa":"Enable email authentication later",
-    
+
     // Documents
     "reg.documents.title":"Required Documents","reg.documents.helper":"Upload required documents clearly","reg.documents.instructions":"Upload instructions: JPG/PNG or PDF – Maximum 5MB per file – Recent and clear images.","reg.documents.national_id":"National ID – Front/Back","reg.documents.contract_document":"Premises Contract (certified lease or ownership)","reg.documents.utility_bill":"Recent utility bill","reg.documents.facade_photo":"Facade + Sign photo","reg.documents.interior_photo":"Interior photo","reg.documents.personal_photo":"Personal photo of manager in front of facade",
-    
+
     // Review
     "reg.review.title":"Confirmation and Review","reg.review.helper":"Review your data before submission","reg.review.summary":"Your data summary:","reg.review.agree_terms":"I agree to the Terms and Conditions and Privacy Policy","reg.review.submit":"Submit Request",
-    
+
     // Navigation
     "reg.nav.previous":"Previous","reg.nav.next":"Next","reg.nav.submit":"Submit Request",
-    
+
     // Form Validation
     "validation.required":"This field is required","validation.email":"Invalid email","validation.phone":"Invalid phone number","validation.password_match":"Passwords do not match","validation.file_type":"Unsupported file type","validation.file_size":"File size too large","validation.terms_required":"Must agree to terms and conditions",
 

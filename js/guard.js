@@ -34,10 +34,8 @@ const PUBLIC_PAGES = [
     'index.html',
     'auth.html',
     'unified-signup.html',
-    'signup.html',
     'choose-role.html',
     'choose-platform.html',
-    'account-type-selection.html',
     'terms-conditions.html',
     'social.html'
 ];
@@ -337,7 +335,7 @@ export async function initAutoGuard() {
 export async function initDashboardGuard() {
     try {
         console.log('🛡️ Initializing dashboard guard...');
-        
+
         // التحقق من المصادقة فوراً
         const isAuthenticated = await requireAuth();
         if (!isAuthenticated) {

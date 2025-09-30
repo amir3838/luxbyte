@@ -5,30 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الشروط والأحكام - LUXBYTE</title>
     <meta name="description" content="شروط وأحكام استخدام منصة LUXBYTE">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Font Awesome with font-display: swap -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="/assets/app_icon/LUXBYTEICON.PNG" type="image/png">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="icon" href="assets/app_icon/LUXBYTEICON.PNG" type="image/png">
+    <link rel="apple-touch-icon" href="assets/app_icon/LUXBYTEICON.PNG">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <img src="/assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE Logo">
-                <span>LUXBYTE</span>
-            </div>
-            <nav class="nav">
-                <a href="index.html">
-                    <i class="fas fa-home"></i>
-                    الرئيسية
-                </a>
-                <a href="auth.html">
-                    <i class="fas fa-user"></i>
-                    تسجيل الدخول
-                </a>
-            </nav>
-        </div>
-    </header>
+    <!-- Navigation will be injected by js/navigation-bar.js -->
 
     <!-- Main Content -->
     <main>
@@ -204,9 +192,11 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
-    <script src="common.js"></script>
+    <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/theme-manager.js"></script>
+    <script type="module" src="js/navigation-bar.js"></script>
+    <script type="module" src="js/translation-manager.js"></script>
     <script>
         // Initialize page
         document.addEventListener('DOMContentLoaded', () => {

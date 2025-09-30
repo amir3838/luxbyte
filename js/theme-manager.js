@@ -53,12 +53,12 @@ class ThemeManager {
         const root = document.documentElement;
         root.className = root.className.replace(/light|dark/g, '');
         root.classList.add(theme);
-        
+
         this.currentTheme = theme;
         this.saveTheme(theme);
         this.updateMetaTheme(theme);
         this.updateSocialIcons(theme);
-        
+
         // Trigger custom event
         document.dispatchEvent(new CustomEvent('themeChanged', {
             detail: { theme }
@@ -88,7 +88,7 @@ class ThemeManager {
             metaTheme.name = 'theme-color';
             document.head.appendChild(metaTheme);
         }
-        
+
         metaTheme.content = theme === 'dark' ? '#1e293b' : '#ffffff';
     }
 
@@ -99,10 +99,10 @@ class ThemeManager {
     toggleTheme() {
         const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
         this.applyTheme(newTheme);
-        
+
         // Show notification
         this.showThemeNotification(newTheme);
-        
+
         console.log(`🔄 Theme toggled to: ${newTheme}`);
     }
 
@@ -121,9 +121,9 @@ class ThemeManager {
         toggle.className = 'theme-toggle';
         toggle.setAttribute('aria-label', 'Toggle theme');
         toggle.innerHTML = this.getThemeIcon();
-        
+
         toggle.addEventListener('click', () => this.toggleTheme());
-        
+
         document.body.appendChild(toggle);
     }
 
@@ -132,8 +132,8 @@ class ThemeManager {
      * الحصول على الأيقونة المناسبة للثيم الحالي
      */
     getThemeIcon() {
-        return this.currentTheme === 'light' 
-            ? '<i class="fas fa-moon"></i>' 
+        return this.currentTheme === 'light'
+            ? '<i class="fas fa-moon"></i>'
             : '<i class="fas fa-sun"></i>';
     }
 
@@ -175,10 +175,10 @@ class ThemeManager {
      * عرض إشعار تغيير الثيم
      */
     showThemeNotification(theme) {
-        const message = theme === 'dark' 
-            ? 'تم التبديل إلى الوضع الليلي 🌙' 
+        const message = theme === 'dark'
+            ? 'تم التبديل إلى الوضع الليلي 🌙'
             : 'تم التبديل إلى الوضع النهاري ☀️';
-        
+
         if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyOk) {
             LUXBYTE.notifyOk(message);
         } else {
@@ -246,9 +246,9 @@ class ThemeManager {
         ];
 
         socialContainer.innerHTML = socialLinks.map(link => `
-            <a href="${link.url}" 
-               class="social-icon ${link.class}" 
-               target="_blank" 
+            <a href="${link.url}"
+               class="social-icon ${link.class}"
+               target="_blank"
                rel="noopener noreferrer"
                aria-label="${link.name}">
                 <i class="${link.icon}"></i>

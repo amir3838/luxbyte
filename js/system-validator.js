@@ -20,7 +20,7 @@ class SystemValidator {
      */
     async validateAll() {
         console.log('🔍 Starting comprehensive system validation...');
-        
+
         try {
             await Promise.all([
                 this.validateBackend(),
@@ -44,12 +44,12 @@ class SystemValidator {
      */
     async validateBackend() {
         console.log('🔍 Validating backend connections...');
-        
+
         try {
             // Test Supabase connection
             const { getSupabase } = await import('./supabase-client.js');
             const supabase = getSupabase();
-            
+
             // Test auth
             const { data: { session }, error: authError } = await supabase.auth.getSession();
             this.results.backend.details.push({
@@ -63,7 +63,7 @@ class SystemValidator {
                 .from('profiles')
                 .select('count')
                 .limit(1);
-            
+
             this.results.backend.details.push({
                 test: 'Database Connection',
                 status: dbError ? 'error' : 'success',
@@ -74,7 +74,7 @@ class SystemValidator {
             const { data: storageData, error: storageError } = await supabase.storage
                 .from('kyc_docs')
                 .list('', { limit: 1 });
-            
+
             this.results.backend.details.push({
                 test: 'Storage Connection',
                 status: storageError ? 'error' : 'success',
@@ -113,7 +113,7 @@ class SystemValidator {
      */
     async validateFrontend() {
         console.log('🔍 Validating frontend components...');
-        
+
         try {
             // Check theme manager
             if (window.translationManager) {
@@ -209,7 +209,7 @@ class SystemValidator {
      */
     async validateAssets() {
         console.log('🔍 Validating assets and resources...');
-        
+
         try {
             // Check critical images
             const criticalImages = [
@@ -301,7 +301,7 @@ class SystemValidator {
      */
     async validatePermissions() {
         console.log('🔍 Validating permissions and access...');
-        
+
         try {
             // Check camera permission
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -392,7 +392,7 @@ class SystemValidator {
      */
     async validateIntegration() {
         console.log('🔍 Validating component integration...');
-        
+
         try {
             // Check theme integration
             const body = document.body;
@@ -436,7 +436,7 @@ class SystemValidator {
                     break;
                 }
             }
-            
+
             this.results.integration.details.push({
                 test: 'Form Integration',
                 status: formIntegrationOk ? 'success' : 'warning',
@@ -476,7 +476,7 @@ class SystemValidator {
      */
     generateReport() {
         console.log('📊 Generating validation report...');
-        
+
         const report = {
             timestamp: new Date().toISOString(),
             overall: this.getOverallStatus(),
@@ -485,10 +485,10 @@ class SystemValidator {
         };
 
         console.log('📋 Validation Report:', report);
-        
+
         // Display report in UI if possible
         this.displayReport(report);
-        
+
         return report;
     }
 
@@ -498,7 +498,7 @@ class SystemValidator {
      */
     getOverallStatus() {
         const statuses = Object.values(this.results).map(result => result.status);
-        
+
         if (statuses.every(status => status === 'success')) {
             return 'excellent';
         } else if (statuses.some(status => status === 'error')) {
@@ -514,13 +514,13 @@ class SystemValidator {
      */
     getSummary() {
         const summary = {};
-        
+
         for (const [category, result] of Object.entries(this.results)) {
             const total = result.details.length;
             const success = result.details.filter(d => d.status === 'success').length;
             const warnings = result.details.filter(d => d.status === 'warning').length;
             const errors = result.details.filter(d => d.status === 'error').length;
-            
+
             summary[category] = {
                 total,
                 success,
@@ -529,7 +529,7 @@ class SystemValidator {
                 status: result.status
             };
         }
-        
+
         return summary;
     }
 

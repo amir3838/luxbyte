@@ -303,19 +303,19 @@ p {
   body {
     padding-top: 60px;
   }
-  
+
   h1 {
     font-size: 2rem;
   }
-  
+
   h2 {
     font-size: 1.5rem;
   }
-  
+
   .card {
     padding: var(--space-lg);
   }
-  
+
   .btn {
     padding: var(--space-sm) var(--space-lg);
     font-size: 0.9rem;

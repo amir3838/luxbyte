@@ -41,10 +41,10 @@ class NavigationBar {
             const { getSupabase } = await import('./supabase-client.js');
             const supabase = getSupabase();
             const { data: { session } } = await supabase.auth.getSession();
-            
+
             this.isAuthenticated = !!session;
             this.userRole = session?.user?.user_metadata?.role || null;
-            
+
             console.log('🔐 Auth status:', this.isAuthenticated, 'Role:', this.userRole);
         } catch (error) {
             console.warn('⚠️ Could not check authentication:', error);
@@ -66,12 +66,11 @@ class NavigationBar {
         const navbar = document.createElement('div');
         navbar.className = 'luxbyte-navbar';
         navbar.innerHTML = this.getNavbarHTML();
-        
+
         // Insert at the beginning of body
         document.body.insertBefore(navbar, document.body.firstChild);
-        
-        // Add styles
-        this.addNavbarStyles();
+
+        // Styles are now in css/themes.css
     }
 
     /**
@@ -81,14 +80,14 @@ class NavigationBar {
     getNavbarHTML() {
         const isDashboard = this.currentPage.includes('dashboard') || this.currentPage === 'admin-panel.html';
         const isAuthPage = this.currentPage === 'auth.html' || this.currentPage === 'unified-signup.html';
-        
+
         return `
             <div class="navbar-container">
                 <div class="navbar-content">
                     <!-- Logo Section -->
                     <div class="navbar-brand">
                         <a href="index.html" class="brand-link">
-                            <img src="assets/app_icon/app_icon.png" alt="LUXBYTE" class="brand-logo">
+                            <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" class="brand-logo">
                             <span class="brand-text">LUXBYTE</span>
                         </a>
                     </div>
@@ -99,21 +98,21 @@ class NavigationBar {
                             <i class="fas fa-home"></i>
                             <span>الرئيسية</span>
                         </a>
-                        
+
                         ${!isAuthPage ? `
                             <a href="unified-signup.html" class="nav-link ${this.currentPage === 'unified-signup.html' ? 'active' : ''}">
                                 <i class="fas fa-user-plus"></i>
                                 <span>انضم إلينا</span>
                             </a>
                         ` : ''}
-                        
+
                         ${this.isAuthenticated && !isDashboard ? `
                             <a href="${this.getDashboardUrl()}" class="nav-link dashboard-link">
                                 <i class="fas fa-tachometer-alt"></i>
                                 <span>لوحة التحكم</span>
                             </a>
                         ` : ''}
-                        
+
                         ${isDashboard ? `
                             <a href="index.html" class="nav-link">
                                 <i class="fas fa-home"></i>
@@ -163,10 +162,10 @@ class NavigationBar {
                                 </a>
                             </div>
                         `}
-                        
+
                         <!-- Theme Toggle -->
                         <button class="theme-toggle" onclick="toggleTheme()" aria-label="تبديل الثيم">
-                            <i class="fas fa-moon"></i>
+                            <i class="fas fa-adjust"></i>
                         </button>
                     </div>
                 </div>
@@ -188,7 +187,7 @@ class NavigationBar {
             'driver': 'dashboard/driver.html',
             'admin': 'admin-panel.html'
         };
-        
+
         return roleMap[this.userRole] || 'dashboard.html';
     }
 
@@ -215,7 +214,7 @@ class NavigationBar {
             'driver': 'سائق',
             'admin': 'مدير'
         };
-        
+
         return roleNames[role] || role;
     }
 
@@ -224,6 +223,8 @@ class NavigationBar {
      * إضافة أنماط شريط التنقل
      */
     addNavbarStyles() {
+        // Styles are now in css/themes.css
+        return;
         const style = document.createElement('style');
         style.textContent = `
             .luxbyte-navbar {
@@ -520,7 +521,7 @@ class NavigationBar {
                 }
             }
         `;
-        
+
         document.head.appendChild(style);
     }
 
@@ -533,7 +534,7 @@ class NavigationBar {
         document.addEventListener('click', (e) => {
             const dropdown = document.getElementById('userDropdown');
             const userButton = document.querySelector('.user-button');
-            
+
             if (dropdown && userButton && !userButton.contains(e.target) && !dropdown.contains(e.target)) {
                 dropdown.classList.remove('show');
             }
@@ -588,13 +589,13 @@ window.logout = async function() {
     try {
         const { getSupabase } = await import('./supabase-client.js');
         const supabase = getSupabase();
-        
+
         const { error } = await supabase.auth.signOut();
         if (error) {
             console.error('Logout error:', error);
             return;
         }
-        
+
         // Redirect to home page
         window.location.href = 'index.html';
     } catch (error) {

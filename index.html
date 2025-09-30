@@ -60,7 +60,7 @@
 
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/themes.css">
-    <link rel="icon" href="assets/app_icon/LUXBYTE.png" type="image/png">
+    <link rel="icon" href="assets/app_icon/LUXBYTEICON.PNG" type="image/png">
     <link rel="apple-touch-icon" href="assets/app_icon/LUXBYTEICON.PNG">
 
     <!-- Structured Data -->
@@ -95,12 +95,12 @@
 <body>
 
     <!-- Main Content -->
-    <main class="container">
+    <main class="container" style="margin-top: 80px;">
         <!-- Hero Section -->
         <section class="card text-center mb-8 hero-parallax">
             <div class="card-header" style="justify-content: center;">
                 <div class="card-icon">
-                    <img src="assets/app_icon/LUXBYTE.png" alt="لوجو لوكس بايت" class="logo-glow" style="width: 80px; height: 80px; object-fit: contain;" loading="eager" decoding="async">
+                    <img src="assets/app_icon/LUXBYTEICON.PNG" alt="لوجو لوكس بايت" class="logo-glow" style="width: 80px; height: 80px; object-fit: contain;" loading="eager" decoding="async">
                 </div>
                 <div>
                     <h1 class="card-title fade-in" style="font-size: 32px; margin-bottom: 8px;">LUXBYTE</h1>
@@ -325,6 +325,16 @@
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('LUXBYTE Home Page Loaded');
             applyI18n();
+
+            // Initialize navigation bar
+            try {
+                const { default: NavigationBar } = await import('./js/navigation-bar.js');
+                if (!window.navigationBar) {
+                    window.navigationBar = new NavigationBar();
+                }
+            } catch (error) {
+                console.warn('Navigation bar initialization failed:', error);
+            }
 
             // Run system validation
             try {

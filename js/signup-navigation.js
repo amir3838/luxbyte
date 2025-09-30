@@ -212,7 +212,7 @@ class SignupNavigation {
      */
     showValidationError(errors) {
         const message = `يرجى ملء الحقول التالية: ${errors.join(', ')}`;
-        
+
         if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyErr) {
             LUXBYTE.notifyErr(message);
         } else {
@@ -235,7 +235,7 @@ class SignupNavigation {
      */
     async handleSubmit(event) {
         event.preventDefault();
-        
+
         // Validate all tabs before submission
         let allValid = true;
         for (let i = 0; i < this.tabs.length; i++) {
@@ -261,13 +261,13 @@ class SignupNavigation {
         try {
             // Collect form data
             const formData = this.collectFormData();
-            
+
             // Submit form
             await this.submitForm(formData);
-            
+
             // Show success message
             this.showSuccessMessage();
-            
+
         } catch (error) {
             console.error('Form submission error:', error);
             this.showErrorMessage(error.message);
@@ -325,10 +325,10 @@ class SignupNavigation {
     async submitForm(data) {
         // This would typically send data to your backend
         console.log('Submitting form data:', data);
-        
+
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 2000));
-        
+
         // For now, just show success
         return { success: true };
     }
@@ -339,7 +339,7 @@ class SignupNavigation {
      */
     showSuccessMessage() {
         const message = 'تم إرسال طلبك بنجاح! سنتواصل معك قريباً.';
-        
+
         if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyOk) {
             LUXBYTE.notifyOk(message);
         } else {
