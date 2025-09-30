@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار بسيط لرفع الصور</title>
+    <style>
+        body {
+            font-family: 'Cairo', Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .upload-area {
+            border: 3px dashed #6b7cff;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+        .upload-area:hover {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        .upload-icon {
+            font-size: 48px;
+            color: #6b7cff;
+            margin-bottom: 16px;
+        }
+        .upload-text {
+            color: #334155;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .upload-subtext {
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+        .upload-info {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        .preview {
+            margin-top: 20px;
+            display: none;
+        }
+        .preview img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: #1f2937; margin-bottom: 30px;">
+            <i class="fas fa-upload" style="margin-left: 10px; color: #6b7cff;"></i>
+            اختبار رفع الصور - LUXBYTE
+        </h1>
+        
+        <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <div class="upload-text">اضغط لرفع الصور</div>
+            <div class="upload-subtext">أو اسحب الصور هنا</div>
+            <div class="upload-info">JPG, PNG, GIF - حتى 10MB لكل صورة</div>
+        </div>
+
+        <input id="fileInput" type="file" accept="image/*" multiple style="display: none;">
+
+        <div id="preview" class="preview">
+            <h3>الصور المرفوعة:</h3>
+            <div id="images"></div>
+        </div>
+
+        <div id="status" class="status" style="display: none;"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const images = document.getElementById('images');
+        const status = document.getElementById('status');
+
+        fileInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            console.log('تم اختيار', files.length, 'ملف');
+            
+            if (files.length === 0) return;
+
+            // Filter image files
+            const imageFiles = files.filter(file => file.type.startsWith('image/'));
+            
+            if (imageFiles.length === 0) {
+                showStatus('يرجى اختيار ملفات صور صالحة', 'error');
+                return;
+            }
+
+            // Check file sizes
+            const oversizedFiles = imageFiles.filter(file => file.size > 10 * 1024 * 1024);
+            if (oversizedFiles.length > 0) {
+                showStatus(`بعض الملفات كبيرة جداً: ${oversizedFiles.map(f => f.name).join(', ')}`, 'error');
+                return;
+            }
+
+            // Show preview
+            images.innerHTML = '';
+            imageFiles.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.title = file.name;
+                    images.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            preview.style.display = 'block';
+            showStatus(`تم اختيار ${imageFiles.length} صورة بنجاح!`, 'success');
+        });
+
+        function showStatus(message, type) {
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
+        }
+
+        // Drag and drop
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#10b981';
+            uploadArea.style.backgroundColor = '#f0fdf4';
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#6b7cff';
+            uploadArea.style.backgroundColor = '#f8fafc';
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#6b7cff';
+            uploadArea.style.backgroundColor = '#f8fafc';
+            
+            const files = Array.from(e.dataTransfer.files);
+            fileInput.files = e.dataTransfer.files;
+            fileInput.dispatchEvent(new Event('change'));
+        });
+
+        console.log('✅ صفحة اختبار رفع الصور جاهزة');
+    </script>
+</body>
+</html>
