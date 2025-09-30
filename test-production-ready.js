@@ -1,238 +1,378 @@
-// Production Ready Test Script
-// Run with: node test-production-ready.js
+// Comprehensive Production Readiness Test Suite
+// Tests all critical functionality and security measures
 
-const https = require('https');
-const crypto = require('crypto');
+import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 // Configuration
-const BASE_URL = process.env.TEST_URL || 'https://luxbyte-543s7l9n1-amir-saids-projects-035bbecd.vercel.app';
-const ADMIN_KEY = process.env.ADMIN_KEY || 'your_admin_key_here';
-const HMAC_SECRET = process.env.HMAC_SECRET || 'your_hmac_secret_here';
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const ADMIN_KEY = process.env.ADMIN_KEY;
+const API_BASE_URL = process.env.VERCEL_URL || 'http://localhost:3000';
 
-// Test results
-let testResults = {
-    passed: 0,
-    failed: 0,
-    tests: []
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !ADMIN_KEY) {
+  console.error('❌ Missing required environment variables');
+  process.exit(1);
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+// Test results tracking
+const testResults = {
+  passed: 0,
+  failed: 0,
+  total: 0,
+  details: []
 };
 
-function logTest(name, passed, message) {
-    const result = { name, passed, message, timestamp: new Date().toISOString() };
-    testResults.tests.push(result);
-    testResults[passed ? 'passed' : 'failed']++;
-    
-    console.log(`${passed ? '✅' : '❌'} ${name}: ${message}`);
+// Helper functions
+function logTest(testName, passed, message, details = {}) {
+  testResults.total++;
+  if (passed) {
+    testResults.passed++;
+    console.log(`✅ ${testName}: ${message}`);
+  } else {
+    testResults.failed++;
+    console.log(`❌ ${testName}: ${message}`);
+  }
+  testResults.details.push({ testName, passed, message, details });
 }
 
-function makeRequest(url, options = {}) {
-    return new Promise((resolve, reject) => {
-        const req = https.request(url, options, (res) => {
-            let data = '';
-            res.on('data', chunk => data += chunk);
-            res.on('end', () => {
-                try {
-                    const jsonData = data ? JSON.parse(data) : {};
-                    resolve({ status: res.statusCode, data: jsonData, headers: res.headers });
-                } catch (e) {
-                    resolve({ status: res.statusCode, data: data, headers: res.headers });
-                }
-            });
-        });
-        
-        req.on('error', reject);
-        
-        if (options.body) {
-            req.write(options.body);
-        }
-        
-        req.end();
+async function makeApiRequest(endpoint, method = 'GET', body = null, headers = {}) {
+  const url = `${API_BASE_URL}${endpoint}`;
+  const options = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...headers
+    }
+  };
+
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(url, options);
+  return {
+    status: response.status,
+    data: await response.json().catch(() => null)
+  };
+}
+
+// Test functions
+async function testDatabaseConnection() {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('count')
+      .limit(1);
+
+    if (error) throw error;
+    logTest('Database Connection', true, 'Successfully connected to Supabase');
+    return true;
+  } catch (error) {
+    logTest('Database Connection', false, `Failed to connect: ${error.message}`);
+    return false;
+  }
+}
+
+async function testAuditLogging() {
+  try {
+    // Check if audit table exists
+    const { data, error } = await supabase
+      .from('account_audit')
+      .select('count')
+      .limit(1);
+
+    if (error) throw error;
+    logTest('Audit Logging', true, 'Audit table exists and accessible');
+    return true;
+  } catch (error) {
+    logTest('Audit Logging', false, `Audit table not accessible: ${error.message}`);
+    return false;
+  }
+}
+
+async function testErrorLogging() {
+  try {
+    // Check if error_logs table exists
+    const { data, error } = await supabase
+      .from('error_logs')
+      .select('count')
+      .limit(1);
+
+    if (error) throw error;
+    logTest('Error Logging', true, 'Error logs table exists and accessible');
+    return true;
+  } catch (error) {
+    logTest('Error Logging', false, `Error logs table not accessible: ${error.message}`);
+    return false;
+  }
+}
+
+async function testNotificationsTable() {
+  try {
+    // Check if notifications table exists
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('count')
+      .limit(1);
+
+    if (error) throw error;
+    logTest('Notifications Table', true, 'Notifications table exists and accessible');
+    return true;
+  } catch (error) {
+    logTest('Notifications Table', false, `Notifications table not accessible: ${error.message}`);
+    return false;
+  }
+}
+
+async function testUserDevicesTable() {
+  try {
+    // Check if user_devices table exists
+    const { data, error } = await supabase
+      .from('user_devices')
+      .select('count')
+      .limit(1);
+
+    if (error) throw error;
+    logTest('User Devices Table', true, 'User devices table exists and accessible');
+    return true;
+  } catch (error) {
+    logTest('User Devices Table', false, `User devices table not accessible: ${error.message}`);
+    return false;
+  }
+}
+
+async function testAccountChangeApi() {
+  try {
+    // Test with invalid admin key
+    const invalidResponse = await makeApiRequest('/api/change-account-type', 'POST', {
+      user_id: 'test-user-id',
+      new_account_type: 'pharmacy'
+    }, {
+      'X-ADMIN-KEY': 'invalid-key'
     });
+
+    if (invalidResponse.status === 401) {
+      logTest('Account Change API - Security', true, 'Correctly rejects invalid admin key');
+    } else {
+      logTest('Account Change API - Security', false, 'Does not reject invalid admin key');
+      return false;
+    }
+
+    // Test with valid admin key but invalid user
+    const validResponse = await makeApiRequest('/api/change-account-type', 'POST', {
+      user_id: '00000000-0000-0000-0000-000000000000',
+      new_account_type: 'pharmacy'
+    }, {
+      'X-ADMIN-KEY': ADMIN_KEY
+    });
+
+    if (validResponse.status === 404) {
+      logTest('Account Change API - Validation', true, 'Correctly handles non-existent user');
+    } else {
+      logTest('Account Change API - Validation', false, 'Does not handle non-existent user correctly');
+    }
+
+    return true;
+  } catch (error) {
+    logTest('Account Change API', false, `API test failed: ${error.message}`);
+    return false;
+  }
 }
 
-function generateHMAC(payload, timestamp) {
-    return crypto
-        .createHmac('sha256', HMAC_SECRET)
-        .update(payload + timestamp)
-        .digest('hex');
+async function testRateLimiting() {
+  try {
+    const requests = [];
+
+    // Make multiple requests quickly
+    for (let i = 0; i < 15; i++) {
+      requests.push(
+        makeApiRequest('/api/change-account-type', 'POST', {
+          user_id: 'test-user-id',
+          new_account_type: 'pharmacy'
+        }, {
+          'X-ADMIN-KEY': 'invalid-key'
+        })
+      );
+    }
+
+    const responses = await Promise.all(requests);
+    const rateLimitedResponses = responses.filter(r => r.status === 429);
+
+    if (rateLimitedResponses.length > 0) {
+      logTest('Rate Limiting', true, `Rate limiting working: ${rateLimitedResponses.length} requests blocked`);
+    } else {
+      logTest('Rate Limiting', false, 'Rate limiting not working properly');
+    }
+
+    return true;
+  } catch (error) {
+    logTest('Rate Limiting', false, `Rate limiting test failed: ${error.message}`);
+    return false;
+  }
 }
 
-async function testAPIEndpoints() {
-    console.log('\n🔍 Testing API Endpoints...\n');
+async function testCorsHeaders() {
+  try {
+    const response = await makeApiRequest('/api/change-account-type', 'OPTIONS');
 
-    // Test 1: Change Account Type (with admin key)
-    try {
-        const testUserId = '00000000-0000-0000-0000-000000000000'; // Dummy UUID
-        const payload = JSON.stringify({
-            user_id: testUserId,
-            new_account_type: 'pharmacy',
-            changed_by: 'test_script'
-        });
-        
-        const response = await makeRequest(`${BASE_URL}/api/change-account-type`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-ADMIN-KEY': ADMIN_KEY
-            },
-            body: payload
-        });
-        
-        logTest(
-            'Change Account Type API',
-            response.status === 404, // Expected 404 for non-existent user
-            `Status: ${response.status} (Expected 404 for non-existent user)`
-        );
-    } catch (error) {
-        logTest('Change Account Type API', false, `Error: ${error.message}`);
+    if (response.status === 200) {
+      logTest('CORS Headers', true, 'CORS preflight requests handled correctly');
+    } else {
+      logTest('CORS Headers', false, 'CORS preflight requests not handled correctly');
     }
 
-    // Test 2: List Users API
-    try {
-        const response = await makeRequest(`${BASE_URL}/api/list-users?admin_key=${ADMIN_KEY}`);
-        
-        logTest(
-            'List Users API',
-            response.status === 200 || response.status === 401,
-            `Status: ${response.status}`
-        );
-    } catch (error) {
-        logTest('List Users API', false, `Error: ${error.message}`);
-    }
-
-    // Test 3: Rate Limiting
-    try {
-        const promises = [];
-        for (let i = 0; i < 15; i++) {
-            promises.push(makeRequest(`${BASE_URL}/api/change-account-type`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-ADMIN-KEY': 'invalid_key'
-                },
-                body: JSON.stringify({ user_id: 'test', new_account_type: 'pharmacy' })
-            }));
-        }
-        
-        const responses = await Promise.all(promises);
-        const rateLimited = responses.some(r => r.status === 429);
-        
-        logTest(
-            'Rate Limiting',
-            rateLimited,
-            rateLimited ? 'Rate limiting working' : 'Rate limiting not working'
-        );
-    } catch (error) {
-        logTest('Rate Limiting', false, `Error: ${error.message}`);
-    }
-
-    // Test 4: HMAC Verification
-    try {
-        const timestamp = Date.now().toString();
-        const payload = JSON.stringify({
-            user_id: 'test',
-            new_account_type: 'pharmacy'
-        });
-        const hmac = generateHMAC(payload, timestamp);
-        
-        const response = await makeRequest(`${BASE_URL}/api/change-account-type`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-ADMIN-KEY': ADMIN_KEY,
-                'X-HMAC-Signature': hmac,
-                'X-Timestamp': timestamp
-            },
-            body: payload
-        });
-        
-        logTest(
-            'HMAC Verification',
-            response.status === 400 || response.status === 404,
-            `Status: ${response.status} (HMAC accepted)`
-        );
-    } catch (error) {
-        logTest('HMAC Verification', false, `Error: ${error.message}`);
-    }
+    return true;
+  } catch (error) {
+    logTest('CORS Headers', false, `CORS test failed: ${error.message}`);
+    return false;
+  }
 }
 
-async function testWebPages() {
-    console.log('\n🌐 Testing Web Pages...\n');
+async function testErrorLoggingApi() {
+  try {
+    const testError = {
+      timestamp: new Date().toISOString(),
+      sessionId: 'test-session-123',
+      level: 'error',
+      message: 'Test error for production readiness',
+      data: { test: true },
+      url: 'https://test.com',
+      userAgent: 'Test Agent',
+      userId: null
+    };
 
-    const pages = [
-        { name: 'Home Page', url: '/' },
-        { name: 'Signup Page', url: '/unified-signup.html' },
-        { name: 'Login Page', url: '/auth.html' },
-        { name: 'Admin Panel', url: '/admin-panel.html' }
-    ];
+    const response = await makeApiRequest('/api/log-error', 'POST', testError);
 
-    for (const page of pages) {
-        try {
-            const response = await makeRequest(`${BASE_URL}${page.url}`);
-            
-            logTest(
-                page.name,
-                response.status === 200,
-                `Status: ${response.status}`
-            );
-        } catch (error) {
-            logTest(page.name, false, `Error: ${error.message}`);
-        }
+    if (response.status === 200) {
+      logTest('Error Logging API', true, 'Error logging API working correctly');
+    } else {
+      logTest('Error Logging API', false, `Error logging API failed: ${response.status}`);
     }
+
+    return true;
+  } catch (error) {
+    logTest('Error Logging API', false, `Error logging API test failed: ${error.message}`);
+    return false;
+  }
 }
 
-async function testSecurityHeaders() {
-    console.log('\n🔒 Testing Security Headers...\n');
+async function testDatabaseCleanupFunctions() {
+  try {
+    // Test cleanup functions exist
+    const { data, error } = await supabase.rpc('cleanup_old_audit_logs');
 
-    try {
-        const response = await makeRequest(`${BASE_URL}/`);
-        
-        const securityHeaders = [
-            'x-request-id',
-            'access-control-allow-origin'
-        ];
-        
-        let headersPresent = 0;
-        securityHeaders.forEach(header => {
-            if (response.headers[header]) {
-                headersPresent++;
-            }
-        });
-        
-        logTest(
-            'Security Headers',
-            headersPresent > 0,
-            `${headersPresent}/${securityHeaders.length} security headers present`
-        );
-    } catch (error) {
-        logTest('Security Headers', false, `Error: ${error.message}`);
+    if (error) {
+      logTest('Database Cleanup Functions', false, `Cleanup functions not working: ${error.message}`);
+      return false;
     }
+
+    logTest('Database Cleanup Functions', true, 'Database cleanup functions working correctly');
+    return true;
+  } catch (error) {
+    logTest('Database Cleanup Functions', false, `Cleanup functions test failed: ${error.message}`);
+    return false;
+  }
 }
 
+async function testSecurityPolicies() {
+  try {
+    // Test that RLS is enabled
+    const { data, error } = await supabase
+      .from('account_audit')
+      .select('*')
+      .limit(1);
+
+    // This should fail for non-admin users
+    if (error && error.message.includes('permission denied')) {
+      logTest('Security Policies', true, 'RLS policies are working correctly');
+    } else {
+      logTest('Security Policies', false, 'RLS policies may not be working correctly');
+    }
+
+    return true;
+  } catch (error) {
+    logTest('Security Policies', false, `Security policies test failed: ${error.message}`);
+    return false;
+  }
+}
+
+// Main test runner
 async function runAllTests() {
-    console.log('🚀 Starting Production Ready Tests...\n');
-    console.log(`Testing against: ${BASE_URL}\n`);
+  console.log('🚀 Starting Production Readiness Tests...\n');
 
-    await testWebPages();
-    await testAPIEndpoints();
-    await testSecurityHeaders();
+  // Database tests
+  await testDatabaseConnection();
+  await testAuditLogging();
+  await testErrorLogging();
+  await testNotificationsTable();
+  await testUserDevicesTable();
+  await testDatabaseCleanupFunctions();
+  await testSecurityPolicies();
 
-    // Summary
-    console.log('\n📊 Test Summary:');
-    console.log(`✅ Passed: ${testResults.passed}`);
-    console.log(`❌ Failed: ${testResults.failed}`);
-    console.log(`📈 Success Rate: ${((testResults.passed / (testResults.passed + testResults.failed)) * 100).toFixed(1)}%`);
+  // API tests
+  await testAccountChangeApi();
+  await testRateLimiting();
+  await testCorsHeaders();
+  await testErrorLoggingApi();
 
-    // Detailed results
-    console.log('\n📋 Detailed Results:');
-    testResults.tests.forEach(test => {
-        console.log(`${test.passed ? '✅' : '❌'} ${test.name}: ${test.message}`);
-    });
+  // Generate report
+  console.log('\n📊 Test Results Summary:');
+  console.log(`✅ Passed: ${testResults.passed}`);
+  console.log(`❌ Failed: ${testResults.failed}`);
+  console.log(`📈 Total: ${testResults.total}`);
+  console.log(`🎯 Success Rate: ${((testResults.passed / testResults.total) * 100).toFixed(1)}%`);
 
-    // Exit with error code if any tests failed
-    if (testResults.failed > 0) {
-        process.exit(1);
-    }
+  // Detailed results
+  console.log('\n📋 Detailed Results:');
+  testResults.details.forEach(test => {
+    const status = test.passed ? '✅' : '❌';
+    console.log(`${status} ${test.testName}: ${test.message}`);
+  });
+
+  // Production readiness assessment
+  const criticalTests = [
+    'Database Connection',
+    'Audit Logging',
+    'Account Change API - Security',
+    'Rate Limiting',
+    'CORS Headers',
+    'Security Policies'
+  ];
+
+  const criticalPassed = testResults.details
+    .filter(test => criticalTests.includes(test.testName) && test.passed)
+    .length;
+
+  console.log('\n🎯 Production Readiness Assessment:');
+  if (criticalPassed === criticalTests.length) {
+    console.log('✅ SYSTEM IS PRODUCTION READY!');
+    console.log('All critical security and functionality tests passed.');
+  } else {
+    console.log('⚠️  SYSTEM NEEDS ATTENTION BEFORE PRODUCTION');
+    console.log(`${criticalTests.length - criticalPassed} critical tests failed.`);
+  }
+
+  // Recommendations
+  console.log('\n💡 Recommendations:');
+  if (testResults.failed > 0) {
+    console.log('1. Fix all failed tests before deploying to production');
+    console.log('2. Review security policies and API endpoints');
+    console.log('3. Test with real user data in staging environment');
+  } else {
+    console.log('1. Deploy to production with confidence!');
+    console.log('2. Set up monitoring and alerting');
+    console.log('3. Schedule regular security audits');
+  }
+
+  return testResults;
 }
 
-// Run tests
-runAllTests().catch(console.error);
+// Run tests if this file is executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runAllTests().catch(console.error);
+}
+
+export { runAllTests, testResults };

@@ -13,16 +13,16 @@ export async function handleRegister(email, password, account, additionalData = 
 
         // تسجيل المستخدم في Supabase Auth
         const { data: { user }, error: authError } = await supabase.auth.signUp({
-            email, 
-            password, 
-            options: { 
-                data: { 
+            email,
+            password,
+            options: {
+                data: {
                     account,
                     ...additionalData
-                } 
+                }
             }
         });
-        
+
         if (authError) {
             console.error('❌ Auth registration failed:', authError);
             throw new Error(authError.message);
@@ -44,8 +44,8 @@ export async function handleRegister(email, password, account, additionalData = 
         // إنشاء ملف شخصي في جدول profiles
         const { error: profileError } = await supabase
             .from('profiles')
-            .insert({ 
-                user_id: user.id, 
+            .insert({
+                user_id: user.id,
                 account: account,
                 city: additionalData.city || null
             });
@@ -160,31 +160,56 @@ export async function checkAuthAndRedirect() {
 
         if (!session) {
             console.log('❌ No active session, redirecting to auth');
+            // التحقق من وجود profile في localStorage للعودة السريعة
+            const savedProfile = localStorage.getItem('user_profile');
+            if (savedProfile) {
+                try {
+                    const profile = JSON.parse(savedProfile);
+                    if (profile.account) {
+                        console.log('🔄 Found saved profile, redirecting to unified signup');
+                        window.location.href = 'unified-signup.html';
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('Invalid saved profile data');
+                }
+            }
             window.location.href = 'auth.html';
             return;
         }
 
         console.log('✅ Active session found:', session.user.id);
 
+        // التحقق من تأكيد البريد الإلكتروني
+        if (!session.user.email_confirmed_at) {
+            console.log('📧 Email not confirmed, showing confirmation message');
+            showEmailConfirmationMessage();
+            return;
+        }
+
         // الحصول على نوع الحساب
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
-            .select('account, city')
+            .select('account, city, full_name, phone')
             .eq('user_id', session.user.id)
             .single();
 
         if (profileError) {
             console.error('❌ Profile fetch failed:', profileError);
-            window.location.href = 'auth.html';
+            // إذا لم يوجد profile، توجيه لصفحة التسجيل الموحد
+            console.log('🔄 No profile found, redirecting to unified signup');
+            window.location.href = 'unified-signup.html';
             return;
         }
 
         if (profile?.account) {
             console.log('✅ Profile found, redirecting to dashboard:', profile.account);
+            // حفظ معلومات المستخدم في localStorage للوصول السريع
+            localStorage.setItem('user_profile', JSON.stringify(profile));
             redirectByAccount(profile.account);
         } else {
-            console.log('❌ No profile found, redirecting to auth');
-            window.location.href = 'auth.html';
+            console.log('❌ No account type found, redirecting to unified signup');
+            window.location.href = 'unified-signup.html';
         }
 
     } catch (error) {
@@ -267,7 +292,7 @@ function showEmailConfirmationMessage() {
     if (messageDiv) {
         messageDiv.style.display = 'block';
     }
-    
+
     // إخفاء الرسالة بعد 10 ثوانٍ
     setTimeout(() => {
         if (messageDiv) {

@@ -23,18 +23,18 @@ const RATE_LIMIT_MAX_REQUESTS = 10; // 10 requests per minute
 function checkRateLimit(ip) {
   const now = Date.now();
   const windowStart = now - RATE_LIMIT_WINDOW;
-  
+
   if (!rateLimit.has(ip)) {
     rateLimit.set(ip, []);
   }
-  
+
   const requests = rateLimit.get(ip);
   const recentRequests = requests.filter(time => time > windowStart);
-  
+
   if (recentRequests.length >= RATE_LIMIT_MAX_REQUESTS) {
     return false;
   }
-  
+
   recentRequests.push(now);
   rateLimit.set(ip, recentRequests);
   return true;
@@ -42,12 +42,12 @@ function checkRateLimit(ip) {
 
 function verifyHMAC(payload, signature, timestamp) {
   if (!hmacSecret) return true; // Skip HMAC if not configured
-  
+
   const expectedSignature = crypto
     .createHmac('sha256', hmacSecret)
     .update(payload + timestamp)
     .digest('hex');
-  
+
   return crypto.timingSafeEqual(
     Buffer.from(signature, 'hex'),
     Buffer.from(expectedSignature, 'hex')
@@ -56,7 +56,7 @@ function verifyHMAC(payload, signature, timestamp) {
 
 function logAuditEvent(userId, oldAccount, newAccount, changedBy, ip) {
   console.log(`AUDIT: User ${userId} account changed from ${oldAccount} to ${newAccount} by ${changedBy} from IP ${ip}`);
-  
+
   // Log to Supabase audit table
   supabase
     .from('account_audit')
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
   const startTime = Date.now();
   const requestId = crypto.randomUUID();
   const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  
+
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', process.env.ALLOWED_ORIGINS || '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -119,7 +119,7 @@ export default async function handler(req, res) {
     const { user_id, new_account_type, changed_by } = req.body;
 
     if (!user_id || !new_account_type) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Missing required fields',
         required: ['user_id', 'new_account_type']
       });
@@ -128,7 +128,7 @@ export default async function handler(req, res) {
     // Validate account type
     const validAccountTypes = ['pharmacy', 'supermarket', 'restaurant', 'clinic', 'courier', 'driver', 'admin'];
     if (!validAccountTypes.includes(new_account_type)) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Invalid account type',
         validTypes: validAccountTypes
       });
@@ -149,7 +149,7 @@ export default async function handler(req, res) {
 
     // Check if account type is actually changing
     if (oldAccountType === new_account_type) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Account type is already set to this value',
         current_type: oldAccountType
       });
@@ -173,10 +173,10 @@ export default async function handler(req, res) {
 
     // Log audit event
     logAuditEvent(
-      user_id, 
-      oldAccountType, 
-      new_account_type, 
-      changed_by || 'admin_api', 
+      user_id,
+      oldAccountType,
+      new_account_type,
+      changed_by || 'admin_api',
       clientIP
     );
 
@@ -213,7 +213,7 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error(`Request ${requestId} error:`, error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Internal server error',
       request_id: requestId,
       details: process.env.NODE_ENV === 'development' ? error.message : 'An error occurred'

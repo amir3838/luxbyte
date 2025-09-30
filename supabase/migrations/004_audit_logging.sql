@@ -24,28 +24,28 @@ on public.account_audit for select
 to authenticated
 using (
   exists (
-    select 1 from public.profiles 
-    where user_id = auth.uid() 
+    select 1 from public.profiles
+    where user_id = auth.uid()
     and account = 'admin'
   )
 );
 
 -- Function to log account changes
-create or replace function log_account_change() 
+create or replace function log_account_change()
 returns trigger as $$
 begin
   if NEW.account is distinct from OLD.account then
     insert into public.account_audit (
-      user_id, 
-      old_account, 
-      new_account, 
+      user_id,
+      old_account,
+      new_account,
       changed_by,
       ip_address,
       request_id
     ) values (
-      NEW.user_id, 
-      OLD.account, 
-      NEW.account, 
+      NEW.user_id,
+      OLD.account,
+      NEW.account,
       coalesce(
         current_setting('request.jwt.claim.sub', true),
         current_setting('request.jwt.claim.email', true),
@@ -65,7 +65,7 @@ drop trigger if exists trg_log_account_change on public.profiles;
 -- Create trigger
 create trigger trg_log_account_change
   after update on public.profiles
-  for each row 
+  for each row
   execute function log_account_change();
 
 -- Notifications table for user notifications
