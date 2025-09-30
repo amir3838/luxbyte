@@ -1,7 +1,7 @@
 // Test Deployed System - LUXBYTE Production
 // Tests the deployed system on Vercel
 
-const API_BASE_URL = 'https://luxbyte-r38xw8gqr-amir-saids-projects-035bbecd.vercel.app';
+const API_BASE_URL = 'https://luxbyte-o1iy0y0um-amir-saids-projects-035bbecd.vercel.app';
 
 console.log('🚀 Testing Deployed LUXBYTE System...\n');
 
@@ -34,14 +34,14 @@ async function makeRequest(endpoint, method = 'GET', body = null, headers = {}) 
         ...headers
       }
     };
-    
+
     if (body) {
       options.body = JSON.stringify(body);
     }
-    
+
     const response = await fetch(url, options);
     const data = await response.json().catch(() => null);
-    
+
     return {
       status: response.status,
       data,
@@ -60,7 +60,7 @@ async function makeRequest(endpoint, method = 'GET', body = null, headers = {}) 
 async function testMainPage() {
   try {
     const response = await makeRequest('/');
-    
+
     if (response.status === 200) {
       logTest('Main Page', true, 'Main page loads successfully');
     } else {
@@ -77,11 +77,11 @@ async function testApiEndpoints() {
     '/api/change-account-type',
     '/api/log-error'
   ];
-  
+
   for (const endpoint of endpoints) {
     try {
       const response = await makeRequest(endpoint, 'OPTIONS');
-      
+
       if (response.status === 200) {
         logTest(`API ${endpoint}`, true, 'API endpoint responds to OPTIONS');
       } else {
@@ -100,7 +100,7 @@ async function testApiSecurity() {
       user_id: 'test-user-id',
       new_account_type: 'pharmacy'
     });
-    
+
     if (response.status === 401) {
       logTest('API Security', true, 'API correctly rejects requests without admin key');
     } else {
@@ -115,17 +115,17 @@ async function testApiSecurity() {
 async function testCorsHeaders() {
   try {
     const response = await makeRequest('/api/change-account-type', 'OPTIONS');
-    
+
     const corsHeaders = [
       'access-control-allow-origin',
       'access-control-allow-methods',
       'access-control-allow-headers'
     ];
-    
-    const hasCorsHeaders = corsHeaders.every(header => 
+
+    const hasCorsHeaders = corsHeaders.every(header =>
       response.headers[header] || response.headers[header.toLowerCase()]
     );
-    
+
     if (hasCorsHeaders) {
       logTest('CORS Headers', true, 'CORS headers are present');
     } else {
@@ -140,17 +140,17 @@ async function testCorsHeaders() {
 async function testSecurityHeaders() {
   try {
     const response = await makeRequest('/');
-    
+
     const securityHeaders = [
       'x-content-type-options',
       'x-frame-options',
       'x-xss-protection'
     ];
-    
-    const hasSecurityHeaders = securityHeaders.every(header => 
+
+    const hasSecurityHeaders = securityHeaders.every(header =>
       response.headers[header] || response.headers[header.toLowerCase()]
     );
-    
+
     if (hasSecurityHeaders) {
       logTest('Security Headers', true, 'Security headers are present');
     } else {
@@ -170,9 +170,9 @@ async function testErrorLogging() {
       sessionId: 'test-session-' + Date.now(),
       data: { test: true }
     };
-    
+
     const response = await makeRequest('/api/log-error', 'POST', testError);
-    
+
     if (response.status === 200) {
       logTest('Error Logging API', true, 'Error logging API works correctly');
     } else {
@@ -191,13 +191,13 @@ async function testStaticFiles() {
     '/config.js',
     '/manifest.json'
   ];
-  
+
   let passed = 0;
-  
+
   for (const file of staticFiles) {
     try {
       const response = await makeRequest(file);
-      
+
       if (response.status === 200) {
         passed++;
       }
@@ -205,7 +205,7 @@ async function testStaticFiles() {
       // Ignore errors for static files
     }
   }
-  
+
   if (passed === staticFiles.length) {
     logTest('Static Files', true, `All ${staticFiles.length} static files load successfully`);
   } else {
@@ -221,13 +221,13 @@ async function testHtmlPages() {
     '/dashboard.html',
     '/index.html'
   ];
-  
+
   let passed = 0;
-  
+
   for (const page of htmlPages) {
     try {
       const response = await makeRequest(page);
-      
+
       if (response.status === 200) {
         passed++;
       }
@@ -235,7 +235,7 @@ async function testHtmlPages() {
       // Ignore errors for HTML pages
     }
   }
-  
+
   if (passed === htmlPages.length) {
     logTest('HTML Pages', true, `All ${htmlPages.length} HTML pages load successfully`);
   } else {
@@ -246,7 +246,7 @@ async function testHtmlPages() {
 // Run all tests
 async function runAllTests() {
   console.log('🔍 Testing Deployed System...\n');
-  
+
   await testMainPage();
   await testApiEndpoints();
   await testApiSecurity();
@@ -255,14 +255,14 @@ async function runAllTests() {
   await testErrorLogging();
   await testStaticFiles();
   await testHtmlPages();
-  
+
   // Generate report
   console.log('\n📊 Test Results Summary:');
   console.log(`✅ Passed: ${testResults.passed}`);
   console.log(`❌ Failed: ${testResults.failed}`);
   console.log(`📈 Total: ${testResults.total}`);
   console.log(`🎯 Success Rate: ${((testResults.passed / testResults.total) * 100).toFixed(1)}%`);
-  
+
   // Production readiness assessment
   const criticalTests = [
     'Main Page',
@@ -270,11 +270,11 @@ async function runAllTests() {
     'CORS Headers',
     'Security Headers'
   ];
-  
+
   const criticalPassed = testResults.details
     .filter(test => criticalTests.includes(test.testName) && test.passed)
     .length;
-  
+
   console.log('\n🎯 Production Readiness Assessment:');
   if (criticalPassed === criticalTests.length) {
     console.log('✅ DEPLOYED SYSTEM IS WORKING CORRECTLY!');
@@ -283,13 +283,13 @@ async function runAllTests() {
     console.log('⚠️  DEPLOYED SYSTEM NEEDS ATTENTION');
     console.log(`${criticalTests.length - criticalPassed} critical tests failed.`);
   }
-  
+
   console.log('\n💡 Next Steps:');
   console.log('1. Add environment variables in Vercel Dashboard');
   console.log('2. Apply database migrations in Supabase');
   console.log('3. Test with real user data');
   console.log('4. Monitor system performance');
-  
+
   return testResults;
 }
 

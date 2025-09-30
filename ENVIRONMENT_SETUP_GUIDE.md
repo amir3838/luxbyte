@@ -62,8 +62,8 @@ ALHARETH_API_URL=https://api.alhareth.com
 ### 3. التحقق من الجداول الجديدة
 ```sql
 -- تحقق من وجود الجداول الجديدة
-SELECT table_name FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name FROM information_schema.tables
+WHERE table_schema = 'public'
 AND table_name IN ('account_audit', 'notifications', 'user_devices', 'error_logs', 'system_health');
 ```
 
