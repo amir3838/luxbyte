@@ -295,12 +295,20 @@
     <script src="js/engagement-notification.js" defer></script>
     <script src="js/enhanced-ui.js" defer></script>
     <script src="js/comprehensive-test.js" defer></script>
+    <script type="module" src="js/guard.js"></script>
     <script>
         // Initialize page
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             console.log('LUXBYTE Home Page Loaded');
             injectNavbar('home');
             applyI18n();
+
+            // Check authentication and redirect if logged in
+            try {
+                await checkAuthAndRedirect();
+            } catch (error) {
+                console.log('No authenticated user, staying on home page');
+            }
 
             // Lazy loading enhancement
             if ('IntersectionObserver' in window) {

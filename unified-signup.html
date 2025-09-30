@@ -108,6 +108,19 @@
                         <label class="form-label">رقم الهاتف <span style="color: #ef4444;">*</span></label>
                         <input type="tel" class="form-control" name="phone" placeholder="01xxxxxxxxx" required>
                     </div>
+
+                    <div class="form-group">
+                        <label class="form-label">نوع الحساب <span style="color: #ef4444;">*</span></label>
+                        <select class="form-control" name="account_type" id="accountType" required>
+                            <option value="">اختر نوع الحساب</option>
+                            <option value="pharmacy">صيدلية</option>
+                            <option value="supermarket">سوبرماركت</option>
+                            <option value="restaurant">مطعم</option>
+                            <option value="clinic">عيادة</option>
+                            <option value="courier">مندوب توصيل</option>
+                            <option value="driver">سائق</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Business Information Section -->
@@ -554,56 +567,22 @@
                         throw new Error('كلمات المرور غير متطابقة');
                     }
 
-                    // Create user account
-                    const { data: authData, error: authError } = await LUXBYTE.supabase.auth.signUp({
-                        email: email,
-                        password: passwordClean
-                    });
-
-                    if (authError) throw authError;
-
-                    if (!authData.user) {
-                        throw new Error('فشل في إنشاء الحساب');
+                    // Get account type
+                    const accountType = formData.get('account_type');
+                    if (!accountType) {
+                        throw new Error('يرجى اختيار نوع الحساب');
                     }
 
-                    // Prepare business data
-                    const businessData = {
-                        user_id: authData.user.id,
-                        first_name: formData.get('first_name'),
-                        last_name: formData.get('last_name'),
-                        email: email,
+                    // Create user account using new auth system
+                    await handleRegister(email, passwordClean, accountType, {
                         phone: formData.get('phone'),
                         business_name: formData.get('business_name'),
-                        description: formData.get('description'),
-                        governorate: formData.get('governorate'),
                         city: formData.get('city'),
-                        address: formData.get('address'),
-                        role: selectedRole,
-                        terms_accepted: formData.get('terms_accepted') === 'on',
-                        marketing_consent: formData.get('marketing_consent') === 'on',
-                        status: 'pending',
-                        created_at: new Date().toISOString()
-                    };
+                        governorate: formData.get('governorate')
+                    });
 
-                    // Insert business data
-                    const { data: insertData, error: insertError } = await LUXBYTE.supabase
-                        .from(roleConfig.table)
-                        .insert([businessData]);
-
-                    if (insertError) throw insertError;
-
-                    // Upload files if any
-                    if (Object.keys(uploadedFiles).length > 0) {
-                        console.log('📁 Uploading photos...');
-                        await uploadFiles(authData.user.id, insertData[0].id);
-                    }
-
-                    LUXBYTE.notifyOk('تم إرسال الطلب بنجاح! سيتم مراجعته قريباً.');
-
-                    // Redirect to success page
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 2000);
+                    // Registration successful - user will be redirected by handleRegister
+                    LUXBYTE.notifyOk('تم إنشاء الحساب بنجاح! جاري التوجيه...');
 
                 } catch (error) {
                     console.error('❌ Signup error:', error);
@@ -1142,6 +1121,10 @@
         window.testFileUploadFunctionality = testFileUploadFunctionality;
         window.removeFile = removeFile;
     </script>
+
+    <!-- Auth and Guard Scripts -->
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/guard.js"></script>
 
     <!-- Camera Upload Manager -->
     <script type="module">

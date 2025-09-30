@@ -85,7 +85,7 @@
             <i class="fas fa-upload" style="margin-left: 10px; color: #6b7cff;"></i>
             اختبار رفع الصور - LUXBYTE
         </h1>
-        
+
         <div class="upload-area" onclick="document.getElementById('fileInput').click()">
             <i class="fas fa-cloud-upload-alt upload-icon"></i>
             <div class="upload-text">اضغط لرفع الصور</div>
@@ -112,12 +112,12 @@
         fileInput.addEventListener('change', function(e) {
             const files = Array.from(e.target.files);
             console.log('تم اختيار', files.length, 'ملف');
-            
+
             if (files.length === 0) return;
 
             // Filter image files
             const imageFiles = files.filter(file => file.type.startsWith('image/'));
-            
+
             if (imageFiles.length === 0) {
                 showStatus('يرجى اختيار ملفات صور صالحة', 'error');
                 return;
@@ -151,7 +151,7 @@
             status.textContent = message;
             status.className = `status ${type}`;
             status.style.display = 'block';
-            
+
             setTimeout(() => {
                 status.style.display = 'none';
             }, 3000);
@@ -159,7 +159,7 @@
 
         // Drag and drop
         const uploadArea = document.querySelector('.upload-area');
-        
+
         uploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
             uploadArea.style.borderColor = '#10b981';
@@ -176,7 +176,7 @@
             e.preventDefault();
             uploadArea.style.borderColor = '#6b7cff';
             uploadArea.style.backgroundColor = '#f8fafc';
-            
+
             const files = Array.from(e.dataTransfer.files);
             fileInput.files = e.dataTransfer.files;
             fileInput.dispatchEvent(new Event('change'));
