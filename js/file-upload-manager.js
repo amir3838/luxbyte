@@ -346,24 +346,40 @@ async function uploadFile(file, documentType, filename) {
     currentUploading = true;
 
     try {
-        // Get current user ID
-        const userId = getCurrentUserId();
+        // Get current user ID and email
+        const userId = await getCurrentUserId();
+        const userEmail = await getCurrentUserEmail();
+        
         if (!userId) {
             throw new Error('لم يتم العثور على معرف المستخدم');
         }
 
+        // Handle Blob files without names
+        let namedFile = file;
+        if (file instanceof Blob && !file.name) {
+            const ext = file.type?.split('/')[1] || 'bin';
+            const safeName = `${documentType}_${Date.now()}.${ext}`;
+            namedFile = new File([file], safeName, { 
+                type: file.type || 'application/octet-stream' 
+            });
+        }
+
         // Create file path
-        const filePath = `${userId}/${documentType}/${Date.now()}_${filename}`;
+        const filePath = `${userId}/${documentType}/${Date.now()}_${namedFile.name}`;
 
         // Show progress
         showUploadProgress(documentType, 0);
 
+        // Get Supabase client
+        const { getSupabase } = await import('./supabase-client.js');
+        const supabase = getSupabase();
+
         // Upload to Supabase Storage
-        const { data, error } = await window.supabase.storage
+        const { data, error } = await supabase.storage
             .from('kyc_docs')
-            .upload(filePath, file, {
+            .upload(filePath, namedFile, {
                 upsert: false,
-                contentType: file.type || 'image/jpeg'
+                contentType: namedFile.type || 'image/jpeg'
             });
 
         if (error) {
@@ -371,7 +387,7 @@ async function uploadFile(file, documentType, filename) {
         }
 
         // Get public URL
-        const { data: publicData } = window.supabase.storage
+        const { data: publicData } = supabase.storage
             .from('kyc_docs')
             .getPublicUrl(data.path);
 
@@ -379,15 +395,23 @@ async function uploadFile(file, documentType, filename) {
         uploadedFiles[documentType] = {
             path: data.path,
             url: publicData.publicUrl,
-            filename: filename,
+            filename: namedFile.name,
             uploadedAt: new Date().toISOString()
         };
 
-        // Update UI
-        updateFileUploadUI(documentType, publicData.publicUrl, filename);
+        // Update UI with proper URL handling
+        updateFileUploadUI(documentType, publicData.publicUrl, namedFile.name);
 
-        // Save to database
-        await saveFileToDatabase(documentType, data.path, publicData.publicUrl);
+        // Save to database with correct parameters
+        await saveFileToDatabase({
+            userId,
+            documentType,
+            filePath: data.path,
+            publicUrl: publicData.publicUrl,
+            fileName: namedFile.name,
+            fileSize: namedFile.size,
+            mimeType: namedFile.type
+        });
 
         showToast('تم رفع الملف بنجاح', 'success');
 
@@ -404,22 +428,28 @@ async function uploadFile(file, documentType, filename) {
  * Save file info to database
  * حفظ معلومات الملف في قاعدة البيانات
  */
-async function saveFileToDatabase(documentType, filePath, publicUrl) {
+async function saveFileToDatabase({ userId, documentType, filePath, publicUrl, fileName, fileSize, mimeType }) {
     try {
-        const userId = getCurrentUserId();
+        const { getSupabase } = await import('./supabase-client.js');
+        const supabase = getSupabase();
 
-        const { error } = await window.supabase
+        const { error } = await supabase
             .from('documents')
             .insert({
                 user_id: userId,
                 document_type: documentType,
                 file_path: filePath,
                 public_url: publicUrl,
+                file_name: fileName,
+                file_size: fileSize,
+                mime_type: mimeType,
                 uploaded_at: new Date().toISOString()
             });
 
         if (error) {
             console.error('Database save failed:', error);
+        } else {
+            console.log('✅ File saved to database successfully');
         }
     } catch (error) {
         console.error('Database save error:', error);
@@ -443,9 +473,23 @@ function updateFileUploadUI(documentType, imageUrl, filename) {
     // Create preview
     const preview = document.createElement('div');
     preview.className = 'file-preview';
+    
+    // Create image element with proper URL handling
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = filename;
+    img.className = 'file-preview-image';
+    
+    // Handle URL cleanup when image loads
+    img.onload = () => {
+        // Only revoke if it's a blob URL
+        if (imageUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(imageUrl);
+        }
+    };
+    
     preview.innerHTML = `
         <div class="file-preview-content">
-            <img src="${imageUrl}" alt="${filename}" class="file-preview-image">
             <div class="file-preview-info">
                 <p class="file-name">${filename}</p>
                 <p class="file-status">تم الرفع بنجاح</p>
@@ -455,6 +499,10 @@ function updateFileUploadUI(documentType, imageUrl, filename) {
             </button>
         </div>
     `;
+    
+    // Insert image at the beginning
+    const content = preview.querySelector('.file-preview-content');
+    content.insertBefore(img, content.firstChild);
 
     // Add styles
     const style = document.createElement('style');
@@ -601,27 +649,32 @@ function hideUploadProgress(documentType) {
  * Get current user ID
  * الحصول على معرف المستخدم الحالي
  */
-function getCurrentUserId() {
-    // Try to get from localStorage
-    const user = localStorage.getItem('user');
-    if (user) {
-        try {
-            const userData = JSON.parse(user);
-            return userData.id || userData.user_id;
-        } catch (e) {
-            console.error('Error parsing user data:', e);
-        }
+export async function getCurrentUserId() {
+    try {
+        const { getSupabase } = await import('./supabase-client.js');
+        const supabase = getSupabase();
+        const { data: { session } } = await supabase.auth.getSession();
+        return session?.user?.id ?? null;
+    } catch (error) {
+        console.error('Error getting user ID:', error);
+        return null;
     }
+}
 
-    // Try to get from Supabase session
-    if (window.supabase && window.supabase.auth) {
-        const session = window.supabase.auth.session();
-        if (session && session.user) {
-            return session.user.id;
-        }
+/**
+ * Get current user email
+ * الحصول على إيميل المستخدم الحالي
+ */
+export async function getCurrentUserEmail() {
+    try {
+        const { getSupabase } = await import('./supabase-client.js');
+        const supabase = getSupabase();
+        const { data: { session } } = await supabase.auth.getSession();
+        return session?.user?.email ?? 'anonymous';
+    } catch (error) {
+        console.error('Error getting user email:', error);
+        return 'anonymous';
     }
-
-    return null;
 }
 
 /**

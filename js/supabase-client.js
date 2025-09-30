@@ -2,29 +2,36 @@
 import { loadEnv } from "./env.js";
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-let _client = null;
+let client = null;
 
 export async function initSupabase() {
-  if (_client) return _client;
-
+  if (client) return client;
+  
   const cfg = await loadEnv();
   const { SUPABASE_URL, SUPABASE_ANON_KEY } = cfg || {};
-
+  
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     throw new Error("ENV_INCOMPLETE: SUPABASE_URL / SUPABASE_ANON_KEY");
   }
-
-  _client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { persistSession: false }
+  
+  client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { 
+      persistSession: true, 
+      autoRefreshToken: true, 
+      detectSessionInUrl: true 
+    },
+    global: { 
+      fetch: (...args) => fetch(...args) 
+    }
   });
-
+  
   console.log('✅ Supabase client initialized');
-  return _client;
+  return client;
 }
 
 export function getSupabase() {
-  if (!_client) throw new Error("SUPABASE_NOT_READY");
-  return _client;
+  if (!client) throw new Error("SUPABASE_NOT_READY");
+  return client;
 }
 
 // Legacy compatibility

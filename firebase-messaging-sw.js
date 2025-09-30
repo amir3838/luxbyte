@@ -52,9 +52,26 @@ self.addEventListener('notificationclick', (event) => {
 
   event.notification.close();
 
+  // Get URL from notification data
+  const url = event.notification.data?.url || '/';
+  
+  // Handle different actions
+  if (event.action === 'close') {
+    return; // Just close the notification
+  }
+
   if (event.action === 'open' || !event.action) {
     event.waitUntil(
-      clients.openWindow('/')
+      clients.matchAll({ type: 'window' }).then((clientList) => {
+        // Check if app is already open
+        for (const client of clientList) {
+          if (client.url.includes(self.location.origin) && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        // Open new window if app is not open
+        return clients.openWindow(url);
+      })
     );
   }
 });

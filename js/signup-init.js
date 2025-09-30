@@ -248,13 +248,13 @@ async function init() {
     try {
         // 2) احصل على الدور من URL
         const urlParams = new URLSearchParams(location.search);
-        const role = urlParams.get('role') || 'pharmacy';
-
+        const role = urlParams.get('role') || 'restaurant';
+        
         if (!role) {
-            console.warn('Role missing; using default pharmacy');
+            console.warn('Role missing; using default restaurant');
         }
-
-        const docs = requiredDocsByRole[role] || requiredDocsByRole.pharmacy;
+        
+        const docs = requiredDocsByRole[role] || requiredDocsByRole.restaurant;
 
         console.log('🎯 الدور المحدد:', role);
         console.log('📋 المستندات المطلوبة:', docs);

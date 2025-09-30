@@ -41,12 +41,20 @@ function checkRateLimit(ip) {
 }
 
 function verifyHMAC(payload, signature, timestamp) {
-  if (!hmacSecret) return true; // Skip HMAC if not configured
+  if (!hmacSecret) {
+    console.warn('HMAC_SECRET not configured, skipping HMAC verification');
+    return true; // Skip HMAC if not configured
+  }
 
   const expectedSignature = crypto
     .createHmac('sha256', hmacSecret)
     .update(payload + timestamp)
     .digest('hex');
+
+  // Ensure both signatures have the same length before comparison
+  if (signature.length !== expectedSignature.length) {
+    return false;
+  }
 
   return crypto.timingSafeEqual(
     Buffer.from(signature, 'hex'),
@@ -98,10 +106,10 @@ export default async function handler(req, res) {
       return res.status(429).json({ error: 'Rate limit exceeded' });
     }
 
-    // Verify admin key
-    const providedAdminKey = req.headers['x-admin-key'] || req.body.admin_key;
-    if (providedAdminKey !== adminKey) {
-      console.warn(`Invalid admin key from IP ${clientIP}`);
+    // Verify admin key (only from headers)
+    const providedAdminKey = req.headers['x-admin-key'];
+    if (!providedAdminKey || providedAdminKey !== adminKey) {
+      console.warn(`Invalid or missing admin key from IP ${clientIP}`);
       return res.status(401).json({ error: 'Unauthorized' });
     }
 

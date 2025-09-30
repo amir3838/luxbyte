@@ -7,6 +7,14 @@ class MonitoringSystem {
         this.maxLogs = 1000;
         this.sessionId = this.generateSessionId();
         this.startTime = Date.now();
+        
+        // Store original console methods to prevent recursion
+        this.originalConsole = {
+            log: console.log,
+            warn: console.warn,
+            error: console.error,
+            info: console.info
+        };
     }
 
     /**
@@ -38,9 +46,9 @@ class MonitoringSystem {
             this.logs = this.logs.slice(-this.maxLogs);
         }
 
-        // Console output
+        // Console output using original methods
         const consoleMethod = this.getConsoleMethod(level);
-        console[consoleMethod](`[${level.toUpperCase()}] ${message}`, data);
+        this.originalConsole[consoleMethod](`[${level.toUpperCase()}] ${message}`, data);
 
         // Send to server if error
         if (level === 'error') {
@@ -96,7 +104,7 @@ class MonitoringSystem {
                 });
             }
         } catch (error) {
-            console.warn('Failed to send error to server:', error);
+            this.originalConsole.warn('Failed to send error to server:', error);
         }
     }
 
