@@ -210,37 +210,39 @@
                         </div>
                     </div>
 
-                    <!-- Camera Controls -->
-                    <div id="camera-controls" style="display: block; text-align: center; margin: 20px 0; padding: 20px; background: #f8fafc; border-radius: 12px; border: 2px dashed #cbd5e1;">
+                    <!-- File Upload Controls -->
+                    <div id="file-upload-controls" style="display: block; text-align: center; margin: 20px 0; padding: 20px; background: #f8fafc; border-radius: 12px; border: 2px dashed #cbd5e1;">
                         <h4 style="margin-bottom: 16px; color: #334155;">
-                            <i class="fas fa-camera" style="margin-left: 8px;"></i>
-                            تصوير المستندات بالكاميرا
+                            <i class="fas fa-upload" style="margin-left: 8px;"></i>
+                            رفع صور المستندات
                         </h4>
 
-                        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-                            <button type="button" id="btnOpenCam" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-camera"></i>
-                                تصوير بالكاميرا
-                            </button>
-                            <button type="button" id="btnShot" class="btn btn-success" style="display: inline-flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-camera-retro"></i>
-                                التقاط & رفع
-                            </button>
-                            <button type="button" id="btnStop" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-stop"></i>
-                                إيقاف الكاميرا
-                            </button>
-                            <button type="button" id="btnTest" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-bug"></i>
-                                اختبار سريع
-                            </button>
+                        <!-- File Upload Area -->
+                        <div id="file-upload-area" style="border: 2px dashed #6b7cff; border-radius: 12px; padding: 40px; margin: 20px 0; background: #f8fafc; cursor: pointer; transition: all 0.3s ease;" onclick="document.getElementById('fileInput').click()">
+                            <div style="text-align: center;">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #6b7cff; margin-bottom: 16px;"></i>
+                                <h5 style="color: #334155; margin-bottom: 8px;">اضغط لرفع الصور</h5>
+                                <p style="color: #6b7280; margin-bottom: 16px;">أو اسحب الصور هنا</p>
+                                <p style="color: #9ca3af; font-size: 14px;">JPG, PNG, GIF - حتى 10MB لكل صورة</p>
+                            </div>
                         </div>
 
-                        <!-- Camera Preview -->
-                        <video id="camPrev" playsinline style="width: 300px; height: 200px; border-radius: 8px; background: #000; display: none;"></video>
+                        <!-- Hidden File Input -->
+                        <input id="fileInput" type="file" accept="image/*" multiple style="display: none;">
 
-                        <!-- Fallback File Input -->
-                        <input id="fileFallback" type="file" accept="image/*" capture="environment" style="display: none;">
+                        <!-- Uploaded Files Preview -->
+                        <div id="uploaded-files-preview" style="margin-top: 20px; display: none;">
+                            <h5 style="color: #334155; margin-bottom: 12px;">الصور المرفوعة:</h5>
+                            <div id="files-list" style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;"></div>
+                        </div>
+
+                        <!-- Upload Progress -->
+                        <div id="upload-progress" style="margin-top: 20px; display: none;">
+                            <div style="background: #e5e7eb; border-radius: 8px; height: 8px; overflow: hidden;">
+                                <div id="progress-bar" style="background: #6b7cff; height: 100%; width: 0%; transition: width 0.3s ease;"></div>
+                            </div>
+                            <p id="progress-text" style="margin-top: 8px; color: #6b7280; font-size: 14px;">جاري الرفع...</p>
+                        </div>
                     </div>
                 </div>
 
@@ -1170,153 +1172,219 @@
         });
     </script>
 
-    <!-- Enhanced Camera System - Single Event Listeners -->
+    <!-- File Upload System -->
     <script type="module">
-        import { openCameraOnce, captureAndUpload, onFallbackFile, stopStream } from './js/file-upload-manager.js';
+        import { uploadToSupabase } from './js/file-upload-manager.js';
 
         // Wait for DOM to be ready
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🎥 Initializing enhanced camera system...');
+            console.log('📁 Initializing file upload system...');
 
-            // Function to initialize camera system
-            function initializeCameraSystem() {
-                // Get button elements
-                const openBtn = document.getElementById('btnOpenCam');
-                const shotBtn = document.getElementById('btnShot');
-                const stopBtn = document.getElementById('btnStop');
-                const testBtn = document.getElementById('btnTest');
-                const fallback = document.getElementById('fileFallback');
+            // File upload variables
+            let uploadedFiles = [];
+            let isUploading = false;
 
-                console.log('🔍 Camera elements found:', {
-                    openBtn: !!openBtn,
-                    shotBtn: !!shotBtn,
-                    stopBtn: !!stopBtn,
-                    testBtn: !!testBtn,
-                    fallback: !!fallback
-                });
+            // Get elements
+            const fileInput = document.getElementById('fileInput');
+            const uploadArea = document.getElementById('file-upload-area');
+            const filesPreview = document.getElementById('uploaded-files-preview');
+            const filesList = document.getElementById('files-list');
+            const uploadProgress = document.getElementById('upload-progress');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
 
-                if (!openBtn) {
-                    console.warn('⚠️ Camera button not found, retrying in 1 second...');
-                    setTimeout(initializeCameraSystem, 1000);
+            if (!fileInput || !uploadArea) {
+                console.error('❌ File upload elements not found');
+                return;
+            }
+
+            // File input change handler
+            fileInput.addEventListener('change', handleFileSelection);
+
+            // Drag and drop handlers
+            uploadArea.addEventListener('dragover', handleDragOver);
+            uploadArea.addEventListener('dragleave', handleDragLeave);
+            uploadArea.addEventListener('drop', handleDrop);
+
+            // Click handler for upload area
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            function handleFileSelection(event) {
+                const files = Array.from(event.target.files);
+                console.log('📁 Files selected:', files.length);
+                processFiles(files);
+            }
+
+            function handleDragOver(event) {
+                event.preventDefault();
+                uploadArea.style.borderColor = '#10b981';
+                uploadArea.style.backgroundColor = '#f0fdf4';
+            }
+
+            function handleDragLeave(event) {
+                event.preventDefault();
+                uploadArea.style.borderColor = '#6b7cff';
+                uploadArea.style.backgroundColor = '#f8fafc';
+            }
+
+            function handleDrop(event) {
+                event.preventDefault();
+                uploadArea.style.borderColor = '#6b7cff';
+                uploadArea.style.backgroundColor = '#f8fafc';
+                
+                const files = Array.from(event.dataTransfer.files);
+                console.log('📁 Files dropped:', files.length);
+                processFiles(files);
+            }
+
+            async function processFiles(files) {
+                if (isUploading) {
+                    console.warn('⚠️ Upload already in progress');
                     return;
                 }
 
-                // Remove any existing listeners by cloning elements
-                if (openBtn) {
-                    const newOpenBtn = openBtn.cloneNode(true);
-                    openBtn.parentNode.replaceChild(newOpenBtn, openBtn);
-                }
-                if (shotBtn) {
-                    const newShotBtn = shotBtn.cloneNode(true);
-                    shotBtn.parentNode.replaceChild(newShotBtn, shotBtn);
-                }
-                if (stopBtn) {
-                    const newStopBtn = stopBtn.cloneNode(true);
-                    stopBtn.parentNode.replaceChild(newStopBtn, stopBtn);
-                }
-                if (testBtn) {
-                    const newTestBtn = testBtn.cloneNode(true);
-                    testBtn.parentNode.replaceChild(newTestBtn, testBtn);
-                }
-                if (fallback) {
-                    const newFallback = fallback.cloneNode(true);
-                    fallback.parentNode.replaceChild(newFallback, fallback);
+                // Filter image files
+                const imageFiles = files.filter(file => file.type.startsWith('image/'));
+                
+                if (imageFiles.length === 0) {
+                    alert('⚠️ يرجى اختيار ملفات صور صالحة');
+                    return;
                 }
 
-                // Add single event listeners
-                const finalOpenBtn = document.getElementById('btnOpenCam');
-                const finalShotBtn = document.getElementById('btnShot');
-                const finalStopBtn = document.getElementById('btnStop');
-                const finalTestBtn = document.getElementById('btnTest');
-                const finalFallback = document.getElementById('fileFallback');
-
-                if (finalOpenBtn) {
-                    finalOpenBtn.addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        console.log('📸 Camera button clicked - opening camera...');
-                        try {
-                            await openCameraOnce();
-                        } catch (error) {
-                            console.error('❌ Camera error:', error);
-                        }
-                    });
+                // Check file sizes (max 10MB each)
+                const oversizedFiles = imageFiles.filter(file => file.size > 10 * 1024 * 1024);
+                if (oversizedFiles.length > 0) {
+                    alert(`⚠️ بعض الملفات كبيرة جداً (أكثر من 10MB): ${oversizedFiles.map(f => f.name).join(', ')}`);
+                    return;
                 }
 
-                if (finalShotBtn) {
-                    finalShotBtn.addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        console.log('📷 Capture button clicked - capturing image...');
-                        try {
-                            await captureAndUpload();
-                        } catch (error) {
-                            console.error('❌ Capture error:', error);
-                        }
-                    });
-                }
+                isUploading = true;
+                showUploadProgress();
 
-                if (finalStopBtn) {
-                    finalStopBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        console.log('🛑 Stop button clicked - stopping camera...');
-                        stopStream();
-                    });
-                }
-
-                if (finalTestBtn) {
-                    finalTestBtn.addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        console.log('🧪 Test button clicked - running camera test...');
+                try {
+                    for (let i = 0; i < imageFiles.length; i++) {
+                        const file = imageFiles[i];
+                        updateProgress(i, imageFiles.length, `جاري رفع ${file.name}...`);
                         
-                        // Test camera functionality
-                        try {
-                            console.log('🔍 Testing camera availability...');
-                            const isSecure = window.isSecureContext || location.hostname === 'localhost';
-                            const supports = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-                            
-                            console.log('📊 Camera test results:', {
-                                isSecure,
-                                supports,
-                                hostname: location.hostname,
-                                protocol: location.protocol
+                        const result = await uploadFile(file);
+                        if (result.success) {
+                            uploadedFiles.push({
+                                file: file,
+                                url: result.publicUrl,
+                                path: result.path
                             });
-                            
-                            if (!isSecure) {
-                                alert('⚠️ يجب فتح الموقع عبر HTTPS أو localhost للوصول للكاميرا');
-                                return;
-                            }
-                            
-                            if (!supports) {
-                                alert('⚠️ المتصفح لا يدعم الكاميرا');
-                                return;
-                            }
-                            
-                            // Try to open camera
-                            console.log('📸 Attempting to open camera...');
-                            await openCameraOnce();
-                            
-                        } catch (error) {
-                            console.error('❌ Camera test failed:', error);
-                            alert(`خطأ في اختبار الكاميرا: ${error.message}`);
+                        } else {
+                            console.error('❌ Upload failed:', result.error);
                         }
-                    });
-                }
+                    }
 
-                if (finalFallback) {
-                    finalFallback.addEventListener('change', async (e) => {
-                        console.log('📁 Fallback file selected - processing...');
-                        try {
-                            await onFallbackFile(e);
-                        } catch (error) {
-                            console.error('❌ File upload error:', error);
-                        }
-                    });
+                    updateProgress(imageFiles.length, imageFiles.length, 'تم الرفع بنجاح!');
+                    showUploadedFiles();
+                    
+                    // Reset file input
+                    fileInput.value = '';
+                    
+                } catch (error) {
+                    console.error('❌ Upload error:', error);
+                    alert(`خطأ في رفع الملفات: ${error.message}`);
+                } finally {
+                    isUploading = false;
+                    setTimeout(() => {
+                        hideUploadProgress();
+                    }, 2000);
                 }
-
-                console.log('✅ Enhanced camera system initialized successfully');
             }
 
-            // Initialize camera system
-            initializeCameraSystem();
+            async function uploadFile(file) {
+                try {
+                    const filename = `doc_${Date.now()}_${file.name}`;
+                    const result = await uploadToSupabase(file, filename);
+                    return result;
+                } catch (error) {
+                    console.error('❌ File upload error:', error);
+                    return { success: false, error: error.message };
+                }
+            }
+
+            function showUploadProgress() {
+                uploadProgress.style.display = 'block';
+                progressBar.style.width = '0%';
+            }
+
+            function updateProgress(current, total, text) {
+                const percentage = (current / total) * 100;
+                progressBar.style.width = `${percentage}%`;
+                progressText.textContent = text;
+            }
+
+            function hideUploadProgress() {
+                uploadProgress.style.display = 'none';
+            }
+
+            function showUploadedFiles() {
+                if (uploadedFiles.length === 0) return;
+
+                filesPreview.style.display = 'block';
+                filesList.innerHTML = '';
+
+                uploadedFiles.forEach((fileData, index) => {
+                    const fileDiv = document.createElement('div');
+                    fileDiv.style.cssText = `
+                        position: relative;
+                        width: 120px;
+                        height: 120px;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        border: 2px solid #e5e7eb;
+                        background: #f9fafb;
+                    `;
+
+                    const img = document.createElement('img');
+                    img.src = fileData.url;
+                    img.style.cssText = `
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    `;
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.innerHTML = '×';
+                    removeBtn.style.cssText = `
+                        position: absolute;
+                        top: 4px;
+                        right: 4px;
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        border: none;
+                        background: #ef4444;
+                        color: white;
+                        cursor: pointer;
+                        font-size: 16px;
+                        font-weight: bold;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    `;
+
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        uploadedFiles.splice(index, 1);
+                        showUploadedFiles();
+                        if (uploadedFiles.length === 0) {
+                            filesPreview.style.display = 'none';
+                        }
+                    });
+
+                    fileDiv.appendChild(img);
+                    fileDiv.appendChild(removeBtn);
+                    filesList.appendChild(fileDiv);
+                });
+            }
+
+            console.log('✅ File upload system initialized successfully');
         });
     </script>
 </body>

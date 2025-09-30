@@ -21,17 +21,17 @@ let ready = false;
  */
 export async function openCameraOnce() {
     console.log('🎥 openCameraOnce called');
-    
+
     if (opening) {
         console.log('⚠️ Camera already opening, ignoring duplicate request');
         return;
     }
-    
+
     if (stream) {
         console.log('⚠️ Camera already opened, stopping previous stream');
         stopStream();
     }
-    
+
     opening = true;
 
     try {
@@ -44,7 +44,7 @@ export async function openCameraOnce() {
         // فحص قدرات المتصفح
         const supports = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
         const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        
+
         console.log('🔍 Browser capabilities:', {
             supports,
             isiOS,
@@ -52,7 +52,7 @@ export async function openCameraOnce() {
             mediaDevices: !!navigator.mediaDevices,
             getUserMedia: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
         });
-        
+
         if (!supports || isiOS) {
             console.log('📱 Camera not supported or iOS detected, using file fallback');
             const fallback = document.getElementById('fileFallback');
@@ -94,13 +94,13 @@ export async function openCameraOnce() {
                 console.error('⏰ Video metadata timeout');
                 reject(new Error('الكاميرا لم تبدأ خلال 5 ثوانٍ'));
             }, 5000);
-            
+
             video.onloadedmetadata = () => {
                 console.log('✅ Video metadata loaded');
                 clearTimeout(timeout);
                 resolve();
             };
-            
+
             video.onerror = (error) => {
                 console.error('❌ Video error:', error);
                 clearTimeout(timeout);
@@ -227,7 +227,7 @@ export function stopStream() {
  * Upload file/blob to Supabase Storage
  * رفع الملف إلى Supabase Storage
  */
-async function uploadToSupabase(fileOrBlob, filename) {
+export async function uploadToSupabase(fileOrBlob, filename) {
     try {
         const { data, error } = await supabase.storage
             .from('kyc_docs')
