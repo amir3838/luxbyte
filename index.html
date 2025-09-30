@@ -304,9 +304,9 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="config.js" defer></script>
-    <script src="js/supabase-client.js" defer></script>
+    <script type="module" src="js/env.js"></script>
+    <script type="module" src="js/supabase-client.js"></script>
     <script src="i18n-dict.js" defer></script>
     <script src="js/translation-utils.js" defer></script>
     <script src="common.js" defer></script>
@@ -314,6 +314,7 @@
     <script src="js/enhanced-ui.js" defer></script>
     <script src="js/comprehensive-test.js" defer></script>
     <script type="module" src="js/guard.js"></script>
+    <script type="module" src="firebase-app.js"></script>
     <script>
         // Initialize page
         document.addEventListener('DOMContentLoaded', async () => {

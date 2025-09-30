@@ -19,21 +19,21 @@ export function loadEnvInline() {
 }
 
 /**
- * Load environment configuration from fetch (fallback)
+ * Load environment configuration (inline first, then fetch fallback)
  * @returns {Promise<Object>} Environment configuration
  */
 export async function loadEnv() {
-  try {
-    // Try inline first (faster and more reliable)
-    const inlineConfig = loadEnvInline();
-    if (inlineConfig.SUPABASE_URL && inlineConfig.SUPABASE_ANON_KEY) {
-      return inlineConfig;
-    }
+  // Try inline first (faster and more reliable)
+  const inlineConfig = loadEnvInline();
+  if (inlineConfig.SUPABASE_URL && inlineConfig.SUPABASE_ANON_KEY) {
+    return inlineConfig;
+  }
 
-    // Fallback to fetch
-    const response = await fetch('/config.json');
+  // Fallback to fetch
+  try {
+    const response = await fetch('/config.json', { cache: 'no-store' });
     if (!response.ok) {
-      throw new Error(`Failed to load config.json: ${response.statusText}`);
+      throw new Error(`ENV_FETCH_FAILED: ${response.status}`);
     }
     const config = await response.json();
     console.log('✅ Loaded environment from config.json');
@@ -47,7 +47,7 @@ export async function loadEnv() {
       return window.CONFIG.__ENV__;
     }
     
-    throw new Error('Failed to load environment configuration.');
+    throw new Error('ENV_FETCH_FAILED: No configuration available');
   }
 }
 
@@ -61,7 +61,7 @@ export function validateEnv(env) {
     'SUPABASE_URL',
     'SUPABASE_ANON_KEY'
   ];
-  
+
   const optionalKeys = [
     'FIREBASE_API_KEY',
     'FIREBASE_AUTH_DOMAIN',
@@ -74,10 +74,10 @@ export function validateEnv(env) {
     'MAX_UPLOAD_MB',
     'ALLOWED_MIME'
   ];
-  
+
   const missing = requiredKeys.filter(key => !env[key]);
   const present = [...requiredKeys, ...optionalKeys].filter(key => env[key]);
-  
+
   return {
     ok: missing.length === 0,
     missing,

@@ -1,5 +1,5 @@
 // js/signup-init.js - مُهيّئ موحد وآمن لصفحة التسجيل
-import { getSupabaseClient } from './supabase-client.js';
+import { initSupabase } from './supabase-client.js';
 
 // تعريف المستندات المطلوبة لكل دور
 const requiredDocsByRole = {
@@ -236,7 +236,7 @@ function createCameraModal(stream, docType, accept) {
 // دالة تهيئة رئيسية - مع دعم ESM
 async function init() {
     console.log('🚀 بدء تهيئة صفحة التسجيل...');
-    
+
     // 1) أوقف أي سبينر فوراً
     const spinner = $('uploadButtonsSpinner');
     const container = $('uploadButtonsContainer');
@@ -249,6 +249,11 @@ async function init() {
         // 2) احصل على الدور من URL
         const urlParams = new URLSearchParams(location.search);
         const role = urlParams.get('role') || 'pharmacy';
+        
+        if (!role) {
+            console.warn('Role missing; using default pharmacy');
+        }
+        
         const docs = requiredDocsByRole[role] || requiredDocsByRole.pharmacy;
         
         console.log('🎯 الدور المحدد:', role);
@@ -256,7 +261,7 @@ async function init() {
 
         // 3) تأكد من تهيئة Supabase
         try {
-            await getSupabaseClient();
+            await initSupabase();
             console.log('✅ Supabase جاهز');
         } catch (supabaseError) {
             console.warn('⚠️ Supabase غير متاح، المتابعة بدون اتصال:', supabaseError.message);
@@ -276,9 +281,9 @@ async function init() {
                         docType,
                         onDone: ({ publicUrl, path }) => {
                             const preview = $(`preview_${docType}`);
-                            if (preview) { 
-                                preview.src = publicUrl; 
-                                preview.style.display = 'block'; 
+                            if (preview) {
+                                preview.src = publicUrl;
+                                preview.style.display = 'block';
                             }
                             toastOk(`تم رفع ${getDocumentLabel(docType)} بنجاح`);
                         },
@@ -296,7 +301,7 @@ async function init() {
         }
 
         toastOk('تم تهيئة أزرار المستندات بنجاح');
-        
+
     } catch (e) {
         console.error('❌ خطأ في التهيئة:', e);
         toastErr('خطأ في تهيئة الصفحة: ' + (e?.message || e));
