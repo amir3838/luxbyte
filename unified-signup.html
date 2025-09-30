@@ -201,60 +201,10 @@
 
                 <!-- File Upload Section -->
                 <div class="form-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-upload" style="margin-left: 8px; color: #6b7cff;"></i>
-                        رفع صور المستندات المطلوبة
-                    </h3>
-
                     <div id="file-upload-container">
                         <div style="text-align: center; padding: 40px; color: var(--text-muted);">
                             <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
                             <p>جاري تحميل أزرار رفع الصور...</p>
-                            <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
-                                <button type="button" onclick="testFileUploadGeneration()" class="btn btn-outline">
-                                    <i class="fas fa-refresh"></i>
-                                    إعادة تحميل أزرار الرفع
-                                </button>
-                                <button type="button" onclick="testFileUploadFunctionality()" class="btn btn-outline">
-                                    <i class="fas fa-upload"></i>
-                                    اختبار رفع الصور
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- File Upload Controls -->
-                    <div id="file-upload-controls" style="display: block; text-align: center; margin: 20px 0; padding: 20px; background: #f8fafc; border-radius: 12px; border: 2px dashed #cbd5e1;">
-                        <h4 style="margin-bottom: 16px; color: #334155;">
-                            <i class="fas fa-upload" style="margin-left: 8px;"></i>
-                            رفع صور المستندات
-                        </h4>
-
-                        <!-- File Upload Area -->
-                        <div id="file-upload-area" style="border: 2px dashed #6b7cff; border-radius: 12px; padding: 40px; margin: 20px 0; background: #f8fafc; cursor: pointer; transition: all 0.3s ease;" onclick="document.getElementById('fileInput').click()">
-                            <div style="text-align: center;">
-                                <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #6b7cff; margin-bottom: 16px;"></i>
-                                <h5 style="color: #334155; margin-bottom: 8px;">اضغط لرفع الصور</h5>
-                                <p style="color: #6b7280; margin-bottom: 16px;">أو اسحب الصور هنا</p>
-                                <p style="color: #9ca3af; font-size: 14px;">JPG, PNG, GIF - حتى 10MB لكل صورة</p>
-                            </div>
-                        </div>
-
-                        <!-- Hidden File Input -->
-                        <input id="fileInput" type="file" accept="image/*" multiple style="display: none;">
-
-                        <!-- Uploaded Files Preview -->
-                        <div id="uploaded-files-preview" style="margin-top: 20px; display: none;">
-                            <h5 style="color: #334155; margin-bottom: 12px;">الصور المرفوعة:</h5>
-                            <div id="files-list" style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;"></div>
-                        </div>
-
-                        <!-- Upload Progress -->
-                        <div id="upload-progress" style="margin-top: 20px; display: none;">
-                            <div style="background: #e5e7eb; border-radius: 8px; height: 8px; overflow: hidden;">
-                                <div id="progress-bar" style="background: #6b7cff; height: 100%; width: 0%; transition: width 0.3s ease;"></div>
-                            </div>
-                            <p id="progress-text" style="margin-top: 8px; color: #6b7280; font-size: 14px;">جاري الرفع...</p>
                         </div>
                     </div>
                 </div>
@@ -684,162 +634,17 @@
             }
         }
 
-        // Generate file upload fields
+        // Generate file upload fields using the new unified system
         function generateFileUploadFields() {
-            console.log('🔧 Starting generateFileUploadFields...');
+            console.log('🔧 Starting generateFileUploadFields with unified system...');
             console.log('🎯 Current selectedRole:', selectedRole);
-            console.log('📋 Available roles:', Object.keys(window.CONFIG.ROLES));
-
-            const roleConfig = window.CONFIG.ROLES[selectedRole];
-            const container = document.getElementById('file-upload-container');
-
-            console.log('📊 Role config:', roleConfig);
-            console.log('📦 Container found:', !!container);
-
-            if (!container) {
-                console.error('❌ File upload container not found!');
-                LUXBYTE.notifyErr('لم يتم العثور على حاوية تصوير المستندات');
-                return;
-            }
-
-            container.innerHTML = ''; // Clear container
-
-            if (!roleConfig) {
-                console.error('❌ No role config found for:', selectedRole);
-                container.innerHTML = `<div style="text-align: center; padding: 40px; color: #ef4444;"><i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom: 12px;"></i><p style="font-size: 16px; margin: 0;">خطأ: لم يتم العثور على إعدادات النشاط</p></div>`;
-                return;
-            }
-
-            if (!roleConfig.files || roleConfig.files.length === 0) {
-                console.warn('⚠️ No files required for role:', selectedRole);
-                container.innerHTML = `<div style="text-align: center; padding: 40px; color: #f59e0b;"><i class="fas fa-info-circle" style="font-size: 24px; margin-bottom: 12px;"></i><p style="font-size: 16px; margin: 0;">لا توجد مستندات مطلوبة لهذا النشاط</p></div>`;
-                return;
-            }
-
-            console.log('✅ Found', roleConfig.files.length, 'files to generate');
-
-            // Create header with instructions
-            const headerDiv = document.createElement('div');
-            headerDiv.style.cssText = `background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border: 1px solid #0ea5e9; border-radius: 12px; padding: 20px; margin-bottom: 24px; text-align: center;`;
-            headerDiv.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px;">
-                    <i class="fas fa-info-circle" style="color: #0ea5e9; font-size: 24px;"></i>
-                    <h4 style="margin: 0; color: #0c4a6e; font-size: 18px;">تعليمات تصوير المستندات</h4>
-                </div>
-                <p style="margin: 0; color: #075985; font-size: 14px; line-height: 1.5;">
-                    • اضغط على أي منطقة لتصوير المستند بالكاميرا<br>
-                    • المستندات المطلوبة marked بـ (*)<br>
-                    • الحد الأقصى لحجم الصورة: 10 ميجابايت<br>
-                    • استخدم الكاميرا لتصوير المستندات بوضوح
-                </p>
-            `;
-            container.appendChild(headerDiv);
-
-            // Generate file upload fields
-            roleConfig.files.forEach((file, index) => {
-                console.log(`📁 Creating field ${index + 1}/${roleConfig.files.length}:`, file.name);
-
-                const fileDiv = document.createElement('div');
-                fileDiv.className = 'form-group';
-                fileDiv.style.cssText = 'margin-bottom: 24px;';
-
-                const label = document.createElement('label');
-                label.className = 'form-label';
-                label.style.cssText = 'font-weight: 600; margin-bottom: 8px; display: block;';
-                label.innerHTML = `${file.label} ${file.required ? '<span style="color: #ef4444;">*</span>' : ''}`;
-                fileDiv.appendChild(label);
-
-                const uploadDiv = document.createElement('div');
-                uploadDiv.className = 'file-upload';
-                uploadDiv.setAttribute('data-file-name', file.name);
-                uploadDiv.style.cssText = `border: 2px dashed #d1d5db; border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: #fafbfc; position: relative; overflow: hidden; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;`;
-
-                uploadDiv.innerHTML = `
-                    <div class="upload-icon" style="font-size: 32px; color: #6b7280;">
-                        <i class="fas fa-upload"></i>
-                    </div>
-                    <div class="upload-text" style="font-size: 16px; font-weight: 500; color: #374151;">
-                        اضغط لرفع ${file.label}
-                    </div>
-                    <div class="upload-requirement" style="font-size: 14px; color: #6b7280; margin-top: 4px;">
-                        ${file.description} - اختر صورة من جهازك
-                    </div>
-                    <div class="upload-button" style="background: #10b981; color: white; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; margin-top: 8px;">
-                        <i class="fas fa-upload"></i>
-                        رفع صورة
-                    </div>
-                    <input type="file" class="file-input" accept="image/*" ${file.required ? 'required' : ''} style="display: none;" data-file-key="${file.key}" data-file-name="${file.name}">
-                `;
-
-                // Event listeners
-                uploadDiv.addEventListener('mouseenter', () => {
-                    uploadDiv.style.borderColor = '#3b82f6';
-                    uploadDiv.style.background = '#f0f9ff';
-                    uploadDiv.style.transform = 'translateY(-2px)';
-                    uploadDiv.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.15)';
-                });
-
-                uploadDiv.addEventListener('mouseleave', () => {
-                    if (!uploadDiv.classList.contains('uploaded')) {
-                        uploadDiv.style.borderColor = '#d1d5db';
-                        uploadDiv.style.background = '#fafbfc';
-                        uploadDiv.style.transform = 'translateY(0)';
-                        uploadDiv.style.boxShadow = 'none';
-                    }
-                });
-
-                // Camera functionality moved to enhanced system
-                // الكاميرا تم نقلها إلى النظام المحسّن
-
-                // Drag and drop
-                uploadDiv.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    uploadDiv.classList.add('dragover');
-                    uploadDiv.style.borderColor = '#10b981';
-                    uploadDiv.style.background = '#f0fdf4';
-                });
-
-                uploadDiv.addEventListener('dragleave', (e) => {
-                    e.preventDefault();
-                    uploadDiv.classList.remove('dragover');
-                    if (!uploadDiv.classList.contains('uploaded')) {
-                        uploadDiv.style.borderColor = '#d1d5db';
-                        uploadDiv.style.background = '#fafbfc';
-                    }
-                });
-
-                uploadDiv.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    uploadDiv.classList.remove('dragover');
-                    uploadDiv.style.borderColor = '#d1d5db';
-                    uploadDiv.style.background = '#fafbfc';
-                    const files = e.dataTransfer.files;
-                    if (files.length > 0) {
-                        const fileInput = uploadDiv.querySelector('.file-input');
-                        fileInput.files = files;
-                        handleFileUpload({ target: fileInput }, file, uploadDiv);
-                    }
-                });
-
-                // File input change handler
-                uploadDiv.querySelector('.file-input').addEventListener('change', (e) => {
-                    console.log('📁 File input changed:', e.target.files.length, 'files');
-                    handleFileUpload(e, file, uploadDiv);
-                });
-
-                // Add click handler to file input for direct camera access
-                uploadDiv.querySelector('.file-input').addEventListener('click', (e) => {
-                    console.log('📸 File input clicked - should open camera directly');
-                    // The capture="environment" attribute should handle this
-                });
-
-                fileDiv.appendChild(uploadDiv);
-                container.appendChild(fileDiv);
-            });
-
-            console.log(`✅ Generated ${roleConfig.files.length} file upload fields successfully`);
-            if (roleConfig.files.length > 0) {
-                LUXBYTE.notifyOk(`تم تحميل ${roleConfig.files.length} أزرار رفع الصور بنجاح`);
+            
+            // Use the new unified file upload system
+            if (typeof window.generateFileUploadFields === 'function') {
+                window.generateFileUploadFields(selectedRole);
+            } else {
+                console.error('❌ Unified file upload system not loaded');
+                LUXBYTE.notifyErr('نظام رفع الملفات غير متاح');
             }
         }
 
@@ -1126,6 +931,9 @@
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/guard.js"></script>
 
+    <!-- File Upload Manager -->
+    <script src="js/file-upload-manager.js" defer></script>
+    
     <!-- Camera Upload Manager -->
     <script type="module">
         import { openCamera, captureAndUpload, onFallbackFile, stopStream } from './js/camera-upload-manager.js';

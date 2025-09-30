@@ -1,315 +1,618 @@
 /**
- * Enhanced Camera Upload Manager for LUXBYTE
- * مدير تصوير ورفع المستندات بالكاميرا المحسّن
- *
- * يحل مشاكل:
- * - تكرار المستمعين (listeners)
- * - رسائل "تم منح إذن الكاميرا" المتكررة
- * - عدم فتح الكاميرا بعد منح الإذن
- * - ضمان العمل على HTTPS/iFrame
+ * Unified File Upload Manager for LUXBYTE
+ * مدير موحد لرفع الملفات وتصوير المستندات
+ * 
+ * Features:
+ * - Camera capture with fallback to file selection
+ * - Multiple file types support (images, PDFs)
+ * - Supabase Storage integration
+ * - Progress tracking and error handling
+ * - Mobile and desktop compatibility
+ * - Arabic UI support
  */
 
-import { supabase } from './supabase-client.js';
-
-let stream = null;
-let opening = false;   // مانع النقرات المتكررة
-let ready = false;
+// Global variables
+let uploadedFiles = {};
+let currentUploading = false;
 
 /**
- * Open camera once with proper error handling
- * فتح الكاميرا مرة واحدة مع معالجة الأخطاء المناسبة
+ * Initialize file upload system
+ * تهيئة نظام رفع الملفات
  */
-export async function openCameraOnce() {
-    console.log('🎥 openCameraOnce called');
+function initFileUpload() {
+    console.log('🚀 Initializing file upload system...');
+    
+    // Check for required dependencies
+    if (typeof window.CONFIG === 'undefined') {
+        console.error('❌ CONFIG not found');
+        return false;
+    }
+    
+    if (typeof window.supabase === 'undefined') {
+        console.error('❌ Supabase client not found');
+        return false;
+    }
+    
+    console.log('✅ File upload system initialized');
+    return true;
+}
 
-    if (opening) {
-        console.log('⚠️ Camera already opening, ignoring duplicate request');
+/**
+ * Open camera or file selection dialog
+ * فتح الكاميرا أو نافذة اختيار الملفات
+ */
+async function openCameraOrFile(documentType, accept = "image/*") {
+    console.log(`📷 Opening camera/file for: ${documentType}`);
+    
+    if (currentUploading) {
+        showToast('جاري رفع ملف آخر، يرجى الانتظار...', 'warning');
         return;
     }
-
-    if (stream) {
-        console.log('⚠️ Camera already opened, stopping previous stream');
-        stopStream();
+    
+    // Check if camera is supported
+    const isCameraSupported = checkCameraSupport();
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isCameraSupported && isMobile) {
+        // Try camera first on mobile
+        try {
+            await openCamera(documentType, accept);
+        } catch (error) {
+            console.warn('Camera failed, falling back to file selection:', error);
+            openFileSelection(documentType, accept);
+        }
+    } else {
+        // Use file selection on desktop or if camera not supported
+        openFileSelection(documentType, accept);
     }
+}
 
-    opening = true;
+/**
+ * Check if camera is supported
+ * فحص دعم الكاميرا
+ */
+function checkCameraSupport() {
+    return !!(navigator.mediaDevices && 
+              navigator.mediaDevices.getUserMedia && 
+              window.isSecureContext);
+}
 
+/**
+ * Open camera for document capture
+ * فتح الكاميرا لتصوير المستندات
+ */
+async function openCamera(documentType, accept) {
+    console.log(`📹 Opening camera for: ${documentType}`);
+    
     try {
-        // شرط الأمان - يجب أن يكون HTTPS أو localhost
-        const isSecure = window.isSecureContext || location.hostname === 'localhost';
-        if (!isSecure) {
-            throw new Error('يجب فتح الموقع عبر HTTPS أو localhost للوصول للكاميرا');
-        }
-
-        // فحص قدرات المتصفح
-        const supports = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-        const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-        console.log('🔍 Browser capabilities:', {
-            supports,
-            isiOS,
-            userAgent: navigator.userAgent,
-            mediaDevices: !!navigator.mediaDevices,
-            getUserMedia: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
-        });
-
-        if (!supports || isiOS) {
-            console.log('📱 Camera not supported or iOS detected, using file fallback');
-            const fallback = document.getElementById('fileFallback');
-            if (fallback) {
-                fallback.click();
-            } else {
-                console.error('❌ Fallback file input not found');
-                toastErr('عنصر اختيار الملف غير موجود');
-            }
-            return;
-        }
-
-        // طلب الكاميرا مرة واحدة فقط
-        console.log('🔐 Requesting camera access...');
-        stream = await navigator.mediaDevices.getUserMedia({
+        // Request camera permission
+        const stream = await navigator.mediaDevices.getUserMedia({
             video: {
-                facingMode: { ideal: 'environment' },
+                facingMode: { ideal: 'environment' }, // Use back camera
                 width: { ideal: 1280 },
                 height: { ideal: 720 }
             },
             audio: false
         });
-
-        const video = document.getElementById('camPrev');
-        if (!video) {
-            console.error('❌ Video element not found');
-            throw new Error('عنصر الفيديو camPrev غير موجود');
-        }
-
-        console.log('📹 Video element found:', video);
-        video.srcObject = stream;
-        video.style.display = 'block';
-        console.log('📹 Video stream set, display set to block');
-
-        // انتظار جاهزية الفيديو قبل التشغيل
-        console.log('⏳ Waiting for video metadata...');
-        await new Promise((resolve, reject) => {
-            const timeout = setTimeout(() => {
-                console.error('⏰ Video metadata timeout');
-                reject(new Error('الكاميرا لم تبدأ خلال 5 ثوانٍ'));
-            }, 5000);
-
-            video.onloadedmetadata = () => {
-                console.log('✅ Video metadata loaded');
-                clearTimeout(timeout);
-                resolve();
-            };
-
-            video.onerror = (error) => {
-                console.error('❌ Video error:', error);
-                clearTimeout(timeout);
-                reject(new Error('خطأ في تحميل الفيديو'));
-            };
-        });
-
-        console.log('▶️ Starting video playback...');
-        await video.play();
-        ready = true;
-        console.log('✅ Video is ready and playing');
-
-        console.log('✅ Camera opened successfully');
-        toastOk('تم فتح الكاميرا بنجاح ✅');
-
+        
+        // Create camera modal
+        createCameraModal(stream, documentType, accept);
+        
     } catch (error) {
-        console.error('❌ Camera error:', error);
-        toastErr(humanizeMediaError(error));
-        stopStream();
-
-        // فولباك لاختيار الملف
-        setTimeout(() => {
-            document.getElementById('fileFallback')?.click();
-        }, 500);
-
-    } finally {
-        opening = false;
+        console.error('Camera access failed:', error);
+        throw new Error(getCameraErrorMessage(error));
     }
 }
 
 /**
- * Capture image from camera and upload
- * التقاط صورة من الكاميرا ورفعها
+ * Create camera modal for document capture
+ * إنشاء نافذة الكاميرا لتصوير المستندات
  */
-export async function captureAndUpload() {
-    const video = document.getElementById('camPrev');
-    if (!video || !ready || !video.videoWidth) {
-        toastErr('الكاميرا غير جاهزة للالتقاط');
-        return false;
+function createCameraModal(stream, documentType, accept) {
+    // Remove existing modal
+    const existingModal = document.getElementById('cameraModal');
+    if (existingModal) {
+        existingModal.remove();
     }
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.id = 'cameraModal';
+    modal.innerHTML = `
+        <div class="camera-modal-overlay">
+            <div class="camera-modal-content">
+                <div class="camera-modal-header">
+                    <h3>تصوير ${getDocumentLabel(documentType)}</h3>
+                    <button class="close-btn" onclick="closeCameraModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="camera-modal-body">
+                    <video id="cameraPreview" autoplay playsinline></video>
+                    <div class="camera-controls">
+                        <button class="btn btn-primary" onclick="capturePhoto('${documentType}', '${accept}')">
+                            <i class="fas fa-camera"></i>
+                            التقاط صورة
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeCameraModal()">
+                            <i class="fas fa-times"></i>
+                            إلغاء
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .camera-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .camera-modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: hidden;
+        }
+        .camera-modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .camera-modal-body {
+            padding: 20px;
+            text-align: center;
+        }
+        #cameraPreview {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .camera-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+    `;
+    
+    document.head.appendChild(style);
+    document.body.appendChild(modal);
+    
+    // Set video stream
+    const video = document.getElementById('cameraPreview');
+    video.srcObject = stream;
+    
+    // Store stream for cleanup
+    window.currentCameraStream = stream;
+}
 
+/**
+ * Capture photo from camera
+ * التقاط صورة من الكاميرا
+ */
+async function capturePhoto(documentType, accept) {
+    console.log(`📸 Capturing photo for: ${documentType}`);
+    
+    const video = document.getElementById('cameraPreview');
+    if (!video || !video.videoWidth) {
+        showToast('الكاميرا غير جاهزة', 'error');
+        return;
+    }
+    
     try {
-        // إنشاء canvas والالتقاط
+        // Create canvas and capture frame
         const canvas = document.createElement('canvas');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-
-        // تحويل إلى blob
-        const blob = await new Promise(resolve =>
-            canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.9)
-        );
-
-        // رفع إلى Supabase
-        const filename = `doc_${Date.now()}.jpg`;
-        const result = await uploadToSupabase(blob, filename);
-
-        if (result.success) {
-            console.log('✅ Image captured and uploaded successfully');
-            showImagePreview(result.publicUrl);
-            toastOk('تم الالتقاط والرفع بنجاح ✅');
-        } else {
-            toastErr(`فشل في الرفع: ${result.error}`);
-        }
-
-        // إيقاف الكاميرا
-        stopStream();
-        return result.success;
-
+        ctx.drawImage(video, 0, 0);
+        
+        // Convert to blob
+        const blob = await new Promise(resolve => {
+            canvas.toBlob(resolve, 'image/jpeg', 0.9);
+        });
+        
+        // Close camera modal
+        closeCameraModal();
+        
+        // Upload the captured image
+        await uploadFile(blob, documentType, 'camera_capture.jpg');
+        
     } catch (error) {
-        console.error('❌ Capture error:', error);
-        toastErr(`خطأ في الالتقاط: ${error.message}`);
-        return false;
+        console.error('Photo capture failed:', error);
+        showToast('فشل في التقاط الصورة', 'error');
     }
 }
 
 /**
- * Handle fallback file selection (iOS/Safari)
- * التعامل مع اختيار الملف كبديل
+ * Close camera modal
+ * إغلاق نافذة الكاميرا
  */
-export async function onFallbackFile(event) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    try {
-        const filename = `doc_${Date.now()}_${file.name}`;
-        const result = await uploadToSupabase(file, filename);
-
-        if (result.success) {
-            console.log('✅ File uploaded successfully');
-            showImagePreview(result.publicUrl);
-            toastOk('تم رفع الملف بنجاح ✅');
-        } else {
-            toastErr(`فشل في رفع الملف: ${result.error}`);
-        }
-    } catch (error) {
-        console.error('❌ File upload error:', error);
-        toastErr(`خطأ في رفع الملف: ${error.message}`);
+function closeCameraModal() {
+    const modal = document.getElementById('cameraModal');
+    if (modal) {
+        modal.remove();
+    }
+    
+    // Stop camera stream
+    if (window.currentCameraStream) {
+        window.currentCameraStream.getTracks().forEach(track => track.stop());
+        window.currentCameraStream = null;
     }
 }
 
 /**
- * Stop camera stream
- * إيقاف تدفق الكاميرا
+ * Open file selection dialog
+ * فتح نافذة اختيار الملفات
  */
-export function stopStream() {
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        stream = null;
-        ready = false;
-
-        const video = document.getElementById('camPrev');
-        if (video) {
-            video.srcObject = null;
-            video.style.display = 'none';
+function openFileSelection(documentType, accept) {
+    console.log(`📁 Opening file selection for: ${documentType}`);
+    
+    // Create file input
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = accept;
+    input.multiple = false;
+    input.style.display = 'none';
+    
+    input.onchange = async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            await uploadFile(file, documentType, file.name);
         }
-
-        console.log('🛑 Camera stream stopped');
-    }
+        input.remove();
+    };
+    
+    document.body.appendChild(input);
+    input.click();
 }
 
 /**
- * Upload file/blob to Supabase Storage
+ * Upload file to Supabase Storage
  * رفع الملف إلى Supabase Storage
  */
-export async function uploadToSupabase(fileOrBlob, filename) {
+async function uploadFile(file, documentType, filename) {
+    console.log(`📤 Uploading file: ${filename} for ${documentType}`);
+    
+    if (currentUploading) {
+        showToast('جاري رفع ملف آخر، يرجى الانتظار...', 'warning');
+        return;
+    }
+    
+    currentUploading = true;
+    
     try {
-        const { data, error } = await supabase.storage
-            .from('kyc_docs')
-            .upload(filename, fileOrBlob, {
-                upsert: false,
-                contentType: 'image/jpeg'
-            });
-
-        if (error) {
-            console.error('❌ Upload error:', error);
-            return { success: false, error: error.message };
+        // Get current user ID
+        const userId = getCurrentUserId();
+        if (!userId) {
+            throw new Error('لم يتم العثور على معرف المستخدم');
         }
-
-        // الحصول على الرابط العام
-        const { data: publicData } = supabase.storage
+        
+        // Create file path
+        const filePath = `${userId}/${documentType}/${Date.now()}_${filename}`;
+        
+        // Show progress
+        showUploadProgress(documentType, 0);
+        
+        // Upload to Supabase Storage
+        const { data, error } = await window.supabase.storage
+            .from('kyc_docs')
+            .upload(filePath, file, {
+                upsert: false,
+                contentType: file.type || 'image/jpeg'
+            });
+        
+        if (error) {
+            throw new Error(error.message);
+        }
+        
+        // Get public URL
+        const { data: publicData } = window.supabase.storage
             .from('kyc_docs')
             .getPublicUrl(data.path);
-
-        return {
-            success: true,
-            publicUrl: publicData.publicUrl,
-            path: data.path
+        
+        // Store file info
+        uploadedFiles[documentType] = {
+            path: data.path,
+            url: publicData.publicUrl,
+            filename: filename,
+            uploadedAt: new Date().toISOString()
         };
+        
+        // Update UI
+        updateFileUploadUI(documentType, publicData.publicUrl, filename);
+        
+        // Save to database
+        await saveFileToDatabase(documentType, data.path, publicData.publicUrl);
+        
+        showToast('تم رفع الملف بنجاح', 'success');
+        
     } catch (error) {
-        console.error('❌ Upload failed:', error);
-        return { success: false, error: error.message };
+        console.error('Upload failed:', error);
+        showToast(`فشل في رفع الملف: ${error.message}`, 'error');
+    } finally {
+        currentUploading = false;
+        hideUploadProgress(documentType);
     }
 }
 
 /**
- * Show image preview
- * عرض معاينة الصورة
+ * Save file info to database
+ * حفظ معلومات الملف في قاعدة البيانات
  */
-function showImagePreview(imageUrl) {
-    // إزالة المعاينات الموجودة
-    const existingPreviews = document.querySelectorAll('.image-preview');
-    existingPreviews.forEach(preview => preview.remove());
-
-    // إنشاء عنصر المعاينة
-    const preview = document.createElement('div');
-    preview.className = 'image-preview';
-    preview.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        width: 200px;
-        height: 150px;
-        border: 2px solid #10b981;
-        border-radius: 8px;
-        overflow: hidden;
-        background: white;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 1000;
-    `;
-
-    const img = document.createElement('img');
-    img.src = imageUrl;
-    img.style.cssText = `
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    `;
-
-    preview.appendChild(img);
-    document.body.appendChild(preview);
-
-    // إزالة تلقائية بعد 5 ثوانٍ
-    setTimeout(() => {
-        if (preview.parentNode) {
-            preview.parentNode.removeChild(preview);
+async function saveFileToDatabase(documentType, filePath, publicUrl) {
+    try {
+        const userId = getCurrentUserId();
+        
+        const { error } = await window.supabase
+            .from('documents')
+            .insert({
+                user_id: userId,
+                document_type: documentType,
+                file_path: filePath,
+                public_url: publicUrl,
+                uploaded_at: new Date().toISOString()
+            });
+        
+        if (error) {
+            console.error('Database save failed:', error);
         }
-    }, 5000);
+    } catch (error) {
+        console.error('Database save error:', error);
+    }
 }
 
 /**
- * Humanize media error messages
- * تحويل رسائل الأخطاء إلى رسائل مفهومة
+ * Update file upload UI
+ * تحديث واجهة رفع الملفات
  */
-function humanizeMediaError(error) {
+function updateFileUploadUI(documentType, imageUrl, filename) {
+    const container = document.getElementById(`file-upload-${documentType}`);
+    if (!container) return;
+    
+    // Remove existing preview
+    const existingPreview = container.querySelector('.file-preview');
+    if (existingPreview) {
+        existingPreview.remove();
+    }
+    
+    // Create preview
+    const preview = document.createElement('div');
+    preview.className = 'file-preview';
+    preview.innerHTML = `
+        <div class="file-preview-content">
+            <img src="${imageUrl}" alt="${filename}" class="file-preview-image">
+            <div class="file-preview-info">
+                <p class="file-name">${filename}</p>
+                <p class="file-status">تم الرفع بنجاح</p>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="removeFile('${documentType}')">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+    
+    // Add styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .file-preview-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .file-preview-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .file-preview-info {
+            flex: 1;
+        }
+        .file-name {
+            font-weight: bold;
+            margin: 0 0 5px 0;
+        }
+        .file-status {
+            color: #28a745;
+            font-size: 12px;
+            margin: 0;
+        }
+    `;
+    
+    document.head.appendChild(style);
+    container.appendChild(preview);
+    
+    // Update upload button
+    const uploadBtn = container.querySelector('.upload-btn');
+    if (uploadBtn) {
+        uploadBtn.innerHTML = '<i class="fas fa-sync"></i> تغيير الملف';
+    }
+}
+
+/**
+ * Remove uploaded file
+ * حذف الملف المرفوع
+ */
+async function removeFile(documentType) {
+    console.log(`🗑️ Removing file: ${documentType}`);
+    
+    try {
+        const fileInfo = uploadedFiles[documentType];
+        if (fileInfo) {
+            // Delete from storage
+            const { error } = await window.supabase.storage
+                .from('kyc_docs')
+                .remove([fileInfo.path]);
+            
+            if (error) {
+                console.error('Storage delete failed:', error);
+            }
+            
+            // Delete from database
+            const userId = getCurrentUserId();
+            if (userId) {
+                await window.supabase
+                    .from('documents')
+                    .delete()
+                    .eq('user_id', userId)
+                    .eq('document_type', documentType);
+            }
+            
+            // Remove from memory
+            delete uploadedFiles[documentType];
+        }
+        
+        // Update UI
+        const container = document.getElementById(`file-upload-${documentType}`);
+        if (container) {
+            const preview = container.querySelector('.file-preview');
+            if (preview) {
+                preview.remove();
+            }
+            
+            const uploadBtn = container.querySelector('.upload-btn');
+            if (uploadBtn) {
+                uploadBtn.innerHTML = '<i class="fas fa-camera"></i> تصوير/رفع';
+            }
+        }
+        
+        showToast('تم حذف الملف', 'success');
+        
+    } catch (error) {
+        console.error('Remove file failed:', error);
+        showToast('فشل في حذف الملف', 'error');
+    }
+}
+
+/**
+ * Show upload progress
+ * عرض تقدم الرفع
+ */
+function showUploadProgress(documentType, progress) {
+    const container = document.getElementById(`file-upload-${documentType}`);
+    if (!container) return;
+    
+    let progressBar = container.querySelector('.upload-progress');
+    if (!progressBar) {
+        progressBar = document.createElement('div');
+        progressBar.className = 'upload-progress';
+        progressBar.innerHTML = `
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <p class="progress-text">جاري الرفع... ${progress}%</p>
+        `;
+        container.appendChild(progressBar);
+    } else {
+        const fill = progressBar.querySelector('.progress-fill');
+        const text = progressBar.querySelector('.progress-text');
+        if (fill) fill.style.width = `${progress}%`;
+        if (text) text.textContent = `جاري الرفع... ${progress}%`;
+    }
+}
+
+/**
+ * Hide upload progress
+ * إخفاء تقدم الرفع
+ */
+function hideUploadProgress(documentType) {
+    const container = document.getElementById(`file-upload-${documentType}`);
+    if (!container) return;
+    
+    const progressBar = container.querySelector('.upload-progress');
+    if (progressBar) {
+        progressBar.remove();
+    }
+}
+
+/**
+ * Get current user ID
+ * الحصول على معرف المستخدم الحالي
+ */
+function getCurrentUserId() {
+    // Try to get from localStorage
+    const user = localStorage.getItem('user');
+    if (user) {
+        try {
+            const userData = JSON.parse(user);
+            return userData.id || userData.user_id;
+        } catch (e) {
+            console.error('Error parsing user data:', e);
+        }
+    }
+    
+    // Try to get from Supabase session
+    if (window.supabase && window.supabase.auth) {
+        const session = window.supabase.auth.session();
+        if (session && session.user) {
+            return session.user.id;
+        }
+    }
+    
+    return null;
+}
+
+/**
+ * Get document label
+ * الحصول على تسمية المستند
+ */
+function getDocumentLabel(documentType) {
+    const labels = {
+        'commercial_register': 'السجل التجاري',
+        'tax_card': 'البطاقة الضريبية',
+        'contract_document': 'عقد المقر',
+        'facade_photo': 'صورة الواجهة',
+        'interior_photo': 'صورة داخلية',
+        'national_id': 'البطاقة الشخصية',
+        'driving_license': 'رخصة القيادة',
+        'vehicle_license': 'رخصة المركبة',
+        'criminal_record': 'صحيفة الحالة الجنائية',
+        'personal_photos': 'الصور الشخصية',
+        'vehicle_photo': 'صورة المركبة'
+    };
+    
+    return labels[documentType] || documentType;
+}
+
+/**
+ * Get camera error message
+ * الحصول على رسالة خطأ الكاميرا
+ */
+function getCameraErrorMessage(error) {
     const name = error?.name || '';
     const message = error?.message || String(error);
-
+    
     switch (name) {
         case 'NotAllowedError':
             return 'تم رفض الإذن من المتصفح. يرجى السماح بالوصول للكاميرا.';
@@ -327,33 +630,178 @@ function humanizeMediaError(error) {
 }
 
 /**
- * Toast notification functions
- * دوال الإشعارات
+ * Show toast notification
+ * عرض إشعار
  */
-function toastOk(message) {
-    console.log('✅', message);
-    // استخدم نظام الإشعارات الموجود في المشروع
+function showToast(message, type = 'info') {
+    console.log(`📢 Toast [${type}]: ${message}`);
+    
+    // Use existing notification system if available
     if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyOk) {
-        LUXBYTE.notifyOk(message);
-    } else if (typeof window !== 'undefined' && window.LUXBYTE?.notifyOk) {
-        window.LUXBYTE.notifyOk(message);
+        if (type === 'success') {
+            LUXBYTE.notifyOk(message);
+        } else if (type === 'error') {
+            LUXBYTE.notifyErr(message);
+        } else if (type === 'warning') {
+            LUXBYTE.notifyWarn(message);
+        } else {
+            LUXBYTE.notifyOk(message);
+        }
+    } else {
+        // Fallback to alert
+        alert(message);
     }
 }
 
-function toastErr(message) {
-    console.error('❌', message);
-    // استخدم نظام الإشعارات الموجود في المشروع
-    if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyErr) {
-        LUXBYTE.notifyErr(message);
-    } else if (typeof window !== 'undefined' && window.LUXBYTE?.notifyErr) {
-        window.LUXBYTE.notifyErr(message);
+/**
+ * Generate file upload fields for a role
+ * إنشاء حقول رفع الملفات لدور معين
+ */
+function generateFileUploadFields(role) {
+    console.log(`🔧 Generating file upload fields for role: ${role}`);
+    
+    const roleConfig = window.CONFIG.ROLES[role];
+    if (!roleConfig || !roleConfig.files) {
+        console.error('Role config not found:', role);
+        return;
     }
+    
+    const container = document.getElementById('file-upload-container');
+    if (!container) {
+        console.error('File upload container not found');
+        return;
+    }
+    
+    // Clear existing content
+    container.innerHTML = '';
+    
+    // Create header
+    const header = document.createElement('div');
+    header.className = 'file-upload-header';
+    header.innerHTML = `
+        <h3>
+            <i class="fas fa-upload" style="margin-left: 8px; color: #6b7cff;"></i>
+            رفع صور المستندات المطلوبة
+        </h3>
+        <p style="color: #666; margin-bottom: 20px;">
+            يرجى رفع جميع المستندات المطلوبة بوضوح. يمكنك استخدام الكاميرا أو اختيار ملف من الجهاز.
+        </p>
+    `;
+    container.appendChild(header);
+    
+    // Create file upload fields
+    roleConfig.files.forEach(fileConfig => {
+        const field = createFileUploadField(fileConfig);
+        container.appendChild(field);
+    });
 }
 
-// تصدير الدوال للاستخدام العام
+/**
+ * Create individual file upload field
+ * إنشاء حقل رفع ملف فردي
+ */
+function createFileUploadField(fileConfig) {
+    const field = document.createElement('div');
+    field.className = 'file-upload-field';
+    field.id = `file-upload-${fileConfig.name}`;
+    
+    const acceptTypes = fileConfig.accept || 'image/*';
+    const isRequired = fileConfig.required || false;
+    
+    field.innerHTML = `
+        <div class="file-upload-label">
+            <label>
+                ${fileConfig.label}
+                ${isRequired ? '<span style="color: #ef4444;">*</span>' : ''}
+            </label>
+            ${fileConfig.description ? `<p class="file-description">${fileConfig.description}</p>` : ''}
+        </div>
+        <div class="file-upload-controls">
+            <button type="button" class="btn btn-primary upload-btn" 
+                    onclick="openCameraOrFile('${fileConfig.name}', '${acceptTypes}')">
+                <i class="fas fa-camera"></i>
+                تصوير/رفع
+            </button>
+        </div>
+    `;
+    
+    // Add styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .file-upload-field {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+        .file-upload-label label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .file-description {
+            font-size: 12px;
+            color: #6b7280;
+            margin: 5px 0 0 0;
+        }
+        .file-upload-controls {
+            margin-top: 10px;
+        }
+        .upload-btn {
+            background: #6b7cff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .upload-btn:hover {
+            background: #5a6fd8;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #6b7cff;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+            margin: 5px 0;
+        }
+    `;
+    
+    document.head.appendChild(style);
+    return field;
+}
+
+// Export functions to window for global access
 if (typeof window !== 'undefined') {
-    window.openCameraOnce = openCameraOnce;
-    window.captureAndUpload = captureAndUpload;
-    window.onFallbackFile = onFallbackFile;
-    window.stopStream = stopStream;
+    window.openCameraOrFile = openCameraOrFile;
+    window.capturePhoto = capturePhoto;
+    window.closeCameraModal = closeCameraModal;
+    window.removeFile = removeFile;
+    window.generateFileUploadFields = generateFileUploadFields;
+    window.initFileUpload = initFileUpload;
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFileUpload);
+} else {
+    initFileUpload();
 }

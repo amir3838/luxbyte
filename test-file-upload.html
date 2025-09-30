@@ -3,264 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار رفع الصور - LUXBYTE</title>
+    <title>اختبار نظام رفع الملفات - LUXBYTE</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container" style="max-width: 800px; margin: 50px auto; padding: 20px;">
+        <h1>اختبار نظام رفع الملفات</h1>
+        
         <div class="card">
-            <h1 style="text-align: center; margin-bottom: 30px; color: var(--text-primary);">
-                <i class="fas fa-upload" style="margin-left: 10px;"></i>
-                اختبار نظام رفع الصور
-            </h1>
-
-            <!-- File Upload Area -->
-            <div id="file-upload-area" style="border: 2px dashed #6b7cff; border-radius: 12px; padding: 40px; margin: 20px 0; background: #f8fafc; cursor: pointer; transition: all 0.3s ease;" onclick="document.getElementById('fileInput').click()">
-                <div style="text-align: center;">
-                    <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #6b7cff; margin-bottom: 16px;"></i>
-                    <h5 style="color: #334155; margin-bottom: 8px;">اضغط لرفع الصور</h5>
-                    <p style="color: #6b7280; margin-bottom: 16px;">أو اسحب الصور هنا</p>
-                    <p style="color: #9ca3af; font-size: 14px;">JPG, PNG, GIF - حتى 10MB لكل صورة</p>
+            <h2>اختبار رفع الملفات</h2>
+            
+            <div id="test-results" style="margin-bottom: 20px;">
+                <h3>نتائج الاختبار:</h3>
+                <ul id="test-list"></ul>
+            </div>
+            
+            <div id="file-upload-container">
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
+                    <p>جاري تحميل نظام رفع الملفات...</p>
                 </div>
             </div>
-
-            <!-- Hidden File Input -->
-            <input id="fileInput" type="file" accept="image/*" multiple style="display: none;">
-
-            <!-- Uploaded Files Preview -->
-            <div id="uploaded-files-preview" style="margin-top: 20px; display: none;">
-                <h5 style="color: #334155; margin-bottom: 12px;">الصور المرفوعة:</h5>
-                <div id="files-list" style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;"></div>
-            </div>
-
-            <!-- Upload Progress -->
-            <div id="upload-progress" style="margin-top: 20px; display: none;">
-                <div style="background: #e5e7eb; border-radius: 8px; height: 8px; overflow: hidden;">
-                    <div id="progress-bar" style="background: #6b7cff; height: 100%; width: 0%; transition: width 0.3s ease;"></div>
-                </div>
-                <p id="progress-text" style="margin-top: 8px; color: #6b7280; font-size: 14px;">جاري الرفع...</p>
-            </div>
-
-            <!-- Status -->
-            <div id="status" style="text-align: center; margin: 20px 0; padding: 15px; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color);">
-                <p style="margin: 0; color: var(--text-muted);">جاهز لرفع الصور</p>
+            
+            <div style="margin-top: 20px;">
+                <button onclick="testCameraFunctionality()" class="btn btn-primary">
+                    <i class="fas fa-camera"></i>
+                    اختبار الكاميرا
+                </button>
+                <button onclick="testFileSelection()" class="btn btn-secondary">
+                    <i class="fas fa-file"></i>
+                    اختبار اختيار الملف
+                </button>
+                <button onclick="clearTestResults()" class="btn btn-outline">
+                    <i class="fas fa-trash"></i>
+                    مسح النتائج
+                </button>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { uploadToSupabase } from './js/file-upload-manager.js';
-
-        // File upload variables
-        let uploadedFiles = [];
-        let isUploading = false;
-
-        // Get elements
-        const fileInput = document.getElementById('fileInput');
-        const uploadArea = document.getElementById('file-upload-area');
-        const filesPreview = document.getElementById('uploaded-files-preview');
-        const filesList = document.getElementById('files-list');
-        const uploadProgress = document.getElementById('upload-progress');
-        const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
-        const status = document.getElementById('status');
-
-        // File input change handler
-        fileInput.addEventListener('change', handleFileSelection);
-
-        // Drag and drop handlers
-        uploadArea.addEventListener('dragover', handleDragOver);
-        uploadArea.addEventListener('dragleave', handleDragLeave);
-        uploadArea.addEventListener('drop', handleDrop);
-
-        function handleFileSelection(event) {
-            const files = Array.from(event.target.files);
-            console.log('📁 Files selected:', files.length);
-            processFiles(files);
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/file-upload-manager.js"></script>
+    
+    <script>
+        let testResults = [];
+        
+        function addTestResult(test, status, message) {
+            const result = {
+                test: test,
+                status: status,
+                message: message,
+                timestamp: new Date().toLocaleString()
+            };
+            testResults.push(result);
+            updateTestDisplay();
         }
-
-        function handleDragOver(event) {
-            event.preventDefault();
-            uploadArea.style.borderColor = '#10b981';
-            uploadArea.style.backgroundColor = '#f0fdf4';
-        }
-
-        function handleDragLeave(event) {
-            event.preventDefault();
-            uploadArea.style.borderColor = '#6b7cff';
-            uploadArea.style.backgroundColor = '#f8fafc';
-        }
-
-        function handleDrop(event) {
-            event.preventDefault();
-            uploadArea.style.borderColor = '#6b7cff';
-            uploadArea.style.backgroundColor = '#f8fafc';
-
-            const files = Array.from(event.dataTransfer.files);
-            console.log('📁 Files dropped:', files.length);
-            processFiles(files);
-        }
-
-        async function processFiles(files) {
-            if (isUploading) {
-                console.warn('⚠️ Upload already in progress');
-                return;
-            }
-
-            // Filter image files
-            const imageFiles = files.filter(file => file.type.startsWith('image/'));
-
-            if (imageFiles.length === 0) {
-                updateStatus('⚠️ يرجى اختيار ملفات صور صالحة', 'error');
-                return;
-            }
-
-            // Check file sizes (max 10MB each)
-            const oversizedFiles = imageFiles.filter(file => file.size > 10 * 1024 * 1024);
-            if (oversizedFiles.length > 0) {
-                updateStatus(`⚠️ بعض الملفات كبيرة جداً (أكثر من 10MB): ${oversizedFiles.map(f => f.name).join(', ')}`, 'error');
-                return;
-            }
-
-            isUploading = true;
-            showUploadProgress();
-            updateStatus(`جاري رفع ${imageFiles.length} صورة...`, 'info');
-
-            try {
-                for (let i = 0; i < imageFiles.length; i++) {
-                    const file = imageFiles[i];
-                    updateProgress(i, imageFiles.length, `جاري رفع ${file.name}...`);
-
-                    const result = await uploadFile(file);
-                    if (result.success) {
-                        uploadedFiles.push({
-                            file: file,
-                            url: result.publicUrl,
-                            path: result.path
-                        });
-                        console.log('✅ File uploaded:', file.name);
-                    } else {
-                        console.error('❌ Upload failed:', result.error);
-                    }
-                }
-
-                updateProgress(imageFiles.length, imageFiles.length, 'تم الرفع بنجاح!');
-                showUploadedFiles();
-                updateStatus(`تم رفع ${uploadedFiles.length} صورة بنجاح!`, 'success');
-
-                // Reset file input
-                fileInput.value = '';
-
-            } catch (error) {
-                console.error('❌ Upload error:', error);
-                updateStatus(`خطأ في رفع الملفات: ${error.message}`, 'error');
-            } finally {
-                isUploading = false;
-                setTimeout(() => {
-                    hideUploadProgress();
-                }, 2000);
-            }
-        }
-
-        async function uploadFile(file) {
-            try {
-                const filename = `test_${Date.now()}_${file.name}`;
-                const result = await uploadToSupabase(file, filename);
-                return result;
-            } catch (error) {
-                console.error('❌ File upload error:', error);
-                return { success: false, error: error.message };
-            }
-        }
-
-        function showUploadProgress() {
-            uploadProgress.style.display = 'block';
-            progressBar.style.width = '0%';
-        }
-
-        function updateProgress(current, total, text) {
-            const percentage = (current / total) * 100;
-            progressBar.style.width = `${percentage}%`;
-            progressText.textContent = text;
-        }
-
-        function hideUploadProgress() {
-            uploadProgress.style.display = 'none';
-        }
-
-        function showUploadedFiles() {
-            if (uploadedFiles.length === 0) return;
-
-            filesPreview.style.display = 'block';
-            filesList.innerHTML = '';
-
-            uploadedFiles.forEach((fileData, index) => {
-                const fileDiv = document.createElement('div');
-                fileDiv.style.cssText = `
-                    position: relative;
-                    width: 120px;
-                    height: 120px;
-                    border-radius: 8px;
-                    overflow: hidden;
-                    border: 2px solid #e5e7eb;
-                    background: #f9fafb;
+        
+        function updateTestDisplay() {
+            const list = document.getElementById('test-list');
+            list.innerHTML = '';
+            
+            testResults.forEach(result => {
+                const li = document.createElement('li');
+                li.style.cssText = `
+                    padding: 10px;
+                    margin: 5px 0;
+                    border-radius: 5px;
+                    background: ${result.status === 'success' ? '#d4edda' : result.status === 'error' ? '#f8d7da' : '#fff3cd'};
+                    color: ${result.status === 'success' ? '#155724' : result.status === 'error' ? '#721c24' : '#856404'};
                 `;
-
-                const img = document.createElement('img');
-                img.src = fileData.url;
-                img.style.cssText = `
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
+                li.innerHTML = `
+                    <strong>${result.test}:</strong> ${result.message}
+                    <br><small>${result.timestamp}</small>
                 `;
-
-                const removeBtn = document.createElement('button');
-                removeBtn.innerHTML = '×';
-                removeBtn.style.cssText = `
-                    position: absolute;
-                    top: 4px;
-                    right: 4px;
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 50%;
-                    border: none;
-                    background: #ef4444;
-                    color: white;
-                    cursor: pointer;
-                    font-size: 16px;
-                    font-weight: bold;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                `;
-
-                removeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    uploadedFiles.splice(index, 1);
-                    showUploadedFiles();
-                    if (uploadedFiles.length === 0) {
-                        filesPreview.style.display = 'none';
-                        updateStatus('تم حذف جميع الصور', 'info');
-                    }
-                });
-
-                fileDiv.appendChild(img);
-                fileDiv.appendChild(removeBtn);
-                filesList.appendChild(fileDiv);
+                list.appendChild(li);
             });
         }
-
-        function updateStatus(message, type = 'info') {
-            const colors = {
-                info: '#6b7280',
-                success: '#10b981',
-                error: '#ef4444'
-            };
-            status.innerHTML = `<p style="margin: 0; color: ${colors[type]};">${message}</p>`;
+        
+        function clearTestResults() {
+            testResults = [];
+            updateTestDisplay();
         }
-
-        console.log('✅ File upload test page loaded');
+        
+        function testCameraFunctionality() {
+            addTestResult('اختبار الكاميرا', 'info', 'بدء اختبار الكاميرا...');
+            
+            if (typeof window.openCameraOrFile === 'function') {
+                addTestResult('دالة الكاميرا', 'success', 'دالة openCameraOrFile متاحة');
+                
+                // Test camera support
+                const isSupported = checkCameraSupport();
+                addTestResult('دعم الكاميرا', isSupported ? 'success' : 'warning', 
+                    isSupported ? 'الكاميرا مدعومة' : 'الكاميرا غير مدعومة');
+                
+                // Test camera access
+                if (isSupported) {
+                    openCameraOrFile('test_document', 'image/*')
+                        .then(() => {
+                            addTestResult('فتح الكاميرا', 'success', 'تم فتح الكاميرا بنجاح');
+                        })
+                        .catch(error => {
+                            addTestResult('فتح الكاميرا', 'error', `فشل في فتح الكاميرا: ${error.message}`);
+                        });
+                }
+            } else {
+                addTestResult('دالة الكاميرا', 'error', 'دالة openCameraOrFile غير متاحة');
+            }
+        }
+        
+        function testFileSelection() {
+            addTestResult('اختبار اختيار الملف', 'info', 'بدء اختبار اختيار الملف...');
+            
+            if (typeof window.openCameraOrFile === 'function') {
+                addTestResult('دالة اختيار الملف', 'success', 'دالة openCameraOrFile متاحة');
+                
+                // Test file selection
+                openCameraOrFile('test_file', 'image/*')
+                    .then(() => {
+                        addTestResult('اختيار الملف', 'success', 'تم فتح نافذة اختيار الملف');
+                    })
+                    .catch(error => {
+                        addTestResult('اختيار الملف', 'error', `فشل في اختيار الملف: ${error.message}`);
+                    });
+            } else {
+                addTestResult('دالة اختيار الملف', 'error', 'دالة openCameraOrFile غير متاحة');
+            }
+        }
+        
+        function checkCameraSupport() {
+            return !!(navigator.mediaDevices && 
+                      navigator.mediaDevices.getUserMedia && 
+                      window.isSecureContext);
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            addTestResult('تحميل الصفحة', 'success', 'تم تحميل الصفحة بنجاح');
+            
+            // Test if file upload manager is loaded
+            if (typeof window.initFileUpload === 'function') {
+                addTestResult('نظام رفع الملفات', 'success', 'تم تحميل نظام رفع الملفات');
+                
+                // Initialize file upload system
+                if (window.initFileUpload()) {
+                    addTestResult('تهيئة النظام', 'success', 'تم تهيئة نظام رفع الملفات بنجاح');
+                    
+                    // Generate test file upload fields
+                    if (typeof window.generateFileUploadFields === 'function') {
+                        window.generateFileUploadFields('restaurant');
+                        addTestResult('إنشاء الحقول', 'success', 'تم إنشاء حقول رفع الملفات');
+                    } else {
+                        addTestResult('إنشاء الحقول', 'error', 'دالة generateFileUploadFields غير متاحة');
+                    }
+                } else {
+                    addTestResult('تهيئة النظام', 'error', 'فشل في تهيئة نظام رفع الملفات');
+                }
+            } else {
+                addTestResult('نظام رفع الملفات', 'error', 'نظام رفع الملفات غير متاح');
+            }
+            
+            // Test Supabase connection
+            if (typeof window.supabase !== 'undefined') {
+                addTestResult('اتصال Supabase', 'success', 'تم الاتصال بـ Supabase');
+            } else {
+                addTestResult('اتصال Supabase', 'error', 'فشل في الاتصال بـ Supabase');
+            }
+        });
     </script>
 </body>
 </html>

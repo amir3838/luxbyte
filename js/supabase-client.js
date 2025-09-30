@@ -38,6 +38,9 @@ function getSupabaseClient() {
       );
 
       console.log('Supabase client initialized successfully');
+      
+      // Make supabase available globally
+      window.supabase = supabaseClient;
     } catch (error) {
       console.error('Failed to initialize Supabase client:', error);
       return null;
