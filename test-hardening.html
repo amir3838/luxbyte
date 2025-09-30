@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار تعزيز الأمان - LUXBYTE</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="/assets/app_icon/LUXBYTEICON.PNG" type="image/png">
+</head>
+<body>
+    <div class="container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+        <h1>اختبار تعزيز الأمان - LUXBYTE</h1>
+        
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>1. اختبار الكاميرا</h2>
+            <button onclick="testCamera()" class="btn btn-primary">اختبار الكاميرا</button>
+            <div id="camera-result" style="margin-top: 10px;"></div>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>2. اختبار FCM</h2>
+            <button onclick="testFCM()" class="btn btn-primary">اختبار FCM</button>
+            <div id="fcm-result" style="margin-top: 10px;"></div>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>3. اختبار API</h2>
+            <button onclick="testAPI()" class="btn btn-primary">اختبار API</button>
+            <div id="api-result" style="margin-top: 10px;"></div>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>4. اختبار التنقل</h2>
+            <button onclick="testNavigation()" class="btn btn-primary">اختبار التنقل</button>
+            <div id="nav-result" style="margin-top: 10px;"></div>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px;">
+            <h2>5. اختبار الأمان</h2>
+            <button onclick="testSecurity()" class="btn btn-primary">اختبار الأمان</button>
+            <div id="security-result" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="common.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/firebase-fcm.js"></script>
+    <script src="js/camera-upload-manager.js"></script>
+
+    <script>
+        async function testCamera() {
+            const result = document.getElementById('camera-result');
+            result.innerHTML = '<p>جاري اختبار الكاميرا...</p>';
+            
+            try {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    stream.getTracks().forEach(track => track.stop());
+                    result.innerHTML = '<p style="color: green;">✅ الكاميرا تعمل بشكل صحيح</p>';
+                } else {
+                    result.innerHTML = '<p style="color: orange;">⚠️ الكاميرا غير مدعومة</p>';
+                }
+            } catch (error) {
+                result.innerHTML = `<p style="color: red;">❌ خطأ في الكاميرا: ${error.message}</p>`;
+            }
+        }
+
+        async function testFCM() {
+            const result = document.getElementById('fcm-result');
+            result.innerHTML = '<p>جاري اختبار FCM...</p>';
+            
+            try {
+                if (window.firebaseFCM) {
+                    const permission = await window.firebaseFCM.requestPermission();
+                    if (permission) {
+                        result.innerHTML = '<p style="color: green;">✅ FCM يعمل بشكل صحيح</p>';
+                    } else {
+                        result.innerHTML = '<p style="color: orange;">⚠️ FCM متاح لكن الإذن مرفوض</p>';
+                    }
+                } else {
+                    result.innerHTML = '<p style="color: red;">❌ FCM غير متاح</p>';
+                }
+            } catch (error) {
+                result.innerHTML = `<p style="color: red;">❌ خطأ في FCM: ${error.message}</p>`;
+            }
+        }
+
+        async function testAPI() {
+            const result = document.getElementById('api-result');
+            result.innerHTML = '<p>جاري اختبار API...</p>';
+            
+            try {
+                const response = await fetch('/api/push/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: 'Test Notification',
+                        body: 'This is a test',
+                        topic: 'test'
+                    })
+                });
+                
+                if (response.ok) {
+                    result.innerHTML = '<p style="color: green;">✅ API يعمل بشكل صحيح</p>';
+                } else {
+                    result.innerHTML = `<p style="color: orange;">⚠️ API متاح لكن هناك خطأ: ${response.status}</p>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<p style="color: red;">❌ خطأ في API: ${error.message}</p>`;
+            }
+        }
+
+        function testNavigation() {
+            const result = document.getElementById('nav-result');
+            result.innerHTML = '<p>جاري اختبار التنقل...</p>';
+            
+            try {
+                // Test if navigation functions exist
+                const functions = ['logout', 'testFileUploadGeneration', 'testCameraFunctionality'];
+                const missing = functions.filter(fn => typeof window[fn] !== 'function');
+                
+                if (missing.length === 0) {
+                    result.innerHTML = '<p style="color: green;">✅ جميع وظائف التنقل متاحة</p>';
+                } else {
+                    result.innerHTML = `<p style="color: orange;">⚠️ وظائف مفقودة: ${missing.join(', ')}</p>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<p style="color: red;">❌ خطأ في التنقل: ${error.message}</p>`;
+            }
+        }
+
+        function testSecurity() {
+            const result = document.getElementById('security-result');
+            result.innerHTML = '<p>جاري اختبار الأمان...</p>';
+            
+            try {
+                const tests = [];
+                
+                // Test HTTPS
+                if (location.protocol === 'https:') {
+                    tests.push('✅ HTTPS مفعل');
+                } else {
+                    tests.push('⚠️ HTTP (غير آمن)');
+                }
+                
+                // Test Service Worker
+                if ('serviceWorker' in navigator) {
+                    tests.push('✅ Service Worker مدعوم');
+                } else {
+                    tests.push('❌ Service Worker غير مدعوم');
+                }
+                
+                // Test Permissions API
+                if ('permissions' in navigator) {
+                    tests.push('✅ Permissions API مدعوم');
+                } else {
+                    tests.push('❌ Permissions API غير مدعوم');
+                }
+                
+                result.innerHTML = `<p>${tests.join('<br>')}</p>`;
+            } catch (error) {
+                result.innerHTML = `<p style="color: red;">❌ خطأ في اختبار الأمان: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

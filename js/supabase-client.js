@@ -25,8 +25,8 @@ function getSupabaseClient() {
 
     try {
       supabaseClient = window.supabase.createClient(
-        window.CONFIG?.SUPABASE_URL || 'https://your-project.supabase.co',
-        window.CONFIG?.SUPABASE_ANON_KEY || 'your-anon-key',
+        window.CONFIG?.__ENV__?.NEXT_PUBLIC_SUPABASE_URL || window.CONFIG?.SUPABASE_URL || 'https://your-project.supabase.co',
+        window.CONFIG?.__ENV__?.NEXT_PUBLIC_SUPABASE_ANON_KEY || window.CONFIG?.SUPABASE_ANON_KEY || 'your-anon-key',
         {
           auth: {
             storageKey: 'luxbyte-auth', // Unique storage key

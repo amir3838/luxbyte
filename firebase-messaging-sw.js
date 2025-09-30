@@ -6,14 +6,14 @@
 importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js');
 
-// Firebase configuration
+// Firebase configuration - will be replaced by environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyBIlSKMkFIyY1OFYqqImwx5Lo2nHW5Foss",
-  authDomain: "studio-1f95z.firebaseapp.com",
-  projectId: "studio-1f95z",
-  storageBucket: "studio-1f95z.firebasestorage.app",
-  messagingSenderId: "922681782984",
-  appId: "1:922681782984:web:d3840713be209e4a60abfd"
+  apiKey: "REPLACE_API_KEY",
+  authDomain: "REPLACE_AUTH_DOMAIN",
+  projectId: "REPLACE_PROJECT_ID",
+  storageBucket: "REPLACE_STORAGE_BUCKET",
+  messagingSenderId: "REPLACE_SENDER_ID",
+  appId: "REPLACE_APP_ID"
 };
 
 // Initialize Firebase

@@ -2,7 +2,7 @@ const { createClient } = require('@supabase/supabase-js');
 
 // Initialize Supabase client
 const supabase = createClient(
-  process.env.SUPABASE_URL || 'https://qjsvgpvbtrcnbhcjdcci.supabase.co',
+  process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || 'https://qjsvgpvbtrcnbhcjdcci.supabase.co',
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
 );
 
@@ -34,13 +34,13 @@ export default async function handler(req, res) {
     }
 
     const { data, error } = await supabase
-      .from('push_tokens')
+      .from('user_devices')
       .upsert({
         user_id: user_id,
-        token: token,
+        fcm_token: token,
         platform: platform
       }, {
-        onConflict: 'token'
+        onConflict: 'fcm_token'
       })
       .select();
 

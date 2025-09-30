@@ -1,6 +1,18 @@
 // LUXBYTE Configuration
 window.CONFIG = {
-  // Supabase Configuration
+  // Environment Variables Injection
+  __ENV__: {
+    NEXT_PUBLIC_SUPABASE_URL: "https://qjsvgpvbtrcnbhcjdcci.supabase.co",
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: "sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e",
+    NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyBIlSKMkFIyY1OFYqqImwx5Lo2nHW5Foss",
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "studio-1f95z.firebaseapp.com",
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID: "studio-1f95z",
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "922681782984",
+    NEXT_PUBLIC_FIREBASE_APP_ID: "1:922681782984:web:d3840713be209e4a60abfd",
+    NEXT_PUBLIC_FIREBASE_VAPID_KEY: "BJ3SXe0Nof9H4KJpvgG80LVUeDTNxdh0O2z3aOIzEzrFxd3bAn4ixhhouG7VV11zmK8giQ-UUGWeAP3JK8MpbXk"
+  },
+
+  // Supabase Configuration (Legacy - for backward compatibility)
   SUPABASE_URL: "https://qjsvgpvbtrcnbhcjdcci.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e",
 

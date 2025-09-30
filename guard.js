@@ -4,7 +4,7 @@ window.AuthGuard = {
   protectedPages: [
     'choose-platform.html',
     'choose-role.html',
-    'signup.html',
+    'unified-signup.html',
     'dashboard.html'
   ],
 

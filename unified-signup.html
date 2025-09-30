@@ -209,6 +209,35 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Camera Controls -->
+                    <div id="camera-controls" style="display: none; text-align: center; margin: 20px 0; padding: 20px; background: #f8fafc; border-radius: 12px; border: 2px dashed #cbd5e1;">
+                        <h4 style="margin-bottom: 16px; color: #334155;">
+                            <i class="fas fa-camera" style="margin-left: 8px;"></i>
+                            تصوير المستندات بالكاميرا
+                        </h4>
+                        
+                        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                            <button type="button" onclick="openCamera()" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-camera"></i>
+                                تصوير بالكاميرا
+                            </button>
+                            <button type="button" onclick="captureAndUpload()" class="btn btn-success" style="display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-camera-retro"></i>
+                                التقاط & رفع
+                            </button>
+                            <button type="button" onclick="stopStream()" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-stop"></i>
+                                إيقاف الكاميرا
+                            </button>
+                        </div>
+
+                        <!-- Camera Preview -->
+                        <video id="camPrev" playsinline style="width: 300px; height: 200px; border-radius: 8px; background: #000; display: none;"></video>
+
+                        <!-- Fallback File Input -->
+                        <input id="fileFallback" type="file" accept="image/*" capture="environment" onchange="onFallbackFile(event)" style="display: none;">
+                    </div>
                 </div>
 
                 <!-- Terms and Conditions -->
@@ -1152,6 +1181,31 @@
                 LUXBYTE.notifyErr('حدث خطأ في تسجيل الخروج');
             }
         }
+
+        // Make functions available globally for onclick handlers
+        window.logout = logout;
+        window.testFileUploadGeneration = testFileUploadGeneration;
+        window.testCameraFunctionality = testCameraFunctionality;
+        window.removeFile = removeFile;
+    </script>
+
+    <!-- Camera Upload Manager -->
+    <script type="module">
+        import { openCamera, captureAndUpload, onFallbackFile, stopStream } from './js/camera-upload-manager.js';
+        
+        // Make functions available globally for onclick handlers
+        window.openCamera = openCamera;
+        window.captureAndUpload = captureAndUpload;
+        window.onFallbackFile = onFallbackFile;
+        window.stopStream = stopStream;
+        
+        // Show camera controls when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const cameraControls = document.getElementById('camera-controls');
+            if (cameraControls) {
+                cameraControls.style.display = 'block';
+            }
+        });
     </script>
 </body>
 </html>

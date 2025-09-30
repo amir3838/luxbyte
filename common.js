@@ -505,7 +505,7 @@ window.goShopEG = function(){
 }
 window.goMasterDriver = function(){
   LUXBYTE.setStorage('selectedPlatform', 'masterdriver');
-  safeNav('signup.html?role=driver');
+  safeNav('unified-signup.html?role=driver');
 }
 
 /* ================== i18n بسطرين إعداد ================== */
