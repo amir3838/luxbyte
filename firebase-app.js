@@ -101,7 +101,7 @@ class FirebaseManager {
 
       // Store token for server use
       localStorage.setItem('fcm_token', token);
-      
+
       // Set up foreground message listener
       onMessage(this.messaging, (payload) => {
         console.log('📱 Message received in foreground:', payload);
@@ -120,7 +120,7 @@ class FirebaseManager {
   showNotification(payload) {
     const title = payload.notification?.title || 'LUXBYTE';
     const body = payload.notification?.body || 'لديك إشعار جديد';
-    
+
     if ('serviceWorker' in navigator && 'showNotification' in ServiceWorkerRegistration.prototype) {
       navigator.serviceWorker.ready.then(registration => {
         registration.showNotification(title, {
@@ -188,7 +188,7 @@ const firebaseManager = new FirebaseManager();
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 Initializing Firebase with Analytics...');
   await firebaseManager.setupNotifications();
-  
+
   // Track initial page view
   firebaseManager.trackPageView(document.title);
 });
