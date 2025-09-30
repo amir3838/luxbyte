@@ -216,17 +216,17 @@
                             <i class="fas fa-camera" style="margin-left: 8px;"></i>
                             تصوير المستندات بالكاميرا
                         </h4>
-                        
+
                         <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-                            <button type="button" onclick="openCamera()" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+                            <button type="button" id="btnOpenCam" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fas fa-camera"></i>
                                 تصوير بالكاميرا
                             </button>
-                            <button type="button" onclick="captureAndUpload()" class="btn btn-success" style="display: inline-flex; align-items: center; gap: 8px;">
+                            <button type="button" id="btnShot" class="btn btn-success" style="display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fas fa-camera-retro"></i>
                                 التقاط & رفع
                             </button>
-                            <button type="button" onclick="stopStream()" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 8px;">
+                            <button type="button" id="btnStop" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 8px;">
                                 <i class="fas fa-stop"></i>
                                 إيقاف الكاميرا
                             </button>
@@ -236,7 +236,7 @@
                         <video id="camPrev" playsinline style="width: 300px; height: 200px; border-radius: 8px; background: #000; display: none;"></video>
 
                         <!-- Fallback File Input -->
-                        <input id="fileFallback" type="file" accept="image/*" capture="environment" onchange="onFallbackFile(event)" style="display: none;">
+                        <input id="fileFallback" type="file" accept="image/*" capture="environment" style="display: none;">
                     </div>
                 </div>
 
@@ -803,50 +803,8 @@
                     }
                 });
 
-                uploadDiv.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    console.log('📸 Camera button clicked');
-
-                    try {
-                        // Check camera availability first
-                        const cameraAvailable = await checkCameraAvailability();
-                        if (!cameraAvailable) {
-                            LUXBYTE.notifyWarn('الكاميرا غير متاحة - سيتم فتح اختيار الملفات');
-                            uploadDiv.querySelector('.file-input').click();
-                            return;
-                        }
-
-                        // Request camera permission explicitly
-                        console.log('🔐 Requesting camera permission...');
-                        const stream = await navigator.mediaDevices.getUserMedia({
-                            video: {
-                                facingMode: 'environment',
-                                width: { ideal: 1280 },
-                                height: { ideal: 720 }
-                            }
-                        });
-
-                        // Stop the stream immediately (we just needed permission)
-                        stream.getTracks().forEach(track => track.stop());
-
-                        console.log('✅ Camera permission granted, opening file input...');
-                        LUXBYTE.notifyOk('تم منح إذن الكاميرا - جاري فتح الكاميرا...');
-
-                        // Small delay to ensure permission is fully processed
-                        setTimeout(() => {
-                            console.log('📸 Opening file input with camera access...');
-                            uploadDiv.querySelector('.file-input').click();
-                        }, 100);
-
-                    } catch (error) {
-                        console.error('❌ Camera permission error:', error);
-                        LUXBYTE.notifyErr(`خطأ في الوصول للكاميرا: ${error.message}`);
-
-                        // Fallback to file selection
-                        console.log('🔄 Falling back to file selection...');
-                        uploadDiv.querySelector('.file-input').click();
-                    }
-                });
+                // Camera functionality moved to enhanced system
+                // الكاميرا تم نقلها إلى النظام المحسّن
 
                 // Drag and drop
                 uploadDiv.addEventListener('dragover', (e) => {
@@ -1192,19 +1150,92 @@
     <!-- Camera Upload Manager -->
     <script type="module">
         import { openCamera, captureAndUpload, onFallbackFile, stopStream } from './js/camera-upload-manager.js';
-        
+
         // Make functions available globally for onclick handlers
         window.openCamera = openCamera;
         window.captureAndUpload = captureAndUpload;
         window.onFallbackFile = onFallbackFile;
         window.stopStream = stopStream;
-        
+
         // Show camera controls when page loads
         document.addEventListener('DOMContentLoaded', () => {
             const cameraControls = document.getElementById('camera-controls');
             if (cameraControls) {
                 cameraControls.style.display = 'block';
             }
+        });
+    </script>
+
+    <!-- Enhanced Camera System - Single Event Listeners -->
+    <script type="module">
+        import { openCameraOnce, captureAndUpload, onFallbackFile, stopStream } from './js/file-upload-manager.js';
+
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🎥 Initializing enhanced camera system...');
+
+            // Get button elements
+            const openBtn = document.getElementById('btnOpenCam');
+            const shotBtn = document.getElementById('btnShot');
+            const stopBtn = document.getElementById('btnStop');
+            const fallback = document.getElementById('fileFallback');
+
+            // Remove any existing listeners by cloning elements
+            if (openBtn) {
+                const newOpenBtn = openBtn.cloneNode(true);
+                openBtn.parentNode.replaceChild(newOpenBtn, openBtn);
+            }
+            if (shotBtn) {
+                const newShotBtn = shotBtn.cloneNode(true);
+                shotBtn.parentNode.replaceChild(newShotBtn, shotBtn);
+            }
+            if (stopBtn) {
+                const newStopBtn = stopBtn.cloneNode(true);
+                stopBtn.parentNode.replaceChild(newStopBtn, stopBtn);
+            }
+            if (fallback) {
+                const newFallback = fallback.cloneNode(true);
+                fallback.parentNode.replaceChild(newFallback, fallback);
+            }
+
+            // Add single event listeners
+            const finalOpenBtn = document.getElementById('btnOpenCam');
+            const finalShotBtn = document.getElementById('btnShot');
+            const finalStopBtn = document.getElementById('btnStop');
+            const finalFallback = document.getElementById('fileFallback');
+
+            if (finalOpenBtn) {
+                finalOpenBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('📸 Camera button clicked - opening camera...');
+                    openCameraOnce();
+                });
+            }
+
+            if (finalShotBtn) {
+                finalShotBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('📷 Capture button clicked - capturing image...');
+                    captureAndUpload();
+                });
+            }
+
+            if (finalStopBtn) {
+                finalStopBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('🛑 Stop button clicked - stopping camera...');
+                    stopStream();
+                });
+            }
+
+            if (finalFallback) {
+                finalFallback.addEventListener('change', (e) => {
+                    console.log('📁 Fallback file selected - processing...');
+                    onFallbackFile(e);
+                });
+            }
+
+            console.log('✅ Enhanced camera system initialized successfully');
         });
     </script>
 </body>

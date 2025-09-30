@@ -1,429 +1,329 @@
 /**
- * مدير رفع الملفات والمستندات - مشروع Luxbyte
- * File Upload Manager for Luxbyte Project
+ * Enhanced Camera Upload Manager for LUXBYTE
+ * مدير تصوير ورفع المستندات بالكاميرا المحسّن
  *
- * يدير رفع الملفات المطلوبة لكل نشاط مع التحقق من الصيغ والأحجام
- * Manages file uploads for each activity with format and size validation
+ * يحل مشاكل:
+ * - تكرار المستمعين (listeners)
+ * - رسائل "تم منح إذن الكاميرا" المتكررة
+ * - عدم فتح الكاميرا بعد منح الإذن
+ * - ضمان العمل على HTTPS/iFrame
  */
 
-class FileUploadManager {
-    constructor(supabaseClient) {
-        this.supabase = supabaseClient;
-        this.maxFileSize = 5 * 1024 * 1024; // 5MB
-        this.allowedImageFormats = ['jpg', 'jpeg', 'png'];
-        this.allowedDocumentFormats = ['pdf', 'jpg', 'jpeg'];
-        this.uploadProgress = new Map();
-        this.init();
+import { supabase } from './supabase-client.js';
+
+let stream = null;
+let opening = false;   // مانع النقرات المتكررة
+let ready = false;
+
+/**
+ * Open camera once with proper error handling
+ * فتح الكاميرا مرة واحدة مع معالجة الأخطاء المناسبة
+ */
+export async function openCameraOnce() {
+    if (opening || stream) {
+        console.log('Camera already opening or opened, ignoring duplicate request');
+        return;
     }
 
-    /**
-     * تهيئة النظام
-     */
-    init() {
-        // تهيئة النظام
-    }
+    opening = true;
 
-    /**
-     * الحصول على أنواع الأنشطة المتاحة
-     * Get available activity types
-     */
-    async getActivityTypes() {
-        try {
-            const { data, error } = await this.supabase
-                .from('activity_types')
-                .select('*')
-                .eq('is_active', true)
-                .order('name_ar');
-
-            if (error) throw error;
-            return data;
-        } catch (error) {
-            console.error('خطأ في جلب أنواع الأنشطة:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * الحصول على أنواع المستندات المطلوبة لنشاط معين
-     * Get required document types for specific activity
-     */
-    async getDocumentTypes(activityTypeId) {
-        try {
-            const { data, error } = await this.supabase
-                .from('document_types')
-                .select('*')
-                .eq('activity_type_id', activityTypeId)
-                .order('is_required', { ascending: false });
-
-            if (error) throw error;
-            return data;
-        } catch (error) {
-            console.error('خطأ في جلب أنواع المستندات:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * إنشاء طلب تسجيل جديد
-     * Create new registration request
-     */
-    async createRegistrationRequest(activityTypeId, additionalNotes = '') {
-        try {
-            const { data: { user } } = await this.supabase.auth.getUser();
-            if (!user) throw new Error('يجب تسجيل الدخول أولاً');
-
-            const { data, error } = await this.supabase
-                .from('registration_requests')
-                .insert({
-                    user_id: user.id,
-                    activity_type_id: activityTypeId,
-                    additional_notes: additionalNotes
-                })
-                .select()
-                .single();
-
-            if (error) throw error;
-            return data;
-        } catch (error) {
-            console.error('خطأ في إنشاء طلب التسجيل:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * التحقق من صحة الملف قبل الرفع
-     * Validate file before upload
-     */
-    validateFile(file, documentType) {
-        const errors = [];
-
-        // التحقق من وجود الملف
-        if (!file) {
-            errors.push('لم يتم اختيار ملف');
-            return { isValid: false, errors };
+    try {
+        // شرط الأمان - يجب أن يكون HTTPS أو localhost
+        const isSecure = window.isSecureContext || location.hostname === 'localhost';
+        if (!isSecure) {
+            throw new Error('يجب فتح الموقع عبر HTTPS أو localhost للوصول للكاميرا');
         }
 
-        // التحقق من حجم الملف
-        if (file.size > documentType.max_file_size_mb * 1024 * 1024) {
-            errors.push(`حجم الملف يجب أن يكون أقل من ${documentType.max_file_size_mb} ميجابايت`);
+        // فحص قدرات المتصفح
+        const supports = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+        const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+        if (!supports || isiOS) {
+            console.log('Camera not supported or iOS detected, using file fallback');
+            document.getElementById('fileFallback')?.click();
+            return;
         }
 
-        // التحقق من صيغة الملف
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-        if (!documentType.file_formats.includes(fileExtension)) {
-            errors.push(`صيغة الملف غير مدعومة. الصيغ المسموحة: ${documentType.file_formats.join(', ')}`);
+        // طلب الكاميرا مرة واحدة فقط
+        console.log('🔐 Requesting camera access...');
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: { ideal: 'environment' },
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            },
+            audio: false
+        });
+
+        const video = document.getElementById('camPrev');
+        if (!video) {
+            throw new Error('عنصر الفيديو camPrev غير موجود');
         }
 
-        // التحقق من نوع MIME
-        const allowedMimeTypes = this.getAllowedMimeTypes(documentType.file_formats);
-        if (!allowedMimeTypes.includes(file.type)) {
-            errors.push('نوع الملف غير صحيح');
-        }
+        video.srcObject = stream;
+        video.style.display = 'block';
 
-        return {
-            isValid: errors.length === 0,
-            errors
-        };
-    }
+        // انتظار جاهزية الفيديو قبل التشغيل
+        await new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                reject(new Error('الكاميرا لم تبدأ خلال 5 ثوانٍ'));
+            }, 5000);
 
-    /**
-     * الحصول على أنواع MIME المسموحة
-     * Get allowed MIME types
-     */
-    getAllowedMimeTypes(formats) {
-        const mimeTypes = {
-            'jpg': 'image/jpeg',
-            'jpeg': 'image/jpeg',
-            'png': 'image/png',
-            'pdf': 'application/pdf'
-        };
-
-        return formats.map(format => mimeTypes[format]).filter(Boolean);
-    }
-
-    /**
-     * إنشاء اسم ملف فريد
-     * Generate unique filename
-     */
-    generateUniqueFilename(originalName, userId) {
-        const timestamp = Date.now();
-        const randomString = Math.random().toString(36).substring(2, 8);
-        const extension = originalName.split('.').pop();
-        return `${timestamp}_${randomString}_${userId}.${extension}`;
-    }
-
-    /**
-     * رفع ملف واحد
-     * Upload single file
-     */
-    async uploadFile(file, documentType, requestId, userId) {
-        try {
-            // التحقق من صحة الملف
-            const validation = this.validateFile(file, documentType);
-            if (!validation.isValid) {
-                throw new Error(`خطأ في التحقق من الملف: ${validation.errors.join(', ')}`);
-            }
-
-            // إنشاء اسم ملف فريد
-            const uniqueFilename = this.generateUniqueFilename(file.name, userId);
-
-            // إنشاء مسار التخزين
-            const storagePath = documentType.storage_path_template
-                .replace('{uid}', userId)
-                .replace('{request_id}', requestId);
-
-            const fullPath = `${storagePath}${uniqueFilename}`;
-
-            // رفع الملف إلى Supabase Storage
-            const { data: uploadData, error: uploadError } = await this.supabase.storage
-                .from('documents')
-                .upload(fullPath, file, {
-                    cacheControl: '3600',
-                    upsert: false
-                });
-
-            if (uploadError) throw uploadError;
-
-            // حفظ معلومات الملف في قاعدة البيانات
-            const { data: fileData, error: dbError } = await this.supabase
-                .from('uploaded_files')
-                .insert({
-                    request_id: requestId,
-                    document_type_id: documentType.id,
-                    original_filename: file.name,
-                    stored_filename: uniqueFilename,
-                    file_path: fullPath,
-                    file_size_bytes: file.size,
-                    mime_type: file.type,
-                    file_extension: file.name.split('.').pop().toLowerCase(),
-                    upload_status: 'uploaded'
-                })
-                .select()
-                .single();
-
-            if (dbError) throw dbError;
-
-            return {
-                success: true,
-                data: fileData,
-                storagePath: fullPath
+            video.onloadedmetadata = () => {
+                clearTimeout(timeout);
+                resolve();
             };
 
-        } catch (error) {
-            console.error('خطأ في رفع الملف:', error);
-            return {
-                success: false,
-                error: error.message
+            video.onerror = () => {
+                clearTimeout(timeout);
+                reject(new Error('خطأ في تحميل الفيديو'));
             };
-        }
-    }
+        });
 
-    /**
-     * رفع عدة ملفات
-     * Upload multiple files
-     */
-    async uploadMultipleFiles(files, documentTypes, requestId, userId, onProgress = null) {
-        const results = [];
-        const totalFiles = files.length;
+        await video.play();
+        ready = true;
 
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const documentType = documentTypes.find(dt => dt.id === file.documentTypeId);
+        console.log('✅ Camera opened successfully');
+        toastOk('تم فتح الكاميرا بنجاح ✅');
 
-            if (!documentType) {
-                results.push({
-                    success: false,
-                    error: 'نوع المستند غير موجود',
-                    filename: file.name
-                });
-                continue;
-            }
+    } catch (error) {
+        console.error('❌ Camera error:', error);
+        toastErr(humanizeMediaError(error));
+        stopStream();
 
-            // تحديث التقدم
-            if (onProgress) {
-                onProgress({
-                    current: i + 1,
-                    total: totalFiles,
-                    percentage: Math.round(((i + 1) / totalFiles) * 100),
-                    filename: file.name
-                });
-            }
+        // فولباك لاختيار الملف
+        setTimeout(() => {
+            document.getElementById('fileFallback')?.click();
+        }, 500);
 
-            const result = await this.uploadFile(file, documentType, requestId, userId);
-            results.push({
-                ...result,
-                filename: file.name,
-                documentType: documentType.name_ar
-            });
-        }
-
-        return results;
-    }
-
-    /**
-     * الحصول على الملفات المرفوعة لطلب معين
-     * Get uploaded files for specific request
-     */
-    async getUploadedFiles(requestId) {
-        try {
-            const { data, error } = await this.supabase
-                .from('uploaded_files')
-                .select(`
-                    *,
-                    document_types (
-                        name_ar,
-                        name_en,
-                        is_required,
-                        suggested_filename
-                    )
-                `)
-                .eq('request_id', requestId)
-                .order('uploaded_at', { ascending: true });
-
-            if (error) throw error;
-            return data;
-        } catch (error) {
-            console.error('خطأ في جلب الملفات المرفوعة:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * حذف ملف
-     * Delete file
-     */
-    async deleteFile(fileId) {
-        try {
-            // الحصول على معلومات الملف
-            const { data: fileData, error: fetchError } = await this.supabase
-                .from('uploaded_files')
-                .select('file_path')
-                .eq('id', fileId)
-                .single();
-
-            if (fetchError) throw fetchError;
-
-            // حذف الملف من التخزين
-            const { error: storageError } = await this.supabase.storage
-                .from('documents')
-                .remove([fileData.file_path]);
-
-            if (storageError) throw storageError;
-
-            // حذف سجل الملف من قاعدة البيانات
-            const { error: dbError } = await this.supabase
-                .from('uploaded_files')
-                .delete()
-                .eq('id', fileId);
-
-            if (dbError) throw dbError;
-
-            return { success: true };
-        } catch (error) {
-            console.error('خطأ في حذف الملف:', error);
-            return { success: false, error: error.message };
-        }
-    }
-
-    /**
-     * الحصول على رابط تحميل الملف
-     * Get file download URL
-     */
-    async getFileDownloadUrl(filePath) {
-        try {
-            const { data, error } = await this.supabase.storage
-                .from('documents')
-                .createSignedUrl(filePath, 3600); // صالح لمدة ساعة
-
-            if (error) throw error;
-            return data.signedUrl;
-        } catch (error) {
-            console.error('خطأ في الحصول على رابط التحميل:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * التحقق من اكتمال المستندات المطلوبة
-     * Check if all required documents are uploaded
-     */
-    async checkRequiredDocumentsComplete(requestId, activityTypeId) {
-        try {
-            // الحصول على المستندات المطلوبة
-            const { data: requiredDocs, error: requiredError } = await this.supabase
-                .from('document_types')
-                .select('id')
-                .eq('activity_type_id', activityTypeId)
-                .eq('is_required', true);
-
-            if (requiredError) throw requiredError;
-
-            // الحصول على الملفات المرفوعة
-            const { data: uploadedFiles, error: uploadedError } = await this.supabase
-                .from('uploaded_files')
-                .select('document_type_id')
-                .eq('request_id', requestId)
-                .eq('upload_status', 'uploaded');
-
-            if (uploadedError) throw uploadedError;
-
-            const requiredDocIds = requiredDocs.map(doc => doc.id);
-            const uploadedDocIds = uploadedFiles.map(file => file.document_type_id);
-
-            const missingDocs = requiredDocIds.filter(id => !uploadedDocIds.includes(id));
-
-            return {
-                isComplete: missingDocs.length === 0,
-                missingCount: missingDocs.length,
-                missingDocIds: missingDocs
-            };
-        } catch (error) {
-            console.error('خطأ في التحقق من اكتمال المستندات:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * إرسال الطلب للمراجعة
-     * Submit request for review
-     */
-    async submitRequestForReview(requestId) {
-        try {
-            // التحقق من اكتمال المستندات المطلوبة
-            const { data: request } = await this.supabase
-                .from('registration_requests')
-                .select('activity_type_id')
-                .eq('id', requestId)
-                .single();
-
-            const completeness = await this.checkRequiredDocumentsComplete(requestId, request.activity_type_id);
-
-            if (!completeness.isComplete) {
-                throw new Error(`يجب رفع ${completeness.missingCount} مستند إضافي مطلوب`);
-            }
-
-            // تحديث حالة الطلب
-            const { error } = await this.supabase
-                .from('registration_requests')
-                .update({
-                    status: 'under_review',
-                    submitted_at: new Date().toISOString()
-                })
-                .eq('id', requestId);
-
-            if (error) throw error;
-
-            return { success: true };
-        } catch (error) {
-            console.error('خطأ في إرسال الطلب للمراجعة:', error);
-            return { success: false, error: error.message };
-        }
+    } finally {
+        opening = false;
     }
 }
 
-// تصدير الكلاس للاستخدام
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = FileUploadManager;
-} else if (typeof window !== 'undefined') {
-    window.FileUploadManager = FileUploadManager;
+/**
+ * Capture image from camera and upload
+ * التقاط صورة من الكاميرا ورفعها
+ */
+export async function captureAndUpload() {
+    const video = document.getElementById('camPrev');
+    if (!video || !ready || !video.videoWidth) {
+        toastErr('الكاميرا غير جاهزة للالتقاط');
+        return false;
+    }
+
+    try {
+        // إنشاء canvas والالتقاط
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+        // تحويل إلى blob
+        const blob = await new Promise(resolve =>
+            canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.9)
+        );
+
+        // رفع إلى Supabase
+        const filename = `doc_${Date.now()}.jpg`;
+        const result = await uploadToSupabase(blob, filename);
+
+        if (result.success) {
+            console.log('✅ Image captured and uploaded successfully');
+            showImagePreview(result.publicUrl);
+            toastOk('تم الالتقاط والرفع بنجاح ✅');
+        } else {
+            toastErr(`فشل في الرفع: ${result.error}`);
+        }
+
+        // إيقاف الكاميرا
+        stopStream();
+        return result.success;
+
+    } catch (error) {
+        console.error('❌ Capture error:', error);
+        toastErr(`خطأ في الالتقاط: ${error.message}`);
+        return false;
+    }
+}
+
+/**
+ * Handle fallback file selection (iOS/Safari)
+ * التعامل مع اختيار الملف كبديل
+ */
+export async function onFallbackFile(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+        const filename = `doc_${Date.now()}_${file.name}`;
+        const result = await uploadToSupabase(file, filename);
+
+        if (result.success) {
+            console.log('✅ File uploaded successfully');
+            showImagePreview(result.publicUrl);
+            toastOk('تم رفع الملف بنجاح ✅');
+        } else {
+            toastErr(`فشل في رفع الملف: ${result.error}`);
+        }
+    } catch (error) {
+        console.error('❌ File upload error:', error);
+        toastErr(`خطأ في رفع الملف: ${error.message}`);
+    }
+}
+
+/**
+ * Stop camera stream
+ * إيقاف تدفق الكاميرا
+ */
+export function stopStream() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+        ready = false;
+
+        const video = document.getElementById('camPrev');
+        if (video) {
+            video.srcObject = null;
+            video.style.display = 'none';
+        }
+
+        console.log('🛑 Camera stream stopped');
+    }
+}
+
+/**
+ * Upload file/blob to Supabase Storage
+ * رفع الملف إلى Supabase Storage
+ */
+async function uploadToSupabase(fileOrBlob, filename) {
+    try {
+        const { data, error } = await supabase.storage
+            .from('kyc_docs')
+            .upload(filename, fileOrBlob, {
+                upsert: false,
+                contentType: 'image/jpeg'
+            });
+
+        if (error) {
+            console.error('❌ Upload error:', error);
+            return { success: false, error: error.message };
+        }
+
+        // الحصول على الرابط العام
+        const { data: publicData } = supabase.storage
+            .from('kyc_docs')
+            .getPublicUrl(data.path);
+
+        return {
+            success: true,
+            publicUrl: publicData.publicUrl,
+            path: data.path
+        };
+    } catch (error) {
+        console.error('❌ Upload failed:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+/**
+ * Show image preview
+ * عرض معاينة الصورة
+ */
+function showImagePreview(imageUrl) {
+    // إزالة المعاينات الموجودة
+    const existingPreviews = document.querySelectorAll('.image-preview');
+    existingPreviews.forEach(preview => preview.remove());
+
+    // إنشاء عنصر المعاينة
+    const preview = document.createElement('div');
+    preview.className = 'image-preview';
+    preview.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 200px;
+        height: 150px;
+        border: 2px solid #10b981;
+        border-radius: 8px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 1000;
+    `;
+
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.style.cssText = `
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    `;
+
+    preview.appendChild(img);
+    document.body.appendChild(preview);
+
+    // إزالة تلقائية بعد 5 ثوانٍ
+    setTimeout(() => {
+        if (preview.parentNode) {
+            preview.parentNode.removeChild(preview);
+        }
+    }, 5000);
+}
+
+/**
+ * Humanize media error messages
+ * تحويل رسائل الأخطاء إلى رسائل مفهومة
+ */
+function humanizeMediaError(error) {
+    const name = error?.name || '';
+    const message = error?.message || String(error);
+
+    switch (name) {
+        case 'NotAllowedError':
+            return 'تم رفض الإذن من المتصفح. يرجى السماح بالوصول للكاميرا.';
+        case 'NotFoundError':
+            return 'لا توجد كاميرا متاحة على هذا الجهاز.';
+        case 'NotReadableError':
+            return 'الكاميرا مشغولة بتطبيق آخر. يرجى إغلاق التطبيقات الأخرى.';
+        case 'OverconstrainedError':
+            return 'قيود الكاميرا غير مناسبة. سيتم استخدام الكاميرا الأمامية.';
+        case 'SecurityError':
+            return 'خطأ أمني: يجب فتح الموقع عبر HTTPS.';
+        default:
+            return message || 'خطأ غير معروف في الوصول للكاميرا';
+    }
+}
+
+/**
+ * Toast notification functions
+ * دوال الإشعارات
+ */
+function toastOk(message) {
+    console.log('✅', message);
+    // استخدم نظام الإشعارات الموجود في المشروع
+    if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyOk) {
+        LUXBYTE.notifyOk(message);
+    } else if (typeof window !== 'undefined' && window.LUXBYTE?.notifyOk) {
+        window.LUXBYTE.notifyOk(message);
+    }
+}
+
+function toastErr(message) {
+    console.error('❌', message);
+    // استخدم نظام الإشعارات الموجود في المشروع
+    if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyErr) {
+        LUXBYTE.notifyErr(message);
+    } else if (typeof window !== 'undefined' && window.LUXBYTE?.notifyErr) {
+        window.LUXBYTE.notifyErr(message);
+    }
+}
+
+// تصدير الدوال للاستخدام العام
+if (typeof window !== 'undefined') {
+    window.openCameraOnce = openCameraOnce;
+    window.captureAndUpload = captureAndUpload;
+    window.onFallbackFile = onFallbackFile;
+    window.stopStream = stopStream;
 }

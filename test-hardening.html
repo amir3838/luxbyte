@@ -10,7 +10,7 @@
 <body>
     <div class="container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
         <h1>اختبار تعزيز الأمان - LUXBYTE</h1>
-        
+
         <div class="card" style="margin-bottom: 20px;">
             <h2>1. اختبار الكاميرا</h2>
             <button onclick="testCamera()" class="btn btn-primary">اختبار الكاميرا</button>
@@ -52,7 +52,7 @@
         async function testCamera() {
             const result = document.getElementById('camera-result');
             result.innerHTML = '<p>جاري اختبار الكاميرا...</p>';
-            
+
             try {
                 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -69,7 +69,7 @@
         async function testFCM() {
             const result = document.getElementById('fcm-result');
             result.innerHTML = '<p>جاري اختبار FCM...</p>';
-            
+
             try {
                 if (window.firebaseFCM) {
                     const permission = await window.firebaseFCM.requestPermission();
@@ -89,7 +89,7 @@
         async function testAPI() {
             const result = document.getElementById('api-result');
             result.innerHTML = '<p>جاري اختبار API...</p>';
-            
+
             try {
                 const response = await fetch('/api/push/send', {
                     method: 'POST',
@@ -100,7 +100,7 @@
                         topic: 'test'
                     })
                 });
-                
+
                 if (response.ok) {
                     result.innerHTML = '<p style="color: green;">✅ API يعمل بشكل صحيح</p>';
                 } else {
@@ -114,12 +114,12 @@
         function testNavigation() {
             const result = document.getElementById('nav-result');
             result.innerHTML = '<p>جاري اختبار التنقل...</p>';
-            
+
             try {
                 // Test if navigation functions exist
                 const functions = ['logout', 'testFileUploadGeneration', 'testCameraFunctionality'];
                 const missing = functions.filter(fn => typeof window[fn] !== 'function');
-                
+
                 if (missing.length === 0) {
                     result.innerHTML = '<p style="color: green;">✅ جميع وظائف التنقل متاحة</p>';
                 } else {
@@ -133,31 +133,31 @@
         function testSecurity() {
             const result = document.getElementById('security-result');
             result.innerHTML = '<p>جاري اختبار الأمان...</p>';
-            
+
             try {
                 const tests = [];
-                
+
                 // Test HTTPS
                 if (location.protocol === 'https:') {
                     tests.push('✅ HTTPS مفعل');
                 } else {
                     tests.push('⚠️ HTTP (غير آمن)');
                 }
-                
+
                 // Test Service Worker
                 if ('serviceWorker' in navigator) {
                     tests.push('✅ Service Worker مدعوم');
                 } else {
                     tests.push('❌ Service Worker غير مدعوم');
                 }
-                
+
                 // Test Permissions API
                 if ('permissions' in navigator) {
                     tests.push('✅ Permissions API مدعوم');
                 } else {
                     tests.push('❌ Permissions API غير مدعوم');
                 }
-                
+
                 result.innerHTML = `<p>${tests.join('<br>')}</p>`;
             } catch (error) {
                 result.innerHTML = `<p style="color: red;">❌ خطأ في اختبار الأمان: ${error.message}</p>`;

@@ -118,7 +118,6 @@ body{
   line-height: 1.6;
   direction: rtl;
   min-height: 100vh;
-  font-smooth: antialiased;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -152,6 +151,7 @@ main {
   position: sticky;
   top: 0;
   z-index: 100;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
   transition: all 0.3s ease;
@@ -836,6 +836,7 @@ a{color:inherit}
   position:sticky;
   top:0;
   z-index:50;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   background: #2c3e50;
   border-bottom:2px solid #FFD700;
@@ -1141,6 +1142,7 @@ a{color:inherit}
   opacity:0;
   transform:translateY(20px) scale(0.9);
   transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   font-weight: 500;
 }
@@ -1157,6 +1159,7 @@ a{color:inherit}
   display:none;
   place-items:center;
   z-index:70;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   background:rgba(10,10,12,.6);
 }
@@ -1202,7 +1205,8 @@ a{color:inherit}
   background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.2);
   cursor:pointer;
-  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   color: var(--white);
   font-size: 18px;
@@ -1362,6 +1366,7 @@ a{color:inherit}
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 15px;
   padding: 10px;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -1405,6 +1410,7 @@ a{color:inherit}
   font-size: 12px;
   font-weight: 500;
   z-index: 100;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -1424,6 +1430,7 @@ a{color:inherit}
   cursor: pointer;
   transition: all 0.3s ease;
   z-index: 100;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   color: var(--white);
   font-size: 18px;
@@ -1448,6 +1455,7 @@ a{color:inherit}
   transition: all 0.3s ease;
   z-index: 100;
   font-size: 14px;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -1797,6 +1805,7 @@ body {
   padding: 20px;
   max-width: 400px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   z-index: 1000;
   transform: translateX(100%);
@@ -2091,6 +2100,7 @@ body {
 
 .unified-signup label {
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
 }
 

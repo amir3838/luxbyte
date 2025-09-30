@@ -14,26 +14,26 @@ let stream = null;
 export async function openCamera() {
     const supports = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
     const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    
+
     if (!supports || isiOS) {
         console.log('Camera not supported or iOS detected, using file fallback');
         return document.getElementById('fileFallback').click();
     }
 
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { 
-                facingMode: { ideal: 'environment' } 
-            }, 
-            audio: false 
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: { ideal: 'environment' }
+            },
+            audio: false
         });
-        
+
         const video = document.getElementById('camPrev');
         if (video) {
             video.srcObject = stream;
             video.play();
         }
-        
+
         console.log('Camera opened successfully');
         return true;
     } catch (error) {
@@ -63,19 +63,19 @@ export async function captureAndUpload() {
         ctx.drawImage(video, 0, 0);
 
         // Convert to blob
-        const blob = await new Promise(resolve => 
+        const blob = await new Promise(resolve =>
             canvas.toBlob(blob => resolve(blob), 'image/jpeg', 0.9)
         );
 
         // Upload to Supabase
         const filename = `doc_${Date.now()}.jpg`;
         const result = await uploadToSupabase(blob, filename);
-        
+
         if (result.success) {
             console.log('Image captured and uploaded successfully');
             showImagePreview(result.publicUrl);
         }
-        
+
         // Stop camera
         stopStream();
         return result.success;
@@ -96,7 +96,7 @@ export async function onFallbackFile(event) {
     try {
         const filename = `doc_${Date.now()}_${file.name}`;
         const result = await uploadToSupabase(file, filename);
-        
+
         if (result.success) {
             console.log('File uploaded successfully');
             showImagePreview(result.publicUrl);
@@ -125,9 +125,9 @@ async function uploadToSupabase(fileOrBlob, filename) {
     try {
         const { data, error } = await supabase.storage
             .from('kyc_docs')
-            .upload(filename, fileOrBlob, { 
-                upsert: false, 
-                contentType: 'image/jpeg' 
+            .upload(filename, fileOrBlob, {
+                upsert: false,
+                contentType: 'image/jpeg'
             });
 
         if (error) {
@@ -140,10 +140,10 @@ async function uploadToSupabase(fileOrBlob, filename) {
             .from('kyc_docs')
             .getPublicUrl(data.path);
 
-        return { 
-            success: true, 
+        return {
+            success: true,
             publicUrl: publicData.publicUrl,
-            path: data.path 
+            path: data.path
         };
     } catch (error) {
         console.error('Upload failed:', error);
