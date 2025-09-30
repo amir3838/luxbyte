@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار نظام الحارس - LUXBYTE</title>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        .success {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        .error {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        .info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+        button {
+            background: #6b7cff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5a6fd8;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>اختبار نظام الحارس</h1>
+        <p>هذه الصفحة لاختبار نظام الحارس والتأكد من أنه لا يمنع الوصول للصفحات العامة.</p>
+        
+        <div id="test-results"></div>
+        
+        <button onclick="runTests()">تشغيل الاختبارات</button>
+        <button onclick="testPageDetection()">اختبار كشف الصفحة</button>
+        <button onclick="testAuthCheck()">اختبار التحقق من المصادقة</button>
+        <button onclick="clearResults()">مسح النتائج</button>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/guard.js"></script>
+    <script type="module" src="js/supabase-client.js"></script>
+    
+    <script>
+        function addResult(message, type = 'info') {
+            const results = document.getElementById('test-results');
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            results.appendChild(div);
+        }
+
+        function clearResults() {
+            document.getElementById('test-results').innerHTML = '';
+        }
+
+        async function testPageDetection() {
+            addResult('بدء اختبار كشف الصفحة...', 'info');
+            
+            try {
+                // Test current page detection
+                const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+                addResult(`الصفحة الحالية: ${currentPage}`, 'info');
+                
+                // Test if it's detected as public
+                if (typeof window.isCurrentPagePublic === 'function') {
+                    const isPublic = window.isCurrentPagePublic();
+                    addResult(`هل الصفحة عامة؟ ${isPublic}`, isPublic ? 'success' : 'error');
+                } else {
+                    addResult('دالة isCurrentPagePublic غير متاحة', 'error');
+                }
+                
+                // Test if it's detected as protected
+                if (typeof window.isCurrentPageProtected === 'function') {
+                    const isProtected = window.isCurrentPageProtected();
+                    addResult(`هل الصفحة محمية؟ ${isProtected}`, isProtected ? 'error' : 'success');
+                } else {
+                    addResult('دالة isCurrentPageProtected غير متاحة', 'error');
+                }
+                
+            } catch (error) {
+                addResult(`خطأ في اختبار كشف الصفحة: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAuthCheck() {
+            addResult('بدء اختبار التحقق من المصادقة...', 'info');
+            
+            try {
+                if (typeof window.requireAuth === 'function') {
+                    const isAuthenticated = await window.requireAuth();
+                    addResult(`هل المستخدم مسجل دخول؟ ${isAuthenticated}`, isAuthenticated ? 'success' : 'info');
+                } else {
+                    addResult('دالة requireAuth غير متاحة', 'error');
+                }
+            } catch (error) {
+                addResult(`خطأ في اختبار المصادقة: ${error.message}`, 'error');
+            }
+        }
+
+        async function runTests() {
+            clearResults();
+            addResult('بدء تشغيل جميع الاختبارات...', 'info');
+            
+            await testPageDetection();
+            await testAuthCheck();
+            
+            addResult('انتهت جميع الاختبارات', 'success');
+        }
+
+        // Auto-run tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                runTests();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

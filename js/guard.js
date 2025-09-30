@@ -117,6 +117,11 @@ export async function requireAuth() {
         return true;
     } catch (error) {
         console.error('❌ Auth requirement check error:', error);
+        // في حالة الخطأ، لا نمنع الوصول للصفحات العامة
+        if (isCurrentPagePublic()) {
+            console.log('🌐 Auth check failed but page is public, allowing access');
+            return true;
+        }
         redirectToAuth();
         return false;
     }
@@ -285,7 +290,9 @@ export function isCurrentPageProtected() {
  */
 export function isCurrentPagePublic() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    return PUBLIC_PAGES.includes(currentPage);
+    const isPublic = PUBLIC_PAGES.includes(currentPage);
+    console.log(`🔍 Checking if page is public: ${currentPage} -> ${isPublic}`);
+    return isPublic;
 }
 
 /**
@@ -294,29 +301,34 @@ export function isCurrentPagePublic() {
 export async function initAutoGuard() {
     try {
         console.log('🛡️ Initializing auto page guard...');
-
-        // إذا كانت الصفحة محمية، تحقق من المصادقة
-        if (isCurrentPageProtected()) {
-            console.log('🔒 Protected page detected, checking authentication...');
-            const isAuthenticated = await requireAuth();
-            if (!isAuthenticated) return false;
-
-            console.log('✅ Protected page access granted');
-            return true;
-        }
-
+        
         // إذا كانت الصفحة عامة، لا حاجة للتحقق
         if (isCurrentPagePublic()) {
             console.log('🌐 Public page detected, no authentication required');
             return true;
         }
-
-        console.log('⚠️ Unknown page type, applying default protection');
-        const isAuthenticated = await requireAuth();
-        return isAuthenticated;
+        
+        // إذا كانت الصفحة محمية، تحقق من المصادقة
+        if (isCurrentPageProtected()) {
+            console.log('🔒 Protected page detected, checking authentication...');
+            const isAuthenticated = await requireAuth();
+            if (!isAuthenticated) return false;
+            
+            console.log('✅ Protected page access granted');
+            return true;
+        }
+        
+        // للصفحات غير المعروفة، اعتبارها عامة (لا تحتاج تسجيل دخول)
+        console.log('⚠️ Unknown page type, treating as public page');
+        return true;
 
     } catch (error) {
         console.error('❌ Auto guard initialization error:', error);
+        // في حالة الخطأ، لا نمنع الوصول للصفحات العامة
+        if (isCurrentPagePublic()) {
+            console.log('🌐 Error occurred but page is public, allowing access');
+            return true;
+        }
         redirectToAuth();
         return false;
     }
@@ -367,8 +379,14 @@ window.isCurrentPagePublic = isCurrentPagePublic;
 // تهيئة تلقائية للحارس عند تحميل الصفحة
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        initAutoGuard();
+        // تأخير بسيط للتأكد من تحميل جميع السكريبتات
+        setTimeout(() => {
+            initAutoGuard();
+        }, 100);
     });
 } else {
-    initAutoGuard();
+    // تأخير بسيط للتأكد من تحميل جميع السكريبتات
+    setTimeout(() => {
+        initAutoGuard();
+    }, 100);
 }
