@@ -22,10 +22,8 @@ class PharmacyDashboard {
             await this.waitForSupabase();
 
             // تهيئة Supabase
-            this.supabase = window.supabase.createClient(
-                window.SUPABASE_CONFIG?.url || 'YOUR_SUPABASE_URL',
-                window.SUPABASE_CONFIG?.anonKey || 'YOUR_SUPABASE_ANON_KEY'
-            );
+            const { getSupabase } = await import('./supabase-client.js');
+            this.supabase = getSupabase();
 
             // التحقق من المصادقة
             await this.checkAuthentication();

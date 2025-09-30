@@ -6,8 +6,10 @@
     <title>لوحة تحكم الصيدلية - Luxbyte</title>
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/pharmacy-dashboard.css">
+    <link rel="stylesheet" href="../css/themes.css">
 </head>
 <body>
+    <!-- Navigation will be injected by js/navigation-bar.js -->
     <div class="dashboard-container">
         <!-- Header -->
         <header class="dashboard-header">
@@ -376,10 +378,39 @@
         </main>
     </div>
 
+    <!-- Navigation and Theme Scripts -->
+    <script type="module" src="../js/navigation-bar.js"></script>
+    <script type="module" src="../js/theme-manager.js"></script>
+    <script type="module" src="../js/translation-manager.js"></script>
+
+    <!-- Dashboard Scripts -->
     <script type="module" src="../js/supabase-client.js"></script>
     <script type="module" src="../js/guard.js"></script>
     <script src="../js/supabase-dashboard.js"></script>
     <script src="../js/dashboard.js"></script>
     <script src="../js/pharmacy-dashboard.js"></script>
+
+    <script>
+        // تهيئة لوحة تحكم الصيدلية
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // تهيئة Guard أولاً
+                const { initAutoGuard } = await import('../js/guard.js');
+                await initAutoGuard();
+
+                // انتظار تحميل جميع المودولات
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                // تهيئة لوحة التحكم
+                if (typeof PharmacyDashboard !== 'undefined') {
+                    window.pharmacyDashboard = new PharmacyDashboard();
+                } else {
+                    console.error('PharmacyDashboard class not found');
+                }
+            } catch (error) {
+                console.error('خطأ في تهيئة لوحة تحكم الصيدلية:', error);
+            }
+        });
+    </script>
 </body>
 </html>
