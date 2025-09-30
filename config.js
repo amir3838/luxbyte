@@ -310,6 +310,37 @@ async function initConfig() {
         }
         return null;
       }
+
+      // Update window.__ENV__ with loaded values
+      window.__ENV__ = {
+        NEXT_PUBLIC_SUPABASE_URL: ENV.SUPABASE_URL,
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ENV.SUPABASE_ANON_KEY,
+        NEXT_PUBLIC_FIREBASE_API_KEY: ENV.FIREBASE_API_KEY,
+        NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ENV.FIREBASE_AUTH_DOMAIN,
+        NEXT_PUBLIC_FIREBASE_PROJECT_ID: ENV.FIREBASE_PROJECT_ID,
+        NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ENV.FIREBASE_MESSAGING_SENDER_ID,
+        NEXT_PUBLIC_FIREBASE_APP_ID: ENV.FIREBASE_APP_ID,
+        NEXT_PUBLIC_FIREBASE_VAPID_KEY: ENV.FIREBASE_VAPID_KEY,
+        NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ENV.FIREBASE_MEASUREMENT_ID
+      };
+
+      console.log('✅ Environment loaded successfully from new system');
+      return ENV;
+    }
+
+    // Fallback to existing configuration
+    console.log('📦 Using existing configuration');
+    return window.CONFIG.__ENV__;
+
+  } catch (error) {
+    console.error('❌ Failed to initialize configuration:', error);
+    if (window.toastError) {
+      window.toastError('خطأ في تحميل أزرار الرفع: تعذّر جلب إعدادات البيئة');
+    }
+    return null;
+  }
+}
+
 // Make initConfig globally available
 if (typeof window !== 'undefined') {
   window.initConfig = initConfig;
