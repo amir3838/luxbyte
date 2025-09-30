@@ -2100,24 +2100,24 @@ body {
     padding: 16px;
     margin-bottom: 24px;
   }
-  
+
   .unified-signup .form-section h3 {
     font-size: 18px;
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
-  
+
   .unified-signup .form-row {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .unified-signup .file-upload {
     padding: 16px;
     min-height: 100px;
   }
-  
+
   .unified-signup .btn {
     width: 100%;
     justify-content: center;

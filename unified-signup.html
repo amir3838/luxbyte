@@ -180,8 +180,8 @@
                 <!-- File Upload Section -->
                 <div class="form-section">
                     <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-file-upload" style="margin-left: 8px; color: #6b7cff;"></i>
-                        المستندات المطلوبة
+                        <i class="fas fa-camera" style="margin-left: 8px; color: #6b7cff;"></i>
+                        تصوير المستندات المطلوبة
                     </h3>
 
                     <div id="file-upload-container">
@@ -200,7 +200,7 @@
                         <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
                             <input type="checkbox" name="terms_accepted" required style="margin-top: 4px;">
                             <span style="line-height: 1.5;">
-                                أوافق على <a href="terms-conditions.html" target="_blank" style="color: #6b7cff; text-decoration: underline;">الشروط والأحكام</a> 
+                                أوافق على <a href="terms-conditions.html" target="_blank" style="color: #6b7cff; text-decoration: underline;">الشروط والأحكام</a>
                                 و <a href="privacy-policy.html" target="_blank" style="color: #6b7cff; text-decoration: underline;">سياسة الخصوصية</a>
                                 <span style="color: #ef4444;">*</span>
                             </span>
@@ -252,12 +252,12 @@
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 console.log('🚀 LUXBYTE Unified Signup Page Loaded');
-                
+
                 // Get role from URL parameter
                 selectedRole = LUXBYTE.getUrlParam('role');
                 console.log('🎯 Selected role from URL:', selectedRole);
                 console.log('📋 Available roles:', Object.keys(window.CONFIG.ROLES));
-                
+
                 // If no role from URL, try to get from localStorage or default
                 if (!selectedRole) {
                     selectedRole = localStorage.getItem('selectedRole') || 'restaurant';
@@ -371,12 +371,12 @@
 
                     // Upload files if any
                     if (Object.keys(uploadedFiles).length > 0) {
-                        console.log('📁 Uploading files...');
+                        console.log('📁 Uploading photos...');
                         await uploadFiles(authData.user.id, insertData[0].id);
                     }
 
                     LUXBYTE.notifyOk('تم إرسال الطلب بنجاح! سيتم مراجعته قريباً.');
-                    
+
                     // Redirect to success page
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
@@ -469,7 +469,7 @@
             try {
                 const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=ar`);
                 const data = await response.json();
-                
+
                 if (data && data.display_name) {
                     const addressField = document.getElementById('address');
                     if (addressField) {
@@ -487,7 +487,7 @@
             console.log('🔧 Starting generateFileUploadFields...');
             console.log('🎯 Current selectedRole:', selectedRole);
             console.log('📋 Available roles:', Object.keys(window.CONFIG.ROLES));
-            
+
             const roleConfig = window.CONFIG.ROLES[selectedRole];
             const container = document.getElementById('file-upload-container');
 
@@ -496,7 +496,7 @@
 
             if (!container) {
                 console.error('❌ File upload container not found!');
-                LUXBYTE.notifyErr('لم يتم العثور على حاوية رفع الملفات');
+                LUXBYTE.notifyErr('لم يتم العثور على حاوية تصوير المستندات');
                 return;
             }
 
@@ -510,7 +510,7 @@
 
             if (!roleConfig.files || roleConfig.files.length === 0) {
                 console.warn('⚠️ No files required for role:', selectedRole);
-                container.innerHTML = `<div style="text-align: center; padding: 40px; color: #f59e0b;"><i class="fas fa-info-circle" style="font-size: 24px; margin-bottom: 12px;"></i><p style="font-size: 16px; margin: 0;">لا توجد ملفات مطلوبة لهذا النشاط</p></div>`;
+                container.innerHTML = `<div style="text-align: center; padding: 40px; color: #f59e0b;"><i class="fas fa-info-circle" style="font-size: 24px; margin-bottom: 12px;"></i><p style="font-size: 16px; margin: 0;">لا توجد مستندات مطلوبة لهذا النشاط</p></div>`;
                 return;
             }
 
@@ -522,13 +522,13 @@
             headerDiv.innerHTML = `
                 <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px;">
                     <i class="fas fa-info-circle" style="color: #0ea5e9; font-size: 24px;"></i>
-                    <h4 style="margin: 0; color: #0c4a6e; font-size: 18px;">تعليمات رفع الملفات</h4>
+                    <h4 style="margin: 0; color: #0c4a6e; font-size: 18px;">تعليمات تصوير المستندات</h4>
                 </div>
                 <p style="margin: 0; color: #075985; font-size: 14px; line-height: 1.5;">
-                    • اضغط على أي منطقة لرفع الملف أو اسحب الملف وأفلته<br>
-                    • الملفات المطلوبة marked بـ (*)<br>
-                    • الحد الأقصى لحجم الملف: 5 ميجابايت<br>
-                    • الأنواع المسموحة: PDF, JPG, JPEG, PNG
+                    • اضغط على أي منطقة لتصوير المستند بالكاميرا<br>
+                    • المستندات المطلوبة marked بـ (*)<br>
+                    • الحد الأقصى لحجم الصورة: 10 ميجابايت<br>
+                    • استخدم الكاميرا لتصوير المستندات بوضوح
                 </p>
             `;
             container.appendChild(headerDiv);
@@ -536,7 +536,7 @@
             // Generate file upload fields
             roleConfig.files.forEach((file, index) => {
                 console.log(`📁 Creating field ${index + 1}/${roleConfig.files.length}:`, file.name);
-                
+
                 const fileDiv = document.createElement('div');
                 fileDiv.className = 'form-group';
                 fileDiv.style.cssText = 'margin-bottom: 24px;';
@@ -554,19 +554,19 @@
 
                 uploadDiv.innerHTML = `
                     <div class="upload-icon" style="font-size: 32px; color: #6b7280;">
-                        <i class="fas fa-${file.accept.startsWith('image') ? 'image' : 'file-pdf'}"></i>
+                        <i class="fas fa-camera"></i>
                     </div>
                     <div class="upload-text" style="font-size: 16px; font-weight: 500; color: #374151;">
-                        اضغط لرفع ${file.label}
+                        اضغط لتصوير ${file.label}
                     </div>
                     <div class="upload-requirement" style="font-size: 14px; color: #6b7280; margin-top: 4px;">
-                        ${file.description}
+                        ${file.description} - استخدم الكاميرا لتصوير المستند
                     </div>
                     <div class="upload-button" style="background: #3b82f6; color: white; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; margin-top: 8px;">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        رفع الملف
+                        <i class="fas fa-camera"></i>
+                        تصوير بالكاميرا
                     </div>
-                    <input type="file" class="file-input" accept="${file.accept}" ${file.required ? 'required' : ''} style="display: none;">
+                    <input type="file" class="file-input" accept="image/*" capture="environment" ${file.required ? 'required' : ''} style="display: none;">
                 `;
 
                 // Event listeners
@@ -631,7 +631,7 @@
 
             console.log(`✅ Generated ${roleConfig.files.length} file upload fields successfully`);
             if (roleConfig.files.length > 0) {
-                LUXBYTE.notifyOk(`تم تحميل ${roleConfig.files.length} أزرار رفع ملفات بنجاح`);
+                LUXBYTE.notifyOk(`تم تحميل ${roleConfig.files.length} أزرار تصوير المستندات بنجاح`);
             }
         }
 
@@ -639,14 +639,13 @@
         function handleFileUpload(event, fileConfig, container) {
             const file = event.target.files[0];
             if (!file) {
-                console.log('No file selected');
+                console.log('No photo selected');
                 return;
             }
 
-            console.log('File selected:', { name: file.name, size: file.size, type: file.type });
+            console.log('Photo selected:', { name: file.name, size: file.size, type: file.type });
 
             if (!validateFile(file, fileConfig)) {
-                LUXBYTE.notifyErr(`نوع الملف أو الحجم غير مناسب. الحد الأقصى: 5 ميجابايت`);
                 return;
             }
 
@@ -656,11 +655,11 @@
 
             const uploadText = container.querySelector('.upload-text');
             const uploadButton = container.querySelector('.upload-button');
-            
+
             if (uploadText) {
                 uploadText.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981; margin-left: 8px;"></i>تم رفع: ${file.name}`;
             }
-            
+
             if (uploadButton) {
                 uploadButton.innerHTML = `<i class="fas fa-check"></i>تم الرفع`;
                 uploadButton.style.background = '#10b981';
@@ -689,30 +688,25 @@
             container.appendChild(fileInfo);
 
             uploadedFiles[fileConfig.name] = file;
-            console.log('File uploaded successfully:', fileConfig.name);
-            LUXBYTE.notifyOk(`تم رفع ${fileConfig.label} بنجاح`);
+            console.log('Photo uploaded successfully:', fileConfig.name);
+            LUXBYTE.notifyOk(`تم تصوير ${fileConfig.label} بنجاح`);
         }
 
         // Validate file
         function validateFile(file, fileConfig) {
             console.log('Validating file:', { name: file.name, type: file.type, size: file.size });
 
-            if (fileConfig.accept.startsWith('image')) {
-                if (!file.type.startsWith('image/')) {
-                    console.log('Invalid image type:', file.type);
-                    return false;
-                }
-            } else {
-                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-                if (!allowedTypes.includes(file.type)) {
-                    console.log('Invalid file type:', file.type, 'Allowed:', allowedTypes);
-                    return false;
-                }
+            // Only accept images (camera photos)
+            if (!file.type.startsWith('image/')) {
+                console.log('Invalid image type:', file.type);
+                LUXBYTE.notifyErr('يرجى تصوير المستند بالكاميرا - الصور فقط مسموحة');
+                return false;
             }
 
-            const maxSize = 5 * 1024 * 1024; // 5MB
+            const maxSize = 10 * 1024 * 1024; // 10MB for camera photos
             if (file.size > maxSize) {
                 console.log('File too large:', file.size, 'Max:', maxSize);
+                LUXBYTE.notifyErr('حجم الصورة كبير جداً - الحد الأقصى 10 ميجابايت');
                 return false;
             }
 
@@ -722,42 +716,42 @@
 
         // Remove file
         function removeFile(fileName, buttonElement) {
-            console.log('Removing file:', fileName);
+            console.log('Removing photo:', fileName);
             delete uploadedFiles[fileName];
-            
+
             const container = buttonElement.closest('.file-upload');
             if (container) {
                 container.classList.remove('uploaded');
                 container.style.borderColor = '#d1d5db';
                 container.style.background = '#fafbfc';
-                
+
                 const uploadText = container.querySelector('.upload-text');
                 const uploadButton = container.querySelector('.upload-button');
-                
+
                 if (uploadText) {
-                    uploadText.innerHTML = `اضغط لرفع ${fileName}`;
+                    uploadText.innerHTML = `اضغط لتصوير ${fileName}`;
                 }
-                
+
                 if (uploadButton) {
-                    uploadButton.innerHTML = `<i class="fas fa-cloud-upload-alt"></i>رفع الملف`;
+                    uploadButton.innerHTML = `<i class="fas fa-camera"></i>تصوير بالكاميرا`;
                     uploadButton.style.background = '#3b82f6';
                 }
-                
+
                 const fileInfo = container.querySelector('.file-info');
                 if (fileInfo) {
                     fileInfo.remove();
                 }
-                
+
                 const fileInput = container.querySelector('.file-input');
                 if (fileInput) {
                     fileInput.value = '';
                 }
             }
-            
-            LUXBYTE.notifyOk('تم حذف الملف');
+
+            LUXBYTE.notifyOk('تم حذف الصورة');
         }
 
-        // Upload files to Supabase Storage
+        // Upload photos to Supabase Storage
         async function uploadFiles(userId, businessId) {
             const roleConfig = window.CONFIG.ROLES[selectedRole];
             const bucket = roleConfig.bucket;
@@ -766,16 +760,16 @@
                 try {
                     const fileExt = file.name.split('.').pop();
                     const fileName = `${userId}/${businessId}/${fileName}.${fileExt}`;
-                    
+
                     const { data, error } = await LUXBYTE.supabase.storage
                         .from(bucket)
                         .upload(fileName, file);
 
                     if (error) throw error;
-                    console.log('File uploaded to storage:', fileName);
+                    console.log('Photo uploaded to storage:', fileName);
                 } catch (error) {
-                    console.error('Error uploading file:', fileName, error);
-                    LUXBYTE.notifyErr(`فشل في رفع الملف: ${fileName}`);
+                    console.error('Error uploading photo:', fileName, error);
+                    LUXBYTE.notifyErr(`فشل في رفع الصورة: ${fileName}`);
                 }
             }
         }
