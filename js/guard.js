@@ -1,4 +1,4 @@
-import { supabase } from './supabase-client.js';
+import { getSupabase } from './supabase-client.js';
 
 /**
  * خريطة توجيه لوحات التحكم حسب نوع الحساب
@@ -14,6 +14,37 @@ const DASHBOARD_MAP = {
 };
 
 /**
+ * قائمة الصفحات المحمية التي تتطلب تسجيل دخول
+ */
+const PROTECTED_PAGES = [
+    'dashboard.html',
+    'dashboard/pharmacy.html',
+    'dashboard/supermarket.html',
+    'dashboard/restaurant.html',
+    'dashboard/clinic.html',
+    'dashboard/courier.html',
+    'dashboard/driver.html',
+    'admin-panel.html',
+    'profile.html',
+    'settings.html'
+];
+
+/**
+ * قائمة الصفحات العامة التي لا تحتاج تسجيل دخول
+ */
+const PUBLIC_PAGES = [
+    'index.html',
+    'auth.html',
+    'unified-signup.html',
+    'signup.html',
+    'choose-role.html',
+    'choose-platform.html',
+    'account-type-selection.html',
+    'terms-conditions.html',
+    'social.html'
+];
+
+/**
  * التحقق من حالة المصادقة وتوجيه المستخدم للداشبورد المناسب
  */
 export async function checkAuthAndRedirect() {
@@ -21,6 +52,7 @@ export async function checkAuthAndRedirect() {
         console.log('🔍 Checking authentication status...');
 
         // التحقق من وجود جلسة نشطة
+        const supabase = getSupabase();
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
         if (sessionError) {
@@ -73,6 +105,7 @@ export async function checkAuthAndRedirect() {
  */
 export async function requireAuth() {
     try {
+        const supabase = getSupabase();
         const { data: { session } } = await supabase.auth.getSession();
 
         if (!session) {
@@ -94,6 +127,7 @@ export async function requireAuth() {
  */
 export async function getCurrentUser() {
     try {
+        const supabase = getSupabase();
         const { data: { user }, error } = await supabase.auth.getUser();
 
         if (error) {
@@ -116,6 +150,7 @@ export async function getCurrentProfile() {
         const user = await getCurrentUser();
         if (!user) return null;
 
+        const supabase = getSupabase();
         const { data: profile, error } = await supabase
             .from('profiles')
             .select('*')
@@ -194,6 +229,7 @@ export async function logout() {
     try {
         console.log('🔐 Starting logout process...');
 
+        const supabase = getSupabase();
         const { error } = await supabase.auth.signOut();
 
         if (error) {
@@ -237,6 +273,56 @@ function showSuccess(message) {
 }
 
 /**
+ * التحقق من الصفحة الحالية وحمايتها
+ */
+export function isCurrentPageProtected() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    return PROTECTED_PAGES.includes(currentPage);
+}
+
+/**
+ * التحقق من الصفحة الحالية إذا كانت عامة
+ */
+export function isCurrentPagePublic() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    return PUBLIC_PAGES.includes(currentPage);
+}
+
+/**
+ * تهيئة الحماية التلقائية للصفحة
+ */
+export async function initAutoGuard() {
+    try {
+        console.log('🛡️ Initializing auto page guard...');
+        
+        // إذا كانت الصفحة محمية، تحقق من المصادقة
+        if (isCurrentPageProtected()) {
+            console.log('🔒 Protected page detected, checking authentication...');
+            const isAuthenticated = await requireAuth();
+            if (!isAuthenticated) return false;
+            
+            console.log('✅ Protected page access granted');
+            return true;
+        }
+        
+        // إذا كانت الصفحة عامة، لا حاجة للتحقق
+        if (isCurrentPagePublic()) {
+            console.log('🌐 Public page detected, no authentication required');
+            return true;
+        }
+        
+        console.log('⚠️ Unknown page type, applying default protection');
+        const isAuthenticated = await requireAuth();
+        return isAuthenticated;
+
+    } catch (error) {
+        console.error('❌ Auto guard initialization error:', error);
+        redirectToAuth();
+        return false;
+    }
+}
+
+/**
  * تهيئة الحماية للصفحة
  * @param {string} requiredAccountType - نوع الحساب المطلوب (اختياري)
  */
@@ -274,3 +360,15 @@ window.redirectByAccount = redirectByAccount;
 window.redirectToAuth = redirectToAuth;
 window.logout = logout;
 window.initPageGuard = initPageGuard;
+window.initAutoGuard = initAutoGuard;
+window.isCurrentPageProtected = isCurrentPageProtected;
+window.isCurrentPagePublic = isCurrentPagePublic;
+
+// تهيئة تلقائية للحارس عند تحميل الصفحة
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initAutoGuard();
+    });
+} else {
+    initAutoGuard();
+}

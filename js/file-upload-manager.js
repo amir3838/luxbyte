@@ -312,16 +312,21 @@ function closeCameraModal() {
 function openFileSelection(documentType, accept) {
     console.log(`📁 Opening file selection for: ${documentType}`);
 
-    // Create file input
+    // Create file input - force JPG/PNG only for images
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = accept;
+    input.accept = accept.includes('image') ? 'image/jpeg,image/png' : accept;
     input.multiple = false;
     input.style.display = 'none';
 
     input.onchange = async (event) => {
         const file = event.target.files[0];
         if (file) {
+            // Validate file type for images
+            if (accept.includes('image') && !file.type.match(/^image\/(jpeg|png)$/)) {
+                showToast('يرجى اختيار ملف JPG أو PNG فقط', 'error');
+                return;
+            }
             await uploadFile(file, documentType, file.name);
         }
         input.remove();
@@ -859,75 +864,86 @@ function createFileUploadField(fileConfig) {
         config = {
             name: fileConfig,
             label: getDocumentLabel(fileConfig),
-            accept: 'image/*',
+            accept: 'image/jpeg,image/png',
             required: true,
-            description: 'صورة واضحة للمستند'
+            description: 'صورة واضحة للمستند (JPG أو PNG فقط)'
         };
     } else {
-        // Full config object
+        // Full config object - ensure only JPG/PNG for images
         config = fileConfig;
+        if (config.accept && config.accept.includes('image')) {
+            config.accept = 'image/jpeg,image/png';
+        }
     }
 
     field.id = `file-upload-${config.name}`;
 
-    const acceptTypes = config.accept || 'image/*';
+    const acceptTypes = config.accept || 'image/jpeg,image/png';
     const isRequired = config.required || false;
 
     field.innerHTML = `
         <div class="file-upload-label">
-            <label>
+            <label style="font-weight: 600; color: #1f2937; margin-bottom: 5px; display: block;">
                 ${config.label}
                 ${isRequired ? '<span style="color: #ef4444;">*</span>' : ''}
             </label>
-            ${config.description ? `<p class="file-description">${config.description}</p>` : ''}
+            ${config.description ? `<p class="file-description" style="font-size: 12px; color: #6b7280; margin: 5px 0 0 0;">${config.description}</p>` : ''}
         </div>
-        <div class="file-upload-controls">
+        <div class="file-upload-controls" style="margin-top: 10px;">
             <button type="button" class="btn btn-primary upload-btn"
-                    onclick="openCameraOrFile('${config.name}', '${acceptTypes}')">
+                    onclick="openCameraOrFile('${config.name}', '${acceptTypes}')"
+                    style="background: #6b7cff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
                 <i class="fas fa-camera"></i>
                 تصوير/رفع
             </button>
         </div>
     `;
 
-    // Add styles
+    // Add styles with improved white theme and dark text
     const style = document.createElement('style');
     style.textContent = `
         .file-upload-field {
             margin-bottom: 20px;
-            padding: 15px;
+            padding: 20px;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            background: #f9fafb;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         .file-upload-label label {
             font-weight: 600;
-            color: #374151;
-            margin-bottom: 5px;
+            color: #1f2937;
+            margin-bottom: 8px;
             display: block;
+            font-size: 16px;
         }
         .file-description {
-            font-size: 12px;
+            font-size: 13px;
             color: #6b7280;
-            margin: 5px 0 0 0;
+            margin: 8px 0 0 0;
+            line-height: 1.4;
         }
         .file-upload-controls {
-            margin-top: 10px;
+            margin-top: 15px;
         }
         .upload-btn {
             background: #6b7cff;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
+            padding: 12px 24px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.2s ease;
         }
         .upload-btn:hover {
             background: #5a6fd8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(107, 124, 255, 0.3);
         }
         .progress-bar {
             width: 100%;
