@@ -966,9 +966,10 @@
 
     <!-- Core Scripts - Load in correct order -->
     <script src="config.js" defer></script>
-    <script type="module" defer src="js/supabase-client.js"></script>
-    <script type="module" defer src="js/file-upload-manager.js"></script>
-    <script type="module" defer src="js/signup-init.js"></script>
+    <script type="module" src="src/utils/env.js"></script>
+    <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/file-upload-manager.js"></script>
+    <script type="module" src="js/signup-init.js"></script>
 
     <!-- Auth and Guard Scripts -->
     <script type="module" src="js/auth.js"></script>

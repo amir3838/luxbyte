@@ -1,5 +1,5 @@
 // js/signup-init.js - مُهيّئ موحد وآمن لصفحة التسجيل
-// لا يعتمد على أي fetch - fallback دائماً
+import { getSupabaseClient } from './supabase-client.js';
 
 // تعريف المستندات المطلوبة لكل دور
 const requiredDocsByRole = {
@@ -233,10 +233,10 @@ function createCameraModal(stream, docType, accept) {
     return modal;
 }
 
-// دالة تهيئة رئيسية - لا تعتمد على أي async خارجي
-function init() {
+// دالة تهيئة رئيسية - مع دعم ESM
+async function init() {
     console.log('🚀 بدء تهيئة صفحة التسجيل...');
-
+    
     // 1) أوقف أي سبينر فوراً
     const spinner = $('uploadButtonsSpinner');
     const container = $('uploadButtonsContainer');
@@ -250,14 +250,22 @@ function init() {
         const urlParams = new URLSearchParams(location.search);
         const role = urlParams.get('role') || 'pharmacy';
         const docs = requiredDocsByRole[role] || requiredDocsByRole.pharmacy;
-
+        
         console.log('🎯 الدور المحدد:', role);
         console.log('📋 المستندات المطلوبة:', docs);
 
-        // 3) ابنِ الأزرار والحقول (دوماً – حتى لو فشل أي شيء آخر)
+        // 3) تأكد من تهيئة Supabase
+        try {
+            await getSupabaseClient();
+            console.log('✅ Supabase جاهز');
+        } catch (supabaseError) {
+            console.warn('⚠️ Supabase غير متاح، المتابعة بدون اتصال:', supabaseError.message);
+        }
+
+        // 4) ابنِ الأزرار والحقول (دوماً – حتى لو فشل أي شيء آخر)
         buildDocButtons(container, docs);
 
-        // 4) اربط الأزرار بالمدير الموحّد
+        // 5) اربط الأزرار بالمدير الموحّد
         for (const docType of docs) {
             try {
                 // استخدام bindUploadButton المحسّن
@@ -268,9 +276,9 @@ function init() {
                         docType,
                         onDone: ({ publicUrl, path }) => {
                             const preview = $(`preview_${docType}`);
-                            if (preview) {
-                                preview.src = publicUrl;
-                                preview.style.display = 'block';
+                            if (preview) { 
+                                preview.src = publicUrl; 
+                                preview.style.display = 'block'; 
                             }
                             toastOk(`تم رفع ${getDocumentLabel(docType)} بنجاح`);
                         },
@@ -288,13 +296,13 @@ function init() {
         }
 
         toastOk('تم تهيئة أزرار المستندات بنجاح');
-
+        
     } catch (e) {
         console.error('❌ خطأ في التهيئة:', e);
         toastErr('خطأ في تهيئة الصفحة: ' + (e?.message || e));
         showRetry(container);
     } finally {
-        // 5) أخفِ السبينر مهما حدث
+        // 6) أخفِ السبينر مهما حدث
         if (spinner) {
             spinner.style.display = 'none';
             console.log('🔄 تم إخفاء السبينر');
@@ -385,11 +393,13 @@ function showRetry(container) {
     }
 }
 
+// تصدير الدوال للاستخدام الخارجي
+export { init, buildDocButtons, getDocumentLabel, bindUploadButton, bindSimpleUpload };
+
 // تهيئة الصفحة عند التحميل
 document.addEventListener('DOMContentLoaded', () => {
     console.log('📄 تم تحميل صفحة التسجيل');
-    init();
+    init().catch(error => {
+        console.error('❌ خطأ في تهيئة الصفحة:', error);
+    });
 });
-
-// تصدير الدوال للاستخدام الخارجي
-export { init, buildDocButtons, getDocumentLabel };

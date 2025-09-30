@@ -1,61 +1,80 @@
 /**
- * Unified Supabase Client
- * عميل سوبابيز موحد - لوكس بايت
+ * Unified Supabase Client - ESM Module
+ * عميل سوبابيز موحد - وحدة ESM
  */
 
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+import { loadEnvInline, loadEnv, validateEnv } from "../src/utils/env.js";
+
 let supabaseClient = null;
+let envConfig = null;
+
+/**
+ * Initialize environment configuration
+ * تهيئة إعدادات البيئة
+ */
+async function initializeEnv() {
+  if (envConfig) return envConfig;
+
+  try {
+    // Try inline config first (fastest)
+    envConfig = loadEnvInline();
+    
+    // If inline config is incomplete, try fetch
+    if (!envConfig.SUPABASE_URL || !envConfig.SUPABASE_ANON_KEY) {
+      console.log('🔄 Inline config incomplete, trying fetch...');
+      envConfig = await loadEnv();
+    }
+
+    // Validate configuration
+    const validation = validateEnv(envConfig);
+    if (!validation.ok) {
+      throw new Error(`Environment validation failed: ${validation.missing.join(', ')}`);
+    }
+
+    console.log('✅ Environment loaded successfully:', validation.present);
+    return envConfig;
+  } catch (error) {
+    console.error('❌ Failed to load environment:', error);
+    throw new Error('Environment configuration failed');
+  }
+}
 
 /**
  * Get or create Supabase client instance
  * الحصول على أو إنشاء مثيل عميل سوبابيز
  */
-function getSupabaseClient() {
-  if (!supabaseClient) {
-    // Check if we're in browser environment
-    if (typeof window === 'undefined') {
-      console.warn('Supabase client can only be initialized in browser environment');
-      return null;
-    }
+export async function getSupabaseClient() {
+  if (supabaseClient) return supabaseClient;
 
-    // Check if Supabase is available
-    if (typeof window.supabase === 'undefined') {
-      console.warn('Supabase library not loaded');
-      return null;
-    }
+  try {
+    // Initialize environment
+    const env = await initializeEnv();
 
-    try {
-      supabaseClient = window.supabase.createClient(
-        window.CONFIG?.__ENV__?.NEXT_PUBLIC_SUPABASE_URL || window.CONFIG?.SUPABASE_URL || 'https://your-project.supabase.co',
-        window.CONFIG?.__ENV__?.NEXT_PUBLIC_SUPABASE_ANON_KEY || window.CONFIG?.SUPABASE_ANON_KEY || 'your-anon-key',
-        {
-          auth: {
-            storageKey: 'luxbyte-auth', // Unique storage key
-            autoRefreshToken: true,
-            persistSession: true,
-            detectSessionInUrl: true
-          }
-        }
-      );
+    // Create Supabase client
+    supabaseClient = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, {
+      auth: {
+        storageKey: 'luxbyte-auth',
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true
+      }
+    });
 
-      console.log('Supabase client initialized successfully');
-
-      // Make supabase available globally
-      window.supabase = supabaseClient;
-    } catch (error) {
-      console.error('Failed to initialize Supabase client:', error);
-      return null;
-    }
+    console.log('✅ Supabase client initialized successfully');
+    return supabaseClient;
+  } catch (error) {
+    console.error('❌ Failed to initialize Supabase client:', error);
+    throw error;
   }
-
-  return supabaseClient;
 }
 
 /**
  * Get current user
  * الحصول على المستخدم الحالي
  */
-async function getCurrentUser() {
-  const supabase = getSupabaseClient();
+export async function getCurrentUser() {
+  const supabase = await getSupabaseClient();
   if (!supabase) return null;
 
   try {
@@ -75,8 +94,8 @@ async function getCurrentUser() {
  * Sign up user
  * تسجيل مستخدم جديد
  */
-async function signUp(email, password) {
-  const supabase = getSupabaseClient();
+export async function signUp(email, password) {
+  const supabase = await getSupabaseClient();
   if (!supabase) {
     throw new Error('Supabase client not available');
   }
@@ -102,8 +121,8 @@ async function signUp(email, password) {
  * Sign in user
  * تسجيل دخول المستخدم
  */
-async function signIn(email, password) {
-  const supabase = getSupabaseClient();
+export async function signIn(email, password) {
+  const supabase = await getSupabaseClient();
   if (!supabase) {
     throw new Error('Supabase client not available');
   }
@@ -129,8 +148,8 @@ async function signIn(email, password) {
  * Sign out user
  * تسجيل خروج المستخدم
  */
-async function signOut() {
-  const supabase = getSupabaseClient();
+export async function signOut() {
+  const supabase = await getSupabaseClient();
   if (!supabase) {
     throw new Error('Supabase client not available');
   }
@@ -154,16 +173,15 @@ async function signOut() {
  * Listen to auth state changes
  * الاستماع لتغييرات حالة المصادقة
  */
-function onAuthStateChange(callback) {
-  const supabase = getSupabaseClient();
+export async function onAuthStateChange(callback) {
+  const supabase = await getSupabaseClient();
   if (!supabase) return null;
 
   return supabase.auth.onAuthStateChange(callback);
 }
 
-// Export functions
-window.LUXBYTE = window.LUXBYTE || {};
-window.LUXBYTE.supabase = {
+// Create a default export for convenience
+const supabase = {
   getClient: getSupabaseClient,
   getCurrentUser: getCurrentUser,
   signUp: signUp,
@@ -172,14 +190,20 @@ window.LUXBYTE.supabase = {
   onAuthStateChange: onAuthStateChange
 };
 
-// For module exports
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    getSupabaseClient,
-    getCurrentUser,
-    signUp,
-    signIn,
-    signOut,
-    onAuthStateChange
+export { supabase };
+
+// Make available globally for legacy scripts
+if (typeof window !== 'undefined') {
+  window.LUXBYTE = window.LUXBYTE || {};
+  window.LUXBYTE.supabase = supabase;
+  
+  // Also provide direct access
+  window.supabase = {
+    getClient: getSupabaseClient,
+    getCurrentUser: getCurrentUser,
+    signUp: signUp,
+    signIn: signIn,
+    signOut: signOut,
+    onAuthStateChange: onAuthStateChange
   };
 }
