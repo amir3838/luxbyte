@@ -163,6 +163,11 @@ class NavigationBar {
                             </div>
                         `}
 
+                        <!-- Language Toggle -->
+                        <button class="lang-toggle" onclick="toggleLanguage()" aria-label="تبديل اللغة">
+                            <i class="fas fa-globe"></i>
+                        </button>
+
                         <!-- Theme Toggle -->
                         <button class="theme-toggle" onclick="toggleTheme()" aria-label="تبديل الثيم">
                             <i class="fas fa-adjust"></i>
@@ -582,6 +587,14 @@ window.toggleTheme = function() {
         window.themeManager.toggleTheme();
     } else {
         console.warn('Theme manager not available');
+    }
+};
+
+window.toggleLanguage = function() {
+    if (window.translationManager) {
+        window.translationManager.toggleLanguage();
+    } else {
+        console.warn('Translation manager not available');
     }
 };
 

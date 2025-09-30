@@ -44,6 +44,12 @@
   --border-hover: #d1d5db;
   --shadow: var(--shadow-md);
   --shadow-hover: var(--shadow-lg);
+  
+  /* Fixed navbar colors for both themes */
+  --bg-header: #000000;
+  --text-header: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: #ffffff;
 }
 
 /* Dark Theme */
@@ -58,6 +64,12 @@
   --border-hover: #64748b;
   --shadow: var(--shadow-lg);
   --shadow-hover: var(--shadow-xl);
+  
+  /* Fixed navbar colors for both themes */
+  --bg-header: #000000;
+  --text-header: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: #ffffff;
 }
 
 /* Apply theme to document */
@@ -166,8 +178,8 @@ p, span, div, a {
   left: 0;
   right: 0;
   z-index: 1000;
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
+  background: #000000 !important;
+  border-bottom: 1px solid #333333;
   box-shadow: var(--shadow);
   transition: all 0.3s ease;
 }
@@ -215,6 +227,7 @@ p, span, div, a {
 .brand-text {
   font-weight: 700;
   letter-spacing: -0.025em;
+  color: #ffffff !important;
 }
 
 .navbar-nav {
@@ -229,20 +242,20 @@ p, span, div, a {
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   text-decoration: none;
-  color: var(--text-muted);
+  color: #ffffff !important;
   border-radius: 0.5rem;
   transition: all 0.3s ease;
   font-weight: 500;
 }
 
 .nav-link:hover {
-  color: var(--text);
-  background-color: var(--bg-secondary);
+  color: #ffffff !important;
+  background-color: #333333;
 }
 
 .nav-link.active {
-  color: var(--luxbyte-blue);
-  background-color: rgba(33, 128, 141, 0.1);
+  color: #ffffff !important;
+  background-color: #333333;
 }
 
 .nav-link i {
@@ -274,6 +287,18 @@ p, span, div, a {
   color: white;
 }
 
+/* Navbar specific button styles */
+.luxbyte-navbar .btn-primary {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #ffffff;
+}
+
+.luxbyte-navbar .btn-primary:hover {
+  background: #f0f0f0 !important;
+  color: #000000 !important;
+}
+
 .btn-primary:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-hover);
@@ -293,6 +318,18 @@ p, span, div, a {
   background: transparent;
   color: var(--text);
   border: 1px solid var(--border-color);
+}
+
+/* Navbar specific outline button styles */
+.luxbyte-navbar .btn-outline {
+  background: transparent !important;
+  color: #ffffff !important;
+  border: 1px solid #ffffff;
+}
+
+.luxbyte-navbar .btn-outline:hover {
+  background: #ffffff !important;
+  color: #000000 !important;
 }
 
 .btn-outline:hover {
@@ -317,6 +354,20 @@ p, span, div, a {
 .theme-toggle:hover {
   background: var(--border-hover);
   transform: scale(1.05);
+}
+
+/* Navbar specific toggle button styles */
+.luxbyte-navbar .theme-toggle,
+.luxbyte-navbar .lang-toggle {
+  background: #333333 !important;
+  color: #ffffff !important;
+  border: 1px solid #555555;
+}
+
+.luxbyte-navbar .theme-toggle:hover,
+.luxbyte-navbar .lang-toggle:hover {
+  background: #555555 !important;
+  color: #ffffff !important;
 }
 
 /* Language Toggle Button */
@@ -363,8 +414,8 @@ p, span, div, a {
   position: absolute;
   top: 100%;
   right: 0;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background: #000000 !important;
+  border: 1px solid #333333;
   border-radius: 0.5rem;
   box-shadow: var(--shadow-lg);
   min-width: 200px;
@@ -386,10 +437,10 @@ p, span, div, a {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  color: var(--text);
+  color: #ffffff !important;
   text-decoration: none;
   transition: background-color 0.3s ease;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid #333333;
 }
 
 .dropdown-item:last-child {
@@ -397,7 +448,26 @@ p, span, div, a {
 }
 
 .dropdown-item:hover {
-  background: var(--bg-secondary);
+  background: #333333;
+}
+
+/* User button styles */
+.luxbyte-navbar .user-button {
+  background: #333333 !important;
+  color: #ffffff !important;
+  border: 1px solid #555555;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.luxbyte-navbar .user-button:hover {
+  background: #555555 !important;
+  color: #ffffff !important;
 }
 
 .dropdown-item i {
