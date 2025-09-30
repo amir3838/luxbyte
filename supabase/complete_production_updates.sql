@@ -22,23 +22,23 @@ CREATE INDEX IF NOT EXISTS idx_account_audit_changed_at ON public.account_audit(
 CREATE INDEX IF NOT EXISTS idx_account_audit_changed_by ON public.account_audit(changed_by);
 
 -- Function to log account changes
-CREATE OR REPLACE FUNCTION log_account_change() 
+CREATE OR REPLACE FUNCTION log_account_change()
 RETURNS TRIGGER AS $$
 BEGIN
   -- Only log if account actually changed
   IF NEW.account IS DISTINCT FROM OLD.account THEN
     INSERT INTO public.account_audit (
-      user_id, 
-      old_account, 
-      new_account, 
+      user_id,
+      old_account,
+      new_account,
       changed_by,
       ip_address,
       request_id,
       user_agent
     ) VALUES (
-      NEW.user_id, 
-      OLD.account, 
-      NEW.account, 
+      NEW.user_id,
+      OLD.account,
+      NEW.account,
       COALESCE(
         current_setting('request.jwt.claim.sub', true),
         current_setting('request.jwt.claim.email', true),
@@ -59,7 +59,7 @@ DROP TRIGGER IF EXISTS trg_log_account_change ON public.profiles;
 -- Create trigger for account changes
 CREATE TRIGGER trg_log_account_change
   AFTER UPDATE ON public.profiles
-  FOR EACH ROW 
+  FOR EACH ROW
   EXECUTE FUNCTION log_account_change();
 
 -- RLS policies for audit table
@@ -69,8 +69,8 @@ ALTER TABLE public.account_audit ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admins can view audit logs" ON public.account_audit
   FOR SELECT USING (
     EXISTS (
-      SELECT 1 FROM public.profiles 
-      WHERE user_id = auth.uid() 
+      SELECT 1 FROM public.profiles
+      WHERE user_id = auth.uid()
       AND account = 'admin'
     )
   );
@@ -165,8 +165,8 @@ ALTER TABLE public.error_logs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admins can view error logs" ON public.error_logs
   FOR SELECT USING (
     EXISTS (
-      SELECT 1 FROM public.profiles 
-      WHERE user_id = auth.uid() 
+      SELECT 1 FROM public.profiles
+      WHERE user_id = auth.uid()
       AND account = 'admin'
     )
   );
@@ -196,8 +196,8 @@ ALTER TABLE public.system_health ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admins can view system health" ON public.system_health
   FOR SELECT USING (
     EXISTS (
-      SELECT 1 FROM public.profiles 
-      WHERE user_id = auth.uid() 
+      SELECT 1 FROM public.profiles
+      WHERE user_id = auth.uid()
       AND account = 'admin'
     )
   );
@@ -212,9 +212,9 @@ RETURNS INTEGER AS $$
 DECLARE
   deleted_count INTEGER;
 BEGIN
-  DELETE FROM public.account_audit 
+  DELETE FROM public.account_audit
   WHERE changed_at < NOW() - INTERVAL '90 days';
-  
+
   GET DIAGNOSTICS deleted_count = ROW_COUNT;
   RETURN deleted_count;
 END;
@@ -225,10 +225,10 @@ RETURNS INTEGER AS $$
 DECLARE
   deleted_count INTEGER;
 BEGIN
-  DELETE FROM public.notifications 
-  WHERE created_at < NOW() - INTERVAL '30 days' 
+  DELETE FROM public.notifications
+  WHERE created_at < NOW() - INTERVAL '30 days'
   AND is_read = TRUE;
-  
+
   GET DIAGNOSTICS deleted_count = ROW_COUNT;
   RETURN deleted_count;
 END;
@@ -239,9 +239,9 @@ RETURNS INTEGER AS $$
 DECLARE
   deleted_count INTEGER;
 BEGIN
-  DELETE FROM public.error_logs 
+  DELETE FROM public.error_logs
   WHERE created_at < NOW() - INTERVAL '30 days';
-  
+
   GET DIAGNOSTICS deleted_count = ROW_COUNT;
   RETURN deleted_count;
 END;
@@ -257,13 +257,13 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
   RETURN QUERY
-  SELECT 
+  SELECT
     COUNT(*) as total_errors,
     jsonb_object_agg(level, level_count) as errors_by_level,
     jsonb_object_agg(hour, hour_count) as errors_by_hour,
     jsonb_object_agg(message, message_count) as top_errors
   FROM (
-    SELECT 
+    SELECT
       level,
       COUNT(*) as level_count,
       EXTRACT(hour FROM timestamp) as hour,
@@ -299,7 +299,7 @@ GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO anon, authenticated;
 
 -- 10. Create a view for admin dashboard
 CREATE OR REPLACE VIEW admin_dashboard_stats AS
-SELECT 
+SELECT
   (SELECT COUNT(*) FROM public.profiles) as total_users,
   (SELECT COUNT(*) FROM public.profiles WHERE account = 'pharmacy') as pharmacy_users,
   (SELECT COUNT(*) FROM public.profiles WHERE account = 'supermarket') as supermarket_users,
@@ -316,7 +316,7 @@ GRANT SELECT ON admin_dashboard_stats TO authenticated;
 
 -- 11. Insert initial system health check
 INSERT INTO public.system_health (check_name, status, message, data)
-VALUES ('database_migration', 'healthy', 'Production updates applied successfully', 
+VALUES ('database_migration', 'healthy', 'Production updates applied successfully',
         jsonb_build_object('version', '1.0.0', 'timestamp', NOW()));
 
 COMMIT;

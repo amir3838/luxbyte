@@ -67,7 +67,7 @@ self.addEventListener('notificationclick', (event) => {
           return client.focus();
         }
       }
-      
+
       // If app is not open, open it
       if (clients.openWindow) {
         return clients.openWindow('/');
@@ -103,7 +103,7 @@ self.addEventListener('push', (event) => {
 // Handle notification close
 self.addEventListener('notificationclose', (event) => {
   console.log('📱 Notification closed:', event);
-  
+
   // Track notification dismissal
   if (event.notification.data && event.notification.data.trackingId) {
     // Send analytics event
@@ -148,7 +148,7 @@ self.addEventListener('fetch', (event) => {
 // Handle sync events for background sync
 self.addEventListener('sync', (event) => {
   console.log('📱 Background sync:', event.tag);
-  
+
   if (event.tag === 'notification-sync') {
     event.waitUntil(
       // Sync any pending notifications
@@ -162,7 +162,7 @@ async function syncPendingNotifications() {
   try {
     // Get pending notifications from IndexedDB
     const pendingNotifications = await getPendingNotifications();
-    
+
     for (const notification of pendingNotifications) {
       try {
         await fetch('/api/sync-notification', {
@@ -172,7 +172,7 @@ async function syncPendingNotifications() {
           },
           body: JSON.stringify(notification)
         });
-        
+
         // Remove from pending list
         await removePendingNotification(notification.id);
       } catch (error) {
@@ -188,18 +188,18 @@ async function syncPendingNotifications() {
 function getPendingNotifications() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('luxbyte-notifications', 1);
-    
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => {
       const db = request.result;
       const transaction = db.transaction(['pending'], 'readonly');
       const store = transaction.objectStore('pending');
       const getAllRequest = store.getAll();
-      
+
       getAllRequest.onsuccess = () => resolve(getAllRequest.result);
       getAllRequest.onerror = () => reject(getAllRequest.error);
     };
-    
+
     request.onupgradeneeded = () => {
       const db = request.result;
       if (!db.objectStoreNames.contains('pending')) {
@@ -212,14 +212,14 @@ function getPendingNotifications() {
 function removePendingNotification(id) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('luxbyte-notifications', 1);
-    
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => {
       const db = request.result;
       const transaction = db.transaction(['pending'], 'readwrite');
       const store = transaction.objectStore('pending');
       const deleteRequest = store.delete(id);
-      
+
       deleteRequest.onsuccess = () => resolve();
       deleteRequest.onerror = () => reject(deleteRequest.error);
     };
