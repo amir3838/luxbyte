@@ -349,7 +349,7 @@ async function uploadFile(file, documentType, filename) {
         // Get current user ID and email
         const userId = await getCurrentUserId();
         const userEmail = await getCurrentUserEmail();
-        
+
         if (!userId) {
             throw new Error('لم يتم العثور على معرف المستخدم');
         }
@@ -359,8 +359,8 @@ async function uploadFile(file, documentType, filename) {
         if (file instanceof Blob && !file.name) {
             const ext = file.type?.split('/')[1] || 'bin';
             const safeName = `${documentType}_${Date.now()}.${ext}`;
-            namedFile = new File([file], safeName, { 
-                type: file.type || 'application/octet-stream' 
+            namedFile = new File([file], safeName, {
+                type: file.type || 'application/octet-stream'
             });
         }
 
@@ -473,13 +473,13 @@ function updateFileUploadUI(documentType, imageUrl, filename) {
     // Create preview
     const preview = document.createElement('div');
     preview.className = 'file-preview';
-    
+
     // Create image element with proper URL handling
     const img = document.createElement('img');
     img.src = imageUrl;
     img.alt = filename;
     img.className = 'file-preview-image';
-    
+
     // Handle URL cleanup when image loads
     img.onload = () => {
         // Only revoke if it's a blob URL
@@ -487,7 +487,7 @@ function updateFileUploadUI(documentType, imageUrl, filename) {
             URL.revokeObjectURL(imageUrl);
         }
     };
-    
+
     preview.innerHTML = `
         <div class="file-preview-content">
             <div class="file-preview-info">
@@ -499,7 +499,7 @@ function updateFileUploadUI(documentType, imageUrl, filename) {
             </button>
         </div>
     `;
-    
+
     // Insert image at the beginning
     const content = preview.querySelector('.file-preview-content');
     content.insertBefore(img, content.firstChild);

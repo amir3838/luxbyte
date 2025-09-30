@@ -54,7 +54,7 @@ self.addEventListener('notificationclick', (event) => {
 
   // Get URL from notification data
   const url = event.notification.data?.url || '/';
-  
+
   // Handle different actions
   if (event.action === 'close') {
     return; // Just close the notification

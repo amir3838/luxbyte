@@ -7,7 +7,7 @@ class MonitoringSystem {
         this.maxLogs = 1000;
         this.sessionId = this.generateSessionId();
         this.startTime = Date.now();
-        
+
         // Store original console methods to prevent recursion
         this.originalConsole = {
             log: console.log,

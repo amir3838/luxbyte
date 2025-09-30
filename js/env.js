@@ -3,7 +3,7 @@ export async function loadEnv() {
   // 1) Try inline config first (fastest)
   const el = document.getElementById('app-config');
   if (el) {
-    try { 
+    try {
       const config = JSON.parse(el.textContent);
       console.log('✅ Loaded environment from inline config');
       return config;
@@ -11,7 +11,7 @@ export async function loadEnv() {
       console.warn('Failed to parse inline config:', e);
     }
   }
-  
+
   // 2) Fallback to fetch
   try {
     const res = await fetch('/config.json', { cache: 'no-store' });
