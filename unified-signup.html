@@ -201,12 +201,17 @@
 
                 <!-- File Upload Section -->
                 <div class="form-section">
-                    <div id="file-upload-container">
-                        <div style="text-align: center; padding: 40px; color: var(--text-muted);">
-                            <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
-                            <p>جاري تحميل أزرار رفع الصور...</p>
-                        </div>
+                    <!-- Error Banner -->
+                    <div id="pageErrorBanner" style="display: none;"></div>
+                    
+                    <!-- Loading Spinner -->
+                    <div id="uploadButtonsSpinner" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
+                        <p>جاري تحميل أزرار رفع الصور...</p>
                     </div>
+                    
+                    <!-- Upload Buttons Container -->
+                    <div id="uploadButtonsContainer"></div>
                 </div>
 
                 <!-- Terms and Conditions -->
@@ -265,6 +270,7 @@
     <script src="js/engagement-notification.js" defer></script>
     <script src="js/enhanced-ui.js" defer></script>
     <script src="js/comprehensive-test.js" defer></script>
+    <script src="js/file-upload-manager.js" defer></script>
     <script>
         // Global variables
         let selectedRole = null;
@@ -638,7 +644,7 @@
         function generateFileUploadFields() {
             console.log('🔧 Starting generateFileUploadFields with unified system...');
             console.log('🎯 Current selectedRole:', selectedRole);
-            
+
             // Use the new unified file upload system
             if (typeof window.generateFileUploadFields === 'function') {
                 window.generateFileUploadFields(selectedRole);
@@ -933,7 +939,7 @@
 
     <!-- File Upload Manager -->
     <script src="js/file-upload-manager.js" defer></script>
-    
+
     <!-- Camera Upload Manager -->
     <script type="module">
         import { openCamera, captureAndUpload, onFallbackFile, stopStream } from './js/camera-upload-manager.js';
@@ -953,220 +959,7 @@
         });
     </script>
 
-    <!-- File Upload System -->
-    <script type="module">
-        import { uploadToSupabase } from './js/file-upload-manager.js';
-
-        // Wait for DOM to be ready
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('📁 Initializing file upload system...');
-
-            // File upload variables
-            let uploadedFiles = [];
-            let isUploading = false;
-
-            // Get elements
-            const fileInput = document.getElementById('fileInput');
-            const uploadArea = document.getElementById('file-upload-area');
-            const filesPreview = document.getElementById('uploaded-files-preview');
-            const filesList = document.getElementById('files-list');
-            const uploadProgress = document.getElementById('upload-progress');
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-
-            if (!fileInput || !uploadArea) {
-                console.error('❌ File upload elements not found');
-                return;
-            }
-
-            // File input change handler
-            fileInput.addEventListener('change', handleFileSelection);
-
-            // Drag and drop handlers
-            uploadArea.addEventListener('dragover', handleDragOver);
-            uploadArea.addEventListener('dragleave', handleDragLeave);
-            uploadArea.addEventListener('drop', handleDrop);
-
-            // Click handler for upload area
-            uploadArea.addEventListener('click', () => {
-                fileInput.click();
-            });
-
-            function handleFileSelection(event) {
-                const files = Array.from(event.target.files);
-                console.log('📁 Files selected:', files.length);
-                processFiles(files);
-            }
-
-            function handleDragOver(event) {
-                event.preventDefault();
-                uploadArea.style.borderColor = '#10b981';
-                uploadArea.style.backgroundColor = '#f0fdf4';
-            }
-
-            function handleDragLeave(event) {
-                event.preventDefault();
-                uploadArea.style.borderColor = '#6b7cff';
-                uploadArea.style.backgroundColor = '#f8fafc';
-            }
-
-            function handleDrop(event) {
-                event.preventDefault();
-                uploadArea.style.borderColor = '#6b7cff';
-                uploadArea.style.backgroundColor = '#f8fafc';
-
-                const files = Array.from(event.dataTransfer.files);
-                console.log('📁 Files dropped:', files.length);
-                processFiles(files);
-            }
-
-            async function processFiles(files) {
-                if (isUploading) {
-                    console.warn('⚠️ Upload already in progress');
-                    return;
-                }
-
-                // Filter image files
-                const imageFiles = files.filter(file => file.type.startsWith('image/'));
-
-                if (imageFiles.length === 0) {
-                    alert('⚠️ يرجى اختيار ملفات صور صالحة');
-                    return;
-                }
-
-                // Check file sizes (max 10MB each)
-                const oversizedFiles = imageFiles.filter(file => file.size > 10 * 1024 * 1024);
-                if (oversizedFiles.length > 0) {
-                    alert(`⚠️ بعض الملفات كبيرة جداً (أكثر من 10MB): ${oversizedFiles.map(f => f.name).join(', ')}`);
-                    return;
-                }
-
-                isUploading = true;
-                showUploadProgress();
-
-                try {
-                    for (let i = 0; i < imageFiles.length; i++) {
-                        const file = imageFiles[i];
-                        updateProgress(i, imageFiles.length, `جاري رفع ${file.name}...`);
-
-                        const result = await uploadFile(file);
-                        if (result.success) {
-                            uploadedFiles.push({
-                                file: file,
-                                url: result.publicUrl,
-                                path: result.path
-                            });
-                        } else {
-                            console.error('❌ Upload failed:', result.error);
-                        }
-                    }
-
-                    updateProgress(imageFiles.length, imageFiles.length, 'تم الرفع بنجاح!');
-                    showUploadedFiles();
-
-                    // Reset file input
-                    fileInput.value = '';
-
-                } catch (error) {
-                    console.error('❌ Upload error:', error);
-                    alert(`خطأ في رفع الملفات: ${error.message}`);
-                } finally {
-                    isUploading = false;
-                    setTimeout(() => {
-                        hideUploadProgress();
-                    }, 2000);
-                }
-            }
-
-            async function uploadFile(file) {
-                try {
-                    const filename = `doc_${Date.now()}_${file.name}`;
-                    const result = await uploadToSupabase(file, filename);
-                    return result;
-                } catch (error) {
-                    console.error('❌ File upload error:', error);
-                    return { success: false, error: error.message };
-                }
-            }
-
-            function showUploadProgress() {
-                uploadProgress.style.display = 'block';
-                progressBar.style.width = '0%';
-            }
-
-            function updateProgress(current, total, text) {
-                const percentage = (current / total) * 100;
-                progressBar.style.width = `${percentage}%`;
-                progressText.textContent = text;
-            }
-
-            function hideUploadProgress() {
-                uploadProgress.style.display = 'none';
-            }
-
-            function showUploadedFiles() {
-                if (uploadedFiles.length === 0) return;
-
-                filesPreview.style.display = 'block';
-                filesList.innerHTML = '';
-
-                uploadedFiles.forEach((fileData, index) => {
-                    const fileDiv = document.createElement('div');
-                    fileDiv.style.cssText = `
-                        position: relative;
-                        width: 120px;
-                        height: 120px;
-                        border-radius: 8px;
-                        overflow: hidden;
-                        border: 2px solid #e5e7eb;
-                        background: #f9fafb;
-                    `;
-
-                    const img = document.createElement('img');
-                    img.src = fileData.url;
-                    img.style.cssText = `
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                    `;
-
-                    const removeBtn = document.createElement('button');
-                    removeBtn.innerHTML = '×';
-                    removeBtn.style.cssText = `
-                        position: absolute;
-                        top: 4px;
-                        right: 4px;
-                        width: 24px;
-                        height: 24px;
-                        border-radius: 50%;
-                        border: none;
-                        background: #ef4444;
-                        color: white;
-                        cursor: pointer;
-                        font-size: 16px;
-                        font-weight: bold;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    `;
-
-                    removeBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        uploadedFiles.splice(index, 1);
-                        showUploadedFiles();
-                        if (uploadedFiles.length === 0) {
-                            filesPreview.style.display = 'none';
-                        }
-                    });
-
-                    fileDiv.appendChild(img);
-                    fileDiv.appendChild(removeBtn);
-                    filesList.appendChild(fileDiv);
-                });
-            }
-
-            console.log('✅ File upload system initialized successfully');
-        });
-    </script>
+    <!-- Unified Signup Initializer -->
+    <script type="module" src="js/unified-signup-init.js"></script>
 </body>
 </html>

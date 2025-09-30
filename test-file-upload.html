@@ -10,22 +10,22 @@
 <body>
     <div class="container" style="max-width: 800px; margin: 50px auto; padding: 20px;">
         <h1>اختبار نظام رفع الملفات</h1>
-        
+
         <div class="card">
             <h2>اختبار رفع الملفات</h2>
-            
+
             <div id="test-results" style="margin-bottom: 20px;">
                 <h3>نتائج الاختبار:</h3>
                 <ul id="test-list"></ul>
             </div>
-            
+
             <div id="file-upload-container">
                 <div style="text-align: center; padding: 40px; color: #666;">
                     <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
                     <p>جاري تحميل نظام رفع الملفات...</p>
                 </div>
             </div>
-            
+
             <div style="margin-top: 20px;">
                 <button onclick="testCameraFunctionality()" class="btn btn-primary">
                     <i class="fas fa-camera"></i>
@@ -48,10 +48,10 @@
     <script src="config.js"></script>
     <script src="js/supabase-client.js"></script>
     <script src="js/file-upload-manager.js"></script>
-    
+
     <script>
         let testResults = [];
-        
+
         function addTestResult(test, status, message) {
             const result = {
                 test: test,
@@ -62,11 +62,11 @@
             testResults.push(result);
             updateTestDisplay();
         }
-        
+
         function updateTestDisplay() {
             const list = document.getElementById('test-list');
             list.innerHTML = '';
-            
+
             testResults.forEach(result => {
                 const li = document.createElement('li');
                 li.style.cssText = `
@@ -83,23 +83,23 @@
                 list.appendChild(li);
             });
         }
-        
+
         function clearTestResults() {
             testResults = [];
             updateTestDisplay();
         }
-        
+
         function testCameraFunctionality() {
             addTestResult('اختبار الكاميرا', 'info', 'بدء اختبار الكاميرا...');
-            
+
             if (typeof window.openCameraOrFile === 'function') {
                 addTestResult('دالة الكاميرا', 'success', 'دالة openCameraOrFile متاحة');
-                
+
                 // Test camera support
                 const isSupported = checkCameraSupport();
-                addTestResult('دعم الكاميرا', isSupported ? 'success' : 'warning', 
+                addTestResult('دعم الكاميرا', isSupported ? 'success' : 'warning',
                     isSupported ? 'الكاميرا مدعومة' : 'الكاميرا غير مدعومة');
-                
+
                 // Test camera access
                 if (isSupported) {
                     openCameraOrFile('test_document', 'image/*')
@@ -114,13 +114,13 @@
                 addTestResult('دالة الكاميرا', 'error', 'دالة openCameraOrFile غير متاحة');
             }
         }
-        
+
         function testFileSelection() {
             addTestResult('اختبار اختيار الملف', 'info', 'بدء اختبار اختيار الملف...');
-            
+
             if (typeof window.openCameraOrFile === 'function') {
                 addTestResult('دالة اختيار الملف', 'success', 'دالة openCameraOrFile متاحة');
-                
+
                 // Test file selection
                 openCameraOrFile('test_file', 'image/*')
                     .then(() => {
@@ -133,25 +133,25 @@
                 addTestResult('دالة اختيار الملف', 'error', 'دالة openCameraOrFile غير متاحة');
             }
         }
-        
+
         function checkCameraSupport() {
-            return !!(navigator.mediaDevices && 
-                      navigator.mediaDevices.getUserMedia && 
+            return !!(navigator.mediaDevices &&
+                      navigator.mediaDevices.getUserMedia &&
                       window.isSecureContext);
         }
-        
+
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             addTestResult('تحميل الصفحة', 'success', 'تم تحميل الصفحة بنجاح');
-            
+
             // Test if file upload manager is loaded
             if (typeof window.initFileUpload === 'function') {
                 addTestResult('نظام رفع الملفات', 'success', 'تم تحميل نظام رفع الملفات');
-                
+
                 // Initialize file upload system
                 if (window.initFileUpload()) {
                     addTestResult('تهيئة النظام', 'success', 'تم تهيئة نظام رفع الملفات بنجاح');
-                    
+
                     // Generate test file upload fields
                     if (typeof window.generateFileUploadFields === 'function') {
                         window.generateFileUploadFields('restaurant');
@@ -165,7 +165,7 @@
             } else {
                 addTestResult('نظام رفع الملفات', 'error', 'نظام رفع الملفات غير متاح');
             }
-            
+
             // Test Supabase connection
             if (typeof window.supabase !== 'undefined') {
                 addTestResult('اتصال Supabase', 'success', 'تم الاتصال بـ Supabase');

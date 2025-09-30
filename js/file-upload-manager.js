@@ -1,7 +1,7 @@
 /**
  * Unified File Upload Manager for LUXBYTE
  * مدير موحد لرفع الملفات وتصوير المستندات
- * 
+ *
  * Features:
  * - Camera capture with fallback to file selection
  * - Multiple file types support (images, PDFs)
@@ -16,23 +16,52 @@ let uploadedFiles = {};
 let currentUploading = false;
 
 /**
+ * Ensure Supabase is ready
+ * التأكد من جاهزية Supabase
+ */
+export async function ensureSupabaseReady() {
+    console.log('🔍 Checking Supabase readiness...');
+
+    // Check environment variables
+    if (!window.__ENV__ || !window.__ENV__.NEXT_PUBLIC_SUPABASE_URL || !window.__ENV__.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        throw new Error('متغيرات البيئة غير مكتملة - تحقق من config.js');
+    }
+
+    // Check Supabase client
+    if (!window.supabase) {
+        throw new Error('عميل Supabase غير متاح - تحقق من js/supabase-client.js');
+    }
+
+    // Test Supabase connection
+    try {
+        const { data, error } = await window.supabase.auth.getSession();
+        if (error) {
+            console.warn('Supabase session check failed:', error);
+        }
+        console.log('✅ Supabase is ready');
+    } catch (error) {
+        throw new Error(`فشل في الاتصال بـ Supabase: ${error.message}`);
+    }
+}
+
+/**
  * Initialize file upload system
  * تهيئة نظام رفع الملفات
  */
 function initFileUpload() {
     console.log('🚀 Initializing file upload system...');
-    
+
     // Check for required dependencies
     if (typeof window.CONFIG === 'undefined') {
         console.error('❌ CONFIG not found');
         return false;
     }
-    
+
     if (typeof window.supabase === 'undefined') {
         console.error('❌ Supabase client not found');
         return false;
     }
-    
+
     console.log('✅ File upload system initialized');
     return true;
 }
@@ -43,16 +72,16 @@ function initFileUpload() {
  */
 async function openCameraOrFile(documentType, accept = "image/*") {
     console.log(`📷 Opening camera/file for: ${documentType}`);
-    
+
     if (currentUploading) {
         showToast('جاري رفع ملف آخر، يرجى الانتظار...', 'warning');
         return;
     }
-    
+
     // Check if camera is supported
     const isCameraSupported = checkCameraSupport();
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
+
     if (isCameraSupported && isMobile) {
         // Try camera first on mobile
         try {
@@ -72,8 +101,8 @@ async function openCameraOrFile(documentType, accept = "image/*") {
  * فحص دعم الكاميرا
  */
 function checkCameraSupport() {
-    return !!(navigator.mediaDevices && 
-              navigator.mediaDevices.getUserMedia && 
+    return !!(navigator.mediaDevices &&
+              navigator.mediaDevices.getUserMedia &&
               window.isSecureContext);
 }
 
@@ -83,7 +112,7 @@ function checkCameraSupport() {
  */
 async function openCamera(documentType, accept) {
     console.log(`📹 Opening camera for: ${documentType}`);
-    
+
     try {
         // Request camera permission
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -94,10 +123,10 @@ async function openCamera(documentType, accept) {
             },
             audio: false
         });
-        
+
         // Create camera modal
         createCameraModal(stream, documentType, accept);
-        
+
     } catch (error) {
         console.error('Camera access failed:', error);
         throw new Error(getCameraErrorMessage(error));
@@ -114,7 +143,7 @@ function createCameraModal(stream, documentType, accept) {
     if (existingModal) {
         existingModal.remove();
     }
-    
+
     // Create modal
     const modal = document.createElement('div');
     modal.id = 'cameraModal';
@@ -143,7 +172,7 @@ function createCameraModal(stream, documentType, accept) {
             </div>
         </div>
     `;
-    
+
     // Add styles
     const style = document.createElement('style');
     style.textContent = `
@@ -197,14 +226,14 @@ function createCameraModal(stream, documentType, accept) {
             color: #666;
         }
     `;
-    
+
     document.head.appendChild(style);
     document.body.appendChild(modal);
-    
+
     // Set video stream
     const video = document.getElementById('cameraPreview');
     video.srcObject = stream;
-    
+
     // Store stream for cleanup
     window.currentCameraStream = stream;
 }
@@ -215,13 +244,13 @@ function createCameraModal(stream, documentType, accept) {
  */
 async function capturePhoto(documentType, accept) {
     console.log(`📸 Capturing photo for: ${documentType}`);
-    
+
     const video = document.getElementById('cameraPreview');
     if (!video || !video.videoWidth) {
         showToast('الكاميرا غير جاهزة', 'error');
         return;
     }
-    
+
     try {
         // Create canvas and capture frame
         const canvas = document.createElement('canvas');
@@ -229,18 +258,18 @@ async function capturePhoto(documentType, accept) {
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0);
-        
+
         // Convert to blob
         const blob = await new Promise(resolve => {
             canvas.toBlob(resolve, 'image/jpeg', 0.9);
         });
-        
+
         // Close camera modal
         closeCameraModal();
-        
+
         // Upload the captured image
         await uploadFile(blob, documentType, 'camera_capture.jpg');
-        
+
     } catch (error) {
         console.error('Photo capture failed:', error);
         showToast('فشل في التقاط الصورة', 'error');
@@ -256,7 +285,7 @@ function closeCameraModal() {
     if (modal) {
         modal.remove();
     }
-    
+
     // Stop camera stream
     if (window.currentCameraStream) {
         window.currentCameraStream.getTracks().forEach(track => track.stop());
@@ -270,14 +299,14 @@ function closeCameraModal() {
  */
 function openFileSelection(documentType, accept) {
     console.log(`📁 Opening file selection for: ${documentType}`);
-    
+
     // Create file input
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = accept;
     input.multiple = false;
     input.style.display = 'none';
-    
+
     input.onchange = async (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -285,7 +314,7 @@ function openFileSelection(documentType, accept) {
         }
         input.remove();
     };
-    
+
     document.body.appendChild(input);
     input.click();
 }
@@ -296,27 +325,27 @@ function openFileSelection(documentType, accept) {
  */
 async function uploadFile(file, documentType, filename) {
     console.log(`📤 Uploading file: ${filename} for ${documentType}`);
-    
+
     if (currentUploading) {
         showToast('جاري رفع ملف آخر، يرجى الانتظار...', 'warning');
         return;
     }
-    
+
     currentUploading = true;
-    
+
     try {
         // Get current user ID
         const userId = getCurrentUserId();
         if (!userId) {
             throw new Error('لم يتم العثور على معرف المستخدم');
         }
-        
+
         // Create file path
         const filePath = `${userId}/${documentType}/${Date.now()}_${filename}`;
-        
+
         // Show progress
         showUploadProgress(documentType, 0);
-        
+
         // Upload to Supabase Storage
         const { data, error } = await window.supabase.storage
             .from('kyc_docs')
@@ -324,16 +353,16 @@ async function uploadFile(file, documentType, filename) {
                 upsert: false,
                 contentType: file.type || 'image/jpeg'
             });
-        
+
         if (error) {
             throw new Error(error.message);
         }
-        
+
         // Get public URL
         const { data: publicData } = window.supabase.storage
             .from('kyc_docs')
             .getPublicUrl(data.path);
-        
+
         // Store file info
         uploadedFiles[documentType] = {
             path: data.path,
@@ -341,15 +370,15 @@ async function uploadFile(file, documentType, filename) {
             filename: filename,
             uploadedAt: new Date().toISOString()
         };
-        
+
         // Update UI
         updateFileUploadUI(documentType, publicData.publicUrl, filename);
-        
+
         // Save to database
         await saveFileToDatabase(documentType, data.path, publicData.publicUrl);
-        
+
         showToast('تم رفع الملف بنجاح', 'success');
-        
+
     } catch (error) {
         console.error('Upload failed:', error);
         showToast(`فشل في رفع الملف: ${error.message}`, 'error');
@@ -366,7 +395,7 @@ async function uploadFile(file, documentType, filename) {
 async function saveFileToDatabase(documentType, filePath, publicUrl) {
     try {
         const userId = getCurrentUserId();
-        
+
         const { error } = await window.supabase
             .from('documents')
             .insert({
@@ -376,7 +405,7 @@ async function saveFileToDatabase(documentType, filePath, publicUrl) {
                 public_url: publicUrl,
                 uploaded_at: new Date().toISOString()
             });
-        
+
         if (error) {
             console.error('Database save failed:', error);
         }
@@ -392,13 +421,13 @@ async function saveFileToDatabase(documentType, filePath, publicUrl) {
 function updateFileUploadUI(documentType, imageUrl, filename) {
     const container = document.getElementById(`file-upload-${documentType}`);
     if (!container) return;
-    
+
     // Remove existing preview
     const existingPreview = container.querySelector('.file-preview');
     if (existingPreview) {
         existingPreview.remove();
     }
-    
+
     // Create preview
     const preview = document.createElement('div');
     preview.className = 'file-preview';
@@ -414,7 +443,7 @@ function updateFileUploadUI(documentType, imageUrl, filename) {
             </button>
         </div>
     `;
-    
+
     // Add styles
     const style = document.createElement('style');
     style.textContent = `
@@ -449,10 +478,10 @@ function updateFileUploadUI(documentType, imageUrl, filename) {
             margin: 0;
         }
     `;
-    
+
     document.head.appendChild(style);
     container.appendChild(preview);
-    
+
     // Update upload button
     const uploadBtn = container.querySelector('.upload-btn');
     if (uploadBtn) {
@@ -466,7 +495,7 @@ function updateFileUploadUI(documentType, imageUrl, filename) {
  */
 async function removeFile(documentType) {
     console.log(`🗑️ Removing file: ${documentType}`);
-    
+
     try {
         const fileInfo = uploadedFiles[documentType];
         if (fileInfo) {
@@ -474,11 +503,11 @@ async function removeFile(documentType) {
             const { error } = await window.supabase.storage
                 .from('kyc_docs')
                 .remove([fileInfo.path]);
-            
+
             if (error) {
                 console.error('Storage delete failed:', error);
             }
-            
+
             // Delete from database
             const userId = getCurrentUserId();
             if (userId) {
@@ -488,11 +517,11 @@ async function removeFile(documentType) {
                     .eq('user_id', userId)
                     .eq('document_type', documentType);
             }
-            
+
             // Remove from memory
             delete uploadedFiles[documentType];
         }
-        
+
         // Update UI
         const container = document.getElementById(`file-upload-${documentType}`);
         if (container) {
@@ -500,15 +529,15 @@ async function removeFile(documentType) {
             if (preview) {
                 preview.remove();
             }
-            
+
             const uploadBtn = container.querySelector('.upload-btn');
             if (uploadBtn) {
                 uploadBtn.innerHTML = '<i class="fas fa-camera"></i> تصوير/رفع';
             }
         }
-        
+
         showToast('تم حذف الملف', 'success');
-        
+
     } catch (error) {
         console.error('Remove file failed:', error);
         showToast('فشل في حذف الملف', 'error');
@@ -522,7 +551,7 @@ async function removeFile(documentType) {
 function showUploadProgress(documentType, progress) {
     const container = document.getElementById(`file-upload-${documentType}`);
     if (!container) return;
-    
+
     let progressBar = container.querySelector('.upload-progress');
     if (!progressBar) {
         progressBar = document.createElement('div');
@@ -549,7 +578,7 @@ function showUploadProgress(documentType, progress) {
 function hideUploadProgress(documentType) {
     const container = document.getElementById(`file-upload-${documentType}`);
     if (!container) return;
-    
+
     const progressBar = container.querySelector('.upload-progress');
     if (progressBar) {
         progressBar.remove();
@@ -571,7 +600,7 @@ function getCurrentUserId() {
             console.error('Error parsing user data:', e);
         }
     }
-    
+
     // Try to get from Supabase session
     if (window.supabase && window.supabase.auth) {
         const session = window.supabase.auth.session();
@@ -579,7 +608,7 @@ function getCurrentUserId() {
             return session.user.id;
         }
     }
-    
+
     return null;
 }
 
@@ -601,7 +630,7 @@ function getDocumentLabel(documentType) {
         'personal_photos': 'الصور الشخصية',
         'vehicle_photo': 'صورة المركبة'
     };
-    
+
     return labels[documentType] || documentType;
 }
 
@@ -612,7 +641,7 @@ function getDocumentLabel(documentType) {
 function getCameraErrorMessage(error) {
     const name = error?.name || '';
     const message = error?.message || String(error);
-    
+
     switch (name) {
         case 'NotAllowedError':
             return 'تم رفض الإذن من المتصفح. يرجى السماح بالوصول للكاميرا.';
@@ -635,7 +664,7 @@ function getCameraErrorMessage(error) {
  */
 function showToast(message, type = 'info') {
     console.log(`📢 Toast [${type}]: ${message}`);
-    
+
     // Use existing notification system if available
     if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyOk) {
         if (type === 'success') {
@@ -654,27 +683,28 @@ function showToast(message, type = 'info') {
 }
 
 /**
- * Generate file upload fields for a role
- * إنشاء حقول رفع الملفات لدور معين
+ * Render upload buttons for documents (Idempotent)
+ * رسم أزرار الرفع للمستندات (قابل للتكرار)
  */
-function generateFileUploadFields(role) {
-    console.log(`🔧 Generating file upload fields for role: ${role}`);
-    
-    const roleConfig = window.CONFIG.ROLES[role];
-    if (!roleConfig || !roleConfig.files) {
-        console.error('Role config not found:', role);
-        return;
-    }
-    
-    const container = document.getElementById('file-upload-container');
+export async function renderUploadButtons(container, documentTypes) {
+    console.log('🎨 Rendering upload buttons for:', documentTypes);
+
     if (!container) {
-        console.error('File upload container not found');
+        throw new Error('حاوية الأزرار غير موجودة');
+    }
+
+    // Check if already initialized
+    if (container.hasAttribute('data-initialized')) {
+        console.log('🔄 Upload buttons already initialized');
         return;
     }
-    
+
+    // Mark as initialized
+    container.setAttribute('data-initialized', '1');
+
     // Clear existing content
     container.innerHTML = '';
-    
+
     // Create header
     const header = document.createElement('div');
     header.className = 'file-upload-header';
@@ -688,7 +718,52 @@ function generateFileUploadFields(role) {
         </p>
     `;
     container.appendChild(header);
-    
+
+    // Create upload fields for each document type
+    for (const docType of documentTypes) {
+        const field = createFileUploadField(docType);
+        container.appendChild(field);
+    }
+
+    console.log('✅ Upload buttons rendered successfully');
+}
+
+/**
+ * Generate file upload fields for a role
+ * إنشاء حقول رفع الملفات لدور معين
+ */
+function generateFileUploadFields(role) {
+    console.log(`🔧 Generating file upload fields for role: ${role}`);
+
+    const roleConfig = window.CONFIG.ROLES[role];
+    if (!roleConfig || !roleConfig.files) {
+        console.error('Role config not found:', role);
+        return;
+    }
+
+    const container = document.getElementById('file-upload-container');
+    if (!container) {
+        console.error('File upload container not found');
+        return;
+    }
+
+    // Clear existing content
+    container.innerHTML = '';
+
+    // Create header
+    const header = document.createElement('div');
+    header.className = 'file-upload-header';
+    header.innerHTML = `
+        <h3>
+            <i class="fas fa-upload" style="margin-left: 8px; color: #6b7cff;"></i>
+            رفع صور المستندات المطلوبة
+        </h3>
+        <p style="color: #666; margin-bottom: 20px;">
+            يرجى رفع جميع المستندات المطلوبة بوضوح. يمكنك استخدام الكاميرا أو اختيار ملف من الجهاز.
+        </p>
+    `;
+    container.appendChild(header);
+
     // Create file upload fields
     roleConfig.files.forEach(fileConfig => {
         const field = createFileUploadField(fileConfig);
@@ -703,28 +778,45 @@ function generateFileUploadFields(role) {
 function createFileUploadField(fileConfig) {
     const field = document.createElement('div');
     field.className = 'file-upload-field';
-    field.id = `file-upload-${fileConfig.name}`;
     
-    const acceptTypes = fileConfig.accept || 'image/*';
-    const isRequired = fileConfig.required || false;
+    // Handle both object config and string document type
+    let config;
+    if (typeof fileConfig === 'string') {
+        // Simple document type - create basic config
+        config = {
+            name: fileConfig,
+            label: getDocumentLabel(fileConfig),
+            accept: 'image/*',
+            required: true,
+            description: 'صورة واضحة للمستند'
+        };
+    } else {
+        // Full config object
+        config = fileConfig;
+    }
     
+    field.id = `file-upload-${config.name}`;
+
+    const acceptTypes = config.accept || 'image/*';
+    const isRequired = config.required || false;
+
     field.innerHTML = `
         <div class="file-upload-label">
             <label>
-                ${fileConfig.label}
+                ${config.label}
                 ${isRequired ? '<span style="color: #ef4444;">*</span>' : ''}
             </label>
-            ${fileConfig.description ? `<p class="file-description">${fileConfig.description}</p>` : ''}
+            ${config.description ? `<p class="file-description">${config.description}</p>` : ''}
         </div>
         <div class="file-upload-controls">
-            <button type="button" class="btn btn-primary upload-btn" 
-                    onclick="openCameraOrFile('${fileConfig.name}', '${acceptTypes}')">
+            <button type="button" class="btn btn-primary upload-btn"
+                    onclick="openCameraOrFile('${config.name}', '${acceptTypes}')">
                 <i class="fas fa-camera"></i>
                 تصوير/رفع
             </button>
         </div>
     `;
-    
+
     // Add styles
     const style = document.createElement('style');
     style.textContent = `
@@ -784,7 +876,7 @@ function createFileUploadField(fileConfig) {
             margin: 5px 0;
         }
     `;
-    
+
     document.head.appendChild(style);
     return field;
 }
