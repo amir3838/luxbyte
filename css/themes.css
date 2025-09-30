@@ -44,7 +44,7 @@
   --border-hover: #d1d5db;
   --shadow: var(--shadow-md);
   --shadow-hover: var(--shadow-lg);
-  
+
   /* Fixed navbar colors for both themes */
   --bg-header: #000000;
   --text-header: #ffffff;
@@ -64,7 +64,7 @@
   --border-hover: #64748b;
   --shadow: var(--shadow-lg);
   --shadow-hover: var(--shadow-xl);
-  
+
   /* Fixed navbar colors for both themes */
   --bg-header: #000000;
   --text-header: #ffffff;

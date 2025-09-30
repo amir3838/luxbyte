@@ -539,81 +539,251 @@
         function generateDocumentFields(accountType) {
             const documentsContainer = document.getElementById('requiredDocuments');
 
-            // Common documents for all business types
-            const commonDocuments = [
-                {
-                    id: 'national_id_front',
-                    title: 'بطاقة الهوية - الوجه',
-                    description: 'صورة واضحة لوجه بطاقة الهوية',
-                    required: true
-                },
-                {
-                    id: 'national_id_back',
-                    title: 'بطاقة الهوية - الخلف',
-                    description: 'صورة واضحة لخلف بطاقة الهوية',
-                    required: true
-                },
-                {
-                    id: 'contract_document',
-                    title: 'عقد المقر',
-                    description: 'عقد إيجار موثق أو سند تمليك للمقر',
-                    required: true
-                },
-                {
-                    id: 'utility_bill',
-                    title: 'إيصال مرافق حديث',
-                    description: 'إيصال كهرباء أو غاز أو مياه حديث',
-                    required: true
-                },
-                {
-                    id: 'facade_photo',
-                    title: 'صورة الواجهة',
-                    description: 'صورة واضحة لواجهة المحل/المنشأة',
-                    required: true
-                },
-                {
-                    id: 'interior_photo',
-                    title: 'صورة داخلية',
-                    description: 'صورة من داخل المحل/المنشأة',
-                    required: true
-                },
-                {
-                    id: 'personal_photo',
-                    title: 'صورة شخصية',
-                    description: 'صورة شخصية للمسؤول أمام الواجهة',
-                    required: true
-                }
-            ];
-
-            // Additional documents based on account type
-            const additionalDocuments = {
+            // Documents based on account type
+            const documentsByType = {
                 'pharmacy': [
                     {
                         id: 'pharmacy_license',
-                        title: 'رخصة الصيدلية',
-                        description: 'رخصة مزاولة مهنة الصيدلة',
+                        title: 'صورة ترخيص/قيد صيدلي أو كارنيه النقابة',
+                        description: 'صورة واضحة لترخيص مزاولة مهنة الصيدلة أو كارنيه النقابة',
+                        required: true
+                    },
+                    {
+                        id: 'manager_id_front',
+                        title: 'صورة بطاقة الصيدلي المسؤول (وجه)',
+                        description: 'صورة واضحة لوجه بطاقة الهوية للصيدلي المسؤول',
+                        required: true
+                    },
+                    {
+                        id: 'manager_id_back',
+                        title: 'صورة بطاقة الصيدلي المسؤول (ظهر)',
+                        description: 'صورة واضحة لظهر بطاقة الهوية للصيدلي المسؤول',
+                        required: true
+                    },
+                    {
+                        id: 'commercial_register',
+                        title: 'صورة السجل التجاري (إن وجد)',
+                        description: 'صورة واضحة للسجل التجاري إن كان متوفراً',
+                        required: false
+                    }
+                ],
+                'restaurant': [
+                    {
+                        id: 'health_certificate',
+                        title: 'صورة شهادة صحية للمدير أو الشيف',
+                        description: 'صورة واضحة للشهادة الصحية للمدير أو الشيف المسؤول',
+                        required: true
+                    },
+                    {
+                        id: 'manager_id_front',
+                        title: 'صورة بطاقة المدير (وجه)',
+                        description: 'صورة واضحة لوجه بطاقة الهوية للمدير',
+                        required: true
+                    },
+                    {
+                        id: 'manager_id_back',
+                        title: 'صورة بطاقة المدير (ظهر)',
+                        description: 'صورة واضحة لظهر بطاقة الهوية للمدير',
+                        required: true
+                    },
+                    {
+                        id: 'commercial_register',
+                        title: 'صورة السجل التجاري (إن وجد)',
+                        description: 'صورة واضحة للسجل التجاري إن كان متوفراً',
+                        required: false
+                    },
+                    {
+                        id: 'contract_document',
+                        title: 'صورة عقد مقر موثق (إيجار/تمليك)',
+                        description: 'صورة واضحة لعقد المقر الموثق سواء إيجار أو تمليك',
+                        required: true
+                    },
+                    {
+                        id: 'utility_bill',
+                        title: 'صورة إيصال مرافق حديث',
+                        description: 'صورة واضحة لإيصال كهرباء أو غاز أو مياه حديث',
+                        required: true
+                    },
+                    {
+                        id: 'food_license',
+                        title: 'صورة رخصة تشغيل مأكولات (قد تُطلب لاحقًا)',
+                        description: 'صورة واضحة لرخصة تشغيل المأكولات إن كانت متوفرة',
+                        required: false
+                    },
+                    {
+                        id: 'food_safety_approval',
+                        title: 'صورة موافقة جهاز سلامة الغذاء (قد تُطلب لاحقًا)',
+                        description: 'صورة واضحة لموافقة جهاز سلامة الغذاء إن كانت متوفرة',
+                        required: false
+                    }
+                ],
+                'supermarket': [
+                    {
+                        id: 'health_certificate',
+                        title: 'صورة شهادة صحية لمسؤول الأغذية (لو يتعامل مع لحوم/ألبان)',
+                        description: 'صورة واضحة للشهادة الصحية لمسؤول الأغذية إن كان يتعامل مع لحوم أو ألبان',
+                        required: false
+                    },
+                    {
+                        id: 'manager_id_front',
+                        title: 'صورة بطاقة المدير (وجه)',
+                        description: 'صورة واضحة لوجه بطاقة الهوية للمدير',
+                        required: true
+                    },
+                    {
+                        id: 'manager_id_back',
+                        title: 'صورة بطاقة المدير (ظهر)',
+                        description: 'صورة واضحة لظهر بطاقة الهوية للمدير',
+                        required: true
+                    },
+                    {
+                        id: 'commercial_register',
+                        title: 'صورة السجل التجاري',
+                        description: 'صورة واضحة للسجل التجاري',
+                        required: true
+                    },
+                    {
+                        id: 'contract_document',
+                        title: 'صورة عقد مقر موثق (إيجار/تمليك)',
+                        description: 'صورة واضحة لعقد المقر الموثق سواء إيجار أو تمليك',
+                        required: true
+                    },
+                    {
+                        id: 'utility_bill',
+                        title: 'صورة إيصال مرافق حديث',
+                        description: 'صورة واضحة لإيصال كهرباء أو غاز أو مياه حديث',
                         required: true
                     }
                 ],
                 'clinic': [
                     {
-                        id: 'medical_license',
-                        title: 'رخصة مزاولة المهنة',
-                        description: 'رخصة مزاولة مهنة الطب',
+                        id: 'doctor_id_front',
+                        title: 'صورة بطاقة الطبيب (وجه)',
+                        description: 'صورة واضحة لوجه بطاقة الهوية للطبيب',
                         required: true
+                    },
+                    {
+                        id: 'doctor_id_back',
+                        title: 'صورة بطاقة الطبيب (ظهر)',
+                        description: 'صورة واضحة لظهر بطاقة الهوية للطبيب',
+                        required: true
+                    },
+                    {
+                        id: 'doctor_union_card',
+                        title: 'صورة قيد نقابة الطبيب',
+                        description: 'صورة واضحة لقيد نقابة الأطباء',
+                        required: true
+                    },
+                    {
+                        id: 'commercial_register',
+                        title: 'صورة السجل التجاري/ترخيص النشاط (إن وجد)',
+                        description: 'صورة واضحة للسجل التجاري أو ترخيص النشاط إن كان متوفراً',
+                        required: false
+                    },
+                    {
+                        id: 'contract_document',
+                        title: 'صورة عقد مقر موثق (إيجار/تمليك)',
+                        description: 'صورة واضحة لعقد المقر الموثق سواء إيجار أو تمليك',
+                        required: true
+                    },
+                    {
+                        id: 'utility_bill',
+                        title: 'صورة إيصال مرافق حديث',
+                        description: 'صورة واضحة لإيصال كهرباء أو غاز أو مياه حديث',
+                        required: true
+                    },
+                    {
+                        id: 'medical_facility_license',
+                        title: 'صورة ترخيص منشأة طبية (قد يُطلب لاحقًا)',
+                        description: 'صورة واضحة لترخيص المنشأة الطبية إن كان متوفراً',
+                        required: false
                     }
                 ],
-                'restaurant': [
+                'courier': [
                     {
-                        id: 'food_license',
-                        title: 'رخصة الغذاء',
-                        description: 'رخصة إعداد وتقديم الطعام',
+                        id: 'national_id_front',
+                        title: 'صورة بطاقة رقم قومي (وجه)',
+                        description: 'صورة واضحة لوجه بطاقة الرقم القومي',
+                        required: true
+                    },
+                    {
+                        id: 'national_id_back',
+                        title: 'صورة بطاقة رقم قومي (ظهر)',
+                        description: 'صورة واضحة لظهر بطاقة الرقم القومي',
+                        required: true
+                    },
+                    {
+                        id: 'driving_license_front',
+                        title: 'صورة رخصة قيادة سارية (وجه)',
+                        description: 'صورة واضحة لوجه رخصة القيادة السارية',
+                        required: true
+                    },
+                    {
+                        id: 'driving_license_back',
+                        title: 'صورة رخصة قيادة سارية (ظهر)',
+                        description: 'صورة واضحة لظهر رخصة القيادة السارية',
+                        required: true
+                    },
+                    {
+                        id: 'personal_photo',
+                        title: 'صورة شخصية واضحة (Selfie)',
+                        description: 'صورة شخصية واضحة حديثة',
+                        required: true
+                    },
+                    {
+                        id: 'vehicle_front_photo',
+                        title: 'صورة المركبة من الأمام',
+                        description: 'صورة واضحة للمركبة من الأمام',
+                        required: true
+                    },
+                    {
+                        id: 'vehicle_plate_photo',
+                        title: 'صورة لوحة المركبة الخلفية',
+                        description: 'صورة واضحة للوحة المركبة الخلفية',
+                        required: true
+                    },
+                    {
+                        id: 'vehicle_insurance',
+                        title: 'صورة تأمين/ترخيص المركبة (إن وجد)',
+                        description: 'صورة واضحة لتأمين أو ترخيص المركبة إن كان متوفراً',
+                        required: false
+                    },
+                    {
+                        id: 'criminal_record',
+                        title: 'صورة صحيفة حالة جنائية (اختياري)',
+                        description: 'صورة واضحة لصحيفة الحالة الجنائية إن كانت متوفرة',
+                        required: false
+                    }
+                ],
+                'driver': [
+                    {
+                        id: 'vehicle_license_1_front',
+                        title: 'صورة رخصة مركبة (مركبة 1 – وجه)',
+                        description: 'صورة واضحة لوجه رخصة المركبة الأولى',
+                        required: true
+                    },
+                    {
+                        id: 'vehicle_license_1_back',
+                        title: 'صورة رخصة مركبة (مركبة 1 – ظهر)',
+                        description: 'صورة واضحة لظهر رخصة المركبة الأولى',
+                        required: true
+                    },
+                    {
+                        id: 'driver_license_1',
+                        title: 'صورة رخصة سائق 1',
+                        description: 'صورة واضحة لرخصة السائق الأولى',
+                        required: true
+                    },
+                    {
+                        id: 'driver_card_1',
+                        title: 'صورة بطاقة سائق 1',
+                        description: 'صورة واضحة لبطاقة السائق الأولى',
                         required: true
                     }
                 ]
             };
 
-            const allDocuments = [...commonDocuments, ...(additionalDocuments[accountType] || [])];
+            const allDocuments = documentsByType[accountType] || [];
 
             documentsContainer.innerHTML = allDocuments.map(doc => `
                 <div class="document-item">
