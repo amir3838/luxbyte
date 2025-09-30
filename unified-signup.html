@@ -203,15 +203,34 @@
                 <div class="form-section">
                     <!-- Error Banner -->
                     <div id="pageErrorBanner" style="display: none;"></div>
-                    
+
                     <!-- Loading Spinner -->
                     <div id="uploadButtonsSpinner" style="text-align: center; padding: 40px; color: var(--text-muted);">
                         <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
                         <p>جاري تحميل أزرار رفع الصور...</p>
                     </div>
-                    
+
                     <!-- Upload Buttons Container -->
-                    <div id="uploadButtonsContainer"></div>
+                    <div id="uploadButtonsContainer">
+                        <!-- Sample upload fields for testing -->
+                        <div class="file-upload-field" style="margin-bottom: 20px; padding: 15px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb;">
+                            <div class="file-upload-label">
+                                <label style="font-weight: 600; color: #374151; margin-bottom: 5px; display: block;">
+                                    السجل التجاري
+                                </label>
+                                <p class="file-description" style="font-size: 12px; color: #6b7280; margin: 5px 0 0 0;">
+                                    PDF أو JPG واضحة
+                                </p>
+                            </div>
+                            <div class="file-upload-controls" style="margin-top: 10px;">
+                                <input type="file" id="commercial_register" data-upload-input accept=".pdf,.jpg,.jpeg" style="display: none;">
+                                <input type="hidden" id="commercial_register_url">
+                                <button type="button" data-upload-btn data-for="#commercial_register" data-bind="#commercial_register_url" class="upload-btn" style="background: #6b7cff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-upload"></i> رفع الملف
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Terms and Conditions -->
@@ -261,15 +280,26 @@
     </footer>
 
     <!-- Scripts -->
+    <!-- Core Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="config.js" defer></script>
     <script src="js/supabase-client.js" defer></script>
+
+    <!-- Utility Scripts -->
     <script src="i18n-dict.js" defer></script>
     <script src="js/translation-utils.js" defer></script>
     <script src="common.js" defer></script>
     <script src="js/engagement-notification.js" defer></script>
     <script src="js/enhanced-ui.js" defer></script>
     <script src="js/comprehensive-test.js" defer></script>
+
+    <!-- New Environment System -->
+    <script type="module" src="src/utils/env.js"></script>
+    <script type="module" src="src/utils/toast.js"></script>
+    <script type="module" src="src/integrations/supabase.js"></script>
+    <script type="module" src="src/ui/upload.js"></script>
+
+    <!-- Legacy File Upload Manager (for backward compatibility) -->
     <script src="js/file-upload-manager.js" defer></script>
     <script>
         // Global variables
@@ -933,12 +963,15 @@
         window.removeFile = removeFile;
     </script>
 
+    <!-- Core Scripts - Load in correct order -->
+    <script src="config.js" defer></script>
+    <script type="module" defer src="js/supabase-client.js"></script>
+    <script type="module" defer src="js/file-upload-manager.js"></script>
+    <script type="module" defer src="js/signup-init.js"></script>
+
     <!-- Auth and Guard Scripts -->
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/guard.js"></script>
-
-    <!-- File Upload Manager -->
-    <script src="js/file-upload-manager.js" defer></script>
 
     <!-- Camera Upload Manager -->
     <script type="module">
@@ -959,7 +992,93 @@
         });
     </script>
 
-    <!-- Unified Signup Initializer -->
+    <!-- New Bootstrap System -->
+    <script type="module" src="src/pages/unified-signup.js"></script>
+
+    <!-- Legacy Unified Signup Initializer (for backward compatibility) -->
     <script type="module" src="js/unified-signup-init.js"></script>
+
+    <!-- Hotfix: إيقاف السبينر بعد 2 ثانية مهما حدث -->
+    <script type="module">
+        // Watchdog: لا يفضل السبينر أكتر من 2ث
+        function stopSpinner(){
+            const sp = document.getElementById('uploadButtonsSpinner');
+            if (sp) sp.style.display = 'none';
+            console.log('🔄 تم إيقاف السبينر (watchdog)');
+        }
+
+        // إيقاف السبينر بعد ثانيتين مهما حدث
+        setTimeout(stopSpinner, 2000);
+
+        // بناء واجهة بسيطة فوراً
+        function buildSimpleUI() {
+            const c = document.getElementById('uploadButtonsContainer');
+            if (!c) return;
+
+            const role = new URLSearchParams(location.search).get('role') || 'pharmacy';
+            const docs = {
+                pharmacy: ['commercial_register', 'tax_card', 'pharmacy_license'],
+                supermarket: ['commercial_register', 'tax_card', 'business_license'],
+                restaurant: ['commercial_register', 'tax_card', 'food_license'],
+                clinic: ['commercial_register', 'tax_card', 'medical_license'],
+                courier: ['national_id_front', 'national_id_back', 'driving_license'],
+                driver: ['driver_license', 'car_license', 'car_photos']
+            }[role] || ['commercial_register', 'tax_card'];
+
+            c.innerHTML = '';
+            for (const doc of docs) {
+                const label = {
+                    commercial_register: 'السجل التجاري',
+                    tax_card: 'البطاقة الضريبية',
+                    pharmacy_license: 'ترخيص الصيدلية',
+                    business_license: 'رخصة النشاط',
+                    food_license: 'رخصة الطعام',
+                    medical_license: 'الترخيص الطبي',
+                    national_id_front: 'البطاقة (أمام)',
+                    national_id_back: 'البطاقة (خلف)',
+                    driving_license: 'رخصة القيادة',
+                    car_license: 'رخصة السيارة',
+                    car_photos: 'صور السيارة'
+                }[doc] || doc;
+
+                c.insertAdjacentHTML('beforeend', `
+                    <div class="file-upload-field">
+                        <div class="file-upload-label">
+                            <label>${label}</label>
+                            <p class="file-description">JPG, PNG أو PDF (حد أقصى 10 ميجابايت)</p>
+                        </div>
+                        <div class="file-upload-controls">
+                            <button id="btn_${doc}" type="button" class="upload-btn">
+                                <i class="fas fa-camera"></i> تصوير/رفع
+                            </button>
+                            <input id="file_${doc}" type="file" accept="image/*" capture="environment" hidden>
+                        </div>
+                        <img id="preview_${doc}" style="display:none;max-width:100%;margin-top:8px;border-radius:8px;" alt="معاينة">
+                    </div>
+                `);
+
+                // ربط الأحداث
+                const btn = document.getElementById(`btn_${doc}`);
+                const inp = document.getElementById(`file_${doc}`);
+                const img = document.getElementById(`preview_${doc}`);
+
+                btn.onclick = () => inp.click();
+                inp.onchange = (e) => {
+                    const f = e.target.files?.[0];
+                    if (!f) return;
+                    const url = URL.createObjectURL(f);
+                    img.src = url;
+                    img.style.display = 'block';
+                    console.log(`تم اختيار ملف: ${f.name} (${doc})`);
+                };
+            }
+        }
+
+        // بناء الواجهة فوراً
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 بناء واجهة بسيطة...');
+            buildSimpleUI();
+        });
+    </script>
 </body>
 </html>

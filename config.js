@@ -1,6 +1,6 @@
 // LUXBYTE Configuration
 window.CONFIG = {
-  // Environment Variables Injection
+  // Environment Variables Injection (Legacy - for backward compatibility)
   __ENV__: {
     NEXT_PUBLIC_SUPABASE_URL: "https://qjsvgpvbtrcnbhcjdcci.supabase.co",
     NEXT_PUBLIC_SUPABASE_ANON_KEY: "sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e",
@@ -258,3 +258,60 @@ window.CONFIG = {
   FCM_APP_ID: "1:922681782984:web:d3840713be209e4a60abfd",
   FCM_VAPID_KEY: "BJ3SXe0Nof9H4KJpvgG80LVUeDTNxdh0O2z3aOIzEzrFxd3bAn4ixhhouG7VV11zmK8giQ-UUGWeAP3JK8MpbXk"
 };
+
+/**
+ * Initialize Configuration System
+ * تهيئة نظام الإعدادات
+ *
+ * This function provides backward compatibility while supporting
+ * the new runtime environment loading system.
+ */
+async function initConfig() {
+  try {
+    // Try to load from new environment system
+    if (typeof window !== 'undefined' && window.loadEnv) {
+      console.log('🔄 Loading environment from new system...');
+      const ENV = await window.loadEnv();
+      const { ok, missing } = window.validateEnv(ENV);
+
+      if (!ok) {
+        console.error('❌ Environment validation failed:', missing);
+        if (window.toastError) {
+          window.toastError(`خطأ في تحميل أزرار الرفع: متغيّرات البيئة غير مكتملة (${missing.join(', ')})`);
+        }
+        return null;
+      }
+
+      // Update window.__ENV__ with loaded values
+      window.__ENV__ = {
+        NEXT_PUBLIC_SUPABASE_URL: ENV.SUPABASE_URL,
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ENV.SUPABASE_ANON_KEY,
+        NEXT_PUBLIC_FIREBASE_API_KEY: ENV.FIREBASE_API_KEY,
+        NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ENV.FIREBASE_AUTH_DOMAIN,
+        NEXT_PUBLIC_FIREBASE_PROJECT_ID: ENV.FIREBASE_PROJECT_ID,
+        NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ENV.FIREBASE_MESSAGING_SENDER_ID,
+        NEXT_PUBLIC_FIREBASE_APP_ID: ENV.FIREBASE_APP_ID,
+        NEXT_PUBLIC_FIREBASE_VAPID_KEY: ENV.FIREBASE_VAPID_KEY
+      };
+
+      console.log('✅ Environment loaded successfully from new system');
+      return ENV;
+    }
+
+    // Fallback to existing configuration
+    console.log('📦 Using existing configuration');
+    return window.CONFIG.__ENV__;
+
+  } catch (error) {
+    console.error('❌ Failed to initialize configuration:', error);
+    if (window.toastError) {
+      window.toastError('خطأ في تحميل أزرار الرفع: تعذّر جلب إعدادات البيئة');
+    }
+    return null;
+  }
+}
+
+// Make initConfig globally available
+if (typeof window !== 'undefined') {
+  window.initConfig = initConfig;
+}

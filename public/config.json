@@ -1,0 +1,17 @@
+{
+  "SUPABASE_URL": "https://qjsvgpvbtrcnbhcjdcci.supabase.co",
+  "SUPABASE_ANON_KEY": "sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e",
+  "STORAGE_BUCKET": "kyc_docs",
+  "MAX_UPLOAD_MB": 10,
+  "ALLOWED_MIME": [
+    "image/jpeg",
+    "image/png",
+    "application/pdf"
+  ],
+  "FIREBASE_API_KEY": "AIzaSyBIlSKMkFIyY1OFYqqImwx5Lo2nHW5Foss",
+  "FIREBASE_AUTH_DOMAIN": "studio-1f95z.firebaseapp.com",
+  "FIREBASE_PROJECT_ID": "studio-1f95z",
+  "FIREBASE_MESSAGING_SENDER_ID": "922681782984",
+  "FIREBASE_APP_ID": "1:922681782984:web:d3840713be209e4a60abfd",
+  "FIREBASE_VAPID_KEY": "BJ3SXe0Nof9H4KJpvgG80LVUeDTNxdh0O2z3aOIzEzrFxd3bAn4ixhhouG7VV11zmK8giQ-UUGWeAP3JK8MpbXk"
+}

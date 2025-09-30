@@ -1,7 +1,7 @@
 /**
  * Unified Signup Page Initializer
  * مُهيئ صفحة التسجيل الموحدة
- * 
+ *
  * Features:
  * - Idempotent button generation
  * - Proper script loading order
@@ -102,7 +102,7 @@ export async function initUploadUI() {
 
     } catch (error) {
         console.error('❌ Upload UI initialization failed:', error);
-        
+
         // Hide spinner
         if (spinner) {
             spinner.style.display = 'none';
@@ -128,7 +128,7 @@ export async function initUploadUI() {
  */
 function showError(message) {
     console.error('🚨 Upload UI Error:', message);
-    
+
     const banner = document.getElementById('pageErrorBanner');
     if (banner) {
         banner.innerHTML = `

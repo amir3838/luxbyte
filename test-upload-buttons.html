@@ -10,19 +10,19 @@
 <body>
     <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
         <h1>اختبار أزرار رفع الملفات</h1>
-        
+
         <!-- Error Banner -->
         <div id="pageErrorBanner" style="display: none;"></div>
-        
+
         <!-- Loading Spinner -->
         <div id="uploadButtonsSpinner" style="text-align: center; padding: 40px; color: #666;">
             <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
             <p>جاري تحميل أزرار رفع الصور...</p>
         </div>
-        
+
         <!-- Upload Buttons Container -->
         <div id="uploadButtonsContainer"></div>
-        
+
         <div style="margin-top: 40px; padding: 20px; background: #f5f5f5; border-radius: 8px;">
             <h3>اختبار الأدوار:</h3>
             <button onclick="testRole('pharmacy')" style="margin: 5px; padding: 10px 15px; background: #6b7cff; color: white; border: none; border-radius: 4px; cursor: pointer;">
@@ -43,7 +43,7 @@
     <script src="js/supabase-client.js" defer></script>
     <script src="js/file-upload-manager.js" defer></script>
     <script type="module" src="js/unified-signup-init.js"></script>
-    
+
     <script>
         function testRole(role) {
             console.log('Testing role:', role);
@@ -51,19 +51,19 @@
             const url = new URL(window.location);
             url.searchParams.set('role', role);
             window.history.pushState({}, '', url);
-            
+
             // Reset and reinitialize
             const container = document.getElementById('uploadButtonsContainer');
             if (container) {
                 container.removeAttribute('data-initialized');
                 container.innerHTML = '';
             }
-            
+
             const spinner = document.getElementById('uploadButtonsSpinner');
             if (spinner) {
                 spinner.style.display = 'block';
             }
-            
+
             // Reinitialize
             if (window.initUploadUI) {
                 window.initUploadUI();

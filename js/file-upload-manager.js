@@ -22,6 +22,18 @@ let currentUploading = false;
 export async function ensureSupabaseReady() {
     console.log('🔍 Checking Supabase readiness...');
 
+    // Try to initialize configuration if not already done
+    if (typeof window.initConfig === 'function') {
+        try {
+            const ENV = await window.initConfig();
+            if (!ENV) {
+                throw new Error('فشل في تحميل إعدادات البيئة');
+            }
+        } catch (error) {
+            console.warn('⚠️ Configuration initialization failed:', error);
+        }
+    }
+
     // Check environment variables
     if (!window.__ENV__ || !window.__ENV__.NEXT_PUBLIC_SUPABASE_URL || !window.__ENV__.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
         throw new Error('متغيرات البيئة غير مكتملة - تحقق من config.js');
@@ -778,7 +790,7 @@ function generateFileUploadFields(role) {
 function createFileUploadField(fileConfig) {
     const field = document.createElement('div');
     field.className = 'file-upload-field';
-    
+
     // Handle both object config and string document type
     let config;
     if (typeof fileConfig === 'string') {
@@ -794,7 +806,7 @@ function createFileUploadField(fileConfig) {
         // Full config object
         config = fileConfig;
     }
-    
+
     field.id = `file-upload-${config.name}`;
 
     const acceptTypes = config.accept || 'image/*';
@@ -889,6 +901,189 @@ if (typeof window !== 'undefined') {
     window.removeFile = removeFile;
     window.generateFileUploadFields = generateFileUploadFields;
     window.initFileUpload = initFileUpload;
+}
+
+/**
+ * Bind upload button with unified functionality
+ * ربط زر الرفع بوظائف موحدة
+ * @param {Object} options - خيارات الربط
+ * @param {string} options.btnId - معرف الزر
+ * @param {string} options.inputId - معرف حقل الملف
+ * @param {string} options.docType - نوع المستند
+ * @param {string} options.userId - معرف المستخدم
+ * @param {Function} options.onDone - دالة عند النجاح
+ * @param {Function} options.onError - دالة عند الخطأ
+ */
+export async function bindUploadButton(options) {
+    const { btnId, inputId, docType, userId, onDone, onError } = options;
+
+    console.log(`🔗 ربط زر الرفع: ${btnId} -> ${inputId} (${docType})`);
+
+    try {
+        const button = document.getElementById(btnId);
+        const input = document.getElementById(inputId);
+
+        if (!button || !input) {
+            throw new Error(`عنصر غير موجود: ${btnId} أو ${inputId}`);
+        }
+
+        // إزالة المستمعين السابقين لتجنب التكرار
+        const newButton = button.cloneNode(true);
+        const newInput = input.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+        input.parentNode.replaceChild(newInput, input);
+
+        // ربط الأحداث الجديدة
+        newButton.addEventListener('click', async () => {
+            try {
+                console.log(`📸 فتح الكاميرا/الملف لـ ${docType}`);
+
+                // محاولة فتح الكاميرا أولاً
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({
+                            video: { facingMode: 'environment' }
+                        });
+
+                        // إنشاء modal للكاميرا
+                        const modal = createCameraModal(stream, docType, 'image/*');
+                        document.body.appendChild(modal);
+
+                        // إعداد زر الالتقاط
+                        const captureBtn = modal.querySelector('#capture-btn');
+                        const cancelBtn = modal.querySelector('#cancel-camera-btn');
+                        const video = modal.querySelector('#camera-feed');
+                        const canvas = modal.querySelector('#camera-canvas');
+                        const context = canvas.getContext('2d');
+
+                        video.srcObject = stream;
+
+                        captureBtn.onclick = async () => {
+                            try {
+                                canvas.width = video.videoWidth;
+                                canvas.height = video.videoHeight;
+                                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                                // إيقاف الكاميرا
+                                stream.getTracks().forEach(track => track.stop());
+
+                                // تحويل إلى ملف
+                                canvas.toBlob(async (blob) => {
+                                    const file = new File([blob], `${docType}_${Date.now()}.jpg`, {
+                                        type: 'image/jpeg'
+                                    });
+
+                                    // رفع الملف
+                                    await uploadAndProcess(file, docType, userId, onDone, onError);
+
+                                    // إزالة الـ modal
+                                    modal.remove();
+                                }, 'image/jpeg', 0.8);
+
+                            } catch (error) {
+                                console.error('خطأ في الالتقاط:', error);
+                                onError?.(error);
+                                stream.getTracks().forEach(track => track.stop());
+                                modal.remove();
+                            }
+                        };
+
+                        cancelBtn.onclick = () => {
+                            stream.getTracks().forEach(track => track.stop());
+                            modal.remove();
+                        };
+
+                    } catch (cameraError) {
+                        console.warn('فشل فتح الكاميرا، استخدام اختيار الملف:', cameraError);
+                        newInput.click();
+                    }
+                } else {
+                    // fallback لاختيار الملف
+                    newInput.click();
+                }
+
+            } catch (error) {
+                console.error('خطأ في فتح الكاميرا/الملف:', error);
+                onError?.(error);
+            }
+        });
+
+        // ربط اختيار الملف
+        newInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                await uploadAndProcess(file, docType, userId, onDone, onError);
+            }
+        });
+
+        console.log(`✅ تم ربط زر الرفع بنجاح: ${docType}`);
+
+    } catch (error) {
+        console.error(`❌ خطأ في ربط زر الرفع ${docType}:`, error);
+        onError?.(error);
+    }
+}
+
+/**
+ * Upload and process file
+ * رفع ومعالجة الملف
+ */
+async function uploadAndProcess(file, docType, userId, onDone, onError) {
+    try {
+        console.log(`📤 رفع الملف: ${file.name} (${file.size} bytes)`);
+
+        // التحقق من حجم الملف
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (file.size > maxSize) {
+            throw new Error('حجم الملف يتجاوز 10 ميجابايت');
+        }
+
+        // التحقق من نوع الملف
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+        if (!allowedTypes.includes(file.type)) {
+            throw new Error('نوع الملف غير مدعوم. الأنواع المدعومة: JPG, PNG, WEBP, PDF');
+        }
+
+        // رفع إلى Supabase Storage
+        const filePath = `${userId}/${docType}_${Date.now()}.${file.name.split('.').pop()}`;
+        const bucketName = 'kyc_docs';
+
+        const { data, error } = await window.supabase.storage
+            .from(bucketName)
+            .upload(filePath, file, {
+                cacheControl: '3600',
+                upsert: false
+            });
+
+        if (error) {
+            throw new Error(`فشل رفع الملف: ${error.message}`);
+        }
+
+        // الحصول على الرابط العام
+        const { data: publicUrlData } = window.supabase.storage
+            .from(bucketName)
+            .getPublicUrl(filePath);
+
+        const publicUrl = publicUrlData.publicUrl;
+
+        // حفظ بيانات الملف في قاعدة البيانات
+        await saveFileToDatabase(userId, docType, filePath, publicUrl, file.name, file.size, file.type);
+
+        console.log(`✅ تم رفع الملف بنجاح: ${publicUrl}`);
+
+        // استدعاء دالة النجاح
+        onDone?.({
+            publicUrl,
+            path: filePath,
+            fileName: file.name,
+            fileSize: file.size,
+            mimeType: file.type
+        });
+
+    } catch (error) {
+        console.error(`❌ خطأ في رفع الملف:`, error);
+        onError?.(error);
+    }
 }
 
 // Initialize when DOM is ready
