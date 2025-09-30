@@ -56,10 +56,13 @@
 <body>
     <div class="test-container">
         <h1>اختبار نظام الحارس</h1>
-        <p>هذه الصفحة لاختبار نظام الحارس والتأكد من أنه لا يمنع الوصول للصفحات العامة.</p>
-        
+        <p>هذه الصفحة لاختبار نظام الحارس. <strong>الحارس يعمل فقط للداشبورد</strong> وليس للصفحات العادية.</p>
+        <div class="test-result info">
+            <strong>معلومات:</strong> الحارس يحمي فقط صفحات الداشبورد (dashboard.html, admin-panel.html) وليس الصفحات العادية.
+        </div>
+
         <div id="test-results"></div>
-        
+
         <button onclick="runTests()">تشغيل الاختبارات</button>
         <button onclick="testPageDetection()">اختبار كشف الصفحة</button>
         <button onclick="testAuthCheck()">اختبار التحقق من المصادقة</button>
@@ -69,7 +72,7 @@
     <!-- Scripts -->
     <script type="module" src="js/guard.js"></script>
     <script type="module" src="js/supabase-client.js"></script>
-    
+
     <script>
         function addResult(message, type = 'info') {
             const results = document.getElementById('test-results');
@@ -85,12 +88,12 @@
 
         async function testPageDetection() {
             addResult('بدء اختبار كشف الصفحة...', 'info');
-            
+
             try {
                 // Test current page detection
                 const currentPage = window.location.pathname.split('/').pop() || 'index.html';
                 addResult(`الصفحة الحالية: ${currentPage}`, 'info');
-                
+
                 // Test if it's detected as public
                 if (typeof window.isCurrentPagePublic === 'function') {
                     const isPublic = window.isCurrentPagePublic();
@@ -98,7 +101,7 @@
                 } else {
                     addResult('دالة isCurrentPagePublic غير متاحة', 'error');
                 }
-                
+
                 // Test if it's detected as protected
                 if (typeof window.isCurrentPageProtected === 'function') {
                     const isProtected = window.isCurrentPageProtected();
@@ -106,7 +109,7 @@
                 } else {
                     addResult('دالة isCurrentPageProtected غير متاحة', 'error');
                 }
-                
+
             } catch (error) {
                 addResult(`خطأ في اختبار كشف الصفحة: ${error.message}`, 'error');
             }
@@ -114,7 +117,7 @@
 
         async function testAuthCheck() {
             addResult('بدء اختبار التحقق من المصادقة...', 'info');
-            
+
             try {
                 if (typeof window.requireAuth === 'function') {
                     const isAuthenticated = await window.requireAuth();
@@ -130,10 +133,10 @@
         async function runTests() {
             clearResults();
             addResult('بدء تشغيل جميع الاختبارات...', 'info');
-            
+
             await testPageDetection();
             await testAuthCheck();
-            
+
             addResult('انتهت جميع الاختبارات', 'success');
         }
 

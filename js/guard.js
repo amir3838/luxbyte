@@ -14,7 +14,7 @@ const DASHBOARD_MAP = {
 };
 
 /**
- * قائمة الصفحات المحمية التي تتطلب تسجيل دخول
+ * قائمة الصفحات المحمية التي تتطلب تسجيل دخول (الداشبورد فقط)
  */
 const PROTECTED_PAGES = [
     'dashboard.html',
@@ -24,9 +24,7 @@ const PROTECTED_PAGES = [
     'dashboard/clinic.html',
     'dashboard/courier.html',
     'dashboard/driver.html',
-    'admin-panel.html',
-    'profile.html',
-    'settings.html'
+    'admin-panel.html'
 ];
 
 /**
@@ -101,7 +99,7 @@ export async function checkAuthAndRedirect() {
 }
 
 /**
- * التحقق من المصادقة بدون توجيه (للاستخدام في الصفحات المحمية)
+ * التحقق من المصادقة (للاستخدام في الداشبورد فقط)
  */
 export async function requireAuth() {
     try {
@@ -109,19 +107,16 @@ export async function requireAuth() {
         const { data: { session } } = await supabase.auth.getSession();
 
         if (!session) {
-            console.log('❌ No active session, redirecting to auth');
+            console.log('❌ No active session, redirecting to login');
             redirectToAuth();
             return false;
         }
 
+        console.log('✅ User is authenticated');
         return true;
     } catch (error) {
-        console.error('❌ Auth requirement check error:', error);
-        // في حالة الخطأ، لا نمنع الوصول للصفحات العامة
-        if (isCurrentPagePublic()) {
-            console.log('🌐 Auth check failed but page is public, allowing access');
-            return true;
-        }
+        console.error('❌ Auth check error:', error);
+        console.log('❌ Authentication failed, redirecting to login');
         redirectToAuth();
         return false;
     }
@@ -278,11 +273,13 @@ function showSuccess(message) {
 }
 
 /**
- * التحقق من الصفحة الحالية وحمايتها
+ * التحقق من الصفحة الحالية إذا كانت محمية (داشبورد فقط)
  */
 export function isCurrentPageProtected() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    return PROTECTED_PAGES.includes(currentPage);
+    const isProtected = PROTECTED_PAGES.includes(currentPage);
+    console.log(`🔍 Checking if page is protected (dashboard): ${currentPage} -> ${isProtected}`);
+    return isProtected;
 }
 
 /**
@@ -296,41 +293,41 @@ export function isCurrentPagePublic() {
 }
 
 /**
- * تهيئة الحماية التلقائية للصفحة
+ * تهيئة الحماية التلقائية للصفحة (الداشبورد فقط)
  */
 export async function initAutoGuard() {
     try {
         console.log('🛡️ Initializing auto page guard...');
         
-        // إذا كانت الصفحة عامة، لا حاجة للتحقق
-        if (isCurrentPagePublic()) {
-            console.log('🌐 Public page detected, no authentication required');
-            return true;
-        }
-        
-        // إذا كانت الصفحة محمية، تحقق من المصادقة
+        // إذا كانت الصفحة محمية (داشبورد)، تحقق من المصادقة
         if (isCurrentPageProtected()) {
-            console.log('🔒 Protected page detected, checking authentication...');
+            console.log('🔒 Dashboard page detected, checking authentication...');
             const isAuthenticated = await requireAuth();
-            if (!isAuthenticated) return false;
+            if (!isAuthenticated) {
+                console.log('❌ Authentication failed, redirecting to login');
+                return false;
+            }
             
-            console.log('✅ Protected page access granted');
+            console.log('✅ Dashboard access granted');
             return true;
         }
         
-        // للصفحات غير المعروفة، اعتبارها عامة (لا تحتاج تسجيل دخول)
-        console.log('⚠️ Unknown page type, treating as public page');
+        // جميع الصفحات الأخرى (العامة وغير المعروفة) لا تحتاج تسجيل دخول
+        console.log('🌐 Non-dashboard page detected, no authentication required');
         return true;
 
     } catch (error) {
         console.error('❌ Auto guard initialization error:', error);
-        // في حالة الخطأ، لا نمنع الوصول للصفحات العامة
-        if (isCurrentPagePublic()) {
-            console.log('🌐 Error occurred but page is public, allowing access');
-            return true;
+        
+        // في حالة الخطأ، لا نمنع الوصول إلا للداشبورد
+        if (isCurrentPageProtected()) {
+            console.log('❌ Error occurred on dashboard page, redirecting to login');
+            redirectToAuth();
+            return false;
         }
-        redirectToAuth();
-        return false;
+        
+        console.log('🌐 Error occurred on non-dashboard page, allowing access');
+        return true;
     }
 }
 
