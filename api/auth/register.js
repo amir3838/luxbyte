@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
     // Validate required fields
     if (!email || !password || !first_name || !last_name) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Missing required fields',
         required: ['email', 'password', 'first_name', 'last_name']
       });
@@ -36,9 +36,9 @@ export default async function handler(req, res) {
 
     if (authError) {
       console.error('Auth error:', authError);
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Failed to create user',
-        details: authError.message 
+        details: authError.message
       });
     }
 
@@ -61,9 +61,9 @@ export default async function handler(req, res) {
       console.error('Profile error:', profileError);
       // Clean up auth user if profile creation fails
       await supabase.auth.admin.deleteUser(authData.user.id);
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Failed to create user profile',
-        details: profileError.message 
+        details: profileError.message
       });
     }
 
@@ -94,9 +94,9 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Registration error:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Internal server error',
-      details: error.message 
+      details: error.message
     });
   }
 }

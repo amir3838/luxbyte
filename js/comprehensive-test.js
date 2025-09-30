@@ -22,22 +22,22 @@ class ComprehensiveTest {
     async runAllTests() {
         // Frontend Tests
         await this.testFrontend();
-        
+
         // Backend Tests
         await this.testBackend();
-        
+
         // Database Tests
         await this.testDatabase();
-        
+
         // Permissions Tests
         await this.testPermissions();
-        
+
         // Performance Tests
         await this.testPerformance();
-        
+
         // Accessibility Tests
         await this.testAccessibility();
-        
+
         // Security Tests
         await this.testSecurity();
     }
@@ -45,7 +45,7 @@ class ComprehensiveTest {
     // Frontend Tests
     async testFrontend() {
         console.log('🔍 Testing Frontend...');
-        
+
         this.testResults.frontend = {
             htmlValidation: this.testHTMLValidation(),
             cssValidation: this.testCSSValidation(),
@@ -62,7 +62,7 @@ class ComprehensiveTest {
 
     testHTMLValidation() {
         const issues = [];
-        
+
         // Check for required meta tags
         const requiredMetaTags = ['viewport', 'description', 'keywords'];
         requiredMetaTags.forEach(tag => {
@@ -99,11 +99,11 @@ class ComprehensiveTest {
 
     testCSSValidation() {
         const issues = [];
-        
+
         // Check for CSS custom properties
         const root = document.documentElement;
         const computedStyle = getComputedStyle(root);
-        
+
         const requiredVars = ['--primary', '--secondary', '--text', '--bg-body'];
         requiredVars.forEach(varName => {
             if (!computedStyle.getPropertyValue(varName)) {
@@ -122,8 +122,8 @@ class ComprehensiveTest {
             })
             .filter(rule => rule.type === CSSRule.MEDIA_RULE);
 
-        const hasMobileBreakpoint = mediaQueries.some(rule => 
-            rule.media.mediaText.includes('768px') || 
+        const hasMobileBreakpoint = mediaQueries.some(rule =>
+            rule.media.mediaText.includes('768px') ||
             rule.media.mediaText.includes('max-width')
         );
 
@@ -141,7 +141,7 @@ class ComprehensiveTest {
     testJavaScriptErrors() {
         const errors = [];
         const originalConsoleError = console.error;
-        
+
         console.error = (...args) => {
             errors.push(args.join(' '));
             originalConsoleError.apply(console, args);
@@ -177,7 +177,7 @@ class ComprehensiveTest {
     testResponsiveDesign() {
         const breakpoints = [320, 768, 1024, 1440];
         const issues = [];
-        
+
         breakpoints.forEach(width => {
             // Simulate viewport width
             const originalWidth = window.innerWidth;
@@ -186,15 +186,15 @@ class ComprehensiveTest {
                 configurable: true,
                 value: width
             });
-            
+
             // Trigger resize event
             window.dispatchEvent(new Event('resize'));
-            
+
             // Check for horizontal scroll
             if (document.documentElement.scrollWidth > width) {
                 issues.push(`Horizontal scroll at ${width}px width`);
             }
-            
+
             // Restore original width
             Object.defineProperty(window, 'innerWidth', {
                 writable: true,
@@ -213,7 +213,7 @@ class ComprehensiveTest {
     testFormValidation() {
         const forms = document.querySelectorAll('form');
         const issues = [];
-        
+
         forms.forEach((form, index) => {
             const requiredInputs = form.querySelectorAll('input[required], textarea[required], select[required]');
             requiredInputs.forEach(input => {
@@ -238,13 +238,13 @@ class ComprehensiveTest {
     testFileUpload() {
         const fileInputs = document.querySelectorAll('input[type="file"]');
         const issues = [];
-        
+
         fileInputs.forEach((input, index) => {
             // Check for proper accept attribute
             if (!input.accept) {
                 issues.push(`File input ${index + 1}: Missing accept attribute`);
             }
-            
+
             // Check for camera capture
             if (!input.hasAttribute('capture')) {
                 issues.push(`File input ${index + 1}: Missing capture attribute for camera`);
@@ -273,7 +273,7 @@ class ComprehensiveTest {
         themeToggle.click();
         const newTheme = document.body.className;
         themeToggle.click(); // Toggle back
-        
+
         return {
             passed: originalTheme !== newTheme,
             issues: originalTheme === newTheme ? ['Theme toggle not working'] : [],
@@ -301,12 +301,12 @@ class ComprehensiveTest {
     testNavigation() {
         const navLinks = document.querySelectorAll('nav a, .nav a');
         const issues = [];
-        
+
         navLinks.forEach((link, index) => {
             if (!link.href || link.href === '#') {
                 issues.push(`Navigation link ${index + 1}: Missing or invalid href`);
             }
-            
+
             if (!link.textContent.trim()) {
                 issues.push(`Navigation link ${index + 1}: Missing text content`);
             }
@@ -322,7 +322,7 @@ class ComprehensiveTest {
     testAnimations() {
         const animatedElements = document.querySelectorAll('.fade-in, .slide-up, .scale-in');
         const issues = [];
-        
+
         if (animatedElements.length === 0) {
             issues.push('No animated elements found');
         }
@@ -352,7 +352,7 @@ class ComprehensiveTest {
     // Backend Tests
     async testBackend() {
         console.log('🔍 Testing Backend...');
-        
+
         this.testResults.backend = {
             apiEndpoints: await this.testAPIEndpoints(),
             authentication: await this.testAuthentication(),
@@ -368,9 +368,9 @@ class ComprehensiveTest {
             '/api/business/get-requests',
             '/api/admin/update-request-status'
         ];
-        
+
         const results = {};
-        
+
         for (const endpoint of endpoints) {
             try {
                 const response = await fetch(endpoint, {
@@ -379,7 +379,7 @@ class ComprehensiveTest {
                         'Content-Type': 'application/json'
                     }
                 });
-                
+
                 results[endpoint] = {
                     accessible: response.status !== 404,
                     status: response.status,
@@ -393,7 +393,7 @@ class ComprehensiveTest {
                 };
             }
         }
-        
+
         return results;
     }
 
@@ -408,7 +408,7 @@ class ComprehensiveTest {
                     hasSession: !!data?.session
                 };
             }
-            
+
             return {
                 connected: false,
                 error: 'Supabase client not initialized',
@@ -426,11 +426,11 @@ class ComprehensiveTest {
     async testFileUploadAPI() {
         // Test file upload functionality
         const testFile = new File(['test content'], 'test.txt', { type: 'text/plain' });
-        
+
         try {
             const formData = new FormData();
             formData.append('file', testFile);
-            
+
             // This would test actual file upload in a real scenario
             return {
                 supported: true,
@@ -451,13 +451,13 @@ class ComprehensiveTest {
                     .from('system_settings')
                     .select('key')
                     .limit(1);
-                
+
                 return {
                     connected: !error,
                     error: error?.message || null
                 };
             }
-            
+
             return {
                 connected: false,
                 error: 'Supabase client not initialized'
@@ -473,7 +473,7 @@ class ComprehensiveTest {
     // Database Tests
     async testDatabase() {
         console.log('🔍 Testing Database...');
-        
+
         this.testResults.database = {
             connection: await this.testDatabaseConnection(),
             tables: await this.testDatabaseTables(),
@@ -498,9 +498,9 @@ class ComprehensiveTest {
             'system_settings',
             'audit_logs'
         ];
-        
+
         const results = {};
-        
+
         for (const table of requiredTables) {
             try {
                 if (typeof window.LUXBYTE?.supabase !== 'undefined') {
@@ -508,7 +508,7 @@ class ComprehensiveTest {
                         .from(table)
                         .select('*')
                         .limit(1);
-                    
+
                     results[table] = {
                         exists: !error,
                         error: error?.message || null
@@ -526,7 +526,7 @@ class ComprehensiveTest {
                 };
             }
         }
-        
+
         return results;
     }
 
@@ -539,13 +539,13 @@ class ComprehensiveTest {
                     .from('user_profiles')
                     .select('id')
                     .limit(1);
-                
+
                 return {
                     rlsEnabled: !error || error.message.includes('permission'),
                     error: error?.message || null
                 };
             }
-            
+
             return {
                 rlsEnabled: false,
                 error: 'Supabase client not initialized'
@@ -561,7 +561,7 @@ class ComprehensiveTest {
     // Permissions Tests
     async testPermissions() {
         console.log('🔍 Testing Permissions...');
-        
+
         this.testResults.permissions = {
             camera: await this.testCameraPermission(),
             location: await this.testLocationPermission(),
@@ -604,10 +604,10 @@ class ComprehensiveTest {
         try {
             if ('Notification' in window) {
                 const permission = Notification.permission;
-                return { 
-                    granted: permission === 'granted', 
+                return {
+                    granted: permission === 'granted',
                     permission: permission,
-                    error: null 
+                    error: null
                 };
             }
             return { granted: false, error: 'Notifications not supported' };
@@ -620,11 +620,11 @@ class ComprehensiveTest {
         try {
             if ('storage' in navigator && 'estimate' in navigator.storage) {
                 const estimate = await navigator.storage.estimate();
-                return { 
-                    supported: true, 
+                return {
+                    supported: true,
                     quota: estimate.quota,
                     usage: estimate.usage,
-                    error: null 
+                    error: null
                 };
             }
             return { supported: false, error: 'Storage API not supported' };
@@ -636,7 +636,7 @@ class ComprehensiveTest {
     // Performance Tests
     async testPerformance() {
         console.log('🔍 Testing Performance...');
-        
+
         this.testResults.performance = {
             pageLoadTime: this.testPageLoadTime(),
             resourceLoading: this.testResourceLoading(),
@@ -657,7 +657,7 @@ class ComprehensiveTest {
     testResourceLoading() {
         const resources = performance.getEntriesByType('resource');
         const slowResources = resources.filter(resource => resource.duration > 1000);
-        
+
         return {
             totalResources: resources.length,
             slowResources: slowResources.length,
@@ -689,7 +689,7 @@ class ComprehensiveTest {
     // Accessibility Tests
     async testAccessibility() {
         console.log('🔍 Testing Accessibility...');
-        
+
         this.testResults.accessibility = {
             colorContrast: this.testColorContrast(),
             keyboardNavigation: this.testKeyboardNavigation(),
@@ -702,18 +702,18 @@ class ComprehensiveTest {
         // Basic color contrast test
         const textElements = document.querySelectorAll('p, span, div, h1, h2, h3, h4, h5, h6');
         const issues = [];
-        
+
         textElements.forEach((element, index) => {
             const style = getComputedStyle(element);
             const color = style.color;
             const backgroundColor = style.backgroundColor;
-            
+
             // This is a simplified test - in reality, you'd use a proper contrast ratio calculation
             if (color === backgroundColor) {
                 issues.push(`Element ${index + 1}: Text and background colors are identical`);
             }
         });
-        
+
         return {
             passed: issues.length === 0,
             issues: issues,
@@ -726,13 +726,13 @@ class ComprehensiveTest {
             'a[href], button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
         );
         const issues = [];
-        
+
         focusableElements.forEach((element, index) => {
             if (element.tabIndex < 0 && element.tabIndex !== -1) {
                 issues.push(`Element ${index + 1}: Invalid tabindex value`);
             }
         });
-        
+
         return {
             passed: issues.length === 0,
             issues: issues,
@@ -743,19 +743,19 @@ class ComprehensiveTest {
     testScreenReaderSupport() {
         const elements = document.querySelectorAll('img, input, button, a');
         const issues = [];
-        
+
         elements.forEach((element, index) => {
             if (element.tagName === 'IMG' && !element.alt) {
                 issues.push(`Image ${index + 1}: Missing alt text`);
             }
-            
-            if (!element.getAttribute('aria-label') && 
-                !element.getAttribute('aria-labelledby') && 
+
+            if (!element.getAttribute('aria-label') &&
+                !element.getAttribute('aria-labelledby') &&
                 !element.textContent.trim()) {
                 issues.push(`Element ${index + 1}: Missing accessible name`);
             }
         });
-        
+
         return {
             passed: issues.length === 0,
             issues: issues,
@@ -767,7 +767,7 @@ class ComprehensiveTest {
         const focusableElements = document.querySelectorAll(
             'a[href], button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
         );
-        
+
         // Test if focus can be managed
         let focusable = true;
         try {
@@ -777,7 +777,7 @@ class ComprehensiveTest {
         } catch (error) {
             focusable = false;
         }
-        
+
         return {
             passed: focusable,
             focusableElements: focusableElements.length,
@@ -788,7 +788,7 @@ class ComprehensiveTest {
     // Security Tests
     async testSecurity() {
         console.log('🔍 Testing Security...');
-        
+
         this.testResults.security = {
             https: this.testHTTPS(),
             contentSecurityPolicy: this.testContentSecurityPolicy(),
@@ -816,13 +816,13 @@ class ComprehensiveTest {
         // Test for potential XSS vulnerabilities
         const scriptTags = document.querySelectorAll('script');
         const issues = [];
-        
+
         scriptTags.forEach((script, index) => {
             if (script.src && !script.src.startsWith('http') && !script.src.startsWith('/')) {
                 issues.push(`Script ${index + 1}: Potentially unsafe src`);
             }
         });
-        
+
         return {
             passed: issues.length === 0,
             issues: issues,
@@ -833,7 +833,7 @@ class ComprehensiveTest {
     testDataValidation() {
         const forms = document.querySelectorAll('form');
         const issues = [];
-        
+
         forms.forEach((form, index) => {
             const inputs = form.querySelectorAll('input, textarea, select');
             inputs.forEach((input, inputIndex) => {
@@ -842,7 +842,7 @@ class ComprehensiveTest {
                 }
             });
         });
-        
+
         return {
             passed: issues.length === 0,
             issues: issues,
@@ -858,7 +858,7 @@ class ComprehensiveTest {
             results: this.testResults,
             summary: this.generateSummary()
         };
-        
+
         console.log('📊 Comprehensive Test Report:', report);
         this.displayReport(report);
         return report;
@@ -868,21 +868,21 @@ class ComprehensiveTest {
         const categories = Object.keys(this.testResults);
         let totalScore = 0;
         let categoryCount = 0;
-        
+
         categories.forEach(category => {
             const categoryResults = this.testResults[category];
             if (typeof categoryResults === 'object') {
                 const scores = Object.values(categoryResults)
                     .filter(result => typeof result === 'object' && 'score' in result)
                     .map(result => result.score);
-                
+
                 if (scores.length > 0) {
                     totalScore += scores.reduce((sum, score) => sum + score, 0) / scores.length;
                     categoryCount++;
                 }
             }
         });
-        
+
         return categoryCount > 0 ? Math.round(totalScore / categoryCount) : 0;
     }
 
@@ -894,7 +894,7 @@ class ComprehensiveTest {
             criticalIssues: [],
             recommendations: []
         };
-        
+
         Object.values(this.testResults).forEach(category => {
             if (typeof category === 'object') {
                 Object.values(category).forEach(test => {
@@ -912,24 +912,24 @@ class ComprehensiveTest {
                 });
             }
         });
-        
+
         // Generate recommendations
         if (summary.criticalIssues.length > 0) {
             summary.recommendations.push('Fix critical issues before deployment');
         }
-        
+
         if (this.testResults.permissions?.camera?.granted === false) {
             summary.recommendations.push('Implement camera permission request flow');
         }
-        
+
         if (this.testResults.permissions?.location?.granted === false) {
             summary.recommendations.push('Implement location permission request flow');
         }
-        
+
         if (this.testResults.performance?.pageLoadTime?.totalTime > 3000) {
             summary.recommendations.push('Optimize page load performance');
         }
-        
+
         return summary;
     }
 
@@ -951,7 +951,7 @@ class ComprehensiveTest {
             overflow-y: auto;
             font-family: 'Cairo', sans-serif;
         `;
-        
+
         reportContainer.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="margin: 0; color: #6b7cff;">🧪 Test Report</h3>
@@ -963,14 +963,14 @@ class ComprehensiveTest {
                     color: #666;
                 ">×</button>
             </div>
-            
+
             <div style="margin-bottom: 20px;">
                 <div style="font-size: 24px; font-weight: bold; color: ${report.overallScore >= 80 ? '#10b981' : report.overallScore >= 60 ? '#f59e0b' : '#ef4444'};">
                     ${report.overallScore}%
                 </div>
                 <div style="color: #666; font-size: 14px;">Overall Score</div>
             </div>
-            
+
             <div style="margin-bottom: 20px;">
                 <h4 style="margin: 0 0 10px 0; color: #333;">Summary</h4>
                 <div style="font-size: 14px; color: #666;">
@@ -979,7 +979,7 @@ class ComprehensiveTest {
                     <div style="color: #ef4444;">Failed: ${report.summary.failedTests}</div>
                 </div>
             </div>
-            
+
             ${report.summary.criticalIssues.length > 0 ? `
                 <div style="margin-bottom: 20px;">
                     <h4 style="margin: 0 0 10px 0; color: #ef4444;">Critical Issues</h4>
@@ -989,7 +989,7 @@ class ComprehensiveTest {
                     </ul>
                 </div>
             ` : ''}
-            
+
             ${report.summary.recommendations.length > 0 ? `
                 <div>
                     <h4 style="margin: 0 0 10px 0; color: #6b7cff;">Recommendations</h4>
@@ -999,7 +999,7 @@ class ComprehensiveTest {
                 </div>
             ` : ''}
         `;
-        
+
         document.body.appendChild(reportContainer);
     }
 }
@@ -1007,7 +1007,7 @@ class ComprehensiveTest {
 // Auto-run tests when page loads
 document.addEventListener('DOMContentLoaded', () => {
     // Only run in development or when explicitly requested
-    if (window.location.hostname === 'localhost' || 
+    if (window.location.hostname === 'localhost' ||
         window.location.search.includes('test=true') ||
         localStorage.getItem('runTests') === 'true') {
         new ComprehensiveTest();

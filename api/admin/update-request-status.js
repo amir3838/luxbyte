@@ -11,17 +11,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { 
-      request_id, 
-      business_type, 
-      status, 
+    const {
+      request_id,
+      business_type,
+      status,
       review_notes,
-      admin_user_id 
+      admin_user_id
     } = req.body;
 
     // Validate required fields
     if (!request_id || !business_type || !status || !admin_user_id) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Missing required fields',
         required: ['request_id', 'business_type', 'status', 'admin_user_id']
       });
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     // Validate status
     const validStatuses = ['pending', 'approved', 'rejected', 'under_review'];
     if (!validStatuses.includes(status)) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Invalid status',
         valid_statuses: validStatuses
       });
@@ -44,15 +44,15 @@ export default async function handler(req, res) {
       .single();
 
     if (adminError || !adminProfile || adminProfile.role !== 'admin') {
-      return res.status(403).json({ 
-        error: 'Unauthorized - Admin access required' 
+      return res.status(403).json({
+        error: 'Unauthorized - Admin access required'
       });
     }
 
     // Validate business type
     const validTypes = ['restaurant', 'supermarket', 'pharmacy', 'clinic', 'courier', 'driver'];
     if (!validTypes.includes(business_type)) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Invalid business type',
         valid_types: validTypes
       });
@@ -68,8 +68,8 @@ export default async function handler(req, res) {
       .single();
 
     if (fetchError || !currentRequest) {
-      return res.status(404).json({ 
-        error: 'Request not found' 
+      return res.status(404).json({
+        error: 'Request not found'
       });
     }
 
@@ -97,9 +97,9 @@ export default async function handler(req, res) {
 
     if (updateError) {
       console.error('Update error:', updateError);
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Failed to update request status',
-        details: updateError.message 
+        details: updateError.message
       });
     }
 
@@ -116,13 +116,13 @@ export default async function handler(req, res) {
       }]);
 
     // Send notification to the user
-    const notificationTitle = status === 'approved' ? 'تم قبول طلبك' : 
-                            status === 'rejected' ? 'تم رفض طلبك' : 
+    const notificationTitle = status === 'approved' ? 'تم قبول طلبك' :
+                            status === 'rejected' ? 'تم رفض طلبك' :
                             'تم تحديث حالة طلبك';
 
-    const notificationMessage = status === 'approved' ? 
+    const notificationMessage = status === 'approved' ?
       `تم قبول طلب تسجيل ${business_type} الخاص بك. مرحباً بك في منصة LUXBYTE!` :
-      status === 'rejected' ? 
+      status === 'rejected' ?
       `تم رفض طلب تسجيل ${business_type} الخاص بك. ${review_notes ? 'السبب: ' + review_notes : ''}` :
       `تم تحديث حالة طلب تسجيل ${business_type} الخاص بك إلى ${status}`;
 
@@ -132,7 +132,7 @@ export default async function handler(req, res) {
         user_id: currentRequest.user_id,
         title: notificationTitle,
         message: notificationMessage,
-        type: status === 'approved' ? 'success' : 
+        type: status === 'approved' ? 'success' :
               status === 'rejected' ? 'error' : 'info',
         data: {
           request_id,
@@ -146,7 +146,7 @@ export default async function handler(req, res) {
     if (status === 'approved') {
       await supabase
         .from('user_profiles')
-        .update({ 
+        .update({
           role: business_type,
           status: 'active',
           updated_at: new Date().toISOString()
@@ -162,9 +162,9 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Update status error:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Internal server error',
-      details: error.message 
+      details: error.message
     });
   }
 }

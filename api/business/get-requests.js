@@ -11,19 +11,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { 
-      user_id, 
-      business_type, 
-      status, 
-      page = 1, 
+    const {
+      user_id,
+      business_type,
+      status,
+      page = 1,
       limit = 10,
-      admin_view = false 
+      admin_view = false
     } = req.query;
 
     // Validate user_id
     if (!user_id) {
-      return res.status(400).json({ 
-        error: 'user_id is required' 
+      return res.status(400).json({
+        error: 'user_id is required'
       });
     }
 
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       // Get requests from specific business type
       const validTypes = ['restaurant', 'supermarket', 'pharmacy', 'clinic', 'courier', 'driver'];
       if (!validTypes.includes(business_type)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           error: 'Invalid business type',
           valid_types: validTypes
         });
@@ -91,9 +91,9 @@ export default async function handler(req, res) {
 
     if (error) {
       console.error('Database error:', error);
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Failed to fetch business requests',
-        details: error.message 
+        details: error.message
       });
     }
 
@@ -131,9 +131,9 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Get requests error:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Internal server error',
-      details: error.message 
+      details: error.message
     });
   }
 }

@@ -27,16 +27,16 @@ class EnhancedUI {
         themeToggle.addEventListener('click', () => {
             const currentTheme = document.body.classList.contains('light-theme') ? 'light' : 'dark';
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
+
             document.body.classList.remove(currentTheme + '-theme');
             document.body.classList.add(newTheme + '-theme');
-            
+
             localStorage.setItem('theme', newTheme);
             this.updateThemeIcon(newTheme);
-            
+
             // Dispatch theme change event
-            window.dispatchEvent(new CustomEvent('themeChanged', { 
-                detail: { theme: newTheme } 
+            window.dispatchEvent(new CustomEvent('themeChanged', {
+                detail: { theme: newTheme }
             }));
         });
     }
@@ -44,8 +44,8 @@ class EnhancedUI {
     updateThemeIcon(theme) {
         const themeIcon = document.getElementById('theme-icon');
         if (themeIcon) {
-            themeIcon.innerHTML = theme === 'light' ? 
-                '<i class="fas fa-moon"></i>' : 
+            themeIcon.innerHTML = theme === 'light' ?
+                '<i class="fas fa-moon"></i>' :
                 '<i class="fas fa-sun"></i>';
         }
     }
@@ -70,7 +70,7 @@ class EnhancedUI {
         localStorage.setItem('language', lang);
         document.documentElement.lang = lang;
         document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-        
+
         // Update language toggle text
         const langToggle = document.getElementById('language-toggle');
         if (langToggle) {
@@ -192,7 +192,7 @@ class EnhancedUI {
                 z-index: 9999;
                 backdrop-filter: blur(4px);
             }
-            
+
             .loading-spinner {
                 width: 50px;
                 height: 50px;
@@ -201,24 +201,24 @@ class EnhancedUI {
                 border-radius: 50%;
                 animation: spin 1s linear infinite;
             }
-            
+
             .loading-text {
                 color: white;
                 margin-top: 20px;
                 font-size: 16px;
                 text-align: center;
             }
-            
+
             @keyframes spin {
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
             }
-            
+
             @keyframes slideInRight {
                 from { transform: translateX(100%); opacity: 0; }
                 to { transform: translateX(0); opacity: 1; }
             }
-            
+
             @keyframes slideOutRight {
                 from { transform: translateX(0); opacity: 1; }
                 to { transform: translateX(100%); opacity: 0; }
@@ -273,29 +273,29 @@ class EnhancedUI {
                 transform: translateY(20px);
                 transition: all 0.6s ease;
             }
-            
+
             .fade-in.animate-in {
                 opacity: 1;
                 transform: translateY(0);
             }
-            
+
             .slide-up {
                 opacity: 0;
                 transform: translateY(30px);
                 transition: all 0.8s ease;
             }
-            
+
             .slide-up.animate-in {
                 opacity: 1;
                 transform: translateY(0);
             }
-            
+
             .scale-in {
                 opacity: 0;
                 transform: scale(0.9);
                 transition: all 0.5s ease;
             }
-            
+
             .scale-in.animate-in {
                 opacity: 1;
                 transform: scale(1);
@@ -333,9 +333,9 @@ class EnhancedUI {
         // Add ARIA labels to interactive elements
         document.querySelectorAll('button, input, select, textarea').forEach(el => {
             if (!el.getAttribute('aria-label') && !el.getAttribute('aria-labelledby')) {
-                const label = el.previousElementSibling?.textContent || 
-                            el.placeholder || 
-                            el.value || 
+                const label = el.previousElementSibling?.textContent ||
+                            el.placeholder ||
+                            el.value ||
                             'عنصر تفاعلي';
                 el.setAttribute('aria-label', label);
             }
@@ -354,7 +354,7 @@ class EnhancedUI {
     // Form Validation Enhancement
     enhanceFormValidation(form) {
         const inputs = form.querySelectorAll('input, textarea, select');
-        
+
         inputs.forEach(input => {
             // Real-time validation
             input.addEventListener('blur', () => {
@@ -439,7 +439,7 @@ class EnhancedUI {
 
     showFieldError(field, message) {
         this.removeFieldError(field);
-        
+
         const errorDiv = document.createElement('div');
         errorDiv.className = 'field-error';
         errorDiv.style.cssText = `
@@ -451,7 +451,7 @@ class EnhancedUI {
             gap: 4px;
         `;
         errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
-        
+
         field.parentNode.appendChild(errorDiv);
     }
 
@@ -469,14 +469,14 @@ class EnhancedUI {
                 throw new Error('Camera not supported');
             }
 
-            const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: { 
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
                     facingMode: 'environment',
                     width: { ideal: 1280 },
                     height: { ideal: 720 }
-                } 
+                }
             });
-            
+
             stream.getTracks().forEach(track => track.stop());
             return true;
         } catch (error) {

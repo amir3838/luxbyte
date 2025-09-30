@@ -11,17 +11,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { 
-      business_type, 
-      business_data, 
-      documents, 
+    const {
+      business_type,
+      business_data,
+      documents,
       location,
-      user_id 
+      user_id
     } = req.body;
 
     // Validate required fields
     if (!business_type || !business_data || !user_id) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Missing required fields',
         required: ['business_type', 'business_data', 'user_id']
       });
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     // Validate business type
     const validTypes = ['restaurant', 'supermarket', 'pharmacy', 'clinic', 'courier', 'driver'];
     if (!validTypes.includes(business_type)) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Invalid business type',
         valid_types: validTypes
       });
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     // Insert into appropriate table
     let result;
     const tableName = `${business_type}_requests`;
-    
+
     const { data, error } = await supabase
       .from(tableName)
       .insert([insertData])
@@ -60,9 +60,9 @@ export default async function handler(req, res) {
 
     if (error) {
       console.error('Database error:', error);
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Failed to create business request',
-        details: error.message 
+        details: error.message
       });
     }
 
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
       for (const [docType, fileData] of Object.entries(documents)) {
         if (fileData && fileData.file) {
           const fileName = `${user_id}/${business_type}/${docType}_${Date.now()}.${fileData.extension}`;
-          
+
           const { error: uploadError } = await supabase.storage
             .from(business_type)
             .upload(fileName, fileData.file, {
@@ -129,9 +129,9 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Business request error:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Internal server error',
-      details: error.message 
+      details: error.message
     });
   }
 }

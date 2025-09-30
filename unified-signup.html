@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل البيانات - LUXBYTE</title>
     <meta name="description" content="تسجيل البيانات والمستندات المطلوبة">
-    
+
     <!-- Permissions for Camera and Location -->
     <meta name="theme-color" content="#6b7cff">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <!-- Google Fonts -->
@@ -197,10 +197,16 @@
                         <div style="text-align: center; padding: 40px; color: var(--text-muted);">
                             <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 12px;"></i>
                             <p>جاري تحميل أزرار تصوير المستندات...</p>
-                            <button type="button" onclick="testFileUploadGeneration()" class="btn btn-outline" style="margin-top: 16px;">
-                                <i class="fas fa-refresh"></i>
-                                إعادة تحميل أزرار التصوير
-                            </button>
+                            <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
+                                <button type="button" onclick="testFileUploadGeneration()" class="btn btn-outline">
+                                    <i class="fas fa-refresh"></i>
+                                    إعادة تحميل أزرار التصوير
+                                </button>
+                                <button type="button" onclick="testCameraFunctionality()" class="btn btn-outline">
+                                    <i class="fas fa-camera"></i>
+                                    اختبار الكاميرا
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -268,35 +274,89 @@
 
         // Request permissions
         async function requestPermissions() {
+            const permissions = {
+                camera: false,
+                location: false,
+                notifications: false
+            };
+
             try {
                 // Request camera permission
                 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                    stream.getTracks().forEach(track => track.stop());
-                    console.log('✅ Camera permission granted');
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ 
+                            video: { 
+                                facingMode: 'environment',
+                                width: { ideal: 1280 },
+                                height: { ideal: 720 }
+                            } 
+                        });
+                        stream.getTracks().forEach(track => track.stop());
+                        permissions.camera = true;
+                        console.log('✅ Camera permission granted');
+                    } catch (cameraError) {
+                        console.warn('⚠️ Camera permission denied:', cameraError.message);
+                        LUXBYTE.notifyWarn('يرجى السماح بالوصول للكاميرا لتصوير المستندات');
+                    }
                 }
                 
                 // Request location permission
                 if (navigator.geolocation) {
-                    await new Promise((resolve, reject) => {
-                        navigator.geolocation.getCurrentPosition(resolve, reject, {
-                            enableHighAccuracy: true,
-                            timeout: 5000,
-                            maximumAge: 0
+                    try {
+                        await new Promise((resolve, reject) => {
+                            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                enableHighAccuracy: true,
+                                timeout: 10000,
+                                maximumAge: 300000
+                            });
                         });
-                    });
-                    console.log('✅ Location permission granted');
+                        permissions.location = true;
+                        console.log('✅ Location permission granted');
+                    } catch (locationError) {
+                        console.warn('⚠️ Location permission denied:', locationError.message);
+                        LUXBYTE.notifyWarn('يرجى السماح بالوصول للموقع الجغرافي');
+                    }
                 }
                 
                 // Request notification permission
-                if ('Notification' in window && Notification.permission === 'default') {
-                    await Notification.requestPermission();
-                    console.log('✅ Notification permission:', Notification.permission);
+                if ('Notification' in window) {
+                    if (Notification.permission === 'default') {
+                        const notificationPermission = await Notification.requestPermission();
+                        permissions.notifications = notificationPermission === 'granted';
+                        console.log('✅ Notification permission:', notificationPermission);
+                    } else {
+                        permissions.notifications = Notification.permission === 'granted';
+                    }
                 }
                 
+                // Store permissions status
+                localStorage.setItem('luxbyte_permissions', JSON.stringify(permissions));
+                
             } catch (error) {
-                console.warn('⚠️ Some permissions denied:', error.message);
-                LUXBYTE.notifyWarn('بعض الأذونات مطلوبة للاستخدام الأمثل للتطبيق');
+                console.error('❌ Error requesting permissions:', error);
+                LUXBYTE.notifyErr('حدث خطأ في طلب الأذونات');
+            }
+        }
+
+        // Check if camera is available
+        async function checkCameraAvailability() {
+            try {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    return false;
+                }
+                
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const hasCamera = devices.some(device => device.kind === 'videoinput');
+                
+                if (!hasCamera) {
+                    LUXBYTE.notifyWarn('لا توجد كاميرا متاحة على هذا الجهاز');
+                    return false;
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Error checking camera availability:', error);
+                return false;
             }
         }
 
@@ -304,9 +364,15 @@
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 console.log('🚀 LUXBYTE Unified Signup Page Loaded');
-                
+
                 // Request permissions first
                 await requestPermissions();
+                
+                // Check camera availability
+                const cameraAvailable = await checkCameraAvailability();
+                if (!cameraAvailable) {
+                    LUXBYTE.notifyWarn('الكاميرا غير متاحة - سيتم استخدام اختيار الملفات بدلاً من التصوير المباشر');
+                }
 
                 // Get role from URL parameter
                 const urlParams = new URLSearchParams(window.location.search);
@@ -642,7 +708,7 @@
                         <i class="fas fa-camera"></i>
                         تصوير بالكاميرا
                     </div>
-                    <input type="file" class="file-input" accept="image/*" capture="environment" ${file.required ? 'required' : ''} style="display: none;">
+                    <input type="file" class="file-input" accept="image/*" capture="environment" ${file.required ? 'required' : ''} style="display: none;" data-file-key="${file.key}">
                 `;
 
                 // Event listeners
@@ -662,8 +728,13 @@
                     }
                 });
 
-                uploadDiv.addEventListener('click', (e) => {
+                uploadDiv.addEventListener('click', async (e) => {
                     e.preventDefault();
+                    // Check camera availability before opening
+                    const cameraAvailable = await checkCameraAvailability();
+                    if (!cameraAvailable) {
+                        LUXBYTE.notifyWarn('الكاميرا غير متاحة - سيتم فتح اختيار الملفات');
+                    }
                     uploadDiv.querySelector('.file-input').click();
                 });
 
@@ -765,7 +836,51 @@
 
             uploadedFiles[fileConfig.name] = file;
             console.log('Photo uploaded successfully:', fileConfig.name);
+            // Show image preview
+            if (file.type.startsWith('image/')) {
+                showImagePreview(file, container);
+            }
+
             LUXBYTE.notifyOk(`تم تصوير ${fileConfig.label} بنجاح`);
+        }
+
+        // Show image preview
+        function showImagePreview(file, container) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Remove existing preview
+                const existingPreview = container.querySelector('.image-preview');
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
+
+                // Create new preview
+                const preview = document.createElement('div');
+                preview.className = 'image-preview';
+                preview.style.cssText = `
+                    margin-top: 12px;
+                    text-align: center;
+                `;
+                preview.innerHTML = `
+                    <img src="${e.target.result}" style="
+                        width: 100%;
+                        max-width: 200px;
+                        height: auto;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                        border: 2px solid #10b981;
+                    " alt="معاينة الصورة">
+                    <div style="
+                        margin-top: 8px;
+                        font-size: 12px;
+                        color: #10b981;
+                        font-weight: 500;
+                    ">✓ تم التقاط الصورة بنجاح</div>
+                `;
+                
+                container.appendChild(preview);
+            };
+            reader.readAsDataURL(file);
         }
 
         // Validate file
@@ -859,12 +974,46 @@
                 hasRoles: !!(window.CONFIG && window.CONFIG.ROLES),
                 roleConfig: window.CONFIG && window.CONFIG.ROLES ? window.CONFIG.ROLES[selectedRole] : null
             });
-
+            
             if (selectedRole && window.CONFIG && window.CONFIG.ROLES && window.CONFIG.ROLES[selectedRole]) {
                 generateFileUploadFields();
                 LUXBYTE.notifyOk('تم إعادة تحميل أزرار التصوير');
             } else {
                 LUXBYTE.notifyErr('لا يمكن تحميل أزرار التصوير - تحقق من نوع النشاط');
+            }
+        }
+
+        // Test camera functionality
+        async function testCameraFunctionality() {
+            console.log('📸 Testing camera functionality...');
+            
+            try {
+                // Check if camera is available
+                const cameraAvailable = await checkCameraAvailability();
+                if (!cameraAvailable) {
+                    LUXBYTE.notifyErr('الكاميرا غير متاحة على هذا الجهاز');
+                    return false;
+                }
+
+                // Test camera permission
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    } 
+                });
+                
+                // Stop the stream immediately
+                stream.getTracks().forEach(track => track.stop());
+                
+                LUXBYTE.notifyOk('✅ الكاميرا تعمل بشكل صحيح');
+                return true;
+                
+            } catch (error) {
+                console.error('Camera test failed:', error);
+                LUXBYTE.notifyErr(`فشل اختبار الكاميرا: ${error.message}`);
+                return false;
             }
         }
 

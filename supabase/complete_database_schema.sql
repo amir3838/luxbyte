@@ -576,7 +576,7 @@ CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs(created_at);
 
 -- View for all business requests
 CREATE OR REPLACE VIEW all_business_requests AS
-SELECT 
+SELECT
     'restaurant' as business_type,
     id,
     user_id,
@@ -591,7 +591,7 @@ SELECT
     updated_at
 FROM restaurant_requests
 UNION ALL
-SELECT 
+SELECT
     'supermarket' as business_type,
     id,
     user_id,
@@ -606,7 +606,7 @@ SELECT
     updated_at
 FROM supermarket_requests
 UNION ALL
-SELECT 
+SELECT
     'pharmacy' as business_type,
     id,
     user_id,
@@ -621,7 +621,7 @@ SELECT
     updated_at
 FROM pharmacy_requests
 UNION ALL
-SELECT 
+SELECT
     'clinic' as business_type,
     id,
     user_id,
@@ -636,7 +636,7 @@ SELECT
     updated_at
 FROM clinic_requests
 UNION ALL
-SELECT 
+SELECT
     'courier' as business_type,
     id,
     user_id,
@@ -651,7 +651,7 @@ SELECT
     updated_at
 FROM courier_requests
 UNION ALL
-SELECT 
+SELECT
     'driver' as business_type,
     id,
     user_id,
@@ -668,7 +668,7 @@ FROM driver_requests;
 
 -- View for user dashboard data
 CREATE OR REPLACE VIEW user_dashboard_data AS
-SELECT 
+SELECT
     up.id,
     up.first_name,
     up.last_name,
@@ -690,13 +690,13 @@ GROUP BY up.id, up.first_name, up.last_name, up.email, up.role, up.status, up.cr
 -- =============================================
 
 -- Final verification query
-SELECT 
+SELECT
     'Database setup completed successfully' as status,
     COUNT(*) as total_tables
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+FROM information_schema.tables
+WHERE table_schema = 'public'
 AND table_name IN (
-    'user_profiles', 'business_types', 'restaurant_requests', 
+    'user_profiles', 'business_types', 'restaurant_requests',
     'supermarket_requests', 'pharmacy_requests', 'clinic_requests',
     'courier_requests', 'driver_requests', 'file_uploads',
     'document_types', 'push_tokens', 'notifications',
