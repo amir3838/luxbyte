@@ -83,7 +83,7 @@ class ThemeManager {
         const root = document.documentElement;
         root.classList.toggle('theme-dark', theme === 'dark');
         root.classList.toggle('theme-light', theme === 'light');
-        
+
         // Update theme toggle button if exists
         const themeToggle = document.querySelector('#themeToggle, [data-action="toggle-theme"]');
         if (themeToggle) {
