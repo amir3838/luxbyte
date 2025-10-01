@@ -48,13 +48,8 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://qjsvgpvbtrcnbhcjdcci.supabase.co">
-
-    <!-- تم إزالة تطبيق الثيم - ثيم موحد -->
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
 
     <!-- Font Awesome with font-display: swap -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -64,7 +59,6 @@
     <link rel="stylesheet" href="css/themes.css">
     <link rel="icon" href="assets/app_icon/LUXBYTEICON.PNG" type="image/png">
     <link rel="apple-touch-icon" href="assets/app_icon/LUXBYTEICON.PNG">
-
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -79,7 +73,7 @@
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "EG",
-        "addressLocality": "القاهرة"
+        "addressRegion": "مصر"
       },
       "contactPoint": {
         "@type": "ContactPoint",
@@ -94,11 +88,229 @@
       ]
     }
     </script>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#21808d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="LUXBYTE">
+
+    <!-- Critical CSS for above-the-fold content -->
+    <style>
+        /* Critical styles for immediate rendering */
+        body {
+            background-image: url("/assets/images/backgrounds/screen-1.png");
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .site-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+        
+        .site-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .site-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .site-header .auth-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .card, .panel, .box, .content-card, .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin: 20px auto;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .card .card-header, .panel .panel-header {
+            background: linear-gradient(135deg, rgba(107, 124, 255, 0.1), rgba(122, 60, 255, 0.1));
+            border-bottom: 1px solid rgba(107, 124, 255, 0.2);
+            padding: 24px;
+            margin: 0;
+        }
+        
+        .card .card-title, .panel .panel-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 8px 0;
+            text-align: center;
+        }
+        
+        .card .card-description, .panel .panel-description {
+            font-size: 1rem;
+            color: #6b7280;
+            line-height: 1.6;
+            margin: 0;
+            text-align: center;
+            padding: 0 16px 16px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            min-height: 40px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.2);
+            color: #333;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-8 {
+            margin-bottom: 2rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        .fade-in-slow {
+            animation: fadeIn 1.2s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: reveal 0.8s ease-out forwards;
+        }
+        
+        @keyframes reveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .tick {
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .muted {
+            color: #6b7280;
+        }
+        
+        .card-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-glow {
+            filter: drop-shadow(0 0 10px rgba(107, 124, 255, 0.3));
+        }
+        
+        @media (max-width: 768px) {
+            .card, .panel, .box, .content-card, .form-container {
+                margin: 8px 0;
+                padding: 16px;
+                max-width: 100%;
+            }
+            
+            .card .card-header, .panel .panel-header {
+                padding: 12px;
+            }
+            
+            .card .card-description, .panel .panel-description {
+                padding: 0 12px 12px;
+                font-size: 13px;
+            }
+            
+            .site-header .container {
+                padding: 8px 16px;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation will be injected by js/navigation-bar.js -->
-
-    <!-- Top Navigation Bar -->
+    <!-- Header -->
     <header class="site-header">
         <div class="container">
             <div class="brand">
@@ -106,121 +318,114 @@
                 <span style="font-size: 18px; font-weight: 600; color: #333;">LUXBYTE</span>
             </div>
             <nav class="auth-actions">
-                <a href="/auth.html" class="btn" style="padding: 8px 16px; font-size: 14px; background: rgba(255, 255, 255, 0.2); color: #333; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; text-decoration: none;">
-                    تسجيل الدخول
-                </a>
-                <a href="/choose-role.html" class="btn" style="padding: 8px 16px; font-size: 14px; background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; text-decoration: none;">
-                    إنشاء حساب
-                </a>
+                <a href="auth.html" class="btn btn-outline">تسجيل الدخول</a>
+                <a href="choose-role.html" class="btn btn-primary">إنشاء حساب</a>
             </nav>
         </div>
     </header>
 
     <!-- Background Logo -->
-    <img id="bg-corner-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE">
+    <img id="bg-corner-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" style="position: fixed; top: 18px; right: 18px; width: 60px; height: 60px; z-index: 5; pointer-events: none; filter: drop-shadow(0 2px 6px rgba(0,0,0,.2));">
 
     <!-- Main Content -->
     <main class="container" style="margin-top: 100px; padding: 0 20px;">
         <!-- Hero Section -->
-        <section class="card text-center mb-8" style="max-width: 450px; margin: 20px auto; padding: 25px 20px;">
+        <section class="card text-center mb-8" style="max-width: 500px; margin: 20px auto; padding: 30px 20px;">
             <div class="card-header" style="flex-direction: column; align-items: center; text-align: center; border: none; padding: 0;">
-                <div class="card-icon" style="margin-bottom: 16px;">
-                    <img id="hero-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="لوجو لوكس بايت" class="logo-glow" style="width: 20px; height: 20px; object-fit: contain;" loading="eager" decoding="async">
+                <div class="card-icon" style="margin-bottom: 20px;">
+                    <img src="assets/app_icon/LUXBYTEICON.PNG" alt="لوجو لوكس بايت" class="logo-glow" style="width: 24px; height: 24px; object-fit: contain;" loading="eager" decoding="async">
                 </div>
                 <div>
-                    <h1 class="card-title fade-in" style="font-size: 22px; margin-bottom: 6px; color: #333; font-weight: 600;">LUXBYTE</h1>
-                    <p class="fade-in-slow" style="color: #666; font-size: 14px; margin: 0;" data-i18n="brand.luxbyte_llc">شركة لوكس بايت المحدودة المسئولية</p>
+                    <h1 class="card-title fade-in" style="font-size: 24px; margin-bottom: 8px; color: #333; font-weight: 700;">LUXBYTE</h1>
+                    <p class="fade-in-slow" style="color: #666; font-size: 14px; margin: 0;">شركة لوكس بايت المحدودة المسئولية</p>
                 </div>
             </div>
-            <p class="card-description fade-in-slow" style="font-size: 15px; line-height: 1.5; margin: 20px 0;" data-i18n="home.tagline">
-                منصة شاملة للتجارة الإلكترونية وخدمات التوصيل، تقدم حلولاً متكاملة للمنشآت التجارية
-                والأفراد في مصر. انضم إلينا واكتشف عالماً جديداً من الفرص التجارية.
+            <p class="card-description fade-in-slow" style="font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                منصة شاملة للتجارة الإلكترونية وخدمات التوصيل، تقدم حلولاً متكاملة للمنشآت التجارية والأفراد في مصر. انضم إلينا واكتشف عالماً جديداً من الفرص التجارية.
             </p>
             <div class="fade-in-slow" style="margin-top: 24px;">
-                <a href="choose-role.html" class="btn" style="font-size: 15px; padding: 10px 20px; background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px;" aria-label="ابدأ رحلتك الآن - اذهب لإنشاء حساب">
-                    <i class="fas fa-rocket" aria-hidden="true"></i>
+                <a href="choose-role.html" class="btn btn-primary" style="font-size: 16px; padding: 12px 24px;" aria-label="ابدأ رحلتك الآن - اذهب لإنشاء حساب">
+                    <i class="fas fa-rocket" aria-hidden="true" style="margin-left: 8px;"></i>
                     ابدأ رحلتك الآن
                 </a>
             </div>
         </section>
 
         <!-- Platform Cards -->
-        <section class="mb-8" style="max-width: 800px; margin: 0 auto; padding: 0 20px;">
-            <h2 class="fade-in text-center" style="margin-bottom: 24px; font-size: 22px; color: #333; font-weight: 600;" data-i18n="home.choose_platform">اختر منصتك</h2>
-            <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+        <section class="mb-8" style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
+            <h2 class="fade-in text-center" style="margin-bottom: 32px; font-size: 28px; color: #333; font-weight: 700;">اختر منصتك</h2>
+            <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
                 <!-- ShopEG Card -->
-                <div class="card reveal" style="min-height: 240px; padding: 20px;">
+                <div class="card reveal" style="min-height: 280px; padding: 24px;">
                     <div class="card-header" style="flex-direction: column; align-items: center; text-align: center;">
-                        <div class="card-icon" style="margin-bottom: 16px;">
+                        <div class="card-icon" style="margin-bottom: 20px;">
                             <img src="/assets/images/shopeg_logo.webp" alt="شوب إي جي" class="logo-glow" style="width: 60px; height: 60px; object-fit: contain;" loading="lazy" decoding="async">
                         </div>
                         <div>
-                            <h3 class="card-title" style="font-size: 20px; margin-bottom: 8px;" data-i18n="home.shop_eg.title">شوب إي جي <span class="tick">✓</span></h3>
-                            <p class="muted" style="font-size: 14px; color: #666;" data-i18n="home.shop_eg.subtitle">منصة التجارة الإلكترونية</p>
+                            <h3 class="card-title" style="font-size: 22px; margin-bottom: 8px;">شوب إي جي <span class="tick">✓</span></h3>
+                            <p class="muted" style="font-size: 14px; color: #666;">منصة التجارة الإلكترونية</p>
                         </div>
                     </div>
-                    <p class="card-description" data-i18n="home.shop_eg.desc">
-                        منصة متكاملة للتجارة الإلكترونية تتيح للمنشآت التجارية إنشاء متاجرها الإلكترونية
-                        وإدارة طلباتها بسهولة. مناسبة للمطاعم، والسوبر ماركت، والصيدليات، والعيادات، ومندوبي التوصيل.
+                    <p class="card-description" style="font-size: 15px; line-height: 1.6; margin: 16px 0;">
+                        منصة متكاملة للتجارة الإلكترونية تتيح للمنشآت التجارية إنشاء متاجرها الإلكترونية وإدارة طلباتها بسهولة. مناسبة للمطاعم، والسوبر ماركت، والصيدليات، والعيادات، ومندوبي التوصيل.
                     </p>
                     <ul style="list-style: none; padding: 0; margin: 20px 0;">
-                        <li style="margin-bottom: 8px; color: #666;" data-i18n="home.shop_eg.features.advanced_orders">
+                        <li style="margin-bottom: 8px; color: #666;">
                             <i class="fas fa-check" style="color: #10b981; margin-left: 8px;"></i>
                             إدارة طلبات متقدمة
                         </li>
-                        <li style="margin-bottom: 8px; color: #666;" data-i18n="home.shop_eg.features.secure_payments">
+                        <li style="margin-bottom: 8px; color: #666;">
                             <i class="fas fa-check" style="color: #10b981; margin-left: 8px;"></i>
                             نظام دفع آمن
                         </li>
-                        <li style="margin-bottom: 8px; color: #666;" data-i18n="home.shop_eg.features.detailed_reports">
+                        <li style="margin-bottom: 8px; color: #666;">
                             <i class="fas fa-check" style="color: #10b981; margin-left: 8px;"></i>
                             تقارير مفصلة
                         </li>
-                        <li style="margin-bottom: 8px; color: #666;" data-i18n="home.shop_eg.features.support_247">
+                        <li style="margin-bottom: 8px; color: #666;">
                             <i class="fas fa-check" style="color: #10b981; margin-left: 8px;"></i>
                             دعم فني 24/7
                         </li>
                     </ul>
-                    <a href="unified-signup.html?role=restaurant" class="btn" style="width: 100%; justify-content: center;" aria-label="ابدأ مع شوب إي جي - منصة التجارة الإلكترونية">
+                    <a href="unified-signup.html?role=restaurant" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 16px; padding: 12px 20px;" aria-label="ابدأ مع شوب إي جي - منصة التجارة الإلكترونية">
                         <img src="/assets/images/shopeg_logo.webp" alt="شوب إي جي" style="width: 20px; height: 20px; margin-left: 8px;" loading="lazy" decoding="async">
                         ابدأ مع شوب إي جي
                     </a>
                 </div>
 
                 <!-- Master Driver Card -->
-                <div class="card reveal" style="min-height: 240px; padding: 20px;">
+                <div class="card reveal" style="min-height: 280px; padding: 24px;">
                     <div class="card-header" style="flex-direction: column; align-items: center; text-align: center;">
-                        <div class="card-icon" style="margin-bottom: 16px;">
+                        <div class="card-icon" style="margin-bottom: 20px;">
                             <img src="./assets/images/activities/driver.png" alt="ماستر درايفر" class="logo-glow" style="width: 60px; height: 60px; object-fit: contain;" loading="lazy" decoding="async">
                         </div>
                         <div>
-                            <h3 class="card-title" style="font-size: 20px; margin-bottom: 8px;" data-i18n="home.master_driver.title">ماستر درايفر <span class="tick">✓</span></h3>
-                            <p class="muted" style="font-size: 14px; color: #666;" data-i18n="home.master_driver.subtitle">منصة خدمات التوصيل</p>
+                            <h3 class="card-title" style="font-size: 22px; margin-bottom: 8px;">ماستر درايفر <span class="tick">✓</span></h3>
+                            <p class="muted" style="font-size: 14px; color: #666;">منصة خدمات التوصيل</p>
                         </div>
                     </div>
-                    <p class="card-description" data-i18n="home.master_driver.desc">
-                        منصة متخصصة في خدمات التوصيل والنقل، تربط بين العملاء ومندوبي التوصيل
-                        لتقديم خدمة توصيل سريعة وموثوقة في جميع أنحاء مصر.
+                    <p class="card-description" style="font-size: 15px; line-height: 1.6; margin: 16px 0;">
+                        منصة متخصصة في خدمات التوصيل والنقل، تربط بين العملاء ومندوبي التوصيل لتقديم خدمة توصيل سريعة وموثوقة في جميع أنحاء مصر.
                     </p>
                     <ul style="list-style: none; padding: 0; margin: 20px 0;">
-                        <li style="margin-bottom: 8px; color: #666;" data-i18n="home.master_driver.features.live_tracking">
+                        <li style="margin-bottom: 8px; color: #666;">
                             <i class="fas fa-check" style="color: #10b981; margin-left: 8px;"></i>
                             تتبع الطلبات في الوقت الفعلي
                         </li>
-                        <li style="margin-bottom: 8px; color: #666;" data-i18n="home.master_driver.features.rating_system">
+                        <li style="margin-bottom: 8px; color: #666;">
                             <i class="fas fa-check" style="color: #10b981; margin-left: 8px;"></i>
                             نظام تقييم متقدم
                         </li>
-                        <li style="margin-bottom: 8px; color: #666;" data-i18n="home.master_driver.features.secure_pay">
+                        <li style="margin-bottom: 8px; color: #666;">
                             <i class="fas fa-check" style="color: #10b981; margin-left: 8px;"></i>
                             دفع آمن ومضمون
                         </li>
-                        <li style="margin-bottom: 8px; color: #666;" data-i18n="home.master_driver.features.city_coverage">
+                        <li style="margin-bottom: 8px; color: #666;">
                             <i class="fas fa-check" style="color: #10b981; margin-left: 8px;"></i>
                             تغطية شاملة للمدن
                         </li>
                     </ul>
-                    <a href="unified-signup.html?role=driver" class="btn" style="width: 100%; justify-content: center;" aria-label="ابدأ مع ماستر درايفر - منصة خدمات التوصيل">
+                    <a href="unified-signup.html?role=driver" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 16px; padding: 12px 20px;" aria-label="ابدأ مع ماستر درايفر - منصة خدمات التوصيل">
                         <img src="assets/images/activities/driver.png" alt="ماستر درايفر" style="width: 20px; height: 20px; margin-left: 8px;" loading="lazy" decoding="async">
                         ابدأ مع ماستر درايفر
                     </a>
@@ -229,45 +434,45 @@
         </section>
 
         <!-- Features Section -->
-        <section class="mb-8">
-            <h2 class="fade-in text-center" style="margin-bottom: 32px; font-size: 28px; color: #eee;">لماذا LUXBYTE؟</h2>
-            <div class="grid">
-                <div class="card text-center reveal">
+        <section class="mb-8" style="max-width: 1000px; margin: 0 auto; padding: 0 20px;">
+            <h2 class="fade-in text-center" style="margin-bottom: 32px; font-size: 28px; color: #333; font-weight: 700;">لماذا LUXBYTE؟</h2>
+            <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div class="card text-center reveal" style="padding: 24px;">
                     <div class="card-icon" style="margin: 0 auto 16px;">
-                        <i class="fas fa-shield-alt"></i>
+                        <i class="fas fa-shield-alt" style="font-size: 32px; color: #10b981;"></i>
                     </div>
-                    <h3 class="card-title">أمان وموثوقية</h3>
-                    <p class="card-description">
+                    <h3 class="card-title" style="font-size: 18px; margin-bottom: 12px;">أمان وموثوقية</h3>
+                    <p class="card-description" style="font-size: 14px; line-height: 1.6;">
                         نستخدم أحدث تقنيات الأمان لحماية بياناتك ومعاملاتك المالية
                     </p>
                 </div>
 
-                <div class="card text-center reveal">
+                <div class="card text-center reveal" style="padding: 24px;">
                     <div class="card-icon" style="margin: 0 auto 16px;">
-                        <i class="fas fa-mobile-alt"></i>
+                        <i class="fas fa-mobile-alt" style="font-size: 32px; color: #3b82f6;"></i>
                     </div>
-                    <h3 class="card-title">سهولة الاستخدام</h3>
-                    <p class="card-description">
+                    <h3 class="card-title" style="font-size: 18px; margin-bottom: 12px;">سهولة الاستخدام</h3>
+                    <p class="card-description" style="font-size: 14px; line-height: 1.6;">
                         واجهة بسيطة وسهلة الاستخدام تعمل على جميع الأجهزة
                     </p>
-                    </div>
+                </div>
 
-                <div class="card text-center reveal">
+                <div class="card text-center reveal" style="padding: 24px;">
                     <div class="card-icon" style="margin: 0 auto 16px;">
-                        <i class="fas fa-headset"></i>
+                        <i class="fas fa-headset" style="font-size: 32px; color: #f59e0b;"></i>
                     </div>
-                    <h3 class="card-title">دعم فني متميز</h3>
-                    <p class="card-description">
+                    <h3 class="card-title" style="font-size: 18px; margin-bottom: 12px;">دعم فني متميز</h3>
+                    <p class="card-description" style="font-size: 14px; line-height: 1.6;">
                         فريق دعم فني متخصص متاح على مدار الساعة لمساعدتك
                     </p>
-    </div>
+                </div>
 
-                <div class="card text-center reveal">
+                <div class="card text-center reveal" style="padding: 24px;">
                     <div class="card-icon" style="margin: 0 auto 16px;">
-                        <i class="fas fa-chart-line"></i>
+                        <i class="fas fa-chart-line" style="font-size: 32px; color: #8b5cf6;"></i>
                     </div>
-                    <h3 class="card-title">تقارير مفصلة</h3>
-                    <p class="card-description">
+                    <h3 class="card-title" style="font-size: 18px; margin-bottom: 12px;">تقارير مفصلة</h3>
+                    <p class="card-description" style="font-size: 14px; line-height: 1.6;">
                         احصل على تقارير مفصلة عن أداء عملك واتخاذ قرارات مدروسة
                     </p>
                 </div>
@@ -275,18 +480,18 @@
         </section>
 
         <!-- CTA Section -->
-        <section class="card text-center reveal" style="background: linear-gradient(135deg, #21808d, #2c5f63); color: white;">
-            <h2 class="fade-in" style="color: white; margin-bottom: 16px;">جاهز للبدء؟</h2>
-            <p class="fade-in-slow" style="color: rgba(255,255,255,0.9); margin-bottom: 32px; font-size: 18px;">
+        <section class="card text-center mb-8" style="max-width: 600px; margin: 40px auto; padding: 40px 24px;">
+            <h2 class="card-title" style="font-size: 24px; margin-bottom: 16px;">جاهز للبدء؟</h2>
+            <p class="card-description" style="font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
                 انضم إلى آلاف العملاء الذين يثقون في LUXBYTE لتطوير أعمالهم
             </p>
-            <div class="fade-in-slow" style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                <a href="auth.html" class="btn" style="background: white; color: #21808d;">
-                    <i class="fas fa-rocket"></i>
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <a href="choose-role.html" class="btn btn-primary" style="font-size: 16px; padding: 12px 24px;">
+                    <i class="fas fa-rocket" style="margin-left: 8px;"></i>
                     ابدأ الآن
                 </a>
-                <a href="social.html" class="btn" style="background: transparent; border: 2px solid white; color: white;">
-                    <i class="fas fa-phone"></i>
+                <a href="contact.html" class="btn btn-outline" style="font-size: 16px; padding: 12px 24px;">
+                    <i class="fas fa-phone" style="margin-left: 8px;"></i>
                     تواصل معنا
                 </a>
             </div>
@@ -294,9 +499,9 @@
     </main>
 
     <!-- Footer -->
-    <footer style="background: #1a1a1a; color: #666; padding: 32px 0; margin-top: 64px; text-align: center;">
-        <div style="max-width: 1100px; margin: 0 auto; padding: 0 16px;">
-            <!-- Social Media Icons - Centered -->
+    <footer class="card" style="max-width: 800px; margin: 40px auto; padding: 32px 24px; text-align: center;">
+        <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 18px; margin-bottom: 16px; color: #333;">التواصل</h3>
             <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
                 <a href="https://www.facebook.com/share/19zx6VUm7M/" target="_blank" rel="noopener" aria-label="تابعنا على فيسبوك" style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: #1877f2; border-radius: 50%; color: white; text-decoration: none; transition: transform 0.2s ease;">
                     <img src="assets/icons/social/FACEBOOK.webp" alt="Facebook" style="width: 24px; height: 24px;" aria-hidden="true">
@@ -314,19 +519,12 @@
                     <img src="assets/icons/social/CALL.webp" alt="Call" style="width: 24px; height: 24px;" aria-hidden="true">
                 </a>
             </div>
-
-            <div style="text-align: center; margin-bottom: 16px;">
-                <a href="/contact.html" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 8px;" aria-label="التواصل معنا - صفحة وسائل التواصل الاجتماعي">
-                    <i class="fas fa-share-alt" aria-hidden="true"></i>
-                    <span data-i18n="nav.contact">التواصل</span>
-                </a>
-                </div>
-            <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #333;">
-                <p data-i18n="home.footer.copyright">&copy; 2024 LUXBYTE LLC. جميع الحقوق محفوظة.</p>
-                <p style="margin-top: 8px; font-size: 14px;" data-i18n="home.footer.company_line">
-                    شركة لوكس بايت المحدودة المسئولية - مصر
-                </p>
-            </div>
+        </div>
+        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+            <p style="color: #6b7280; font-size: 14px; margin: 0;">&copy; 2024 LUXBYTE LLC. جميع الحقوق محفوظة.</p>
+            <p style="margin-top: 8px; font-size: 14px; color: #6b7280;">
+                شركة لوكس بايت المحدودة المسئولية - مصر
+            </p>
         </div>
     </footer>
 
@@ -334,87 +532,39 @@
     <script src="config.js" defer></script>
     <script type="module" src="js/env.js"></script>
     <script type="module" src="js/supabase-client.js"></script>
-
-    <!-- القاموس -->
     <script src="i18n-dict.js"></script>
-
-    <!-- تم إزالة مديري الثيم والترجمة - ثيم موحد -->
     <script type="module" src="js/navigation-bar.js"></script>
     <script type="module" src="js/system-validator.js"></script>
     <script src="js/translation-utils.js" defer></script>
-    <!-- common.js removed - using new modular system -->
     <script src="js/engagement-notification.js" defer></script>
     <script src="js/enhanced-ui.js" defer></script>
     <script src="js/comprehensive-test.js" defer></script>
     <script type="module" src="firebase-app.js"></script>
-    <script>
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', async () => {
-            console.log('LUXBYTE Home Page Loaded');
-            applyI18n();
-
-            // Initialize navigation bar
-            try {
-                const { default: NavigationBar } = await import('./js/navigation-bar.js');
-                if (!window.navigationBar) {
-                    window.navigationBar = new NavigationBar();
-                }
-            } catch (error) {
-                console.warn('Navigation bar initialization failed:', error);
-            }
-
-            // Run system validation
-            try {
-                const { default: SystemValidator } = await import('./js/system-validator.js');
-                const validator = new SystemValidator();
-                await validator.validateAll();
-            } catch (error) {
-                console.warn('System validation failed:', error);
-            }
-
-            // Home page is public - no authentication required
-            console.log('Home page is public - no authentication required');
-
-            // Lazy loading enhancement
-            if ('IntersectionObserver' in window) {
-                const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-                const imageObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            img.classList.add('loaded');
-                            observer.unobserve(img);
-                        }
-                    });
-                });
-
-                lazyImages.forEach(img => imageObserver.observe(img));
-            }
-        });
-    </script>
-
-    <!-- Smoke Tests (only in test mode) -->
-    <script type="module">
-        if (window.location.search.includes('test=true')) {
-            import('./test-smoke.js').then(module => {
-                console.log('🧪 Smoke tests loaded');
-                // Tests will auto-run after DOM is ready
-            });
-        }
-    </script>
-
-    <!-- Translation Scripts -->
-    <script src="i18n-dict.js" defer></script>
-    <script src="js/translation-manager.js" defer></script>
-
-    <!-- Common Scripts -->
     <script src="js/common.js" defer></script>
 
-    <!-- Ticker Marquee -->
-    <div class="ticker" role="status" aria-live="polite">
-        <div class="ticker__track">
-            🚀 بث تجريبي 🚀 — لا تتردد في التواصل معنا في حال ظهور أي خطأ في التسجيل — لوكس بايت (هنكبر مع بعض) — منصة شوب إي جي و ماستر درايفر — التجارة الإلكترونية وخدمات التوصيل — انضم إلينا الآن — 📞 01148709609 — 🌐 www.luxbyte.site
-        </div>
-    </div>
+    <!-- Initialize animations -->
+    <script>
+        // Initialize reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = '0.2s';
+                    entry.target.classList.add('reveal');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all reveal elements
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
 </body>
 </html>
