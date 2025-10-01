@@ -869,7 +869,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Force immediate execution
 (function() {
   'use strict';
-  
+
   // Wait for DOM to be ready
   function waitForDOM() {
     if (document.readyState === 'loading') {
@@ -878,13 +878,13 @@ document.addEventListener('DOMContentLoaded', () => {
       initDocsUploader();
     }
   }
-  
+
   function initDocsUploader() {
     try {
       console.log('🚀 Initializing docs uploader...');
       const role = new URLSearchParams(location.search).get('role') || '';
       console.log('📋 Role detected:', role);
-      
+
       const MAP = {
       supermarket: [
         {key:'sm_health', label:'شهادة صحية لمسؤول الأغذية', accept:'image/*,application/pdf', required:false},
@@ -1034,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(render, 500);
       });
     }
-    } catch(e){ 
+    } catch(e){
       console.error('docs uploader init failed', e);
       // Fallback: try to render after a delay
       setTimeout(() => {
@@ -1049,7 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 2000);
     }
   }
-  
+
   // Start the initialization
   waitForDOM();
 })();

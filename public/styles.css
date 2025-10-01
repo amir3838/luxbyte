@@ -514,10 +514,6 @@ a:hover {
 
 /* الاستجابة */
 @media (max-width: 768px) {
-  .card {
-    margin: 8px 0;
-    padding: 16px;
-  }
 
   .btn {
     padding: 10px 20px;
@@ -662,18 +658,18 @@ a:hover {
   box-sizing: border-box;
 }
 
-html, body { 
-  height: 100%; 
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* تطبيق الخلفية على جميع الصفحات */
-body, 
-.unified-signup, 
-.auth, 
-.choose-role, 
+body,
+.unified-signup,
+.auth,
+.choose-role,
 .choose-platform,
 .index,
 .dashboard {
@@ -774,16 +770,17 @@ body,
 
 /* إصلاح مشاكل الاستجابة */
 @media (max-width: 768px) {
-  .card {
+  .card, .panel, .box, .content-card, .form-container, .signup-form, .auth-form {
     margin: 8px 0;
     padding: 16px;
+    max-width: 100%;
   }
-
-  .card .card-header {
+  
+  .card .card-header, .panel .panel-header {
     padding: 12px;
   }
-
-  .card .card-description {
+  
+  .card .card-description, .panel .panel-description {
     padding: 0 12px 12px;
     font-size: 13px;
   }
