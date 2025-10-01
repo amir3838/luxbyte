@@ -7,6 +7,33 @@ const LANG_KEY = 'lang';
 const dict = window.i18nDict || {};
 let btn;
 
+// Fallback translations if i18nDict is not loaded
+const fallbackDict = {
+  ar: {
+    "home.cta_start_journey": "ابدأ رحلتك الآن",
+    "home.choose_platform": "اختر منصتك",
+    "home.choose_ag.title": "اختر نشاطك",
+    "home.choose_ag.subtitle": "اختر النشاط المناسب لك",
+    "home.choose_ag.items": "مطعم، سوبر ماركت، صيدلية، عيادة، مندوب توصيل",
+    "home.ecology_ag.title": "بيئة عمل متكاملة",
+    "home.ecology_ag.subtitle": "منصة شاملة لجميع احتياجاتك",
+    "home.ecology_ag.items": "إدارة، تقارير، دعم فني، أمان",
+    "brand.luxbyte_llc": "شركة لوكس بايت المحدودة المسئولية",
+    "home.features_block.security_title": "أمان وموثوقية",
+    "home.features_block.security_desc": "نستخدم أحدث تقنيات الأمان لحماية بياناتك ومعاملاتك المالية",
+    "home.features_block.ease_title": "سهولة الاستخدام", 
+    "home.features_block.ease_desc": "واجهة بسيطة وسهلة الاستخدام تعمل على جميع الأجهزة",
+    "home.features_block.support_title": "دعم فني متميز",
+    "home.features_block.support_desc": "فريق دعم فني متخصص متاح على مدار الساعة لمساعدتك",
+    "home.features_block.reports_title": "تقارير مفصلة",
+    "home.features_block.reports_desc": "احصل على تقارير مفصلة عن أداء عملك واتخاذ قرارات مدروسة",
+    "home.cta_block.title": "جاهز للبدء؟",
+    "home.cta_block.desc": "انضم إلى آلاف العملاء الذين يثقون في لوكس بايت لتطوير أعمالهم",
+    "home.cta_block.start_now": "ابدأ الآن",
+    "home.cta_block.contact_us": "تواصل معنا"
+  }
+};
+
 function applyLanguage(lang){
   document.documentElement.lang = lang;
   document.documentElement.dir  = (lang === 'ar') ? 'rtl' : 'ltr';
@@ -15,7 +42,7 @@ function applyLanguage(lang){
   // بدّل نصوص العناصر اللي عليها data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const k = el.getAttribute('data-i18n');
-    const v = dict?.[lang]?.[k];
+    const v = dict?.[lang]?.[k] || fallbackDict?.[lang]?.[k];
     if (v) el.textContent = v;
   });
 
@@ -35,7 +62,19 @@ function applyLanguage(lang){
 
 function initLang(){
   const lang = localStorage.getItem(LANG_KEY) || 'ar';
-  applyLanguage(lang);
+  
+  // Wait for i18nDict to load if not already available
+  if (!window.i18nDict) {
+    setTimeout(() => {
+      if (window.i18nDict) {
+        Object.assign(dict, window.i18nDict);
+      }
+      applyLanguage(lang);
+    }, 100);
+  } else {
+    Object.assign(dict, window.i18nDict);
+    applyLanguage(lang);
+  }
 
   document.addEventListener('click',(e)=>{
     const t = e.target.closest('#langToggle,[data-action="toggle-lang"]');

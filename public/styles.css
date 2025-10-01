@@ -634,8 +634,8 @@ a:hover {
   --site-bg: url("/assets/images/backgrounds/hero-bg.jpg");
 }
 
-html, body { 
-  height: 100%; 
+html, body {
+  height: 100%;
 }
 
 body{
@@ -665,10 +665,10 @@ body{
 }
 
 @media (max-width:480px){
-  #bg-corner-logo{ 
-    top: 12px; 
-    right: 12px; 
-    width: 88px; 
+  #bg-corner-logo{
+    top: 12px;
+    right: 12px;
+    width: 88px;
   }
 }
 
