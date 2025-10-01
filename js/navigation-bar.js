@@ -163,15 +163,7 @@ class NavigationBar {
                             </div>
                         `}
 
-                        <!-- Language Toggle -->
-                        <button id="langToggle" class="lang-toggle" data-action="toggle-lang" onclick="toggleLanguage()" aria-label="تبديل اللغة" title="Language">
-                            🇸🇦
-                        </button>
-
-                        <!-- Theme Toggle -->
-                        <button id="themeToggle" class="theme-toggle" data-action="toggle-theme" onclick="toggleTheme()" aria-label="تبديل الثيم" title="Theme">
-                            ☀️
-                        </button>
+                        <!-- تم إزالة أزرار الثيم واللغة - ثيم موحد -->
                     </div>
                 </div>
             </div>
@@ -389,26 +381,7 @@ class NavigationBar {
                 border-color: var(--primary);
             }
 
-            .theme-toggle {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 40px;
-                height: 40px;
-                background: var(--bg-card);
-                border: 1px solid var(--border-color);
-                border-radius: var(--radius-md);
-                color: var(--text-primary);
-                cursor: pointer;
-                transition: all var(--transition-normal);
-            }
-
-            .theme-toggle:hover {
-                background: var(--bg-card-hover);
-                border-color: var(--primary);
-                color: var(--primary);
-                transform: scale(1.1);
-            }
+            /* تم إزالة CSS أزرار الثيم - ثيم موحد */
 
             .user-menu {
                 position: relative;
@@ -545,23 +518,10 @@ class NavigationBar {
             }
         });
 
-        // Listen for theme changes
-        document.addEventListener('themeChanged', () => {
-            this.updateThemeIcon();
-        });
+        /* تم إزالة مستمع تغيير الثيم - ثيم موحد */
     }
 
-    /**
-     * Update theme toggle icon
-     * تحديث أيقونة تبديل الثيم
-     */
-    updateThemeIcon() {
-        const themeToggle = document.querySelector('.theme-toggle i');
-        if (themeToggle) {
-            const isDark = document.documentElement.classList.contains('dark');
-            themeToggle.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-        }
-    }
+    /* تم إزالة دالة تحديث أيقونة الثيم - ثيم موحد */
 
     /**
      * Refresh navigation bar
