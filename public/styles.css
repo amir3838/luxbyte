@@ -607,8 +607,8 @@ a:hover {
 /* تصغير وتوسيط اللوجو */
 #hero-logo {
   display: block;
-  width: clamp(180px, 28vw, 420px);
-  height: auto;
+  width: 40px;
+  height: 40px;
   margin-inline: auto;
   object-fit: contain;
 }

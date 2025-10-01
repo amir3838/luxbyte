@@ -972,14 +972,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Also render when page loads
     setTimeout(render, 500);
+    setTimeout(render, 1000);
 
+    // Listen for tab clicks
     document.querySelectorAll('[data-tab="documents"], .tab-documents, #tab-documents')
-      .forEach(el => el.addEventListener('click', render));
+      .forEach(el => el.addEventListener('click', () => {
+        setTimeout(render, 200);
+      }));
 
     // Force render on any tab click
     document.querySelectorAll('.tab, [data-tab]')
       .forEach(el => el.addEventListener('click', () => {
-        setTimeout(render, 100);
+        setTimeout(render, 200);
       }));
+
+    // Force render when documents section becomes visible
+    const observer = new MutationObserver(() => {
+      const docsSection = document.getElementById('docs-uploader');
+      if (docsSection && docsSection.offsetParent !== null) {
+        setTimeout(render, 100);
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true
+    });
   } catch(e){ console.error('docs uploader init failed', e); }
 })();

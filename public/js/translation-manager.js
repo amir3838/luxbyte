@@ -99,6 +99,13 @@ setTimeout(() => {
   }
 }, 100);
 
+// Force translation again after DOM is fully loaded
+setTimeout(() => {
+  if (typeof applyLanguage === 'function') {
+    applyLanguage('ar');
+  }
+}, 1000);
+
 // Legacy class for compatibility
 class TranslationManager {
     constructor() {
