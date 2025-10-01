@@ -864,3 +864,112 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('❌ خطأ في تهيئة الصفحة:', error);
     });
 });
+
+// Document uploader initialization
+(() => {
+  try {
+    const role = new URLSearchParams(location.search).get('role') || '';
+    const MAP = {
+      supermarket: [
+        {key:'sm_health', label:'شهادة صحية لمسؤول الأغذية', accept:'image/*,application/pdf', required:false},
+        {key:'sm_mgr_front', label:'بطاقة المدير (وجه)', accept:'image/*', required:true},
+        {key:'sm_mgr_back', label:'بطاقة المدير (ظهر)', accept:'image/*', required:true},
+        {key:'sm_cr', label:'السجل التجاري', accept:'image/*,application/pdf', required:true},
+        {key:'sm_lease', label:'عقد مقر موثق', accept:'image/*,application/pdf', required:true},
+        {key:'sm_bill', label:'إيصال مرافق حديث', accept:'image/*,application/pdf', required:true}
+      ],
+      restaurant: [
+        {key:'rs_health', label:'شهادة صحية للمدير/الشيف', accept:'image/*,application/pdf', required:true},
+        {key:'rs_mgr_front', label:'بطاقة المدير (وجه)', accept:'image/*', required:true},
+        {key:'rs_mgr_back', label:'بطاقة المدير (ظهر)', accept:'image/*', required:true},
+        {key:'rs_cr', label:'السجل التجاري (إن وجد)', accept:'image/*,application/pdf', required:false},
+        {key:'rs_lease', label:'عقد مقر موثق', accept:'image/*,application/pdf', required:true},
+        {key:'rs_bill', label:'إيصال مرافق حديث', accept:'image/*,application/pdf', required:true}
+      ],
+      pharmacy: [
+        {key:'ph_license', label:'ترخيص/قيد صيدلي أو كارنيه النقابة', accept:'image/*,application/pdf', required:true},
+        {key:'ph_id_front', label:'بطاقة الصيدلي المسؤول (وجه)', accept:'image/*', required:true},
+        {key:'ph_id_back', label:'بطاقة الصيدلي المسؤول (ظهر)', accept:'image/*', required:true},
+        {key:'ph_cr', label:'السجل التجاري', accept:'image/*,application/pdf', required:true}
+      ],
+      clinic: [
+        {key:'cl_doc_front', label:'بطاقة الطبيب (وجه)', accept:'image/*', required:true},
+        {key:'cl_doc_back', label:'بطاقة الطبيب (ظهر)', accept:'image/*', required:true},
+        {key:'cl_union', label:'قيد نقابة الطبيب', accept:'image/*,application/pdf', required:true},
+        {key:'cl_cr', label:'السجل التجاري/ترخيص النشاط (إن وجد)', accept:'image/*,application/pdf', required:false},
+        {key:'cl_lease', label:'عقد مقر موثق', accept:'image/*,application/pdf', required:true},
+        {key:'cl_bill', label:'إيصال مرافق حديث', accept:'image/*,application/pdf', required:true}
+      ],
+      courier: [
+        {key:'co_id_front', label:'بطاقة رقم قومي (وجه)', accept:'image/*', required:true},
+        {key:'co_id_back', label:'بطاقة رقم قومي (ظهر)', accept:'image/*', required:true},
+        {key:'co_drv_front', label:'رخصة قيادة سارية (وجه)', accept:'image/*', required:true},
+        {key:'co_drv_back', label:'رخصة قيادة سارية (ظهر)', accept:'image/*', required:true},
+        {key:'co_selfie', label:'صورة شخصية واضحة', accept:'image/*', required:true},
+        {key:'co_vehicle_front', label:'صورة المركبة من الأمام', accept:'image/*', required:false},
+        {key:'co_plate', label:'صورة لوحة المركبة الخلفية', accept:'image/*', required:false}
+      ],
+      driver: [
+        {key:'md_vehicle_license_front', label:'رخصة مركبة (وجه)', accept:'image/*', required:true},
+        {key:'md_vehicle_license_back', label:'رخصة مركبة (ظهر)', accept:'image/*', required:true},
+        {key:'md_driver_license', label:'رخصة سائق', accept:'image/*', required:true},
+        {key:'md_driver_id', label:'بطاقة سائق', accept:'image/*', required:true}
+      ]
+    };
+
+    const host = document.getElementById('docs-uploader');
+    if (!host) return;
+
+    function rowHTML(d){
+      const cap = /image\//.test(d.accept) ? 'capture="environment"' : '';
+      return `
+        <div class="doc-item" data-key="${d.key}">
+          <div class="doc-title">${d.label}${d.required? ' <span style="color:#c00">*</span>':''}</div>
+          <div class="doc-actions">
+            <input class="doc-input" type="file" accept="${d.accept}" ${cap} />
+            <button type="button" class="btn btn-sm replace-btn">استبدال</button>
+            <div class="doc-preview"></div>
+          </div>
+          <div class="doc-error" hidden></div>
+        </div>`;
+    }
+
+    function render(){
+      const docs = MAP[role] || [];
+      host.innerHTML = docs.map(rowHTML).join('');
+      const MAX = 5 * 1024 * 1024;
+
+      host.querySelectorAll('.doc-item').forEach(item => {
+        const key = item.dataset.key;
+        const input = item.querySelector('.doc-input');
+        const err = item.querySelector('.doc-error');
+        const preview = item.querySelector('.doc-preview');
+        const replaceBtn = item.querySelector('.replace-btn');
+
+        function showErr(m){ err.textContent=m||''; err.hidden=!m; }
+        function onPick(f){
+          showErr('');
+          if(!f) { preview.innerHTML=''; return; }
+          const okType = /^(image\/(jpe?g|png|webp)|application\/pdf)$/.test(f.type);
+          const okSize = f.size <= MAX;
+          if(!okType) return showErr('نوع الملف غير مدعوم');
+          if(!okSize) return showErr('الحد الأقصى 5MB');
+          item.dataset.ready = '1';
+          if(f.type.startsWith('image/')) preview.innerHTML = `<img src="${URL.createObjectURL(f)}">`;
+          else preview.textContent = `PDF ✔ (${Math.round(f.size/1024)} KB)`;
+          // expose for uploader step:
+          window.__docsState = window.__docsState || { files:new Map() };
+          window.__docsState.files.set(key, f);
+        }
+
+        input.addEventListener('change', e => onPick(e.target.files?.[0]));
+        replaceBtn.addEventListener('click', () => input.click());
+      });
+    }
+
+    // render immediately and also when the Documents tab is clicked
+    render();
+    document.querySelectorAll('[data-tab="documents"], .tab-documents, #tab-documents')
+      .forEach(el => el.addEventListener('click', render));
+  } catch(e){ console.error('docs uploader init failed', e); }
+})();

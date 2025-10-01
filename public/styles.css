@@ -629,6 +629,42 @@ a:hover {
   flex-wrap: wrap;
 }
 
+/* Document uploader styles */
+#docs-uploader { 
+  display: grid; 
+  gap: 12px; 
+}
+
+.doc-item { 
+  border: 1px dashed var(--border-color, #d1d5db); 
+  border-radius: 12px; 
+  padding: 10px; 
+  background: var(--surface, #fff); 
+}
+
+.doc-title { 
+  font-weight: 600; 
+  margin-bottom: 6px; 
+}
+
+.doc-actions { 
+  display: flex; 
+  gap: 8px; 
+  align-items: center; 
+  flex-wrap: wrap; 
+}
+
+.doc-preview img { 
+  max-height: 90px; 
+  border-radius: 8px; 
+}
+
+.doc-error { 
+  color: #c00; 
+  font-size: .9rem; 
+  margin-top: 4px; 
+}
+
 .is-loading::after {
   content: "جاري التحميل...";
   position: absolute;
