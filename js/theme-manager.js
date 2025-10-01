@@ -1,8 +1,38 @@
 /**
  * LUXBYTE Theme Manager
- * مدير الثيمات - النظام الليلي والنهاري
+ * مدير الثيمات - يدعم الثيم الفاتح والداكن مع الإيموجي
  */
 
+const KEY = 'theme';
+const root = document.documentElement;
+let btn;
+
+function applyTheme(theme){
+  root.classList.toggle('theme-dark', theme === 'dark');
+  localStorage.setItem(KEY, theme);
+  btn = btn || document.querySelector('#themeToggle,[data-action="toggle-theme"]');
+  if (btn) {
+    btn.setAttribute('aria-pressed', theme === 'dark');
+    btn.textContent = theme === 'dark' ? '🌙' : '☀️';
+  }
+}
+
+function initTheme(){
+  const stored = localStorage.getItem(KEY);
+  const sysDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(stored ?? (sysDark ? 'dark' : 'light'));
+
+  document.addEventListener('click',(e)=>{
+    const t = e.target.closest('#themeToggle,[data-action="toggle-theme"]');
+    if (!t) return;
+    const next = root.classList.contains('theme-dark') ? 'light' : 'dark';
+    applyTheme(next);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initTheme);
+
+// Legacy class for compatibility
 class ThemeManager {
     constructor() {
         this.currentTheme = this.getStoredTheme() || this.getSystemTheme();
@@ -14,12 +44,9 @@ class ThemeManager {
      * تهيئة مدير الثيمات
      */
     init() {
-        // Apply theme immediately to prevent flash
         this.applyTheme(this.currentTheme);
-        this.createThemeToggle();
-        this.setupThemeListeners();
-        this.loadSocialIcons();
-        console.log(`🎨 Theme Manager initialized: ${this.currentTheme} mode`);
+        this.setupEventListeners();
+        console.log('🎨 Theme manager initialized:', this.currentTheme);
     }
 
     /**
@@ -28,7 +55,7 @@ class ThemeManager {
      */
     getStoredTheme() {
         try {
-            return localStorage.getItem('luxbyte-theme');
+            return localStorage.getItem('theme');
         } catch (error) {
             console.warn('Could not access localStorage:', error);
             return null;
@@ -37,11 +64,11 @@ class ThemeManager {
 
     /**
      * Get system theme preference
-     * الحصول على تفضيل النظام
+     * الحصول على تفضيل ثيم النظام
      */
     getSystemTheme() {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'dark';
+        if (typeof window !== 'undefined' && window.matchMedia) {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
         return 'light';
     }
@@ -51,230 +78,30 @@ class ThemeManager {
      * تطبيق الثيم على المستند
      */
     applyTheme(theme) {
+        if (!theme) return;
+
         const root = document.documentElement;
-        root.className = root.className.replace(/light|dark/g, '');
-        root.classList.add(theme);
+        root.classList.toggle('theme-dark', theme === 'dark');
+        root.classList.toggle('theme-light', theme === 'light');
+        
+        // Update theme toggle button if exists
+        const themeToggle = document.querySelector('#themeToggle, [data-action="toggle-theme"]');
+        if (themeToggle) {
+            themeToggle.setAttribute('aria-pressed', theme === 'dark');
+            themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+        }
 
         this.currentTheme = theme;
-        this.saveTheme(theme);
-        this.updateMetaTheme(theme);
-        this.updateSocialIcons(theme);
-
-        // Trigger custom event
-        document.dispatchEvent(new CustomEvent('themeChanged', {
-            detail: { theme }
-        }));
+        console.log(`🎨 Theme applied: ${theme}`);
     }
 
     /**
-     * Save theme to localStorage
-     * حفظ الثيم في التخزين المحلي
-     */
-    saveTheme(theme) {
-        try {
-            localStorage.setItem('luxbyte-theme', theme);
-        } catch (error) {
-            console.warn('Could not save theme to localStorage:', error);
-        }
-    }
-
-    /**
-     * Update meta theme-color
-     * تحديث لون الثيم في الميتا
-     */
-    updateMetaTheme(theme) {
-        let metaTheme = document.querySelector('meta[name="theme-color"]');
-        if (!metaTheme) {
-            metaTheme = document.createElement('meta');
-            metaTheme.name = 'theme-color';
-            document.head.appendChild(metaTheme);
-        }
-
-        metaTheme.content = theme === 'dark' ? '#1e293b' : '#ffffff';
-    }
-
-    /**
-     * Toggle between light and dark themes
-     * التبديل بين الثيم الليلي والنهاري
+     * Toggle between light and dark theme
+     * تبديل بين الثيم الفاتح والداكن
      */
     toggleTheme() {
         const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
-        this.applyTheme(newTheme);
-
-        // Show notification
-        this.showThemeNotification(newTheme);
-
-        console.log(`🔄 Theme toggled to: ${newTheme}`);
-    }
-
-    /**
-     * Create theme toggle button
-     * إنشاء زر تبديل الثيم
-     */
-    createThemeToggle() {
-        // Remove existing toggle if any
-        const existingToggle = document.querySelector('.theme-toggle');
-        if (existingToggle) {
-            existingToggle.remove();
-        }
-
-        const toggle = document.createElement('button');
-        toggle.className = 'theme-toggle';
-        toggle.setAttribute('aria-label', 'Toggle theme');
-        toggle.innerHTML = this.getThemeIcon();
-
-        toggle.addEventListener('click', () => this.toggleTheme());
-
-        document.body.appendChild(toggle);
-    }
-
-    /**
-     * Get appropriate icon for current theme
-     * الحصول على الأيقونة المناسبة للثيم الحالي
-     */
-    getThemeIcon() {
-        return this.currentTheme === 'light'
-            ? '<i class="fas fa-moon"></i>'
-            : '<i class="fas fa-sun"></i>';
-    }
-
-    /**
-     * Update theme toggle icon
-     * تحديث أيقونة زر الثيم
-     */
-    updateThemeIcon() {
-        const toggle = document.querySelector('.theme-toggle');
-        if (toggle) {
-            toggle.innerHTML = this.getThemeIcon();
-        }
-    }
-
-    /**
-     * Setup theme change listeners
-     * إعداد مستمعي تغيير الثيم
-     */
-    setupThemeListeners() {
-        // Listen for system theme changes
-        if (window.matchMedia) {
-            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-            mediaQuery.addEventListener('change', (e) => {
-                if (!this.getStoredTheme()) {
-                    this.applyTheme(e.matches ? 'dark' : 'light');
-                }
-            });
-        }
-
-        // Listen for custom theme changes
-        document.addEventListener('themeChanged', (e) => {
-            this.updateThemeIcon();
-            this.updateSocialIcons(e.detail.theme);
-        });
-    }
-
-    /**
-     * Show theme change notification
-     * عرض إشعار تغيير الثيم
-     */
-    showThemeNotification(theme) {
-        const message = theme === 'dark'
-            ? 'تم التبديل إلى الوضع الليلي 🌙'
-            : 'تم التبديل إلى الوضع النهاري ☀️';
-
-        if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyOk) {
-            LUXBYTE.notifyOk(message);
-        } else {
-            console.log(`🎨 ${message}`);
-        }
-    }
-
-    /**
-     * Load social media icons
-     * تحميل أيقونات التواصل الاجتماعي
-     */
-    loadSocialIcons() {
-        const socialContainer = document.querySelector('.social-icons');
-        if (!socialContainer) return;
-
-        const socialLinks = [
-            {
-                name: 'Facebook',
-                url: 'https://facebook.com/luxbyte',
-                icon: 'fab fa-facebook-f',
-                class: 'facebook'
-            },
-            {
-                name: 'Twitter',
-                url: 'https://twitter.com/luxbyte',
-                icon: 'fab fa-twitter',
-                class: 'twitter'
-            },
-            {
-                name: 'Instagram',
-                url: 'https://instagram.com/luxbyte',
-                icon: 'fab fa-instagram',
-                class: 'instagram'
-            },
-            {
-                name: 'LinkedIn',
-                url: 'https://linkedin.com/company/luxbyte',
-                icon: 'fab fa-linkedin-in',
-                class: 'linkedin'
-            },
-            {
-                name: 'YouTube',
-                url: 'https://youtube.com/luxbyte',
-                icon: 'fab fa-youtube',
-                class: 'youtube'
-            },
-            {
-                name: 'WhatsApp',
-                url: 'https://wa.me/1234567890',
-                icon: 'fab fa-whatsapp',
-                class: 'whatsapp'
-            },
-            {
-                name: 'Telegram',
-                url: 'https://t.me/luxbyte',
-                icon: 'fab fa-telegram-plane',
-                class: 'telegram'
-            },
-            {
-                name: 'TikTok',
-                url: 'https://tiktok.com/@luxbyte',
-                icon: 'fab fa-tiktok',
-                class: 'tiktok'
-            }
-        ];
-
-        socialContainer.innerHTML = socialLinks.map(link => `
-            <a href="${link.url}"
-               class="social-icon ${link.class}"
-               target="_blank"
-               rel="noopener noreferrer"
-               aria-label="${link.name}">
-                <i class="${link.icon}"></i>
-            </a>
-        `).join('');
-    }
-
-    /**
-     * Update social icons based on theme
-     * تحديث أيقونات التواصل حسب الثيم
-     */
-    updateSocialIcons(theme) {
-        const socialIcons = document.querySelectorAll('.social-icon');
-        socialIcons.forEach(icon => {
-            // Add theme-specific classes if needed
-            icon.classList.toggle('dark-theme', theme === 'dark');
-        });
-    }
-
-    /**
-     * Get current theme
-     * الحصول على الثيم الحالي
-     */
-    getCurrentTheme() {
-        return this.currentTheme;
+        this.setTheme(newTheme);
     }
 
     /**
@@ -282,78 +109,73 @@ class ThemeManager {
      * تعيين ثيم محدد
      */
     setTheme(theme) {
-        if (theme === 'light' || theme === 'dark') {
-            this.applyTheme(theme);
-        } else {
+        if (!theme || !['light', 'dark'].includes(theme)) {
             console.warn('Invalid theme:', theme);
+            return;
+        }
+
+        this.applyTheme(theme);
+        this.saveTheme(theme);
+    }
+
+    /**
+     * Save theme to localStorage
+     * حفظ الثيم في localStorage
+     */
+    saveTheme(theme) {
+        try {
+            localStorage.setItem('theme', theme);
+            console.log(`💾 Theme saved: ${theme}`);
+        } catch (error) {
+            console.warn('Could not save theme to localStorage:', error);
         }
     }
 
     /**
-     * Reset to system theme
-     * إعادة تعيين لثيم النظام
+     * Setup event listeners
+     * إعداد مستمعي الأحداث
      */
-    resetToSystemTheme() {
-        const systemTheme = this.getSystemTheme();
-        this.applyTheme(systemTheme);
-        console.log(`🔄 Reset to system theme: ${systemTheme}`);
-    }
+    setupEventListeners() {
+        // Listen for system theme changes
+        if (typeof window !== 'undefined' && window.matchMedia) {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            mediaQuery.addEventListener('change', (e) => {
+                if (!this.getStoredTheme()) {
+                    this.setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
 
-    /**
-     * Apply theme to specific element
-     * تطبيق الثيم على عنصر محدد
-     */
-    applyThemeToElement(element, theme = null) {
-        const targetTheme = theme || this.currentTheme;
-        element.classList.remove('light', 'dark');
-        element.classList.add(targetTheme);
-    }
-
-    /**
-     * Get theme-aware color
-     * الحصول على لون حسب الثيم
-     */
-    getThemeColor(colorName) {
-        const root = document.documentElement;
-        return getComputedStyle(root).getPropertyValue(`--${colorName}`).trim();
-    }
-
-    /**
-     * Create theme-aware gradient
-     * إنشاء تدرج حسب الثيم
-     */
-    createGradient(colors) {
-        const theme = this.currentTheme;
-        return `linear-gradient(135deg, ${colors[theme] || colors.light})`;
+        // Listen for theme toggle clicks
+        document.addEventListener('click', (e) => {
+            const themeToggle = e.target.closest('#themeToggle, [data-action="toggle-theme"]');
+            if (themeToggle) {
+                e.preventDefault();
+                this.toggleTheme();
+            }
+        });
     }
 }
 
-// Initialize theme manager when DOM is ready
-let themeManager;
-
+// Initialize theme manager
 function initializeTheme() {
-    if (!themeManager) {
-        themeManager = new ThemeManager();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.themeManager = new ThemeManager();
+        });
+    } else {
+        window.themeManager = new ThemeManager();
     }
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeTheme);
-} else {
-    initializeTheme();
-}
-
-// Export for global access
-if (typeof window !== 'undefined') {
-    window.ThemeManager = ThemeManager;
-    window.themeManager = themeManager;
-}
-
-// Auto-initialize theme manager
-document.addEventListener('DOMContentLoaded', () => {
-    if (!themeManager) {
-        themeManager = new ThemeManager();
+// Global functions for compatibility
+window.toggleTheme = function() {
+    if (window.themeManager) {
+        window.themeManager.toggleTheme();
+    } else {
+        console.warn('Theme manager not available');
     }
-});
+};
 
-export default ThemeManager;
+// Initialize
+initializeTheme();

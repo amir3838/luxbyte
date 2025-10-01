@@ -164,13 +164,13 @@ class NavigationBar {
                         `}
 
                         <!-- Language Toggle -->
-                        <button class="lang-toggle" onclick="toggleLanguage()" aria-label="تبديل اللغة">
-                            <i class="fas fa-globe"></i>
+                        <button id="langToggle" class="lang-toggle" data-action="toggle-lang" onclick="toggleLanguage()" aria-label="تبديل اللغة" title="Language">
+                            🇸🇦
                         </button>
 
                         <!-- Theme Toggle -->
-                        <button class="theme-toggle" onclick="toggleTheme()" aria-label="تبديل الثيم">
-                            <i class="fas fa-adjust"></i>
+                        <button id="themeToggle" class="theme-toggle" data-action="toggle-theme" onclick="toggleTheme()" aria-label="تبديل الثيم" title="Theme">
+                            ☀️
                         </button>
                     </div>
                 </div>

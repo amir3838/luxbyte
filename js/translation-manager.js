@@ -1,12 +1,47 @@
 /**
  * LUXBYTE Translation Manager
- * مدير الترجمة المحسن
+ * مدير الترجمة - يدعم العربية والإنجليزية مع الإيموجي
  */
 
+const LANG_KEY = 'lang';
+const dict = window.i18nDict || {};
+let btn;
+
+function applyLanguage(lang){
+  document.documentElement.lang = lang;
+  document.documentElement.dir  = (lang === 'ar') ? 'rtl' : 'ltr';
+  localStorage.setItem(LANG_KEY, lang);
+
+  // بدّل نصوص العناصر اللي عليها data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    const v = dict?.[lang]?.[k];
+    if (v) el.textContent = v;
+  });
+
+  btn = btn || document.querySelector('#langToggle,[data-action="toggle-lang"]');
+  if (btn) btn.textContent = (lang === 'ar') ? '🇸🇦' : '🇬🇧';
+}
+
+function initLang(){
+  const lang = localStorage.getItem(LANG_KEY) || 'ar';
+  applyLanguage(lang);
+
+  document.addEventListener('click',(e)=>{
+    const t = e.target.closest('#langToggle,[data-action="toggle-lang"]');
+    if (!t) return;
+    const next = (document.documentElement.lang === 'ar') ? 'en' : 'ar';
+    applyLanguage(next);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initLang);
+
+// Legacy class for compatibility
 class TranslationManager {
     constructor() {
-        this.currentLang = this.getStoredLanguage() || this.getBrowserLanguage();
-        this.dict = i18nDict;
+        this.currentLanguage = this.getStoredLanguage() || 'ar';
+        this.dictionary = window.i18nDict || {};
         this.init();
     }
 
@@ -15,10 +50,10 @@ class TranslationManager {
      * تهيئة مدير الترجمة
      */
     init() {
-        this.applyLanguage(this.currentLang);
-        this.createLanguageToggle();
-        this.setupLanguageListeners();
-        console.log(`🌐 Translation Manager initialized: ${this.currentLang}`);
+        this.applyLanguage(this.currentLanguage);
+        this.setupEventListeners();
+        this.observeDynamicContent();
+        console.log('🌍 Translation manager initialized:', this.currentLanguage);
     }
 
     /**
@@ -27,7 +62,7 @@ class TranslationManager {
      */
     getStoredLanguage() {
         try {
-            return localStorage.getItem('luxbyte-language');
+            return localStorage.getItem('lang');
         } catch (error) {
             console.warn('Could not access localStorage:', error);
             return null;
@@ -35,62 +70,37 @@ class TranslationManager {
     }
 
     /**
-     * Get browser language preference
-     * الحصول على تفضيل لغة المتصفح
-     */
-    getBrowserLanguage() {
-        const browserLang = navigator.language || navigator.userLanguage;
-        return browserLang.startsWith('ar') ? 'ar' : 'en';
-    }
-
-    /**
      * Apply language to document
      * تطبيق اللغة على المستند
      */
     applyLanguage(lang) {
-        if (!this.dict[lang]) {
-            console.warn(`Language ${lang} not found, falling back to Arabic`);
-            lang = 'ar';
+        if (!lang || !['ar', 'en'].includes(lang)) {
+            console.warn('Invalid language:', lang);
+            return;
         }
 
-        this.currentLang = lang;
-        this.saveLanguage(lang);
-        this.updateDocumentLanguage(lang);
-        this.translateAllElements();
-        this.updateLanguageToggle(lang);
-
-        // Trigger custom event
-        document.dispatchEvent(new CustomEvent('languageChanged', {
-            detail: { language: lang }
-        }));
-    }
-
-    /**
-     * Save language to localStorage
-     * حفظ اللغة في التخزين المحلي
-     */
-    saveLanguage(lang) {
-        try {
-            localStorage.setItem('luxbyte-language', lang);
-        } catch (error) {
-            console.warn('Could not save language to localStorage:', error);
-        }
-    }
-
-    /**
-     * Update document language attribute
-     * تحديث خاصية لغة المستند
-     */
-    updateDocumentLanguage(lang) {
+        // Set document attributes
         document.documentElement.lang = lang;
         document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+        // Update language toggle button if exists
+        const langToggle = document.querySelector('#langToggle, [data-action="toggle-lang"]');
+        if (langToggle) {
+            langToggle.textContent = lang === 'ar' ? '🇸🇦' : '🇬🇧';
+        }
+
+        // Translate all elements with data-i18n attribute
+        this.translateElements();
+
+        this.currentLanguage = lang;
+        console.log(`🌍 Language applied: ${lang}`);
     }
 
     /**
      * Translate all elements with data-i18n attribute
-     * ترجمة جميع العناصر مع خاصية data-i18n
+     * ترجمة جميع العناصر مع data-i18n
      */
-    translateAllElements() {
+    translateElements() {
         const elements = document.querySelectorAll('[data-i18n]');
         elements.forEach(element => {
             this.translateElement(element);
@@ -98,117 +108,94 @@ class TranslationManager {
     }
 
     /**
-     * Translate a specific element
-     * ترجمة عنصر محدد
+     * Translate a single element
+     * ترجمة عنصر واحد
      */
     translateElement(element) {
         const key = element.getAttribute('data-i18n');
-        const translation = this.getTranslation(key);
+        if (!key) return;
 
+        const translation = this.dictionary[this.currentLanguage]?.[key];
         if (translation) {
-            if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || element.type === 'tel' || element.type === 'password')) {
-                element.placeholder = translation;
-            } else if (element.tagName === 'TEXTAREA') {
-                element.placeholder = translation;
-            } else {
-                element.textContent = translation;
-            }
+            element.textContent = translation;
         } else {
-            console.warn(`Translation not found for key: ${key}`);
+            console.warn(`Translation missing for key: ${key} in language: ${this.currentLanguage}`);
         }
-    }
-
-    /**
-     * Get translation for a key
-     * الحصول على الترجمة لمفتاح
-     */
-    getTranslation(key) {
-        return this.dict[this.currentLang]?.[key] || this.dict['ar']?.[key] || key;
     }
 
     /**
      * Toggle between Arabic and English
-     * التبديل بين العربية والإنجليزية
+     * تبديل بين العربية والإنجليزية
      */
     toggleLanguage() {
-        const newLang = this.currentLang === 'ar' ? 'en' : 'ar';
-        this.applyLanguage(newLang);
-        this.showLanguageNotification(newLang);
-        console.log(`🔄 Language toggled to: ${newLang}`);
+        const newLang = this.currentLanguage === 'ar' ? 'en' : 'ar';
+        this.setLanguage(newLang);
     }
 
     /**
-     * Create language toggle button
-     * إنشاء زر تبديل اللغة
+     * Set specific language
+     * تعيين لغة محددة
      */
-    createLanguageToggle() {
-        // Remove existing toggle if any
-        const existingToggle = document.querySelector('.language-toggle');
-        if (existingToggle) {
-            existingToggle.remove();
+    setLanguage(lang) {
+        if (!lang || !['ar', 'en'].includes(lang)) {
+            console.warn('Invalid language:', lang);
+            return;
         }
 
-        const toggle = document.createElement('button');
-        toggle.className = 'language-toggle';
-        toggle.setAttribute('aria-label', 'Toggle language');
-        toggle.innerHTML = this.getLanguageIcon();
+        this.applyLanguage(lang);
+        this.saveLanguage(lang);
+    }
 
-        toggle.addEventListener('click', () => this.toggleLanguage());
-
-        // Add to navbar if exists, otherwise add to body
-        const navbar = document.querySelector('.navbar-user');
-        if (navbar) {
-            navbar.appendChild(toggle);
-        } else {
-            document.body.appendChild(toggle);
+    /**
+     * Save language to localStorage
+     * حفظ اللغة في localStorage
+     */
+    saveLanguage(lang) {
+        try {
+            localStorage.setItem('lang', lang);
+            console.log(`💾 Language saved: ${lang}`);
+        } catch (error) {
+            console.warn('Could not save language to localStorage:', error);
         }
     }
 
     /**
-     * Get appropriate icon for current language
-     * الحصول على الأيقونة المناسبة للغة الحالية
+     * Setup event listeners
+     * إعداد مستمعي الأحداث
      */
-    getLanguageIcon() {
-        return this.currentLang === 'ar'
-            ? '<i class="fas fa-globe"></i><span>EN</span>'
-            : '<i class="fas fa-globe"></i><span>AR</span>';
-    }
-
-    /**
-     * Update language toggle icon
-     * تحديث أيقونة زر اللغة
-     */
-    updateLanguageToggle(lang) {
-        const toggle = document.querySelector('.language-toggle');
-        if (toggle) {
-            toggle.innerHTML = this.getLanguageIcon();
-        }
-    }
-
-    /**
-     * Setup language change listeners
-     * إعداد مستمعي تغيير اللغة
-     */
-    setupLanguageListeners() {
-        // Listen for custom language changes
-        document.addEventListener('languageChanged', (e) => {
-            this.updateLanguageToggle(e.detail.language);
+    setupEventListeners() {
+        // Listen for language toggle clicks
+        document.addEventListener('click', (e) => {
+            const langToggle = e.target.closest('#langToggle, [data-action="toggle-lang"]');
+            if (langToggle) {
+                e.preventDefault();
+                this.toggleLanguage();
+            }
         });
+    }
 
-        // Listen for new elements added to DOM
+    /**
+     * Observe dynamic content for translation
+     * مراقبة المحتوى الديناميكي للترجمة
+     */
+    observeDynamicContent() {
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                        if (node.hasAttribute && node.hasAttribute('data-i18n')) {
-                            this.translateElement(node);
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            // Translate new elements with data-i18n
+                            if (node.hasAttribute && node.hasAttribute('data-i18n')) {
+                                this.translateElement(node);
+                            }
+                            // Translate children of new elements
+                            const translatableElements = node.querySelectorAll ? node.querySelectorAll('[data-i18n]') : [];
+                            translatableElements.forEach(element => {
+                                this.translateElement(element);
+                            });
                         }
-                        const elements = node.querySelectorAll && node.querySelectorAll('[data-i18n]');
-                        if (elements) {
-                            elements.forEach(element => this.translateElement(element));
-                        }
-                    }
-                });
+                    });
+                }
             });
         });
 
@@ -217,113 +204,27 @@ class TranslationManager {
             subtree: true
         });
     }
-
-    /**
-     * Show language change notification
-     * عرض إشعار تغيير اللغة
-     */
-    showLanguageNotification(lang) {
-        const message = lang === 'ar'
-            ? 'تم التبديل إلى العربية 🇸🇦'
-            : 'Switched to English 🇺🇸';
-
-        if (typeof LUXBYTE !== 'undefined' && LUXBYTE.notifyOk) {
-            LUXBYTE.notifyOk(message);
-        } else {
-            console.log(`🌐 ${message}`);
-        }
-    }
-
-    /**
-     * Get current language
-     * الحصول على اللغة الحالية
-     */
-    getCurrentLanguage() {
-        return this.currentLang;
-    }
-
-    /**
-     * Set specific language
-     * تعيين لغة محددة
-     */
-    setLanguage(lang) {
-        if (lang === 'ar' || lang === 'en') {
-            this.applyLanguage(lang);
-        } else {
-            console.warn('Invalid language:', lang);
-        }
-    }
-
-    /**
-     * Translate text programmatically
-     * ترجمة النص برمجياً
-     */
-    t(key, params = {}) {
-        let translation = this.getTranslation(key);
-
-        // Replace parameters in translation
-        Object.keys(params).forEach(param => {
-            translation = translation.replace(`{${param}}`, params[param]);
-        });
-
-        return translation;
-    }
-
-    /**
-     * Add new translation key
-     * إضافة مفتاح ترجمة جديد
-     */
-    addTranslation(lang, key, value) {
-        if (!this.dict[lang]) {
-            this.dict[lang] = {};
-        }
-        this.dict[lang][key] = value;
-    }
-
-    /**
-     * Get all available languages
-     * الحصول على جميع اللغات المتاحة
-     */
-    getAvailableLanguages() {
-        return Object.keys(this.dict);
-    }
-
-    /**
-     * Check if translation exists
-     * فحص وجود الترجمة
-     */
-    hasTranslation(key) {
-        return !!(this.dict[this.currentLang]?.[key] || this.dict['ar']?.[key]);
-    }
 }
 
-// Initialize translation manager when DOM is ready
-let translationManager;
-
+// Initialize translation manager
 function initializeTranslation() {
-    if (!translationManager) {
-        translationManager = new TranslationManager();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.translationManager = new TranslationManager();
+        });
+    } else {
+        window.translationManager = new TranslationManager();
     }
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeTranslation);
-} else {
-    initializeTranslation();
-}
-
-// Export for global access
-if (typeof window !== 'undefined') {
-    window.TranslationManager = TranslationManager;
-    window.translationManager = translationManager;
-    window.t = (key, params) => translationManager.t(key, params);
-}
-
-// Auto-initialize translation manager
-document.addEventListener('DOMContentLoaded', () => {
-    if (!translationManager) {
-        translationManager = new TranslationManager();
+// Global functions for compatibility
+window.toggleLanguage = function() {
+    if (window.translationManager) {
+        window.translationManager.toggleLanguage();
+    } else {
+        console.warn('Translation manager not available');
     }
-});
+};
 
-export default TranslationManager;
+// Initialize
+initializeTranslation();

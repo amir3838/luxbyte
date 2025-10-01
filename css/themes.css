@@ -1,5 +1,15 @@
 /* LUXBYTE Themes and Navigation Styles */
 
+/* Emoji Support */
+html { 
+  font-family: 'Cairo','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',system-ui,sans-serif; 
+}
+
+#themeToggle,#langToggle,[data-action="toggle-theme"],[data-action="toggle-lang"]{
+  width:2.25rem;height:2.25rem;display:inline-flex;align-items:center;justify-content:center;
+  font-size:1.15rem; line-height:1; border-radius:999px;
+}
+
 :root {
   /* Base Colors */
   --luxbyte-blue: #21808d;
@@ -341,14 +351,16 @@ p, span, div, a {
   background: var(--bg-secondary);
   color: var(--text);
   border: 1px solid var(--border-color);
-  width: 40px;
-  height: 40px;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 1.15rem;
+  line-height: 1;
 }
 
 .theme-toggle:hover {
@@ -375,16 +387,21 @@ p, span, div, a {
   background: var(--bg-secondary);
   color: var(--text);
   border: 1px solid var(--border-color);
-  padding: 0.5rem;
-  border-radius: 0.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 1.15rem;
+  line-height: 1;
 }
 
 .lang-toggle:hover {
   background: var(--border-hover);
+  transform: scale(1.05);
 }
 
 /* User Menu */
