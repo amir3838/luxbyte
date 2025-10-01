@@ -551,45 +551,82 @@ a:hover {
 }
 
 /* تحسينات للمستندات */
-#docs-uploader { 
-  display: grid; 
-  gap: 12px; 
+#docs-uploader {
+  display: grid;
+  gap: 12px;
 }
 
-.doc-item { 
-  border: 1px dashed var(--border-color, #d1d5db); 
-  border-radius: 12px; 
-  padding: 10px; 
-  background: var(--surface, #fff); 
+.doc-item {
+  border: 1px dashed var(--border-color, #d1d5db);
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--surface, #fff);
 }
 
-.doc-title { 
-  font-weight: 600; 
-  margin-bottom: 6px; 
+.doc-title {
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
-.doc-actions { 
-  display: flex; 
-  gap: 8px; 
-  align-items: center; 
-  flex-wrap: wrap; 
+.doc-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.doc-preview img { 
-  max-height: 90px; 
-  border-radius: 8px; 
+.doc-preview img {
+  max-height: 90px;
+  border-radius: 8px;
 }
 
-.doc-error { 
-  color: #c00; 
-  font-size: .9rem; 
-  margin-top: 4px; 
+.doc-error {
+  color: #c00;
+  font-size: .9rem;
+  margin-top: 4px;
 }
 
 /* تحسينات للتحميل */
 .is-loading {
   opacity: 0.7;
   pointer-events: none;
+}
+
+/* حاوية الهيرو */
+.hero, .hero-section, .landing-hero, .hero-parallax {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 70vh;
+  padding: 24px 16px;
+  background-position: center;
+  background-size: cover;
+}
+
+/* تصغير وتوسيط اللوجو */
+#hero-logo {
+  display: block;
+  width: clamp(180px, 28vw, 420px);
+  height: auto;
+  margin-inline: auto;
+  object-fit: contain;
+}
+
+/* لو اللوجو داخل غلاف */
+.logo, .brand, .hero-logo-wrap, .card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* مسافة تحت اللوجو قبل الأزرار */
+.hero-ctas, .landing-ctas {
+  margin-top: 16px;
+  display: flex;
+  gap: .75rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .is-loading::after {

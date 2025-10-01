@@ -677,7 +677,7 @@ async function init() {
         // 2) احصل على الدور من URL
         const urlParams = new URLSearchParams(location.search);
         const role = urlParams.get('role') || 'restaurant';
-        
+
         // Initialize document uploader
         initializeDocumentUploader(role);
 
