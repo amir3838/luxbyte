@@ -379,10 +379,12 @@
                         <div class="form-group">
                             <label class="form-label">الموقع الجغرافي <span style="color: #ef4444;">*</span></label>
                             <div style="display: flex; gap: 8px; align-items: center;">
-                                <button type="button" id="getLocationBtn" class="btn btn-outline" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <button type="button" id="detect-location-btn" class="btn btn-outline" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                     <i class="fas fa-map-marker-alt"></i>
-                                    <span>الحصول على الموقع</span>
+                                    <span>حدد موقعك</span>
                                 </button>
+                                <input type="hidden" id="lat" name="lat">
+                                <input type="hidden" id="lng" name="lng">
                                 <input type="text" class="form-control" id="coordinates" name="coordinates" placeholder="الإحداثيات ستظهر هنا" readonly style="flex: 2;">
                             </div>
                             <small style="color: #666; font-size: 12px; margin-top: 4px; display: block;">
@@ -411,11 +413,29 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" data-i18n="reg.password">كلمة المرور <span style="color: #ef4444;">*</span></label>
-                            <input type="password" class="form-control" name="password" data-i18n="reg.password_ph" placeholder="أدخل كلمة المرور" dir="ltr" autocomplete="new-password" required>
+                            <div style="position: relative;">
+                                <input type="password" class="form-control" name="password" id="password" data-i18n="reg.password_ph" placeholder="أدخل كلمة المرور" dir="ltr" autocomplete="new-password" required>
+                                <button type="button" onclick="togglePassword('password')" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                                    <i class="fas fa-eye" id="password-eye"></i>
+                                </button>
+                            </div>
+                            <div id="password-requirements" style="margin-top: 8px; font-size: 12px; color: #666;">
+                                <div id="req-length" style="color: #ef4444;">• 8 أحرف على الأقل</div>
+                                <div id="req-upper" style="color: #ef4444;">• حرف كبير واحد على الأقل</div>
+                                <div id="req-lower" style="color: #ef4444;">• حرف صغير واحد على الأقل</div>
+                                <div id="req-digit" style="color: #ef4444;">• رقم واحد على الأقل</div>
+                                <div id="req-special" style="color: #ef4444;">• رمز خاص واحد على الأقل</div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" data-i18n="reg.password_confirm">تأكيد كلمة المرور <span style="color: #ef4444;">*</span></label>
-                            <input type="password" class="form-control" name="confirm_password" data-i18n="reg.password_confirm_ph" placeholder="أكد كلمة المرور" dir="ltr" autocomplete="new-password" required>
+                            <div style="position: relative;">
+                                <input type="password" class="form-control" name="confirm_password" id="confirm_password" data-i18n="reg.password_confirm_ph" placeholder="أكد كلمة المرور" dir="ltr" autocomplete="new-password" required>
+                                <button type="button" onclick="togglePassword('confirm_password')" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
+                                    <i class="fas fa-eye" id="confirm_password-eye"></i>
+                                </button>
+                            </div>
+                            <div id="password-match" style="margin-top: 8px; font-size: 12px; color: #ef4444; display: none;">كلمات المرور غير متطابقة</div>
                         </div>
                     </div>
 
@@ -438,7 +458,7 @@
                         <i class="fas fa-file-upload" style="margin-left: 8px; color: #6b7cff;"></i>
                         <span data-i18n="reg.documents.title">المستندات المطلوبة</span>
                     </h3>
-                    <div id="uploadButtonsContainer">
+                    <div id="docs-uploader">
                         <!-- Dynamic upload fields will be generated here by js/signup-init.js -->
                     </div>
                     <div class="upload-instructions" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 16px; margin-top: 20px;">
@@ -574,80 +594,103 @@
                 });
             }
 
-            if (getLocationBtn && coordinatesInput) {
-                getLocationBtn.addEventListener('click', function() {
-                    // طلب إذن الموقع أولاً
-                    if (navigator.geolocation) {
-                        getLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>جاري الحصول على الموقع...</span>';
-                        getLocationBtn.disabled = true;
+            // تحسين زر تحديد الموقع
+            const detectLocationBtn = document.getElementById('detect-location-btn');
+            const latInput = document.getElementById('lat');
+            const lngInput = document.getElementById('lng');
+            const coordinatesDisplay = document.getElementById('coordinates');
 
-                        // طلب إذن الموقع مع رسالة واضحة
-                        navigator.geolocation.getCurrentPosition(
-                            function(position) {
-                                const lat = position.coords.latitude;
-                                const lng = position.coords.longitude;
-                                coordinatesInput.value = `${lat}, ${lng}`;
+            if (detectLocationBtn && coordinatesDisplay) {
+                let isRequesting = false;
 
-                                getLocationBtn.innerHTML = '<i class="fas fa-check"></i><span>تم الحصول على الموقع</span>';
-                                getLocationBtn.style.background = '#10b981';
-                                getLocationBtn.style.color = 'white';
+                detectLocationBtn.addEventListener('click', function() {
+                    if (isRequesting) return;
 
-                                // إظهار رسالة نجاح
-                                showNotification('تم الحصول على الموقع بنجاح!', 'success');
-
-                                // Reset after 3 seconds
-                                setTimeout(() => {
-                                    getLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>الحصول على الموقع</span>';
-                                    getLocationBtn.style.background = '';
-                                    getLocationBtn.style.color = '';
-                                    getLocationBtn.disabled = false;
-                                }, 3000);
-                            },
-                            function(error) {
-                                console.error('Error getting location:', error);
-
-                                let errorMessage = 'حدث خطأ في الحصول على الموقع';
-                                let actionMessage = '';
-
-                                switch(error.code) {
-                                    case error.PERMISSION_DENIED:
-                                        errorMessage = 'تم رفض إذن الموقع';
-                                        actionMessage = 'يرجى السماح بالوصول للموقع في إعدادات المتصفح';
-                                        break;
-                                    case error.POSITION_UNAVAILABLE:
-                                        errorMessage = 'الموقع غير متاح';
-                                        actionMessage = 'تأكد من تفعيل GPS في الجهاز';
-                                        break;
-                                    case error.TIMEOUT:
-                                        errorMessage = 'انتهت مهلة الحصول على الموقع';
-                                        actionMessage = 'يرجى المحاولة مرة أخرى';
-                                        break;
-                                }
-
-                                getLocationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>خطأ</span>';
-                                getLocationBtn.style.background = '#ef4444';
-                                getLocationBtn.style.color = 'white';
-
-                                // إظهار رسالة خطأ مفصلة
-                                showNotification(`${errorMessage}. ${actionMessage}`, 'error');
-
-                                // Reset after 4 seconds
-                                setTimeout(() => {
-                                    getLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>الحصول على الموقع</span>';
-                                    getLocationBtn.style.background = '';
-                                    getLocationBtn.style.color = '';
-                                    getLocationBtn.disabled = false;
-                                }, 4000);
-                            },
-                            {
-                                enableHighAccuracy: true,
-                                timeout: 15000,
-                                maximumAge: 300000 // 5 minutes
-                            }
-                        );
-                    } else {
-                        showNotification('المتصفح لا يدعم الحصول على الموقع الجغرافي', 'error');
+                    // التحقق من HTTPS
+                    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                        showNotification('يجب تفعيل الموقع والمتصفح على اتصال آمن (HTTPS).', 'error');
+                        return;
                     }
+
+                    if (!navigator.geolocation) {
+                        showNotification('المتصفح لا يدعم الحصول على الموقع الجغرافي', 'error');
+                        return;
+                    }
+
+                    isRequesting = true;
+                    detectLocationBtn.classList.add('is-loading');
+                    detectLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>جاري التحميل…</span>';
+                    detectLocationBtn.disabled = true;
+
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            const lat = position.coords.latitude;
+                            const lng = position.coords.longitude;
+
+                            // حفظ الإحداثيات في الحقول المخفية
+                            if (latInput) latInput.value = lat;
+                            if (lngInput) lngInput.value = lng;
+                            coordinatesDisplay.value = `تم تحديد الموقع: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+
+                            detectLocationBtn.innerHTML = '<i class="fas fa-check"></i><span>تم تحديد الموقع</span>';
+                            detectLocationBtn.style.background = '#10b981';
+                            detectLocationBtn.style.color = 'white';
+
+                            showNotification('تم تحديد الموقع بنجاح!', 'success');
+
+                            // Reset after 3 seconds
+                            setTimeout(() => {
+                                detectLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>حدد موقعك</span>';
+                                detectLocationBtn.style.background = '';
+                                detectLocationBtn.style.color = '';
+                                detectLocationBtn.disabled = false;
+                                detectLocationBtn.classList.remove('is-loading');
+                                isRequesting = false;
+                            }, 3000);
+                        },
+                        function(error) {
+                            console.error('Error getting location:', error);
+
+                            let errorMessage = 'حدث خطأ في الحصول على الموقع';
+                            let actionMessage = '';
+
+                            switch(error.code) {
+                                case error.PERMISSION_DENIED:
+                                    errorMessage = 'تم رفض إذن الموقع';
+                                    actionMessage = 'يرجى السماح بالوصول للموقع في إعدادات المتصفح';
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    errorMessage = 'الموقع غير متاح';
+                                    actionMessage = 'تأكد من تفعيل GPS في الجهاز';
+                                    break;
+                                case error.TIMEOUT:
+                                    errorMessage = 'انتهت مهلة الحصول على الموقع';
+                                    actionMessage = 'يرجى المحاولة مرة أخرى';
+                                    break;
+                            }
+
+                            detectLocationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>خطأ</span>';
+                            detectLocationBtn.style.background = '#ef4444';
+                            detectLocationBtn.style.color = 'white';
+
+                            showNotification(`${errorMessage}. ${actionMessage}`, 'error');
+
+                            // Reset after 4 seconds
+                            setTimeout(() => {
+                                detectLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>حدد موقعك</span>';
+                                detectLocationBtn.style.background = '';
+                                detectLocationBtn.style.color = '';
+                                detectLocationBtn.disabled = false;
+                                detectLocationBtn.classList.remove('is-loading');
+                                isRequesting = false;
+                            }, 4000);
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 15000,
+                            maximumAge: 0
+                        }
+                    );
                 });
             }
 
@@ -714,6 +757,111 @@
                 }
             `;
             document.head.appendChild(style);
+
+            // التحقق من صحة البريد الإلكتروني
+            const emailInput = document.querySelector('input[name="email"]');
+            if (emailInput) {
+                emailInput.addEventListener('blur', function() {
+                    const email = this.value.trim();
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                    if (email && !emailRegex.test(email)) {
+                        this.style.borderColor = '#ef4444';
+                        showFieldError(this, 'البريد الإلكتروني غير صحيح');
+                    } else {
+                        this.style.borderColor = '';
+                        hideFieldError(this);
+                    }
+                });
+            }
+
+            // التحقق من صحة كلمة المرور
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    validatePassword(this.value);
+                });
+            }
+
+            if (confirmPasswordInput) {
+                confirmPasswordInput.addEventListener('input', function() {
+                    validatePasswordMatch();
+                });
+            }
+
+            // دالة التحقق من كلمة المرور
+            function validatePassword(password) {
+                const requirements = {
+                    length: password.length >= 8,
+                    upper: /[A-Z]/.test(password),
+                    lower: /[a-z]/.test(password),
+                    digit: /\d/.test(password),
+                    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+                };
+
+                // تحديث مؤشرات المتطلبات
+                Object.keys(requirements).forEach(req => {
+                    const element = document.getElementById(`req-${req}`);
+                    if (element) {
+                        element.style.color = requirements[req] ? '#10b981' : '#ef4444';
+                    }
+                });
+
+                return Object.values(requirements).every(Boolean);
+            }
+
+            // دالة التحقق من تطابق كلمات المرور
+            function validatePasswordMatch() {
+                const password = passwordInput?.value || '';
+                const confirmPassword = confirmPasswordInput?.value || '';
+                const matchElement = document.getElementById('password-match');
+
+                if (confirmPassword && password !== confirmPassword) {
+                    if (matchElement) matchElement.style.display = 'block';
+                    if (confirmPasswordInput) confirmPasswordInput.style.borderColor = '#ef4444';
+                    return false;
+                } else {
+                    if (matchElement) matchElement.style.display = 'none';
+                    if (confirmPasswordInput) confirmPasswordInput.style.borderColor = '';
+                    return true;
+                }
+            }
+
+            // دالة إظهار/إخفاء كلمة المرور
+            window.togglePassword = function(fieldId) {
+                const field = document.getElementById(fieldId);
+                const eye = document.getElementById(fieldId + '-eye');
+
+                if (field && eye) {
+                    if (field.type === 'password') {
+                        field.type = 'text';
+                        eye.className = 'fas fa-eye-slash';
+                    } else {
+                        field.type = 'password';
+                        eye.className = 'fas fa-eye';
+                    }
+                }
+            };
+
+            // دالة إظهار خطأ الحقل
+            function showFieldError(field, message) {
+                hideFieldError(field);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-text';
+                errorDiv.textContent = message;
+                errorDiv.style.marginTop = '4px';
+                field.parentNode.appendChild(errorDiv);
+            }
+
+            // دالة إخفاء خطأ الحقل
+            function hideFieldError(field) {
+                const existingError = field.parentNode.querySelector('.error-text');
+                if (existingError) {
+                    existingError.remove();
+                }
+            }
         });
     </script>
 </body>

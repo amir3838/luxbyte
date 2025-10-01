@@ -350,16 +350,24 @@ async function uploadAndProcess(file, docType, onDone, onError) {
         // إنشاء URL مؤقت للمعاينة
         const tempUrl = URL.createObjectURL(file);
 
-        // رفع الملف إلى Supabase Storage
+        // التحقق من وجود جلسة مستخدم
         const supabase = await initSupabase();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            throw new Error('يجب إنشاء حساب وتأكيد البريد أولًا');
+        }
+
+        // رفع الملف إلى Supabase Storage
         const fileName = `${docType}_${Date.now()}.${file.name.split('.').pop()}`;
-        const filePath = `kyc_docs/${fileName}`;
+        const filePath = `kyc_docs/${getRoleFromUrl()}/${user.id}/${docType}/${fileName}`;
 
         const { data, error } = await supabase.storage
             .from('kyc_docs')
             .upload(filePath, file, {
                 cacheControl: '3600',
-                upsert: false
+                upsert: false,
+                contentType: file.type
             });
 
         if (error) {
@@ -385,6 +393,99 @@ async function uploadAndProcess(file, docType, onDone, onError) {
         console.error('خطأ في معالجة الملف:', error);
         onError?.(error);
     }
+}
+
+// دالة للحصول على الدور من URL
+function getRoleFromUrl() {
+    const urlParams = new URLSearchParams(location.search);
+    return urlParams.get('role') || 'restaurant';
+}
+
+// دالة معالجة المستندات مع التحقق
+function handleDocumentUpload(docType) {
+    const fileInput = document.getElementById(`file_${docType}`);
+    const preview = document.getElementById(`preview_${docType}`);
+    const img = document.getElementById(`img_${docType}`);
+    const info = document.getElementById(`info_${docType}`);
+    const error = document.getElementById(`error_${docType}`);
+    const btn = document.getElementById(`btn_${docType}`);
+
+    if (!fileInput || !preview) return;
+
+    fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // إخفاء رسائل الخطأ السابقة
+        if (error) error.style.display = 'none';
+
+        // إظهار حالة التحميل
+        if (btn) {
+            btn.classList.add('is-loading');
+            btn.disabled = true;
+        }
+
+        try {
+            // التحقق من صحة الملف
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+            if (!allowedTypes.includes(file.type)) {
+                throw new Error('نوع الملف غير مدعوم. يرجى اختيار ملف JPG, PNG أو PDF');
+            }
+
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxSize) {
+                throw new Error('حجم الملف كبير جداً. الحد الأقصى 5MB');
+            }
+
+            // معاينة الملف
+            const tempUrl = URL.createObjectURL(file);
+            if (img) {
+                img.src = tempUrl;
+                img.style.display = 'block';
+            }
+            if (preview) preview.style.display = 'block';
+            if (info) {
+                info.innerHTML = `
+                    <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                        ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)
+                    </div>
+                `;
+            }
+
+            // رفع الملف
+            await uploadAndProcess(file, docType,
+                (data) => {
+                    console.log(`✅ تم رفع ${docType} بنجاح`);
+                    if (window.LUXBYTE?.notifyOk) {
+                        window.LUXBYTE.notifyOk(`تم رفع ${getDocumentLabel(docType)} بنجاح`);
+                    }
+                },
+                (err) => {
+                    console.error(`❌ فشل رفع ${docType}:`, err);
+                    if (error) {
+                        error.textContent = err.message;
+                        error.style.display = 'block';
+                    }
+                    if (window.LUXBYTE?.notifyErr) {
+                        window.LUXBYTE.notifyErr(`فشل رفع ${getDocumentLabel(docType)}: ${err.message}`);
+                    }
+                }
+            );
+
+        } catch (err) {
+            console.error(`❌ خطأ في معالجة ${docType}:`, err);
+            if (error) {
+                error.textContent = err.message;
+                error.style.display = 'block';
+            }
+        } finally {
+            // إخفاء حالة التحميل
+            if (btn) {
+                btn.classList.remove('is-loading');
+                btn.disabled = false;
+            }
+        }
+    });
 }
 
 // دالة إنشاء modal الكاميرا
@@ -473,30 +574,19 @@ async function init() {
         // 6) اربط الأزرار بالمدير الموحّد
         for (const docType of docs) {
             try {
-                // استخدام bindUploadButton المحسّن
-                if (typeof bindUploadButton === 'function') {
-                    bindUploadButton({
-                        btnId: `btn_${docType}`,
-                        inputId: `file_${docType}`,
-                        docType,
-                        onDone: ({ publicUrl, path }) => {
-                            const preview = $(`preview_${docType}`);
-                            if (preview) {
-                                preview.src = publicUrl;
-                                preview.style.display = 'block';
-                            }
-                            toastOk(`تم رفع ${getDocumentLabel(docType)} بنجاح`);
-                        },
-                        onError: (e) => toastErr(`فشل رفع ${getDocumentLabel(docType)}: ${e.message || e}`)
+                // استخدام النظام الجديد
+                handleDocumentUpload(docType);
+
+                // ربط زر الرفع
+                const btn = document.getElementById(`btn_${docType}`);
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        const fileInput = document.getElementById(`file_${docType}`);
+                        if (fileInput) fileInput.click();
                     });
-                } else {
-                    // fallback بسيط
-                    bindSimpleUpload(docType);
                 }
             } catch (bindError) {
                 console.error(`❌ خطأ في ربط زر ${docType}:`, bindError);
-                // fallback بسيط
-                bindSimpleUpload(docType);
             }
         }
 
@@ -528,18 +618,22 @@ function buildDocButtons(container, docs) {
     for (const doc of docs) {
         const label = getDocumentLabel(doc);
         container.insertAdjacentHTML('beforeend', `
-            <div class="file-upload-field" id="field_${doc}">
-                <div class="file-upload-label">
-                    <label for="file_${doc}">${label}</label>
-                    <p class="file-description">JPG, PNG أو PDF (حد أقصى 10 ميجابايت)</p>
-                </div>
-                <div class="file-upload-controls">
-                    <button id="btn_${doc}" type="button" class="upload-btn">
-                        <i class="fas fa-camera"></i> تصوير/رفع
+            <div class="doc-item" id="field_${doc}">
+                <div class="doc-title">${label}</div>
+                <div class="actions">
+                    <button id="btn_${doc}" type="button" class="btn btn-outline">
+                        <i class="fas fa-upload"></i> رفع ملف
                     </button>
-                    <input id="file_${doc}" type="file" accept="image/*,.pdf" capture="environment" hidden>
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('file_${doc}').click()">
+                        <i class="fas fa-camera"></i> التقاط بالكاميرا
+                    </button>
+                    <input id="file_${doc}" type="file" accept="image/*,application/pdf" multiple="false" style="display: none;">
                 </div>
-                <img id="preview_${doc}" style="display:none;max-width:100%;margin-top:8px;border-radius:8px;" alt="معاينة ${label}">
+                <div class="preview" id="preview_${doc}" style="display: none;">
+                    <img id="img_${doc}" style="max-width: 100%; max-height: 90px; border-radius: 4px;" alt="معاينة ${label}">
+                    <div class="file-info" id="info_${doc}"></div>
+                </div>
+                <div class="error-text" id="error_${doc}" style="display: none;"></div>
             </div>
         `);
     }
