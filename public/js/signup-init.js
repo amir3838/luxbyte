@@ -969,7 +969,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // render immediately and also when the Documents tab is clicked
     render();
+    
+    // Also render when page loads
+    setTimeout(render, 500);
+    
     document.querySelectorAll('[data-tab="documents"], .tab-documents, #tab-documents')
       .forEach(el => el.addEventListener('click', render));
+      
+    // Force render on any tab click
+    document.querySelectorAll('.tab, [data-tab]')
+      .forEach(el => el.addEventListener('click', () => {
+        setTimeout(render, 100);
+      }));
   } catch(e){ console.error('docs uploader init failed', e); }
 })();

@@ -30,7 +30,13 @@ const fallbackDict = {
     "home.cta_block.title": "جاهز للبدء؟",
     "home.cta_block.desc": "انضم إلى آلاف العملاء الذين يثقون في لوكس بايت لتطوير أعمالهم",
     "home.cta_block.start_now": "ابدأ الآن",
-    "home.cta_block.contact_us": "تواصل معنا"
+    "home.cta_block.contact_us": "تواصل معنا",
+    "home.shop_eg.title": "شوب إي جي",
+    "home.shop_eg.subtitle": "منصة التجارة الإلكترونية",
+    "home.shop_eg.desc": "منصة متكاملة للتجارة الإلكترونية تتيح للمنشآت التجارية إنشاء متاجرها الإلكترونية وإدارة طلباتها بسهولة",
+    "home.master_driver.title": "ماستر درايفر",
+    "home.master_driver.subtitle": "منصة خدمات التوصيل",
+    "home.master_driver.desc": "منصة متخصصة في خدمات التوصيل والنقل، تربط بين العملاء ومندوبي التوصيل لتقديم خدمة توصيل سريعة وموثوقة"
   }
 };
 
@@ -62,7 +68,7 @@ function applyLanguage(lang){
 
 function initLang(){
   const lang = localStorage.getItem(LANG_KEY) || 'ar';
-  
+
   // Wait for i18nDict to load if not already available
   if (!window.i18nDict) {
     setTimeout(() => {
@@ -85,6 +91,13 @@ function initLang(){
 }
 
 document.addEventListener('DOMContentLoaded', initLang);
+
+// Force immediate translation
+setTimeout(() => {
+  if (typeof applyLanguage === 'function') {
+    applyLanguage('ar');
+  }
+}, 100);
 
 // Legacy class for compatibility
 class TranslationManager {
