@@ -593,12 +593,12 @@ a:hover {
 }
 
 /* حاوية الهيرو */
-.hero, .hero-section, .landing-hero, .hero-parallax {
+.hero, .hero-section, .landing-hero {
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 70vh;
+  min-height: 60vh;
   padding: 24px 16px;
   background-position: center;
   background-size: cover;
@@ -629,6 +629,28 @@ a:hover {
   flex-wrap: wrap;
 }
 
+/* إزالة الأنماط المتعارضة */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.card-description {
+  color: #666;
+  line-height: 1.6;
+  margin: 16px 0;
+}
+
 /* خلفية الموقع */
 :root {
   --site-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -636,8 +658,8 @@ a:hover {
   --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-html, body { 
-  height: 100%; 
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
 }
@@ -657,6 +679,7 @@ body{
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
   margin: 16px 0;
+  overflow: hidden;
 }
 
 .card:hover, .panel:hover, .box:hover, .content-card:hover {
@@ -664,14 +687,52 @@ body{
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
+/* إزالة الأنماط المتعارضة للكروت */
+.card .card-header {
+  background: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 0;
+  padding: 20px;
+}
+
+.card .card-description {
+  padding: 0 20px 20px;
+  margin: 0;
+}
+
 /* تحسين الهيدر */
 .site-header, .header, .top-bar {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
+  width: 100%;
+}
+
+/* إزالة الأنماط المتعارضة للهيدر */
+.site-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.site-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.site-header .auth-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 /* صغّر اللوجو وثبّته في الركن بدون ما يغطي العناصر */

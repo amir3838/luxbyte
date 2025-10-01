@@ -98,13 +98,13 @@
     <!-- Navigation will be injected by js/navigation-bar.js -->
 
     <!-- Top Navigation Bar -->
-    <header class="site-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;">
-            <div class="brand" style="display: flex; align-items: center; gap: 12px;">
+    <header class="site-header">
+        <div class="container">
+            <div class="brand">
                 <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" style="width: 32px; height: 32px; object-fit: contain;">
                 <span style="font-size: 18px; font-weight: 600; color: #333;">LUXBYTE</span>
             </div>
-            <nav class="auth-actions" style="display: flex; gap: 12px; align-items: center;">
+            <nav class="auth-actions">
                 <a href="/auth.html" class="btn" style="padding: 8px 16px; font-size: 14px; background: rgba(255, 255, 255, 0.2); color: #333; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; text-decoration: none;">
                     تسجيل الدخول
                 </a>
@@ -121,8 +121,8 @@
     <!-- Main Content -->
     <main class="container" style="margin-top: 100px; padding: 0 20px;">
         <!-- Hero Section -->
-        <section class="card text-center mb-8 hero-parallax" style="max-width: 800px; margin: 40px auto;">
-            <div class="card-header" style="justify-content: center; flex-direction: column; align-items: center; padding: 40px 20px;">
+        <section class="card text-center mb-8" style="max-width: 800px; margin: 40px auto;">
+            <div class="card-header" style="flex-direction: column; align-items: center; text-align: center;">
                 <div class="card-icon" style="margin-bottom: 20px;">
                     <img id="hero-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="لوجو لوكس بايت" class="logo-glow" style="width: 60px; height: 60px; object-fit: contain;" loading="eager" decoding="async">
                 </div>
@@ -131,7 +131,7 @@
                     <p class="fade-in-slow" style="color: #666; font-size: 16px;" data-i18n="brand.luxbyte_llc">شركة لوكس بايت المحدودة المسئولية</p>
                 </div>
             </div>
-            <p class="card-description fade-in-slow" style="font-size: 16px; line-height: 1.6; padding: 0 20px;" data-i18n="home.tagline">
+            <p class="card-description fade-in-slow" style="font-size: 16px; line-height: 1.6;" data-i18n="home.tagline">
                 منصة شاملة للتجارة الإلكترونية وخدمات التوصيل، تقدم حلول متكاملة للمنشآت التجارية
                 والأفراد في مصر. انضم إلينا واكتشف عالمًا جديدًا من الفرص التجارية.
             </p>
@@ -148,8 +148,8 @@
             <h2 class="fade-in text-center" style="margin-bottom: 32px; font-size: 24px; color: #333; font-weight: 600;" data-i18n="home.choose_platform">اختر منصتك</h2>
             <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
                 <!-- ShopEG Card -->
-                <div class="card reveal" style="padding: 24px; min-height: 280px;">
-                    <div class="card-header" style="flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px;">
+                <div class="card reveal" style="min-height: 280px;">
+                    <div class="card-header" style="flex-direction: column; align-items: center; text-align: center;">
                         <div class="card-icon" style="margin-bottom: 16px;">
                             <img src="/assets/images/shopeg_logo.webp" alt="شوب إي جي" class="logo-glow" style="width: 60px; height: 60px; object-fit: contain;" loading="lazy" decoding="async">
                         </div>
@@ -187,8 +187,8 @@
                 </div>
 
                 <!-- Master Driver Card -->
-                <div class="card reveal" style="padding: 24px; min-height: 280px;">
-                    <div class="card-header" style="flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px;">
+                <div class="card reveal" style="min-height: 280px;">
+                    <div class="card-header" style="flex-direction: column; align-items: center; text-align: center;">
                         <div class="card-icon" style="margin-bottom: 16px;">
                             <img src="./assets/images/activities/driver.png" alt="ماستر درايفر" class="logo-glow" style="width: 60px; height: 60px; object-fit: contain;" loading="lazy" decoding="async">
                         </div>
