@@ -866,10 +866,26 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Document uploader initialization
-(() => {
-  try {
-    const role = new URLSearchParams(location.search).get('role') || '';
-    const MAP = {
+// Force immediate execution
+(function() {
+  'use strict';
+  
+  // Wait for DOM to be ready
+  function waitForDOM() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDocsUploader);
+    } else {
+      initDocsUploader();
+    }
+  }
+  
+  function initDocsUploader() {
+    try {
+      console.log('🚀 Initializing docs uploader...');
+      const role = new URLSearchParams(location.search).get('role') || '';
+      console.log('📋 Role detected:', role);
+      
+      const MAP = {
       supermarket: [
         {key:'sm_health', label:'شهادة صحية لمسؤول الأغذية', accept:'image/*,application/pdf', required:false},
         {key:'sm_mgr_front', label:'بطاقة المدير (وجه)', accept:'image/*', required:true},
@@ -918,7 +934,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const host = document.getElementById('docs-uploader');
-    if (!host) return;
+    if (!host) {
+      console.error('❌ docs-uploader element not found');
+      return;
+    }
+    console.log('✅ docs-uploader element found');
 
     function rowHTML(d){
       const cap = /image\//.test(d.accept) ? 'capture="environment"' : '';
@@ -969,7 +989,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // render immediately and also when the Documents tab is clicked
     render();
-    
+
     // Also render when page loads
     setTimeout(render, 500);
     setTimeout(render, 1000);
@@ -1014,18 +1034,22 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(render, 500);
       });
     }
-  } catch(e){ 
-    console.error('docs uploader init failed', e);
-    // Fallback: try to render after a delay
-    setTimeout(() => {
-      try {
-        const host = document.getElementById('docs-uploader');
-        if (host) {
-          host.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">جاري تحميل أزرار رفع المستندات...</div>';
+    } catch(e){ 
+      console.error('docs uploader init failed', e);
+      // Fallback: try to render after a delay
+      setTimeout(() => {
+        try {
+          const host = document.getElementById('docs-uploader');
+          if (host) {
+            host.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">جاري تحميل أزرار رفع المستندات...</div>';
+          }
+        } catch(fallbackError) {
+          console.error('Fallback render failed', fallbackError);
         }
-      } catch(fallbackError) {
-        console.error('Fallback render failed', fallbackError);
-      }
-    }, 2000);
+      }, 2000);
+    }
   }
+  
+  // Start the initialization
+  waitForDOM();
 })();

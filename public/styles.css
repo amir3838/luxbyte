@@ -651,69 +651,118 @@ a:hover {
   margin: 16px 0;
 }
 
-/* خلفية الموقع */
+/* خلفية الموقع - تطبيق شامل */
 :root {
   --site-bg: url("/assets/images/backgrounds/screen-1.png");
-  --card-bg: rgba(255, 255, 255, 0.9);
-  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 html, body { 
   height: 100%; 
   margin: 0;
   padding: 0;
-}
-
-body{
-  background-image: var(--site-bg);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* تطبيق الخلفية على جميع الصفحات */
-.unified-signup, .auth, .choose-role, .choose-platform {
+body, 
+.unified-signup, 
+.auth, 
+.choose-role, 
+.choose-platform,
+.index,
+.dashboard {
   background-image: var(--site-bg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
+  position: relative;
+}
+
+/* إزالة اللوجو الضخم */
+.hero-logo,
+#hero-logo,
+.large-logo,
+.central-logo {
+  display: none !important;
+}
+
+/* إخفاء أي لوجو كبير في المحتوى */
+.hero .logo,
+.hero img[alt*="LUXBYTE"],
+.hero img[src*="logo"],
+.hero img[src*="LUXBYTE"] {
+  display: none !important;
 }
 
 /* كروت عائمة احترافية */
-.card, .panel, .box, .content-card{
+.card, .panel, .box, .content-card, .form-container, .signup-form, .auth-form {
   background: var(--card-bg);
-  border-radius: 16px;
+  border-radius: 20px;
   box-shadow: var(--card-shadow);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   transition: all 0.3s ease;
-  margin: 12px 0;
+  margin: 20px auto;
   overflow: hidden;
-  max-width: 500px;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+  z-index: 10;
 }
 
-.card:hover, .panel:hover, .box:hover, .content-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+.card:hover, .panel:hover, .box:hover, .content-card:hover, .form-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* إزالة الأنماط المتعارضة للكروت */
-.card .card-header {
-  background: transparent;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+/* تحسين محتوى الكروت */
+.card .card-header, .panel .panel-header {
+  background: linear-gradient(135deg, rgba(107, 124, 255, 0.1), rgba(122, 60, 255, 0.1));
+  border-bottom: 1px solid rgba(107, 124, 255, 0.2);
+  padding: 24px;
   margin: 0;
-  padding: 16px;
+}
+
+.card .card-title, .panel .panel-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.card .card-description, .panel .panel-description {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+  padding: 0 16px 16px;
+}
+
+/* إزالة التعارضات - تطبيق الأنماط الجديدة */
+.card .card-header {
+  background: linear-gradient(135deg, rgba(107, 124, 255, 0.1), rgba(122, 60, 255, 0.1)) !important;
+  border-bottom: 1px solid rgba(107, 124, 255, 0.2) !important;
+  margin: 0;
+  padding: 24px;
 }
 
 .card .card-description {
   padding: 0 16px 16px;
   margin: 0;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #6b7280;
+  text-align: center;
 }
 
 /* إصلاح مشاكل التخطيط */
@@ -729,11 +778,11 @@ body{
     margin: 8px 0;
     padding: 16px;
   }
-  
+
   .card .card-header {
     padding: 12px;
   }
-  
+
   .card .card-description {
     padding: 0 12px 12px;
     font-size: 13px;

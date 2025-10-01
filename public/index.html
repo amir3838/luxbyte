@@ -64,6 +64,68 @@
     <link rel="stylesheet" href="css/themes.css">
     <link rel="icon" href="assets/app_icon/LUXBYTEICON.PNG" type="image/png">
     <link rel="apple-touch-icon" href="assets/app_icon/LUXBYTEICON.PNG">
+    
+    <!-- Apply same background as main site -->
+    <style>
+        body {
+            background-image: url("/assets/images/backgrounds/screen-1.png");
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* إزالة اللوجو الضخم */
+        .hero-logo, #hero-logo, .large-logo, .central-logo {
+            display: none !important;
+        }
+        
+        .hero .logo, .hero img[alt*="LUXBYTE"], .hero img[src*="logo"], .hero img[src*="LUXBYTE"] {
+            display: none !important;
+        }
+        
+        /* تحسين الكروت */
+        .card, .panel, .box, .content-card, .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin: 20px auto;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* تحسين المحتوى */
+        .card .card-header, .panel .panel-header {
+            background: linear-gradient(135deg, rgba(107, 124, 255, 0.1), rgba(122, 60, 255, 0.1));
+            border-bottom: 1px solid rgba(107, 124, 255, 0.2);
+            padding: 24px;
+            margin: 0;
+        }
+        
+        .card .card-title, .panel .panel-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 8px 0;
+            text-align: center;
+        }
+        
+        .card .card-description, .panel .panel-description {
+            font-size: 1rem;
+            color: #6b7280;
+            line-height: 1.6;
+            margin: 0;
+            text-align: center;
+            padding: 0 16px 16px;
+        }
+    </style>
 
     <!-- Structured Data -->
     <script type="application/ld+json">
