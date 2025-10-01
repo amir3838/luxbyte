@@ -519,25 +519,25 @@
     <!-- Tab Navigation Script - Handled by js/signup-navigation.js -->
     <script>
         // All tab navigation and form handling is managed by js/signup-navigation.js
-        
+
         // Location functionality and city filtering
         document.addEventListener('DOMContentLoaded', function() {
             const getLocationBtn = document.getElementById('getLocationBtn');
             const coordinatesInput = document.getElementById('coordinates');
             const governorateSelect = document.getElementById('governorate');
             const citySelect = document.getElementById('city');
-            
+
             // City filtering based on governorate
             if (governorateSelect && citySelect) {
                 governorateSelect.addEventListener('change', function() {
                     const selectedGov = this.value;
                     const cityOptions = citySelect.querySelectorAll('option');
-                    
+
                     // Hide all options first
                     cityOptions.forEach(option => {
                         option.style.display = 'none';
                     });
-                    
+
                     // Show relevant optgroups and options
                     if (selectedGov === 'القاهرة') {
                         const cairoGroup = citySelect.querySelector('optgroup[label="🏙️ القاهرة"]');
@@ -564,28 +564,28 @@
                             });
                         }
                     }
-                    
+
                     // Reset city selection
                     citySelect.value = '';
                 });
             }
-            
+
             if (getLocationBtn && coordinatesInput) {
                 getLocationBtn.addEventListener('click', function() {
                     if (navigator.geolocation) {
                         getLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>جاري الحصول على الموقع...</span>';
                         getLocationBtn.disabled = true;
-                        
+
                         navigator.geolocation.getCurrentPosition(
                             function(position) {
                                 const lat = position.coords.latitude;
                                 const lng = position.coords.longitude;
                                 coordinatesInput.value = `${lat}, ${lng}`;
-                                
+
                                 getLocationBtn.innerHTML = '<i class="fas fa-check"></i><span>تم الحصول على الموقع</span>';
                                 getLocationBtn.style.background = '#10b981';
                                 getLocationBtn.style.color = 'white';
-                                
+
                                 // Reset after 2 seconds
                                 setTimeout(() => {
                                     getLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>الحصول على الموقع</span>';
@@ -596,7 +596,7 @@
                             },
                             function(error) {
                                 console.error('Error getting location:', error);
-                                
+
                                 let errorMessage = 'حدث خطأ في الحصول على الموقع';
                                 switch(error.code) {
                                     case error.PERMISSION_DENIED:
@@ -609,13 +609,13 @@
                                         errorMessage = 'انتهت مهلة الحصول على الموقع';
                                         break;
                                 }
-                                
+
                                 getLocationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>خطأ</span>';
                                 getLocationBtn.style.background = '#ef4444';
                                 getLocationBtn.style.color = 'white';
-                                
+
                                 alert(errorMessage);
-                                
+
                                 // Reset after 3 seconds
                                 setTimeout(() => {
                                     getLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>الحصول على الموقع</span>';
