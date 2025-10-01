@@ -23,6 +23,14 @@ export const supabase = (() => {
         }
       });
       console.log('✅ Supabase client initialized (sync)');
+      
+      // Initialize session immediately
+      _supabase.auth.getSession().then(() => {
+        console.log('✅ Supabase session initialized');
+      }).catch(err => {
+        console.warn('Session initialization warning:', err);
+      });
+      
       return _supabase;
     }
   } catch (error) {

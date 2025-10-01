@@ -524,6 +524,143 @@ function createCameraModal(stream, docType, accept) {
     return modal;
 }
 
+// Initialize document uploader with dynamic rendering
+function initializeDocumentUploader(role) {
+    const urlRole = new URLSearchParams(location.search).get('role');
+    const currentRole = (urlRole || role || '').trim();
+
+    // خريطة المستندات (Fallback لو الـconfig مش جاهز)
+    const DOCS_BY_ROLE = {
+        pharmacy: [
+            {key:'ph_license', label:'صورة ترخيص/قيد صيدلي أو كارنيه النقابة', accept:'image/*,application/pdf', required:true},
+            {key:'ph_id_front', label:'بطاقة الصيدلي المسؤول (وجه)', accept:'image/*', required:true},
+            {key:'ph_id_back', label:'بطاقة الصيدلي المسؤول (ظهر)', accept:'image/*', required:true},
+            {key:'ph_cr', label:'السجل التجاري', accept:'image/*,application/pdf', required:true}
+        ],
+        restaurant: [
+            {key:'rs_health', label:'شهادة صحية للمدير/الشيف', accept:'image/*,application/pdf', required:true},
+            {key:'rs_mgr_front', label:'بطاقة المدير (وجه)', accept:'image/*', required:true},
+            {key:'rs_mgr_back', label:'بطاقة المدير (ظهر)', accept:'image/*', required:true},
+            {key:'rs_cr', label:'السجل التجاري (إن وجد)', accept:'image/*,application/pdf', required:false},
+            {key:'rs_lease', label:'عقد مقر موثق', accept:'image/*,application/pdf', required:true},
+            {key:'rs_bill', label:'إيصال مرافق حديث', accept:'image/*,application/pdf', required:true}
+        ],
+        supermarket: [
+            {key:'sm_health', label:'شهادة صحية لمسؤول الأغذية', accept:'image/*,application/pdf', required:false},
+            {key:'sm_mgr_front', label:'بطاقة المدير (وجه)', accept:'image/*', required:true},
+            {key:'sm_mgr_back', label:'بطاقة المدير (ظهر)', accept:'image/*', required:true},
+            {key:'sm_cr', label:'السجل التجاري', accept:'image/*,application/pdf', required:true},
+            {key:'sm_lease', label:'عقد مقر موثق', accept:'image/*,application/pdf', required:true},
+            {key:'sm_bill', label:'إيصال مرافق حديث', accept:'image/*,application/pdf', required:true}
+        ],
+        clinic: [
+            {key:'cl_doc_front', label:'بطاقة الطبيب (وجه)', accept:'image/*', required:true},
+            {key:'cl_doc_back', label:'بطاقة الطبيب (ظهر)', accept:'image/*', required:true},
+            {key:'cl_union', label:'قيد نقابة الطبيب', accept:'image/*,application/pdf', required:true},
+            {key:'cl_cr', label:'السجل التجاري/ترخيص النشاط (إن وجد)', accept:'image/*,application/pdf', required:false},
+            {key:'cl_lease', label:'عقد مقر موثق', accept:'image/*,application/pdf', required:true},
+            {key:'cl_bill', label:'إيصال مرافق حديث', accept:'image/*,application/pdf', required:true}
+        ],
+        courier: [
+            {key:'co_id_front', label:'بطاقة رقم قومي (وجه)', accept:'image/*', required:true},
+            {key:'co_id_back', label:'بطاقة رقم قومي (ظهر)', accept:'image/*', required:true},
+            {key:'co_drv_front', label:'رخصة قيادة سارية (وجه)', accept:'image/*', required:true},
+            {key:'co_drv_back', label:'رخصة قيادة سارية (ظهر)', accept:'image/*', required:true},
+            {key:'co_selfie', label:'صورة شخصية واضحة', accept:'image/*', required:true},
+            {key:'co_vehicle_front', label:'صورة المركبة من الأمام', accept:'image/*', required:false},
+            {key:'co_plate', label:'صورة لوحة المركبة الخلفية', accept:'image/*', required:false}
+        ],
+        driver: [
+            {key:'md_vehicle_license_front', label:'رخصة مركبة (وجه)', accept:'image/*', required:true},
+            {key:'md_vehicle_license_back', label:'رخصة مركبة (ظهر)', accept:'image/*', required:true},
+            {key:'md_driver_license', label:'رخصة سائق', accept:'image/*', required:true},
+            {key:'md_driver_id', label:'بطاقة سائق', accept:'image/*', required:true}
+        ]
+    };
+
+    const MAX_MB = 5;
+    const state = { files: new Map() };
+
+    function renderDocsList(r) {
+        const list = DOCS_BY_ROLE[r] || [];
+        const host = document.getElementById('docs-uploader');
+        if (!host) return;
+        host.innerHTML = '';
+
+        list.forEach(doc => {
+            const row = document.createElement('div');
+            row.className = 'doc-item';
+            row.dataset.key = doc.key;
+
+            row.innerHTML = `
+                <div class="doc-title">${doc.label}${doc.required ? ' <span style="color:#c00">*</span>' : ''}</div>
+                <div class="doc-actions">
+                    <input class="doc-input" type="file" accept="${doc.accept}" ${/image\//.test(doc.accept)?'capture="environment"':''} />
+                    <button type="button" class="btn btn-sm replace-btn">استبدال</button>
+                    <div class="doc-preview"></div>
+                </div>
+                <div class="doc-error" hidden></div>
+            `;
+
+            const input = row.querySelector('.doc-input');
+            const err = row.querySelector('.doc-error');
+            const preview = row.querySelector('.doc-preview');
+            const replaceBtn = row.querySelector('.replace-btn');
+
+            function showErr(msg){ err.textContent = msg; err.hidden = !msg; }
+            function onFile(f){
+                showErr('');
+                if (!f) { state.files.delete(doc.key); preview.innerHTML=''; return; }
+                const okType = /^(image\/(jpe?g|png|webp)|application\/pdf)$/.test(f.type);
+                const okSize = f.size <= MAX_MB*1024*1024;
+                if (!okType) return showErr('نوع الملف غير مدعوم');
+                if (!okSize) return showErr('الحد الأقصى 5MB');
+                state.files.set(doc.key, f);
+                if (f.type.startsWith('image/')) {
+                    const url = URL.createObjectURL(f);
+                    preview.innerHTML = `<img src="${url}" alt="preview">`;
+                } else {
+                    preview.innerHTML = `PDF ✔ (${Math.round(f.size/1024)} KB)`;
+                }
+            }
+
+            input.addEventListener('change', e => onFile(e.target.files?.[0]));
+            replaceBtn.addEventListener('click', () => input.click());
+
+            host.appendChild(row);
+        });
+    }
+
+    // استدعِ الرندر عند فتح تبويب "المستندات" أو فورًا إن كان هو الحالي
+    const docsTabBtn = document.querySelector('[data-tab="documents"], .tab-documents, #tab-documents');
+    if (docsTabBtn) {
+        docsTabBtn.addEventListener('click', () => renderDocsList(currentRole));
+    }
+    // لو التبويب بالفعل نشِط:
+    const activeTab = document.querySelector('.tabs .active[data-tab="documents"]');
+    if (activeTab) renderDocsList(currentRole);
+
+    // اربط زر "التالي" للتأكد من أن كل المطلوب موجود قبل الرفع
+    const nextBtn = document.querySelector('#next-btn, .btn-next');
+    if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+            const required = (DOCS_BY_ROLE[currentRole]||[]).filter(d=>d.required).map(d=>d.key);
+            const missing = required.filter(k=>!state.files.has(k));
+            if (missing.length) {
+                e.preventDefault();
+                const host = document.getElementById('docs-uploader');
+                if (host) {
+                    host.scrollIntoView({behavior:'smooth', block:'center'});
+                }
+                alert('من فضلك ارفع جميع المستندات المطلوبة قبل المتابعة.');
+            }
+        }, {passive:false});
+    }
+
+    // اجعل الحالة متاحة لباقي الشيفرة
+    window.__docsState = state;
+}
+
 // دالة تهيئة رئيسية - مع دعم ESM
 async function init() {
     console.log('🚀 بدء تهيئة صفحة التسجيل...');
@@ -540,6 +677,9 @@ async function init() {
         // 2) احصل على الدور من URL
         const urlParams = new URLSearchParams(location.search);
         const role = urlParams.get('role') || 'restaurant';
+        
+        // Initialize document uploader
+        initializeDocumentUploader(role);
 
         if (!role) {
             console.warn('Role missing; using default restaurant');

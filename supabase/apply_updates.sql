@@ -1,29 +1,7 @@
--- Fix existing policies and apply new updates
--- Drop conflicting policies first
-drop policy if exists "read own tokens" on public.push_tokens;
-drop policy if exists "insert own tokens" on public.push_tokens;
-drop policy if exists "update own tokens" on public.push_tokens;
-drop policy if exists "delete own tokens" on public.push_tokens;
+-- LUXBYTE Database Updates
+-- Apply all production-ready enhancements
 
--- Recreate push_tokens policies
-create policy "read own tokens" on public.push_tokens
-for select to authenticated
-using (auth.uid() = user_id);
-
-create policy "insert own tokens" on public.push_tokens
-for insert to authenticated
-with check (auth.uid() = user_id);
-
-create policy "update own tokens" on public.push_tokens
-for update to authenticated
-using (auth.uid() = user_id)
-with check (auth.uid() = user_id);
-
-create policy "delete own tokens" on public.push_tokens
-for delete to authenticated
-using (auth.uid() = user_id);
-
--- Apply account_type and profiles updates
+-- 1. Create account_type enum if not exists
 do $$
 begin
   if not exists (select 1 from pg_type where typname = 'account_type') then
@@ -31,7 +9,7 @@ begin
   end if;
 end $$;
 
--- Create profiles table if not exists
+-- 2. Create profiles table if not exists
 create table if not exists public.profiles (
   user_id uuid primary key references auth.users(id) on delete cascade,
   account account_type not null,
@@ -39,10 +17,10 @@ create table if not exists public.profiles (
   created_at timestamptz default now()
 );
 
--- Enable RLS on profiles
+-- 3. Enable RLS on profiles
 alter table public.profiles enable row level security;
 
--- Create RLS policies for profiles
+-- 4. Create RLS policies for profiles
 do $$
 begin
   if not exists (select 1 from pg_policies where policyname='insert own profile once' and tablename='profiles') then
@@ -68,7 +46,7 @@ begin
   end if;
 end $$;
 
--- Create account_audit table
+-- 5. Create account_audit table
 create table if not exists public.account_audit (
   id bigserial primary key,
   user_id uuid not null,
@@ -80,15 +58,15 @@ create table if not exists public.account_audit (
   request_id text
 );
 
--- Create indexes for account_audit
+-- 6. Create indexes for account_audit
 create index if not exists idx_account_audit_user_id on public.account_audit(user_id);
 create index if not exists idx_account_audit_changed_at on public.account_audit(changed_at);
 create index if not exists idx_account_audit_changed_by on public.account_audit(changed_by);
 
--- Enable RLS on account_audit
+-- 7. Enable RLS on account_audit
 alter table public.account_audit enable row level security;
 
--- Create audit policy
+-- 8. Create audit policy
 create policy if not exists "admin can view audit logs"
 on public.account_audit for select
 to authenticated
@@ -100,7 +78,7 @@ using (
   )
 );
 
--- Create audit logging function
+-- 9. Create audit logging function
 create or replace function log_account_change()
 returns trigger as $$
 begin
@@ -129,14 +107,14 @@ begin
 end;
 $$ language plpgsql security definer;
 
--- Create audit trigger
+-- 10. Create audit trigger
 drop trigger if exists trg_log_account_change on public.profiles;
 create trigger trg_log_account_change
   after update on public.profiles
   for each row
   execute function log_account_change();
 
--- Create notifications table
+-- 11. Create notifications table
 create table if not exists public.notifications (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -147,10 +125,10 @@ create table if not exists public.notifications (
   created_at timestamptz default now()
 );
 
--- Enable RLS on notifications
+-- 12. Enable RLS on notifications
 alter table public.notifications enable row level security;
 
--- Create notification policies
+-- 13. Create notification policies
 create policy if not exists "users can view own notifications"
 on public.notifications for select
 to authenticated
@@ -167,12 +145,12 @@ on public.notifications for insert
 to authenticated
 with check (true);
 
--- Create notification indexes
+-- 14. Create notification indexes
 create index if not exists idx_notifications_user_id on public.notifications(user_id);
 create index if not exists idx_notifications_created_at on public.notifications(created_at);
 create index if not exists idx_notifications_read on public.notifications(read);
 
--- Create storage buckets if not exist
+-- 15. Create storage buckets if not exist
 insert into storage.buckets (id, name, public)
 values
   ('documents', 'documents', false),
@@ -180,7 +158,7 @@ values
   ('uploads', 'uploads', false)
 on conflict (id) do nothing;
 
--- Create storage policies
+-- 16. Create storage policies
 create policy if not exists "authenticated users can upload files"
 on storage.objects for insert
 to authenticated

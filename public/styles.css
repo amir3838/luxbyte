@@ -551,34 +551,39 @@ a:hover {
 }
 
 /* تحسينات للمستندات */
-.doc-item {
-  border: 1px dashed var(--border);
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 10px;
-  display: grid;
-  gap: 8px;
+#docs-uploader { 
+  display: grid; 
+  gap: 12px; 
 }
 
-.doc-item .doc-title {
-  font-weight: 600;
+.doc-item { 
+  border: 1px dashed var(--border-color, #d1d5db); 
+  border-radius: 12px; 
+  padding: 10px; 
+  background: var(--surface, #fff); 
 }
 
-.doc-item .actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
+.doc-title { 
+  font-weight: 600; 
+  margin-bottom: 6px; 
 }
 
-.doc-item .preview {
-  max-height: 90px;
-  overflow: hidden;
+.doc-actions { 
+  display: flex; 
+  gap: 8px; 
+  align-items: center; 
+  flex-wrap: wrap; 
 }
 
-.error-text {
-  color: #c00;
-  font-size: 0.9rem;
+.doc-preview img { 
+  max-height: 90px; 
+  border-radius: 8px; 
+}
+
+.doc-error { 
+  color: #c00; 
+  font-size: .9rem; 
+  margin-top: 4px; 
 }
 
 /* تحسينات للتحميل */
