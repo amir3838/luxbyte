@@ -612,8 +612,6 @@
 
     <!-- Dashboard Scripts -->
     <script type="module" src="../js/supabase-client.js"></script>
-    <script type="module" src="../js/guard.js"></script>
-    <script src="../js/supabase-dashboard.js"></script>
     <script src="../js/dashboard.js"></script>
     <script src="../js/driver-dashboard.js"></script>
 
@@ -621,9 +619,8 @@
         // تهيئة لوحة تحكم السائق الرئيسي
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                // تهيئة Guard أولاً
-                const { initAutoGuard } = await import('../js/guard.js');
-                await initAutoGuard();
+                // تهيئة لوحة التحكم
+                console.log('🚚 تهيئة لوحة تحكم السائق');
 
                 // انتظار تحميل جميع المودولات
                 await new Promise(resolve => setTimeout(resolve, 100));
