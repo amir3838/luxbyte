@@ -219,7 +219,7 @@ export default async function handler(req, res) {
         updated_at: new Date().toISOString()
       }
     };
-    
+
     return res.status(200).json(response);
 
   } catch (error) {

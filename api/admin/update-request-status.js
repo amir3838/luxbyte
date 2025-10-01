@@ -160,7 +160,7 @@ export default async function handler(req, res) {
       request: updatedRequest,
       message: `Request status updated to ${status} successfully`
     };
-    
+
     return res.status(200).json(response);
 
   } catch (error) {

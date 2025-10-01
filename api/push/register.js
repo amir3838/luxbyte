@@ -58,7 +58,7 @@ export default async function handler(req, res) {
       message: 'Token registered successfully',
       data: data[0]
     };
-    
+
     return res.status(200).json(response);
 
   } catch (error) {

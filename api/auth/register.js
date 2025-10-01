@@ -101,7 +101,7 @@ export default async function handler(req, res) {
       },
       message: 'User registered successfully'
     };
-    
+
     return res.status(201).json(response);
 
   } catch (error) {

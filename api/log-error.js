@@ -55,7 +55,7 @@ export default async function handler(req, res) {
 
     // Ensure we always return a proper JSON response
     const response = { success: true };
-    
+
     return res.status(200).json(response);
 
   } catch (error) {

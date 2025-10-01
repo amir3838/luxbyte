@@ -133,7 +133,7 @@ export default async function handler(req, res) {
           response: response,
           tokensCount: fcmTokens.length
         };
-        
+
         return res.status(200).json(successResponse);
       } catch (error) {
         console.error('Firebase Admin error:', error);

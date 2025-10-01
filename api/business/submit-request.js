@@ -136,7 +136,7 @@ export default async function handler(req, res) {
       status: 'pending',
       message: 'Business request submitted successfully'
     };
-    
+
     return res.status(201).json(response);
 
   } catch (error) {

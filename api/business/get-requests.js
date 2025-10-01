@@ -129,7 +129,7 @@ export default async function handler(req, res) {
         admin_view: admin_view === 'true' && isAdmin
       }
     };
-    
+
     return res.status(200).json(response);
 
   } catch (error) {
