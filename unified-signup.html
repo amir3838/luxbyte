@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#6b7cff">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    
+
     <!-- Location and Camera Permissions -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -608,7 +608,7 @@
 
                                 let errorMessage = 'حدث خطأ في الحصول على الموقع';
                                 let actionMessage = '';
-                                
+
                                 switch(error.code) {
                                     case error.PERMISSION_DENIED:
                                         errorMessage = 'تم رفض إذن الموقع';
@@ -659,7 +659,7 @@
                     <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
                     <span>${message}</span>
                 `;
-                
+
                 // إضافة الأنماط
                 notification.style.cssText = `
                     position: fixed;
@@ -677,7 +677,7 @@
                     align-items: center;
                     gap: 8px;
                 `;
-                
+
                 // تحديد لون الإشعار
                 const colors = {
                     success: '#10b981',
@@ -685,11 +685,11 @@
                     warning: '#f59e0b',
                     info: '#3b82f6'
                 };
-                
+
                 notification.style.backgroundColor = colors[type] || colors.info;
-                
+
                 document.body.appendChild(notification);
-                
+
                 // إزالة الإشعار بعد 5 ثوان
                 setTimeout(() => {
                     notification.style.animation = 'slideOutRight 0.3s ease';

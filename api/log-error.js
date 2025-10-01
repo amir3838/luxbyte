@@ -53,7 +53,10 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Failed to log error' });
     }
 
-    return res.status(200).json({ success: true });
+    // Ensure we always return a proper JSON response
+    const response = { success: true };
+    
+    return res.status(200).json(response);
 
   } catch (error) {
     console.error('Log error handler error:', error);

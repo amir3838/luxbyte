@@ -113,7 +113,8 @@ export default async function handler(req, res) {
       totalCount = total || 0;
     }
 
-    return res.status(200).json({
+    // Ensure we always return a proper JSON response
+    const response = {
       success: true,
       data: data || [],
       pagination: {
@@ -127,7 +128,9 @@ export default async function handler(req, res) {
         status: status || 'all',
         admin_view: admin_view === 'true' && isAdmin
       }
-    });
+    };
+    
+    return res.status(200).json(response);
 
   } catch (error) {
     console.error('Get requests error:', error);

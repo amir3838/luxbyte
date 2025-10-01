@@ -128,13 +128,16 @@ export default async function handler(req, res) {
         type: 'success'
       }]);
 
-    return res.status(201).json({
+    // Ensure we always return a proper JSON response
+    const response = {
       success: true,
       request_id: data.id,
       business_type,
       status: 'pending',
       message: 'Business request submitted successfully'
-    });
+    };
+    
+    return res.status(201).json(response);
 
   } catch (error) {
     console.error('Business request error:', error);

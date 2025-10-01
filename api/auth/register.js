@@ -87,7 +87,8 @@ export default async function handler(req, res) {
         new_values: { email, first_name, last_name, role }
       }]);
 
-    return res.status(201).json({
+    // Ensure we always return a proper JSON response
+    const response = {
       success: true,
       user: {
         id: authData.user.id,
@@ -99,17 +100,19 @@ export default async function handler(req, res) {
         status: 'active'
       },
       message: 'User registered successfully'
-    });
+    };
+    
+    return res.status(201).json(response);
 
   } catch (error) {
     console.error('Registration error:', error);
-    
+
     // Ensure we always return a proper JSON response
     const errorResponse = {
       error: 'Internal server error',
       details: error.message || 'Unknown error occurred'
     };
-    
+
     return res.status(500).json(errorResponse);
   }
 }

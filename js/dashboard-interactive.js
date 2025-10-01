@@ -18,16 +18,16 @@ class InteractiveDashboard {
         try {
             // تهيئة Supabase
             await this.initSupabase();
-            
+
             // تحميل بيانات المستخدم
             await this.loadUserData();
-            
+
             // تهيئة الأحداث
             this.setupEventListeners();
-            
+
             // تحميل البيانات الحقيقية
             await this.loadRealData();
-            
+
             console.log('✅ لوحة التحكم التفاعلية جاهزة');
         } catch (error) {
             console.error('❌ خطأ في تهيئة لوحة التحكم:', error);
@@ -42,13 +42,13 @@ class InteractiveDashboard {
         try {
             const { getSupabase } = await import('./supabase-client.js');
             this.supabase = getSupabase();
-            
+
             // التحقق من حالة المصادقة
             const { data: { user } } = await this.supabase.auth.getUser();
             if (!user) {
                 throw new Error('المستخدم غير مسجل الدخول');
             }
-            
+
             this.user = user;
             console.log('✅ تم تهيئة Supabase بنجاح');
         } catch (error) {
@@ -72,10 +72,10 @@ class InteractiveDashboard {
 
             this.role = profile.account;
             this.profile = profile;
-            
+
             // تحديث واجهة المستخدم
             this.updateUserInterface();
-            
+
             console.log('✅ تم تحميل بيانات المستخدم:', this.role);
         } catch (error) {
             console.error('❌ خطأ في تحميل بيانات المستخدم:', error);
@@ -168,13 +168,13 @@ class InteractiveDashboard {
         try {
             // تحميل الإحصائيات
             await this.loadStats();
-            
+
             // تحميل المستندات
             await this.loadDocuments();
-            
+
             // تحميل البيانات حسب الدور
             await this.loadRoleSpecificData();
-            
+
             console.log('✅ تم تحميل البيانات الحقيقية');
         } catch (error) {
             console.error('❌ خطأ في تحميل البيانات:', error);
@@ -417,7 +417,7 @@ class InteractiveDashboard {
      */
     handleAction(action) {
         console.log('🎯 معالجة الإجراء:', action);
-        
+
         // يمكن إضافة منطق معالجة الإجراءات هنا
         switch (action) {
             case 'viewDocuments()':
@@ -451,12 +451,12 @@ class InteractiveDashboard {
         fileInput.type = 'file';
         fileInput.accept = 'image/*,application/pdf';
         fileInput.multiple = true;
-        
+
         fileInput.addEventListener('change', (e) => {
             const files = Array.from(e.target.files);
             this.uploadFiles(files);
         });
-        
+
         fileInput.click();
     }
 
@@ -484,7 +484,7 @@ class InteractiveDashboard {
             // رفع الملف إلى Supabase Storage
             const fileExt = file.name.split('.').pop();
             const fileName = `${this.user.id}/${Date.now()}.${fileExt}`;
-            
+
             const { data, error } = await this.supabase.storage
                 .from('kyc_docs')
                 .upload(fileName, file);
@@ -519,7 +519,7 @@ class InteractiveDashboard {
         try {
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
-            
+
             // حفظ البيانات في قاعدة البيانات
             const { error } = await this.supabase
                 .from('profiles')
@@ -542,7 +542,7 @@ class InteractiveDashboard {
         try {
             const { error } = await this.supabase.auth.signOut();
             if (error) throw error;
-            
+
             // توجيه إلى الصفحة الرئيسية
             window.location.href = '../index.html';
         } catch (error) {
@@ -575,7 +575,7 @@ class InteractiveDashboard {
             <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
             <span>${message}</span>
         `;
-        
+
         notification.style.cssText = `
             position: fixed;
             top: 20px;
@@ -592,18 +592,18 @@ class InteractiveDashboard {
             align-items: center;
             gap: 8px;
         `;
-        
+
         const colors = {
             success: '#10b981',
             error: '#ef4444',
             warning: '#f59e0b',
             info: '#3b82f6'
         };
-        
+
         notification.style.backgroundColor = colors[type] || colors.info;
-        
+
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
             notification.style.animation = 'slideOutRight 0.3s ease';
             setTimeout(() => {

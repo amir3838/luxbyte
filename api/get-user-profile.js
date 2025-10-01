@@ -55,7 +55,8 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'Profile not found' });
     }
 
-    return res.status(200).json({
+    // Ensure we always return a proper JSON response
+    const response = {
       success: true,
       data: {
         user: {
@@ -71,7 +72,9 @@ export default async function handler(req, res) {
           created_at: profile.created_at
         }
       }
-    });
+    };
+    
+    return res.status(200).json(response);
 
   } catch (error) {
     console.error('API error:', error);

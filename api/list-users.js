@@ -73,7 +73,8 @@ export default async function handler(req, res) {
         return { data: stats };
       });
 
-    return res.status(200).json({
+    // Ensure we always return a proper JSON response
+    const response = {
       success: true,
       data: {
         users: profiles || [],
@@ -85,7 +86,9 @@ export default async function handler(req, res) {
         },
         stats: stats || {}
       }
-    });
+    };
+    
+    return res.status(200).json(response);
 
   } catch (error) {
     console.error('API error:', error);

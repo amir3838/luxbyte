@@ -154,11 +154,14 @@ export default async function handler(req, res) {
         .eq('id', currentRequest.user_id);
     }
 
-    return res.status(200).json({
+    // Ensure we always return a proper JSON response
+    const response = {
       success: true,
       request: updatedRequest,
       message: `Request status updated to ${status} successfully`
-    });
+    };
+    
+    return res.status(200).json(response);
 
   } catch (error) {
     console.error('Update status error:', error);

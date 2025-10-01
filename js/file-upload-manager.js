@@ -123,7 +123,7 @@ function checkCameraSupport() {
     // Check basic support
     const hasMediaDevices = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
     const isSecureContext = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost';
-    
+
     // Check for camera devices
     if (hasMediaDevices && isSecureContext) {
         navigator.mediaDevices.enumerateDevices().then(devices => {
@@ -133,7 +133,7 @@ function checkCameraSupport() {
             console.warn('Error checking camera devices:', err);
         });
     }
-    
+
     return hasMediaDevices && isSecureContext;
 }
 

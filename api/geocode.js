@@ -68,10 +68,13 @@ export default async function handler(req, res) {
     // Cache the response for 10 minutes
     res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=60');
 
-    return res.status(200).json({
+    // Ensure we always return a proper JSON response
+    const response = {
       success: true,
       data: data
-    });
+    };
+    
+    return res.status(200).json(response);
 
   } catch (error) {
     console.error('Geocoding error:', error);

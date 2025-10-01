@@ -206,7 +206,8 @@ export default async function handler(req, res) {
     const processingTime = Date.now() - startTime;
     console.log(`Request ${requestId} completed in ${processingTime}ms`);
 
-    return res.status(200).json({
+    // Ensure we always return a proper JSON response
+    const response = {
       success: true,
       message: 'Account type updated successfully',
       request_id: requestId,
@@ -217,7 +218,9 @@ export default async function handler(req, res) {
         changed_by: changed_by || 'admin_api',
         updated_at: new Date().toISOString()
       }
-    });
+    };
+    
+    return res.status(200).json(response);
 
   } catch (error) {
     console.error(`Request ${requestId} error:`, error);
