@@ -300,12 +300,16 @@ class TranslationManager {
 // Initialize translation manager when DOM is ready
 let translationManager;
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+function initializeTranslation() {
+    if (!translationManager) {
         translationManager = new TranslationManager();
-    });
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeTranslation);
 } else {
-    translationManager = new TranslationManager();
+    initializeTranslation();
 }
 
 // Export for global access

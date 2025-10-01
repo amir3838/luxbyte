@@ -4,8 +4,10 @@
   "description": "LUXBYTE Web Platform",
   "main": "index.html",
   "scripts": {
-    "dev": "vercel dev",
+    "dev": "http-server -c-1 -p 3000 -a 127.0.0.1 .",
     "build": "node -e \"const fs=require('fs'),p='./public/config.json';fs.mkdirSync('./public',{recursive:true});fs.writeFileSync(p, JSON.stringify({SUPABASE_URL: process.env.SUPABASE_URL || 'https://qjsvgpvbtrcnbhcjdcci.supabase.co',SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || 'sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e',STORAGE_BUCKET: process.env.STORAGE_BUCKET || 'kyc_docs',MAX_UPLOAD_MB: Number(process.env.MAX_UPLOAD_MB || 10),ALLOWED_MIME: (process.env.ALLOWED_MIME || 'image/jpeg,image/png,application/pdf').split(','),FIREBASE_API_KEY: process.env.FIREBASE_API_KEY || 'AIzaSyBIlSKMkFIyY1OFYqqImwx5Lo2nHW5Foss',FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN || 'studio-1f95z.firebaseapp.com',FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || 'studio-1f95z',FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID || '922681782984',FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || '1:922681782984:web:d3840713be209e4a60abfd',FIREBASE_VAPID_KEY: process.env.FIREBASE_VAPID_KEY || 'BJ3SXe0Nof9H4KJpvgG80LVUeDTNxdh0O2z3aOIzEzrFxd3bAn4ixhhouG7VV11zmK8giQ-UUGWeAP3JK8MpbXk'}, null, 2)); console.log('Wrote', p)\"",
+    "test:smoke": "node scripts/test-smoke.mjs",
+    "test:browser": "node -e \"console.log('Run browser tests by opening: ' + (process.env.BASE_URL || 'http://localhost:3000') + '?test=true')\"",
     "deploy": "vercel --prod"
   },
   "dependencies": {
@@ -13,6 +15,7 @@
     "firebase": "^12.3.0"
   },
   "devDependencies": {
+    "http-server": "^14.1.1",
     "vercel": "^32.0.0"
   },
   "engines": {

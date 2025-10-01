@@ -367,6 +367,16 @@
         });
     </script>
 
+    <!-- Smoke Tests (only in test mode) -->
+    <script type="module">
+        if (window.location.search.includes('test=true')) {
+            import('./test-smoke.js').then(module => {
+                console.log('🧪 Smoke tests loaded');
+                // Tests will auto-run after DOM is ready
+            });
+        }
+    </script>
+
     <!-- Ticker Marquee -->
     <div class="ticker" role="status" aria-live="polite">
         <div class="ticker__track">

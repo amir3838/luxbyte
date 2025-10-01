@@ -29,11 +29,9 @@ class PushNotificationManager {
         return;
       }
 
-      // Initialize Supabase client
-      this.supabase = window.supabase?.createClient(
-        window.CONFIG.SUPABASE_URL,
-        window.CONFIG.SUPABASE_ANON_KEY
-      );
+      // Use singleton Supabase client
+      const { getSupabase } = await import('./supabase-client.js');
+      this.supabase = getSupabase();
 
       if (!this.supabase) {
         throw new Error('Supabase client not available');

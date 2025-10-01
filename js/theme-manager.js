@@ -14,6 +14,7 @@ class ThemeManager {
      * تهيئة مدير الثيمات
      */
     init() {
+        // Apply theme immediately to prevent flash
         this.applyTheme(this.currentTheme);
         this.createThemeToggle();
         this.setupThemeListeners();
@@ -330,12 +331,16 @@ class ThemeManager {
 // Initialize theme manager when DOM is ready
 let themeManager;
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+function initializeTheme() {
+    if (!themeManager) {
         themeManager = new ThemeManager();
-    });
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeTheme);
 } else {
-    themeManager = new ThemeManager();
+    initializeTheme();
 }
 
 // Export for global access

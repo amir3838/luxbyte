@@ -17,6 +17,7 @@
 - **Backend**: Supabase (PostgreSQL, Auth, Storage)
 - **Deployment**: Vercel
 - **Version Control**: Git & GitHub
+- **Security**: Row Level Security (RLS), CSP Headers
 
 ## 📁 هيكل المشروع / Project Structure
 
@@ -103,6 +104,78 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 - العربية (الافتراضية)
 - الإنجليزية
+
+## 🚀 التشغيل المحلي / Running Locally
+
+### متطلبات النظام
+- Node.js 18+
+- npm أو yarn
+
+### خطوات التشغيل
+```bash
+# تثبيت التبعيات
+npm install
+
+# تشغيل السيرفر المحلي
+npm run dev
+
+# في terminal آخر - اختبار سريع
+node scripts/test-smoke.mjs
+```
+
+### اختبارات الأمان
+```bash
+# اختبار شامل
+npm run test:smoke
+
+# اختبار في المتصفح
+npm run test:browser
+# ثم افتح: http://localhost:3000?test=true
+```
+
+## 🔒 الأمان والحماية / Security & RLS
+
+### تطبيق سياسات RLS
+
+1. **افتح Supabase Dashboard** → **SQL Editor**
+2. **انسخ والصق** محتوى `supabase/rls_policies_final.sql`
+3. **اضغط Run** لتطبيق جميع السياسات
+
+### اختبار الأمان
+
+```sql
+-- في Supabase SQL Editor
+-- اختبار كالمستخدم 1
+SET LOCAL "request.jwt.claims" TO '{"sub": "user1-uuid"}';
+SELECT * FROM documents; -- يجب أن يرى مستنداته فقط
+
+-- اختبار كالمستخدم 2
+SET LOCAL "request.jwt.claims" TO '{"sub": "user2-uuid"}';
+SELECT * FROM documents; -- يجب أن يرى مستنداته فقط
+```
+
+### التحقق من السياسات
+
+```sql
+-- فحص حالة RLS
+SELECT tablename, rowsecurity as rls_enabled
+FROM pg_tables
+WHERE schemaname = 'public'
+AND tablename IN ('documents', 'profiles', 'business_requests');
+
+-- فحص عدد السياسات
+SELECT schemaname, tablename, COUNT(*) as policy_count
+FROM pg_policies
+WHERE schemaname IN ('public', 'storage')
+GROUP BY schemaname, tablename;
+```
+
+### اختبار الرفع
+
+1. **سجل الدخول** كالمستخدم 1
+2. **ارفع ملف** (يجب أن ينجح)
+3. **سجل الدخول** كالمستخدم 2
+4. **حاول الوصول** لملفات المستخدم 1 (يجب أن يفشل)
 
 ## 📞 التواصل / Contact
 

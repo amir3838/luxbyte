@@ -161,11 +161,14 @@ class SignupNavigation {
             }
         }
 
-        // Password confirmation
+        // Password confirmation with normalization
         const passwordInput = currentSection.querySelector('input[name="password"]');
         const confirmPasswordInput = currentSection.querySelector('input[name="confirm_password"]');
         if (passwordInput && confirmPasswordInput && passwordInput.value && confirmPasswordInput.value) {
-            if (passwordInput.value !== confirmPasswordInput.value) {
+            const password = this.normalizeText(passwordInput.value);
+            const confirmPassword = this.normalizeText(confirmPasswordInput.value);
+
+            if (password !== confirmPassword) {
                 isValid = false;
                 errors.push('كلمات المرور غير متطابقة');
                 this.highlightError(confirmPasswordInput);
@@ -186,6 +189,19 @@ class SignupNavigation {
     getFieldLabel(input) {
         const label = input.closest('.form-group')?.querySelector('label');
         return label ? label.textContent.replace('*', '').trim() : 'هذا الحقل';
+    }
+
+    /**
+     * Normalize text for comparison (fixes RTL/LTR and Arabic/English numbers)
+     * تطبيع النص للمقارنة (إصلاح RTL/LTR والأرقام العربية/الإنجليزية)
+     */
+    normalizeText(text) {
+        if (!text) return '';
+
+        return text.trim()
+            .replace(/\u200f|\u200e/g, '')      // Remove directional marks
+            .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)) // Arabic to English numbers
+            .replace(/\s+/g, ' ');              // Normalize whitespace
     }
 
     /**

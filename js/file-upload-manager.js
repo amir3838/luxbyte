@@ -96,17 +96,22 @@ async function openCameraOrFile(documentType, accept = "image/*") {
     const isCameraSupported = checkCameraSupport();
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    if (isCameraSupported && isMobile) {
-        // Try camera first on mobile
-        try {
-            await openCamera(documentType, accept);
-        } catch (error) {
-            console.warn('Camera failed, falling back to file selection:', error);
+    try {
+        if (isCameraSupported && isMobile) {
+            // Try camera first on mobile
+            try {
+                await openCamera(documentType, accept);
+            } catch (error) {
+                console.warn('Camera failed, falling back to file selection:', error);
+                openFileSelection(documentType, accept);
+            }
+        } else {
+            // Use file selection on desktop or if camera not supported
             openFileSelection(documentType, accept);
         }
-    } else {
-        // Use file selection on desktop or if camera not supported
-        openFileSelection(documentType, accept);
+    } catch (error) {
+        console.error('Error opening camera/file selection:', error);
+        showToast('فشل في فتح الكاميرا أو اختيار الملف', 'error');
     }
 }
 
@@ -469,7 +474,10 @@ async function saveFileToDatabase({ userId, documentType, filePath, publicUrl, f
  */
 function updateFileUploadUI(documentType, imageUrl, filename) {
     const container = document.getElementById(`file-upload-${documentType}`);
-    if (!container) return;
+    if (!container) {
+        console.warn(`Container not found: file-upload-${documentType}`);
+        return;
+    }
 
     // Remove existing preview
     const existingPreview = container.querySelector('.file-preview');
@@ -610,6 +618,15 @@ async function removeFile(documentType) {
     } catch (error) {
         console.error('Remove file failed:', error);
         showToast('فشل في حذف الملف', 'error');
+    } finally {
+        // Ensure UI is reset even if there's an error
+        const container = document.getElementById(`file-upload-${documentType}`);
+        if (container) {
+            const uploadBtn = container.querySelector('.upload-btn');
+            if (uploadBtn) {
+                uploadBtn.innerHTML = '<i class="fas fa-camera"></i> تصوير/رفع';
+            }
+        }
     }
 }
 
