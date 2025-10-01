@@ -120,9 +120,21 @@ async function openCameraOrFile(documentType, accept = "image/*") {
  * فحص دعم الكاميرا
  */
 function checkCameraSupport() {
-    return !!(navigator.mediaDevices &&
-              navigator.mediaDevices.getUserMedia &&
-              window.isSecureContext);
+    // Check basic support
+    const hasMediaDevices = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+    const isSecureContext = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost';
+    
+    // Check for camera devices
+    if (hasMediaDevices && isSecureContext) {
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+            const hasCamera = devices.some(device => device.kind === 'videoinput');
+            console.log('Camera devices found:', hasCamera);
+        }).catch(err => {
+            console.warn('Error checking camera devices:', err);
+        });
+    }
+    
+    return hasMediaDevices && isSecureContext;
 }
 
 /**
@@ -133,22 +145,64 @@ async function openCamera(documentType, accept) {
     console.log(`📹 Opening camera for: ${documentType}`);
 
     try {
-        // Request camera permission
-        const stream = await navigator.mediaDevices.getUserMedia({
+        // Show loading message
+        showToast('جاري فتح الكاميرا...', 'info');
+
+        // Request camera permission with better error handling
+        const constraints = {
             video: {
                 facingMode: { ideal: 'environment' }, // Use back camera
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
+                width: { ideal: 1280, min: 640 },
+                height: { ideal: 720, min: 480 }
             },
             audio: false
-        });
+        };
+
+        // Try to get camera stream
+        let stream;
+        try {
+            stream = await navigator.mediaDevices.getUserMedia(constraints);
+        } catch (error) {
+            // If back camera fails, try front camera
+            if (error.name === 'NotReadableError' || error.name === 'OverconstrainedError') {
+                console.warn('Back camera failed, trying front camera:', error);
+                constraints.video.facingMode = { ideal: 'user' };
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+            } else {
+                throw error;
+            }
+        }
 
         // Create camera modal
         createCameraModal(stream, documentType, accept);
 
     } catch (error) {
         console.error('Camera access failed:', error);
+        showToast(getCameraErrorMessage(error), 'error');
         throw new Error(getCameraErrorMessage(error));
+    }
+}
+
+/**
+ * Get user-friendly camera error message
+ * الحصول على رسالة خطأ مفهومة للكاميرا
+ */
+function getCameraErrorMessage(error) {
+    switch (error.name) {
+        case 'NotAllowedError':
+            return 'تم رفض إذن الكاميرا. يرجى السماح بالوصول للكاميرا في إعدادات المتصفح';
+        case 'NotFoundError':
+            return 'لم يتم العثور على كاميرا. تأكد من وجود كاميرا متصلة';
+        case 'NotReadableError':
+            return 'الكاميرا قيد الاستخدام من قبل تطبيق آخر';
+        case 'OverconstrainedError':
+            return 'إعدادات الكاميرا غير مدعومة. جاري المحاولة بكاميرا أخرى';
+        case 'SecurityError':
+            return 'خطأ أمني. تأكد من استخدام HTTPS';
+        case 'TypeError':
+            return 'المتصفح لا يدعم الكاميرا';
+        default:
+            return `خطأ في الكاميرا: ${error.message}`;
     }
 }
 

@@ -612,19 +612,26 @@
     <!-- Dashboard Scripts -->
     <script type="module" src="../js/supabase-client.js"></script>
     <script src="../js/dashboard.js"></script>
+    <script src="../js/dashboard-interactive.js"></script>
     <script src="../js/driver-dashboard.js"></script>
 
     <script>
-        // تهيئة لوحة تحكم السائق الرئيسي
+        // تهيئة لوحة تحكم السائق الرئيسي التفاعلية
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                // تهيئة لوحة التحكم
-                console.log('🚚 تهيئة لوحة تحكم السائق');
+                console.log('🚚 تهيئة لوحة تحكم السائق التفاعلية');
 
                 // انتظار تحميل جميع المودولات
                 await new Promise(resolve => setTimeout(resolve, 100));
 
-                // تهيئة لوحة التحكم
+                // تهيئة لوحة التحكم التفاعلية
+                if (typeof InteractiveDashboard !== 'undefined') {
+                    window.interactiveDashboard = new InteractiveDashboard();
+                } else {
+                    console.error('InteractiveDashboard class not found');
+                }
+
+                // تهيئة لوحة التحكم التقليدية
                 if (typeof DriverDashboard !== 'undefined') {
                     window.driverDashboard = new DriverDashboard();
                 } else {

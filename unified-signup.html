@@ -10,6 +10,10 @@
     <meta name="theme-color" content="#6b7cff">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!-- Location and Camera Permissions -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -572,10 +576,12 @@
 
             if (getLocationBtn && coordinatesInput) {
                 getLocationBtn.addEventListener('click', function() {
+                    // طلب إذن الموقع أولاً
                     if (navigator.geolocation) {
                         getLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>جاري الحصول على الموقع...</span>';
                         getLocationBtn.disabled = true;
 
+                        // طلب إذن الموقع مع رسالة واضحة
                         navigator.geolocation.getCurrentPosition(
                             function(position) {
                                 const lat = position.coords.latitude;
@@ -586,35 +592,8 @@
                                 getLocationBtn.style.background = '#10b981';
                                 getLocationBtn.style.color = 'white';
 
-                                // Reset after 2 seconds
-                                setTimeout(() => {
-                                    getLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>الحصول على الموقع</span>';
-                                    getLocationBtn.style.background = '';
-                                    getLocationBtn.style.color = '';
-                                    getLocationBtn.disabled = false;
-                                }, 2000);
-                            },
-                            function(error) {
-                                console.error('Error getting location:', error);
-
-                                let errorMessage = 'حدث خطأ في الحصول على الموقع';
-                                switch(error.code) {
-                                    case error.PERMISSION_DENIED:
-                                        errorMessage = 'تم رفض إذن الموقع';
-                                        break;
-                                    case error.POSITION_UNAVAILABLE:
-                                        errorMessage = 'الموقع غير متاح';
-                                        break;
-                                    case error.TIMEOUT:
-                                        errorMessage = 'انتهت مهلة الحصول على الموقع';
-                                        break;
-                                }
-
-                                getLocationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>خطأ</span>';
-                                getLocationBtn.style.background = '#ef4444';
-                                getLocationBtn.style.color = 'white';
-
-                                alert(errorMessage);
+                                // إظهار رسالة نجاح
+                                showNotification('تم الحصول على الموقع بنجاح!', 'success');
 
                                 // Reset after 3 seconds
                                 setTimeout(() => {
@@ -624,17 +603,117 @@
                                     getLocationBtn.disabled = false;
                                 }, 3000);
                             },
+                            function(error) {
+                                console.error('Error getting location:', error);
+
+                                let errorMessage = 'حدث خطأ في الحصول على الموقع';
+                                let actionMessage = '';
+                                
+                                switch(error.code) {
+                                    case error.PERMISSION_DENIED:
+                                        errorMessage = 'تم رفض إذن الموقع';
+                                        actionMessage = 'يرجى السماح بالوصول للموقع في إعدادات المتصفح';
+                                        break;
+                                    case error.POSITION_UNAVAILABLE:
+                                        errorMessage = 'الموقع غير متاح';
+                                        actionMessage = 'تأكد من تفعيل GPS في الجهاز';
+                                        break;
+                                    case error.TIMEOUT:
+                                        errorMessage = 'انتهت مهلة الحصول على الموقع';
+                                        actionMessage = 'يرجى المحاولة مرة أخرى';
+                                        break;
+                                }
+
+                                getLocationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>خطأ</span>';
+                                getLocationBtn.style.background = '#ef4444';
+                                getLocationBtn.style.color = 'white';
+
+                                // إظهار رسالة خطأ مفصلة
+                                showNotification(`${errorMessage}. ${actionMessage}`, 'error');
+
+                                // Reset after 4 seconds
+                                setTimeout(() => {
+                                    getLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>الحصول على الموقع</span>';
+                                    getLocationBtn.style.background = '';
+                                    getLocationBtn.style.color = '';
+                                    getLocationBtn.disabled = false;
+                                }, 4000);
+                            },
                             {
                                 enableHighAccuracy: true,
-                                timeout: 10000,
-                                maximumAge: 60000
+                                timeout: 15000,
+                                maximumAge: 300000 // 5 minutes
                             }
                         );
                     } else {
-                        alert('المتصفح لا يدعم الحصول على الموقع الجغرافي');
+                        showNotification('المتصفح لا يدعم الحصول على الموقع الجغرافي', 'error');
                     }
                 });
             }
+
+            // دالة إظهار الإشعارات
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                
+                // إضافة الأنماط
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 16px 20px;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 10000;
+                    max-width: 400px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    animation: slideInRight 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                `;
+                
+                // تحديد لون الإشعار
+                const colors = {
+                    success: '#10b981',
+                    error: '#ef4444',
+                    warning: '#f59e0b',
+                    info: '#3b82f6'
+                };
+                
+                notification.style.backgroundColor = colors[type] || colors.info;
+                
+                document.body.appendChild(notification);
+                
+                // إزالة الإشعار بعد 5 ثوان
+                setTimeout(() => {
+                    notification.style.animation = 'slideOutRight 0.3s ease';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }, 5000);
+            }
+
+            // إضافة CSS للرسوم المتحركة
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
 </body>

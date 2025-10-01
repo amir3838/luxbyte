@@ -35,7 +35,7 @@
   --text-light: var(--gray-600);
   --border: var(--gray-200);
   --border-hover: var(--gray-300);
-  
+
   /* الألوان الخاصة */
   --gold: #d4af37;
   --gold-light: #f4d03f;
@@ -506,12 +506,12 @@ a:hover {
     margin: 8px 0;
     padding: 16px;
   }
-  
+
   .btn {
     padding: 10px 20px;
     font-size: 14px;
   }
-  
+
   .form-control {
     padding: 10px 12px;
     font-size: 14px;
