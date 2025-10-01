@@ -975,19 +975,20 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(render, 1000);
     setTimeout(render, 2000);
     setTimeout(render, 3000);
-    
+    setTimeout(render, 5000);
+
     // Listen for tab clicks
     document.querySelectorAll('[data-tab="documents"], .tab-documents, #tab-documents')
       .forEach(el => el.addEventListener('click', () => {
         setTimeout(render, 200);
       }));
-      
+
     // Force render on any tab click
     document.querySelectorAll('.tab, [data-tab]')
       .forEach(el => el.addEventListener('click', () => {
         setTimeout(render, 200);
       }));
-      
+
     // Force render when documents section becomes visible
     const observer = new MutationObserver(() => {
       const docsSection = document.getElementById('docs-uploader');
@@ -995,23 +996,36 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(render, 100);
       }
     });
-    
+
     observer.observe(document.body, {
       childList: true,
       subtree: true,
       attributes: true
     });
-    
+
     // Force render on window load
     window.addEventListener('load', () => {
       setTimeout(render, 500);
     });
-    
+
     // Force render when DOM is ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         setTimeout(render, 500);
       });
     }
-  } catch(e){ console.error('docs uploader init failed', e); }
+  } catch(e){ 
+    console.error('docs uploader init failed', e);
+    // Fallback: try to render after a delay
+    setTimeout(() => {
+      try {
+        const host = document.getElementById('docs-uploader');
+        if (host) {
+          host.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">جاري تحميل أزرار رفع المستندات...</div>';
+        }
+      } catch(fallbackError) {
+        console.error('Fallback render failed', fallbackError);
+      }
+    }, 2000);
+  }
 })();

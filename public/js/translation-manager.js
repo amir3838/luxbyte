@@ -106,6 +106,25 @@ setTimeout(() => {
   }
 }, 1000);
 
+// Force translation on window load
+window.addEventListener('load', () => {
+  if (typeof applyLanguage === 'function') {
+    applyLanguage('ar');
+  }
+});
+
+// Force translation when DOM changes
+const observer = new MutationObserver(() => {
+  if (typeof applyLanguage === 'function') {
+    applyLanguage('ar');
+  }
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true
+});
+
 // Legacy class for compatibility
 class TranslationManager {
     constructor() {
