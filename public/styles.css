@@ -653,19 +653,22 @@ a:hover {
 
 /* خلفية الموقع */
 :root {
-  --site-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --site-bg: url("/assets/images/backgrounds/screen-1.png");
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-html, body {
-  height: 100%;
+html, body { 
+  height: 100%; 
   margin: 0;
   padding: 0;
 }
 
 body{
-  background: var(--site-bg);
+  background-image: var(--site-bg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
 }
@@ -673,18 +676,19 @@ body{
 /* كروت عائمة احترافية */
 .card, .panel, .box, .content-card{
   background: var(--card-bg);
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: var(--card-shadow);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
-  margin: 16px 0;
+  margin: 12px 0;
   overflow: hidden;
+  max-width: 500px;
 }
 
 .card:hover, .panel:hover, .box:hover, .content-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 /* إزالة الأنماط المتعارضة للكروت */
@@ -692,12 +696,14 @@ body{
   background: transparent;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   margin: 0;
-  padding: 20px;
+  padding: 16px;
 }
 
 .card .card-description {
-  padding: 0 20px 20px;
+  padding: 0 16px 16px;
   margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 /* تحسين الهيدر */
