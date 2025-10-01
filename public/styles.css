@@ -629,40 +629,83 @@ a:hover {
   flex-wrap: wrap;
 }
 
+/* خلفية الموقع */
+:root {
+  --site-bg: url("/assets/images/backgrounds/hero-bg.jpg");
+}
+
+html, body { 
+  height: 100%; 
+}
+
+body{
+  background-image: var(--site-bg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* تأكد إن الكروت فوق الخلفية */
+.card, .panel, .box, .content-card{
+  background: #fff;
+  border-radius: 12px;
+}
+
+/* صغّر اللوجو وثبّته في الركن بدون ما يغطي العناصر */
+#bg-corner-logo{
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  width: clamp(72px, 10vw, 140px);
+  height: auto;
+  z-index: 5;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.2));
+}
+
+@media (max-width:480px){
+  #bg-corner-logo{ 
+    top: 12px; 
+    right: 12px; 
+    width: 88px; 
+  }
+}
+
 /* Document uploader styles */
-#docs-uploader { 
-  display: grid; 
-  gap: 12px; 
+#docs-uploader {
+  display: grid;
+  gap: 12px;
 }
 
-.doc-item { 
-  border: 1px dashed var(--border-color, #d1d5db); 
-  border-radius: 12px; 
-  padding: 10px; 
-  background: var(--surface, #fff); 
+.doc-item {
+  border: 1px dashed var(--border-color, #d1d5db);
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--surface, #fff);
 }
 
-.doc-title { 
-  font-weight: 600; 
-  margin-bottom: 6px; 
+.doc-title {
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
-.doc-actions { 
-  display: flex; 
-  gap: 8px; 
-  align-items: center; 
-  flex-wrap: wrap; 
+.doc-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.doc-preview img { 
-  max-height: 90px; 
-  border-radius: 8px; 
+.doc-preview img {
+  max-height: 90px;
+  border-radius: 8px;
 }
 
-.doc-error { 
-  color: #c00; 
-  font-size: .9rem; 
-  margin-top: 4px; 
+.doc-error {
+  color: #c00;
+  font-size: .9rem;
+  margin-top: 4px;
 }
 
 .is-loading::after {

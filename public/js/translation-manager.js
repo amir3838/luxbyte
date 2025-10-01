@@ -20,8 +20,8 @@ function applyLanguage(lang){
   });
 
   // Fallback to humanize keys if translation fails
-  function humanizeKey(k){ 
-    return k.replace(/^([a-z_]+\.)+/,'').replace(/[_\.]/g,' ').trim(); 
+  function humanizeKey(k){
+    return k.replace(/^([a-z_]+\.)+/,'').replace(/[_\.]/g,' ').trim();
   }
   document.querySelectorAll('[data-i18n], .i18n').forEach(el=>{
     if(/^[a-z0-9_\.]+$/i.test(el.textContent.trim())) {
