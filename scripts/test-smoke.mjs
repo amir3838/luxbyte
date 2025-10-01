@@ -25,12 +25,12 @@ try {
 
     // Test 2: Auth page loads
     console.log('2️⃣ Testing auth page...');
-    await fetchJson('/auth.html');
+    await fetchJson('/public/auth.html');
     console.log('✅ Auth page OK');
 
     // Test 3: Unified signup loads
     console.log('3️⃣ Testing unified signup...');
-    await fetchJson('/unified-signup.html');
+    await fetchJson('/public/unified-signup.html');
     console.log('✅ Unified signup OK');
 
     // Test 4: Check if API endpoints exist (optional)
@@ -45,7 +45,7 @@ try {
     // Test 5: Check static assets
     console.log('5️⃣ Testing static assets...');
     try {
-        await fetchJson('/assets/app_icon/LUXBYTEicon.png');
+        await fetchJson('/public/assets/app_icon/LUXBYTEicon.png');
         console.log('✅ Static assets OK');
     } catch (e) {
         console.log('⚠️ Static assets not found (check paths)');
@@ -53,7 +53,7 @@ try {
 
     // Test 6: Check SPA routing (should not 404)
     console.log('6️⃣ Testing SPA routing...');
-    const spaResponse = await fetch(base + '/dashboard/pharmacy');
+    const spaResponse = await fetch(base + '/public/dashboard/pharmacy');
     if (spaResponse.status === 200) {
         console.log('✅ SPA routing OK');
     } else {
