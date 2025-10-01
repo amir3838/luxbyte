@@ -97,28 +97,46 @@
 <body>
     <!-- Navigation will be injected by js/navigation-bar.js -->
 
+    <!-- Top Navigation Bar -->
+    <header class="site-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;">
+            <div class="brand" style="display: flex; align-items: center; gap: 12px;">
+                <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" style="width: 32px; height: 32px; object-fit: contain;">
+                <span style="font-size: 18px; font-weight: 600; color: #333;">LUXBYTE</span>
+            </div>
+            <nav class="auth-actions" style="display: flex; gap: 12px; align-items: center;">
+                <a href="/auth.html" class="btn" style="padding: 8px 16px; font-size: 14px; background: rgba(255, 255, 255, 0.2); color: #333; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; text-decoration: none;">
+                    تسجيل الدخول
+                </a>
+                <a href="/choose-role.html" class="btn" style="padding: 8px 16px; font-size: 14px; background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; text-decoration: none;">
+                    إنشاء حساب
+                </a>
+            </nav>
+        </div>
+    </header>
+
     <!-- Background Logo -->
     <img id="bg-corner-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE">
 
     <!-- Main Content -->
-    <main class="container" style="margin-top: 80px;">
+    <main class="container" style="margin-top: 100px; padding: 0 20px;">
         <!-- Hero Section -->
-        <section class="card text-center mb-8 hero-parallax">
-            <div class="card-header" style="justify-content: center; flex-direction: column; align-items: center;">
+        <section class="card text-center mb-8 hero-parallax" style="max-width: 800px; margin: 40px auto;">
+            <div class="card-header" style="justify-content: center; flex-direction: column; align-items: center; padding: 40px 20px;">
                 <div class="card-icon" style="margin-bottom: 20px;">
-                    <img id="hero-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="لوجو لوكس بايت" class="logo-glow" style="width: 40px; height: 40px; object-fit: contain;" loading="eager" decoding="async">
+                    <img id="hero-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="لوجو لوكس بايت" class="logo-glow" style="width: 60px; height: 60px; object-fit: contain;" loading="eager" decoding="async">
                 </div>
                 <div>
-                    <h1 class="card-title fade-in" style="font-size: 32px; margin-bottom: 8px;">LUXBYTE</h1>
-                    <p class="fade-in-slow" style="color: #666; font-size: 18px;" data-i18n="brand.luxbyte_llc">شركة لوكس بايت المحدودة المسئولية</p>
+                    <h1 class="card-title fade-in" style="font-size: 28px; margin-bottom: 8px; color: #333;">LUXBYTE</h1>
+                    <p class="fade-in-slow" style="color: #666; font-size: 16px;" data-i18n="brand.luxbyte_llc">شركة لوكس بايت المحدودة المسئولية</p>
                 </div>
             </div>
-            <p class="card-description fade-in-slow" style="font-size: 18px; line-height: 1.8;" data-i18n="home.tagline">
+            <p class="card-description fade-in-slow" style="font-size: 16px; line-height: 1.6; padding: 0 20px;" data-i18n="home.tagline">
                 منصة شاملة للتجارة الإلكترونية وخدمات التوصيل، تقدم حلول متكاملة للمنشآت التجارية
                 والأفراد في مصر. انضم إلينا واكتشف عالمًا جديدًا من الفرص التجارية.
             </p>
-            <div class="fade-in-slow" style="margin-top: 32px;">
-                <a href="auth.html" class="btn" style="font-size: 18px; padding: 16px 32px;" data-i18n="home.cta_start_journey" aria-label="ابدأ رحلتك الآن - اذهب لتسجيل الدخول">
+            <div class="fade-in-slow" style="margin-top: 32px; padding: 0 20px 20px;">
+                <a href="auth.html" class="btn" style="font-size: 16px; padding: 12px 24px; background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none;" data-i18n="home.cta_start_journey" aria-label="ابدأ رحلتك الآن - اذهب لتسجيل الدخول">
                     <i class="fas fa-rocket" aria-hidden="true"></i>
                     ابدأ رحلتك الآن
                 </a>
@@ -126,18 +144,18 @@
         </section>
 
         <!-- Platform Cards -->
-        <section class="mb-8">
-            <h2 class="fade-in text-center" style="margin-bottom: 32px; font-size: 28px; color: #eee;" data-i18n="home.choose_platform">اختر منصتك</h2>
-            <div class="grid">
+        <section class="mb-8" style="max-width: 1000px; margin: 0 auto; padding: 0 20px;">
+            <h2 class="fade-in text-center" style="margin-bottom: 32px; font-size: 24px; color: #333; font-weight: 600;" data-i18n="home.choose_platform">اختر منصتك</h2>
+            <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
                 <!-- ShopEG Card -->
-                <div class="card reveal">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <img src="/assets/images/shopeg_logo.webp" alt="شوب إي جي" class="logo-glow" style="width: 50px; height: 50px; object-fit: contain;" loading="lazy" decoding="async">
+                <div class="card reveal" style="padding: 24px; min-height: 280px;">
+                    <div class="card-header" style="flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px;">
+                        <div class="card-icon" style="margin-bottom: 16px;">
+                            <img src="/assets/images/shopeg_logo.webp" alt="شوب إي جي" class="logo-glow" style="width: 60px; height: 60px; object-fit: contain;" loading="lazy" decoding="async">
                         </div>
                         <div>
-                            <h3 class="card-title" data-i18n="home.shop_eg.title">شوب إي جي <span class="tick">✓</span></h3>
-                            <p class="muted" data-i18n="home.shop_eg.subtitle">منصة التجارة الإلكترونية</p>
+                            <h3 class="card-title" style="font-size: 20px; margin-bottom: 8px;" data-i18n="home.shop_eg.title">شوب إي جي <span class="tick">✓</span></h3>
+                            <p class="muted" style="font-size: 14px; color: #666;" data-i18n="home.shop_eg.subtitle">منصة التجارة الإلكترونية</p>
                         </div>
                     </div>
                     <p class="card-description" data-i18n="home.shop_eg.desc">
@@ -169,14 +187,14 @@
                 </div>
 
                 <!-- Master Driver Card -->
-                <div class="card reveal">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <img src="./assets/images/activities/driver.png" alt="ماستر درايفر" class="logo-glow" style="width: 50px; height: 50px; object-fit: contain;" loading="lazy" decoding="async">
+                <div class="card reveal" style="padding: 24px; min-height: 280px;">
+                    <div class="card-header" style="flex-direction: column; align-items: center; text-align: center; margin-bottom: 20px;">
+                        <div class="card-icon" style="margin-bottom: 16px;">
+                            <img src="./assets/images/activities/driver.png" alt="ماستر درايفر" class="logo-glow" style="width: 60px; height: 60px; object-fit: contain;" loading="lazy" decoding="async">
                         </div>
                         <div>
-                            <h3 class="card-title" data-i18n="home.master_driver.title">ماستر درايفر <span class="tick">✓</span></h3>
-                            <p class="muted" data-i18n="home.master_driver.subtitle">منصة خدمات التوصيل</p>
+                            <h3 class="card-title" style="font-size: 20px; margin-bottom: 8px;" data-i18n="home.master_driver.title">ماستر درايفر <span class="tick">✓</span></h3>
+                            <p class="muted" style="font-size: 14px; color: #666;" data-i18n="home.master_driver.subtitle">منصة خدمات التوصيل</p>
                         </div>
                     </div>
                     <p class="card-description" data-i18n="home.master_driver.desc">

@@ -21,7 +21,7 @@ const fallbackDict = {
     "brand.luxbyte_llc": "شركة لوكس بايت المحدودة المسئولية",
     "home.features_block.security_title": "أمان وموثوقية",
     "home.features_block.security_desc": "نستخدم أحدث تقنيات الأمان لحماية بياناتك ومعاملاتك المالية",
-    "home.features_block.ease_title": "سهولة الاستخدام", 
+    "home.features_block.ease_title": "سهولة الاستخدام",
     "home.features_block.ease_desc": "واجهة بسيطة وسهلة الاستخدام تعمل على جميع الأجهزة",
     "home.features_block.support_title": "دعم فني متميز",
     "home.features_block.support_desc": "فريق دعم فني متخصص متاح على مدار الساعة لمساعدتك",

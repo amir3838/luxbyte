@@ -631,25 +631,47 @@ a:hover {
 
 /* خلفية الموقع */
 :root {
-  --site-bg: url("/assets/images/backgrounds/hero-bg.jpg");
+  --site-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-html, body {
-  height: 100%;
+html, body { 
+  height: 100%; 
+  margin: 0;
+  padding: 0;
 }
 
 body{
-  background-image: var(--site-bg);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background: var(--site-bg);
   background-attachment: fixed;
+  min-height: 100vh;
 }
 
-/* تأكد إن الكروت فوق الخلفية */
+/* كروت عائمة احترافية */
 .card, .panel, .box, .content-card{
-  background: #fff;
-  border-radius: 12px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  margin: 16px 0;
+}
+
+.card:hover, .panel:hover, .box:hover, .content-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* تحسين الهيدر */
+.site-header, .header, .top-bar {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 /* صغّر اللوجو وثبّته في الركن بدون ما يغطي العناصر */

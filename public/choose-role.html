@@ -45,11 +45,29 @@
         </div>
     </header>
 
+    <!-- Top Navigation Bar -->
+    <header class="site-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;">
+            <div class="brand" style="display: flex; align-items: center; gap: 12px;">
+                <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" style="width: 32px; height: 32px; object-fit: contain;">
+                <span style="font-size: 18px; font-weight: 600; color: #333;">LUXBYTE</span>
+            </div>
+            <nav class="auth-actions" style="display: flex; gap: 12px; align-items: center;">
+                <a href="/auth.html" class="btn" style="padding: 8px 16px; font-size: 14px; background: rgba(255, 255, 255, 0.2); color: #333; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; text-decoration: none;">
+                    تسجيل الدخول
+                </a>
+                <a href="/choose-role.html" class="btn" style="padding: 8px 16px; font-size: 14px; background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; text-decoration: none;">
+                    إنشاء حساب
+                </a>
+            </nav>
+        </div>
+    </header>
+
     <!-- Background Logo -->
     <img id="bg-corner-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE">
 
     <!-- Main Content -->
-    <main>
+    <main style="margin-top: 100px; padding: 0 20px;">
         <!-- Page Header -->
         <div class="card text-center mb-8">
             <div class="card-header" style="justify-content: center;">
