@@ -4,6 +4,22 @@
     {
       "src": "public/**/*",
       "use": "@vercel/static"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "sw.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "manifest.webmanifest",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "offline.html",
+      "use": "@vercel/static"
     }
   ],
   "rewrites": [
@@ -13,10 +29,6 @@
     }
   ],
   "redirects": [
-    {
-      "source": "/",
-      "destination": "/public/index.html"
-    },
     {
       "source": "/dashboard",
       "destination": "/public/dashboard/pharmacy.html"
