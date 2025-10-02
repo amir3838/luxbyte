@@ -9,7 +9,7 @@
     // Initialize when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
         console.log('📁 Simple Upload Manager initialized');
-        
+
         // Initialize all upload buttons
         initializeUploadButtons();
     });
@@ -17,15 +17,15 @@
     function initializeUploadButtons() {
         // Find all upload buttons
         const uploadButtons = document.querySelectorAll('.doc-upload-btn, .upload-btn, [data-upload]');
-        
+
         uploadButtons.forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                
+
                 // Find associated file input
-                const fileInput = this.parentNode.querySelector('input[type="file"]') || 
+                const fileInput = this.parentNode.querySelector('input[type="file"]') ||
                                 this.parentNode.querySelector('.doc-input');
-                
+
                 if (fileInput) {
                     fileInput.click();
                 }
@@ -34,7 +34,7 @@
 
         // Find all file inputs
         const fileInputs = document.querySelectorAll('input[type="file"]');
-        
+
         fileInputs.forEach(input => {
             input.addEventListener('change', function(e) {
                 const file = e.target.files[0];
@@ -47,7 +47,7 @@
 
     function handleFileUpload(file, input) {
         console.log('📁 Handling file upload:', file.name);
-        
+
         // Validate file size (10MB max)
         const maxSize = 10 * 1024 * 1024; // 10MB
         if (file.size > maxSize) {
@@ -75,7 +75,7 @@
 
         // Show preview
         showFilePreview(file, input);
-        
+
         // Update button
         const button = input.parentNode.querySelector('.doc-upload-btn, .upload-btn');
         if (button) {
