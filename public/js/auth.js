@@ -1,4 +1,30 @@
-import { getSupabase, supabaseWithErrorHandling } from './supabase-client.js';
+// استخدام Supabase Singleton
+const getSupabase = () => window.getSupabase();
+
+// دالة موحدة للتسجيل
+window.LX = window.LX || {};
+window.LX.signUp = async ({ email, password, meta = {}, redirect = `${location.origin}/email-confirmation.html` }) => {
+  const supa = window.getSupabase();
+  if (!supa) {
+    throw new Error('Supabase client غير متوفر');
+  }
+  
+  const { data, error } = await supa.auth.signUp({
+    email, 
+    password,
+    options: { 
+      emailRedirectTo: redirect, 
+      data: meta 
+    }
+  });
+  
+  if (error) {
+    throw new Error(error.message || error.error_description || 'فشل في التسجيل');
+  }
+  
+  return data;
+};
+
 import { AUTH_CALLBACKS, SUPABASE_AUTH_CONFIG, getDashboardPath, getCallbackUrl } from './auth-config.js';
 // Initialize file upload manager
 let fileUploadManager = null;
@@ -142,7 +168,11 @@ export async function handleRegister(email, password, account, additionalData = 
 
         // تسجيل المستخدم في Supabase Auth
         const supabase = getSupabase();
-        const { data: { user }, error: authError } = await supabaseWithErrorHandling.auth.signUp({
+        if (!supabase) {
+            throw new Error('Supabase client غير متوفر');
+        }
+
+        const { data: { user }, error: authError } = await supabase.auth.signUp({
             email,
             password,
             options: {
@@ -174,7 +204,7 @@ export async function handleRegister(email, password, account, additionalData = 
         }
 
         // إنشاء ملف شخصي في جدول profiles
-        const { error: profileError } = await supabaseWithErrorHandling
+        const { error: profileError } = await supabase
             .from('profiles')
             .insert({
                 id: user.id,
@@ -252,7 +282,7 @@ export async function handleLogin(email, password) {
         }
 
         const supabase = getSupabase();
-        const { data: { user }, error: authError } = await supabaseWithErrorHandling.auth.signInWithPassword({
+        const { data: { user }, error: authError } = await supabase.auth.signInWithPassword({
             email,
             password
         });
@@ -275,7 +305,7 @@ export async function handleLogin(email, password) {
         }
 
         // الحصول على نوع الحساب من جدول profiles
-        const { data: profile, error: profileError } = await supabaseWithErrorHandling
+        const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('account, city, full_name, phone')
             .eq('id', user.id)

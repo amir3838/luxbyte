@@ -3,7 +3,10 @@
  * مدير رفع الملفات
  */
 
-class FileUploadManager {
+(function (global) {
+  'use strict';
+
+  class FileUploadManager {
     constructor() {
         this.maxFileSize = 10 * 1024 * 1024; // 10MB
         this.allowedTypes = [
@@ -392,20 +395,15 @@ class FileUploadManager {
     }
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.fileUploadManager = new FileUploadManager();
-});
+  // Initialize when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+      global.fileUploadManager = new FileUploadManager();
+  });
 
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = FileUploadManager;
-}
+  // Export to global scope
+  global.FileUploadManager = FileUploadManager;
+  global.UploadManager = {
+    createUploadManager: (opts) => new FileUploadManager(opts)
+  };
 
-// ES6 export
-if (typeof window !== 'undefined') {
-    window.FileUploadManager = FileUploadManager;
-}
-
-// Export for ES6 modules
-export { FileUploadManager };
+})(window);
