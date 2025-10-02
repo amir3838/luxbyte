@@ -72,14 +72,14 @@ const CACHE_STRATEGIES = {
 // تثبيت Service Worker
 self.addEventListener('install', (event) => {
   console.log(`🔧 تثبيت Service Worker ${VERSION}...`);
-  
+
   event.waitUntil(
     Promise.all([
       // تخزين الملفات الثابتة مع معالجة الأخطاء
       caches.open(STATIC_CACHE).then(cache => {
         console.log('📦 تخزين الملفات الثابتة...');
         return Promise.allSettled(
-          STATIC_FILES.map(url => 
+          STATIC_FILES.map(url =>
             fetch(url)
               .then(response => {
                 if (response.ok) {
@@ -107,7 +107,7 @@ self.addEventListener('install', (event) => {
 // تفعيل Service Worker
 self.addEventListener('activate', (event) => {
   console.log(`✅ تفعيل Service Worker ${VERSION}...`);
-  
+
   event.waitUntil(
     Promise.all([
       // تنظيف الكاشات القديمة
