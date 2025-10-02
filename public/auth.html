@@ -111,15 +111,18 @@
     <script type="module" src="js/translation-manager.js"></script>
     <script type="module" src="js/navigation-bar.js"></script>
 
+    <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/auth-guard.js"></script>
     <script type="module" src="js/auth.js"></script>
 
     <script>
         // Initialize page
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             console.log('Auth Page Loaded');
 
-            // Auth page is public - no guard needed
-            console.log('Auth page is public - no guard needed');
+            // حماية صفحة تسجيل الدخول - يجب ألا يكون المستخدم مصادقاً
+            const isProtected = await authGuard.protectAuthPage();
+            if (!isProtected) return;
 
             // Set up forgot password link
             document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {

@@ -191,8 +191,29 @@
     <!-- Scripts -->
     <script src="../js/dashboard-common.js"></script>
     <script type="module" src="../js/supabase-client.js"></script>
+    <script type="module" src="../js/auth-guard.js"></script>
     <script type="module" src="../js/api/pharmacy.js"></script>
     <script type="module" src="../js/pharmacy-dashboard.js"></script>
     <script src="../js/test-dashboard.js"></script>
+    <script>
+        // حماية الداشبورد - يجب أن يكون المستخدم مصادقاً ولديه دور صيدلية
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isProtected = await authGuard.protectPage('pharmacy');
+            if (!isProtected) return;
+            
+            // تهيئة الداشبورد
+            console.log('داشبورد الصيدلية محمي ومحمي');
+        });
+
+        // دالة تسجيل الخروج
+        async function logout() {
+            try {
+                await authGuard.logout();
+                window.location.href = '/index.html';
+            } catch (error) {
+                console.error('خطأ في تسجيل الخروج:', error);
+            }
+        }
+    </script>
 </body>
 </html>

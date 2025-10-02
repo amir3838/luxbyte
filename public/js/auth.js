@@ -48,7 +48,7 @@ export async function handleRegister(email, password, account, additionalData = 
         const { error: profileError } = await supabase
             .from('profiles')
             .insert({
-                user_id: user.id,
+                id: user.id,
                 account: account,
                 city: additionalData.city || null
             });
@@ -60,8 +60,9 @@ export async function handleRegister(email, password, account, additionalData = 
 
         console.log('✅ Profile created successfully');
 
-        // توجيه المستخدم حسب نوع الحساب
-        redirectByAccount(account);
+        // توجيه المستخدم إلى صفحة اختيار الدور بدلاً من الداشبورد مباشرة
+        console.log('🔄 Redirecting to role selection page');
+        window.location.href = '/choose-role.html';
 
         return { success: true, user };
 
@@ -101,19 +102,31 @@ export async function handleLogin(email, password) {
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('account, city')
-            .eq('user_id', user.id)
+            .eq('id', user.id)
             .single();
 
         if (profileError) {
             console.error('❌ Profile fetch failed:', profileError);
-            throw new Error(profileError.message);
+            // إذا لم يكن هناك ملف شخصي، يوجه إلى صفحة اختيار الدور
+            console.log('🔄 No profile found, redirecting to role selection');
+            window.location.href = '/choose-role.html';
+            return { success: true, user, requiresRoleSelection: true };
         }
 
         if (!profile) {
-            throw new Error('لم يتم العثور على ملف المستخدم الشخصي');
+            console.log('🔄 No profile found, redirecting to role selection');
+            window.location.href = '/choose-role.html';
+            return { success: true, user, requiresRoleSelection: true };
         }
 
         console.log('✅ Profile fetched successfully:', profile);
+
+        // إذا لم يكن لديه دور محدد، يوجه إلى صفحة اختيار الدور
+        if (!profile.account) {
+            console.log('🔄 No account type found, redirecting to role selection');
+            window.location.href = '/choose-role.html';
+            return { success: true, user, requiresRoleSelection: true };
+        }
 
         // توجيه المستخدم حسب نوع الحساب
         redirectByAccount(profile.account);

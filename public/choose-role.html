@@ -191,10 +191,10 @@
                     </ul>
                 </div>
 
-                <a href="unified-signup.html?role=restaurant" class="btn" style="width: 100%; display: block; text-align: center;">
+                <button onclick="selectRole('restaurant')" class="btn" style="width: 100%; display: block; text-align: center; border: none; cursor: pointer;">
                     <img src="assets/images/activities/restaurant.png" alt="مطعم" style="width: 20px; height: 20px; margin-left: 8px;">
                     اختر المطعم
-                </a>
+                </button>
             </div>
 
             <!-- Supermarket Card -->
@@ -236,10 +236,10 @@
                     </ul>
                 </div>
 
-                <a href="unified-signup.html?role=supermarket" class="btn" style="width: 100%; display: block; text-align: center;">
+                <button onclick="selectRole('supermarket')" class="btn" style="width: 100%; display: block; text-align: center; border: none; cursor: pointer;">
                     <img src="assets/images/activities/supermarket.png" alt="سوبر ماركت" style="width: 20px; height: 20px; margin-left: 8px;">
                     اختر السوبر ماركت
-                </a>
+                </button>
             </div>
 
             <!-- Pharmacy Card -->
@@ -281,10 +281,10 @@
                     </ul>
                 </div>
 
-                <a href="unified-signup.html?role=pharmacy" class="btn" style="width: 100%; display: block; text-align: center;">
+                <button onclick="selectRole('pharmacy')" class="btn" style="width: 100%; display: block; text-align: center; border: none; cursor: pointer;">
                     <img src="assets/images/activities/pharmacy.png" alt="صيدلية" style="width: 20px; height: 20px; margin-left: 8px;">
                     اختر الصيدلية
-                </a>
+                </button>
             </div>
 
             <!-- Clinic Card -->
@@ -326,10 +326,10 @@
                     </ul>
                 </div>
 
-                <a href="unified-signup.html?role=clinic" class="btn" style="width: 100%; display: block; text-align: center;">
+                <button onclick="selectRole('clinic')" class="btn" style="width: 100%; display: block; text-align: center; border: none; cursor: pointer;">
                     <img src="assets/images/activities/clinic.png" alt="عيادة" style="width: 20px; height: 20px; margin-left: 8px;">
                     اختر العيادة
-                </a>
+                </button>
             </div>
 
             <!-- Courier Card -->
@@ -371,10 +371,10 @@
                     </ul>
                 </div>
 
-                <a href="unified-signup.html?role=courier" class="btn" style="width: 100%; display: block; text-align: center;">
+                <button onclick="selectRole('courier')" class="btn" style="width: 100%; display: block; text-align: center; border: none; cursor: pointer;">
                     <img src="assets/images/activities/courier.png" alt="مندوب توصيل" style="width: 20px; height: 20px; margin-left: 8px;">
                     اختر مندوب التوصيل
-                </a>
+                </button>
             </div>
         </div>
 
@@ -393,23 +393,66 @@
     <script src="js/translation-utils.js"></script>
     <script src="js/engagement-notification.js"></script>
     <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/auth-guard.js"></script>
     <script type="module" src="js/theme-manager.js"></script>
     <script type="module" src="js/navigation-bar.js"></script>
     <script type="module" src="js/translation-manager.js"></script>
     <script>
         // Role selection
-        function selectRole(role) {
-            // Store selected role
-            LUXBYTE.setStorage('selectedRole', role);
+        async function selectRole(role) {
+            try {
+                // تحديث دور المستخدم في قاعدة البيانات
+                const { data: { user } } = await supabase.auth.getUser();
 
-            // Redirect to signup with role parameter
-            window.location.href = `unified-signup.html?role=${role}`;
+                if (!user) {
+                    LUXBYTE.notifyErr('يجب تسجيل الدخول أولاً');
+                    window.location.href = '/auth.html';
+                    return;
+                }
+
+                // تحديث ملف المستخدم الشخصي
+                const { error } = await supabase
+                    .from('profiles')
+                    .upsert({
+                        id: user.id,
+                        account: role,
+                        updated_at: new Date().toISOString()
+                    });
+
+                if (error) {
+                    console.error('خطأ في تحديث الدور:', error);
+                    LUXBYTE.notifyErr('خطأ في تحديث الدور');
+                    return;
+                }
+
+                LUXBYTE.notifyOk('تم تحديث الدور بنجاح');
+
+                // التوجيه إلى الداشبورد المناسب
+                const dashboardMap = {
+                    'pharmacy': '/dashboard/pharmacy.html',
+                    'restaurant': '/dashboard/restaurant.html',
+                    'supermarket': '/dashboard/supermarket.html',
+                    'clinic': '/dashboard/clinic.html',
+                    'courier': '/dashboard/courier.html',
+                    'driver': '/dashboard/driver.html'
+                };
+
+                const dashboardUrl = dashboardMap[role];
+                if (dashboardUrl) {
+                    window.location.href = dashboardUrl;
+                } else {
+                    LUXBYTE.notifyErr('دور غير صحيح');
+                }
+            } catch (error) {
+                console.error('خطأ في اختيار الدور:', error);
+                LUXBYTE.notifyErr('خطأ في اختيار الدور');
+            }
         }
 
         // Logout function
         async function logout() {
             try {
-                await LUXBYTE.supabase.auth.signOut();
+                await authGuard.logout();
                 LUXBYTE.notifyOk('تم تسجيل الخروج بنجاح');
                 window.location.href = 'index.html';
             } catch (error) {
@@ -420,6 +463,10 @@
 
         // Add hover effects to role cards
         document.addEventListener('DOMContentLoaded', async () => {
+            // حماية الصفحة - يجب أن يكون المستخدم مصادقاً
+            const isProtected = await authGuard.protectRoleSelection();
+            if (!isProtected) return;
+
             // Initialize LUXBYTE
             await LUXBYTE.init();
 
@@ -435,14 +482,15 @@
                     card.style.transform = 'translateY(0)';
                     card.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)';
                 });
-            });
 
-            // Check if user came from ShopEG platform
-            const selectedPlatform = LUXBYTE.getStorage('selectedPlatform');
-            if (selectedPlatform !== 'shopeg') {
-                // Redirect to platform selection if not from ShopEG
-                window.location.href = 'unified-signup.html?role=restaurant';
-            }
+                // إضافة مستمع النقر
+                card.addEventListener('click', () => {
+                    const role = card.getAttribute('data-role');
+                    if (role) {
+                        selectRole(role);
+                    }
+                });
+            });
 
             // Initialize common elements
             // Navigation handled by js/navigation-bar.js

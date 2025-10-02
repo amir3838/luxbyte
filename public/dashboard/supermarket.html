@@ -145,7 +145,28 @@
     </main>
 
     <script type="module" src="../js/supabase-client.js"></script>
+    <script type="module" src="../js/auth-guard.js"></script>
     <script type="module" src="../js/supermarket/api/supermarket.js"></script>
     <script type="module" src="../js/supermarket/supermarket-dashboard.js"></script>
+    <script>
+        // حماية الداشبورد - يجب أن يكون المستخدم مصادقاً ولديه دور سوبر ماركت
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isProtected = await authGuard.protectPage('supermarket');
+            if (!isProtected) return;
+            
+            // تهيئة الداشبورد
+            console.log('داشبورد السوبر ماركت محمي ومحمي');
+        });
+
+        // دالة تسجيل الخروج
+        async function logout() {
+            try {
+                await authGuard.logout();
+                window.location.href = '/index.html';
+            } catch (error) {
+                console.error('خطأ في تسجيل الخروج:', error);
+            }
+        }
+    </script>
 </body>
 </html>

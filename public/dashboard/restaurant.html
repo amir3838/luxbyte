@@ -137,7 +137,28 @@
     </main>
 
     <script type="module" src="../js/supabase-client.js"></script>
+    <script type="module" src="../js/auth-guard.js"></script>
     <script type="module" src="../js/restaurant/api/restaurant.js"></script>
     <script type="module" src="../js/restaurant/restaurant-dashboard.js"></script>
+    <script>
+        // حماية الداشبورد - يجب أن يكون المستخدم مصادقاً ولديه دور مطعم
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isProtected = await authGuard.protectPage('restaurant');
+            if (!isProtected) return;
+            
+            // تهيئة الداشبورد
+            console.log('داشبورد المطعم محمي ومحمي');
+        });
+
+        // دالة تسجيل الخروج
+        async function logout() {
+            try {
+                await authGuard.logout();
+                window.location.href = '/index.html';
+            } catch (error) {
+                console.error('خطأ في تسجيل الخروج:', error);
+            }
+        }
+    </script>
 </body>
 </html>

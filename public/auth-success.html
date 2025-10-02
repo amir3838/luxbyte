@@ -42,7 +42,7 @@
 
                 <div id="success-content">
                     <p style="font-size: 1.1rem; margin-bottom: 30px; color: #666;">
-                        تم تسجيل الدخول بنجاح. سيتم توجيهك إلى لوحة التحكم الخاصة بك خلال لحظات.
+                        تم تسجيل الدخول بنجاح. سيتم توجيهك إلى صفحة تسجيل الدخول خلال لحظات.
                     </p>
 
                     <div id="user-info" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
@@ -51,14 +51,14 @@
                         <p><strong>نوع الحساب:</strong> <span id="account-type"></span></p>
                     </div>
 
-                    <button class="btn btn-primary" onclick="redirectToDashboard()" style="margin: 10px;">
-                        <i class="fas fa-tachometer-alt"></i>
-                        الذهاب إلى لوحة التحكم
+                    <button class="btn btn-primary" onclick="redirectToLogin()" style="margin: 10px;">
+                        <i class="fas fa-sign-in-alt"></i>
+                        تسجيل الدخول
                     </button>
 
-                    <button class="btn btn-outline" onclick="window.location.href='auth.html'" style="margin: 10px;">
-                        <i class="fas fa-sign-out-alt"></i>
-                        تسجيل الخروج
+                    <button class="btn btn-outline" onclick="window.location.href='index.html'" style="margin: 10px;">
+                        <i class="fas fa-home"></i>
+                        الصفحة الرئيسية
                     </button>
                 </div>
             </div>
@@ -107,15 +107,15 @@
 
                     accountType.textContent = accountTypeNames[profile.account] || profile.account;
 
-                    // Auto redirect to dashboard after 3 seconds
+                    // Auto redirect to login page after 3 seconds
                     setTimeout(() => {
-                        redirectToDashboard(profile.account);
+                        redirectToLogin();
                     }, 3000);
                 } else {
                     accountType.textContent = 'غير محدد';
-                    // Redirect to unified signup if no profile
+                    // Redirect to login page if no profile
                     setTimeout(() => {
-                        window.location.href = 'unified-signup.html';
+                        redirectToLogin();
                     }, 3000);
                 }
 
@@ -125,37 +125,12 @@
             }
         });
 
-        function redirectToDashboard(accountType = null) {
-            if (accountType) {
-                const dashboardPath = getDashboardPath(accountType);
-                window.location.href = dashboardPath;
-            } else {
-                // Try to get account type from session
-                const supabase = getSupabase();
-                supabase.auth.getSession().then(({ data: { session } }) => {
-                    if (session) {
-                        supabase
-                            .from('profiles')
-                            .select('account')
-                            .eq('user_id', session.user.id)
-                            .single()
-                            .then(({ data: profile }) => {
-                                if (profile) {
-                                    const dashboardPath = getDashboardPath(profile.account);
-                                    window.location.href = dashboardPath;
-                                } else {
-                                    window.location.href = 'unified-signup.html';
-                                }
-                            });
-                    } else {
-                        window.location.href = 'auth.html';
-                    }
-                });
-            }
+        function redirectToLogin() {
+            window.location.href = 'auth.html';
         }
 
         // Make function globally available
-        window.redirectToDashboard = redirectToDashboard;
+        window.redirectToLogin = redirectToLogin;
     </script>
 </body>
 </html>

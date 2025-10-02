@@ -128,8 +128,29 @@
 
     <script src="../js/dashboard-common.js"></script>
     <script type="module" src="../js/supabase-client.js"></script>
+    <script type="module" src="../js/auth-guard.js"></script>
     <script type="module" src="../js/clinic/api/clinic.js"></script>
     <script type="module" src="../js/clinic/clinic-dashboard.js"></script>
+    <script>
+        // حماية الداشبورد - يجب أن يكون المستخدم مصادقاً ولديه دور عيادة
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isProtected = await authGuard.protectPage('clinic');
+            if (!isProtected) return;
+            
+            // تهيئة الداشبورد
+            console.log('داشبورد العيادة محمي ومحمي');
+        });
+
+        // دالة تسجيل الخروج
+        async function logout() {
+            try {
+                await authGuard.logout();
+                window.location.href = '/index.html';
+            } catch (error) {
+                console.error('خطأ في تسجيل الخروج:', error);
+            }
+        }
+    </script>
     <script src="../js/test-dashboard.js"></script>
 </body>
 </html>
