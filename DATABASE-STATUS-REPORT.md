@@ -109,6 +109,6 @@ CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON profiles FOR EACH ROW
 
 ---
 
-**تم إنشاء هذا التقرير تلقائياً**  
-**التاريخ**: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")  
+**تم إنشاء هذا التقرير تلقائياً**
+**التاريخ**: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 **المطور**: Luxbyte Development Team

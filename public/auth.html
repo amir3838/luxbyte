@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - LUXBYTE</title>
+    <meta name="description" content="سجل دخولك إلى منصة LUXBYTE للوصول إلى لوحة التحكم الخاصة بك">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/themes.css">
 
@@ -30,6 +31,61 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* أزرار حمراء مع نص أسود */
+        .btn-primary {
+            background: #e74c3c !important;
+            border: 2px solid #e74c3c !important;
+            color: #000 !important;
+            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #c0392b !important;
+            border-color: #c0392b !important;
+            color: #000 !important;
+            transform: translateY(-2px);
+        }
+
+        /* أزرار مهمة سوداء مع نص أبيض */
+        .btn-important {
+            background: #000 !important;
+            border: 2px solid #000 !important;
+            color: #fff !important;
+            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-important:hover {
+            background: #333 !important;
+            border-color: #333 !important;
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+
+        /* أزرار ثانوية حمراء مع نص أسود */
+        .btn-outline {
+            background: transparent !important;
+            border: 2px solid #e74c3c !important;
+            color: #000 !important;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: #e74c3c !important;
+            color: #000 !important;
         }
     </style>
 
@@ -83,7 +139,7 @@
 
             <div class="text-center" style="margin-top: 24px;">
                 <p style="color: var(--text-muted);">ليس لديك حساب؟</p>
-                <a href="unified-signup.html" class="btn btn-outline" style="width: 100%; justify-content: center;">
+                <a href="/choose-activity.html" class="btn btn-outline" style="width: 100%; justify-content: center;">
                     <i class="fas fa-user-plus"></i>
                     إنشاء حساب جديد
                 </a>

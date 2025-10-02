@@ -33,26 +33,26 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 async function executeSQL() {
     try {
         console.log('🔌 Connecting to Supabase...');
-        
+
         // Read SQL file
         const sqlContent = fs.readFileSync('supabase-schema.sql', 'utf8');
         console.log('📄 SQL file read successfully');
-        
+
         // Split into statements
         const statements = sqlContent
             .split(';')
             .map(stmt => stmt.trim())
             .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
-        
+
         console.log(`📊 Found ${statements.length} SQL statements`);
-        
+
         // Execute each statement
         for (let i = 0; i < statements.length; i++) {
             const statement = statements[i];
             if (statement.trim()) {
                 try {
                     console.log(`⚡ Executing statement ${i + 1}/${statements.length}...`);
-                    
+
                     // Use direct SQL execution via REST API
                     const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
                         method: 'POST',
@@ -63,7 +63,7 @@ async function executeSQL() {
                         },
                         body: JSON.stringify({ sql: statement })
                     });
-                    
+
                     if (!response.ok) {
                         console.log(`⚠️ Statement ${i + 1} warning: ${response.statusText}`);
                     } else {
@@ -74,9 +74,9 @@ async function executeSQL() {
                 }
             }
         }
-        
+
         console.log('🎉 SQL execution completed!');
-        
+
     } catch (error) {
         console.error('❌ Error executing SQL:', error.message);
         process.exit(1);

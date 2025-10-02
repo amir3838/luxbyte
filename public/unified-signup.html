@@ -1,365 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب جديد - LUXBYTE</title>
-    <meta name="description" content="انضم إلى LUXBYTE وابدأ استخدام منصّتنا الآن. رجاءً املأ البيانات بدقّة وارفع المستندات المطلوبة لمراجعة طلبك بسرعة.">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/dashboard-fixes.css">
-    <link rel="stylesheet" href="css/unified-signup-improvements.css">
-    <link rel="stylesheet" href="css/unified-signup-enhanced.css">
-    <link rel="stylesheet" href="css/unified-signup-theme.css">
-
-    <style>
-        /* إجبار ظهور الخلفية */
-        html {
-            background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed !important;
-        }
-        
-        body {
-            background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed !important;
-            min-height: 100vh;
-        }
-        
-        /* إزالة أي خلفية بيضاء من العناصر */
-        .site-header {
-            background: transparent !important;
-        }
-        
-        main {
-            background: transparent !important;
-        }
-        
-        .container {
-            background: transparent !important;
-        }
-        
-        /* الكروت فقط بخلفية بيضاء */
-        .card {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-
-    <link rel="icon" href="assets/app_icon/LUXBYTEICON.PNG" type="image/png">
-    <link rel="apple-touch-icon" href="assets/app_icon/LUXBYTEICON.PNG">
-
-    <!-- Inline Configuration for immediate access -->
-    <script type="application/json" id="app-config">
-    {
-        "SUPABASE_URL": "https://qjsvgpvbtrcnbhcjdcci.supabase.co",
-        "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NzQ0MzQsImV4cCI6MjA1MTI1MDQzNH0.sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e",
-        "STORAGE_BUCKET": "kyc_docs",
-        "MAX_UPLOAD_MB": 10,
-        "ALLOWED_MIME": ["image/jpeg", "image/png", "application/pdf"],
-        "FIREBASE_API_KEY": "AIzaSyBIlSKMkFIyY1OFYqqImwx5Lo2nHW5Foss",
-        "FIREBASE_AUTH_DOMAIN": "studio-1f95z.firebaseapp.com",
-        "FIREBASE_PROJECT_ID": "studio-1f95z",
-        "FIREBASE_MESSAGING_SENDER_ID": "922681782984",
-        "FIREBASE_APP_ID": "1:922681782984:web:d3840713be209e4a60abfd",
-        "FIREBASE_VAPID_KEY": "BJ3SXe0Nof9H4KJpvgG80LVUeDTNxdh0O2z3aOIzEzrFxd3bAn4ixhhouG7VV11zmK8giQ-UUGWeAP3JK8MpbXk",
-        "FIREBASE_MEASUREMENT_ID": "G-4H0S8GB99R"
-    }
-    </script>
-</head>
-
-<body>
-    <!-- Top Navigation Bar -->
-    <header class="site-header">
-        <div class="container">
-            <div class="brand">
-                <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE">
-                <span>LUXBYTE</span>
-            </div>
-            <nav class="auth-actions">
-                <a href="auth.html" class="btn btn-outline">
-                    تسجيل الدخول
-                </a>
-                <a href="choose-role.html" class="btn btn-primary">
-                    إنشاء حساب
-                </a>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Background Logo -->
-    <!-- <img id="bg-corner-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE"> -->
-
-    <main class="container" style="margin-top: 100px; padding: 0 20px;">
-        <!-- Page Header -->
-        <div class="card text-center mb-8" id="page-header">
-            <div class="card-header" style="justify-content: center;">
-                <div class="card-icon">
-                    <i class="fas fa-user-plus"></i>
-                </div>
-                <div>
-                    <h1 class="card-title" style="font-size: 32px; margin-bottom: 8px;">إنشاء حساب جديد</h1>
-                    <p style="color: #666; font-size: 18px; line-height: 1.6;">
-                        انضم إلى LUXBYTE وابدأ استخدام منصّتنا الآن.<br>
-                        املأ البيانات الأساسية وسنرسل لك رابط التحقق لإكمال التسجيل.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Progress Tabs -->
-        <div class="progress-tabs mb-6">
-            <div class="tab-container">
-                <div class="tab active" data-tab="personal">
-                    <i class="fas fa-user"></i>
-                    <span>البيانات الشخصية</span>
-                </div>
-                <div class="tab" data-tab="business">
-                    <i class="fas fa-building"></i>
-                    <span>بيانات النشاط</span>
-                </div>
-                <div class="tab" data-tab="location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>الموقع</span>
-                </div>
-                <div class="tab" data-tab="security">
-                    <i class="fas fa-lock"></i>
-                    <span>الأمان</span>
-                </div>
-                <div class="tab" data-tab="documents">
-                    <i class="fas fa-file-upload"></i>
-                    <span>المستندات</span>
-                </div>
-                <div class="tab" data-tab="review">
-                    <i class="fas fa-check-circle"></i>
-                    <span>تأكيد ومراجعة</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Signup Form -->
-        <div class="card">
-            <form id="signupForm">
-                <!-- Personal Information Section -->
-                <div class="section-content active" id="personal-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-user" style="margin-left: 8px; color: #6b7cff;"></i>
-                        البيانات الشخصية
-                    </h3>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">الاسم الأول <span style="color: #ef4444;">*</span></label>
-                            <input type="text" class="form-control" name="first_name" placeholder="أدخل اسمك الأول" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">اسم العائلة <span style="color: #ef4444;">*</span></label>
-                            <input type="text" class="form-control" name="last_name" placeholder="أدخل اسم العائلة" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">البريد الإلكتروني <span style="color: #ef4444;">*</span></label>
-                            <input type="email" class="form-control" name="email" placeholder="example@email.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">رقم الهاتف <span style="color: #ef4444;">*</span></label>
-                            <input type="tel" class="form-control" name="phone" placeholder="01xxxxxxxxx" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">صفة المتقدّم <span style="color: #ef4444;">*</span></label>
-                        <select class="form-control" name="user_role" required>
-                            <option value="">اختر صفتك</option>
-                            <option value="owner">مالك</option>
-                            <option value="manager">مدير مسؤول</option>
-                            <option value="delegate">مفوض</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Business Information Section -->
-                <div class="section-content" id="business-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-building" style="margin-left: 8px; color: #6b7cff;"></i>
-                        بيانات النشاط
-                    </h3>
-
-                    <div class="form-group">
-                        <label class="form-label">نوع الحساب <span style="color: #ef4444;">*</span></label>
-                        <select class="form-control" name="account_type" id="accountType" required>
-                            <option value="">اختر نوع الحساب</option>
-                            <option value="pharmacy">صيدلية</option>
-                            <option value="supermarket">سوبرماركت</option>
-                            <option value="restaurant">مطعم</option>
-                            <option value="clinic">عيادة</option>
-                            <option value="courier">مندوب توصيل</option>
-                            <option value="driver">سائق</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">اسم النشاط التجاري <span style="color: #ef4444;">*</span></label>
-                        <input type="text" class="form-control" name="business_name" placeholder="أدخل اسم النشاط التجاري" required>
-                    </div>
-                </div>
-
-                <!-- Location Section -->
-                <div class="section-content" id="location-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-map-marker-alt" style="margin-left: 8px; color: #6b7cff;"></i>
-                        الموقع
-                    </h3>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">المحافظة <span style="color: #ef4444;">*</span></label>
-                            <select class="form-control" name="governorate" id="governorate" required>
-                                <option value="">اختر المحافظة</option>
-                                <option value="القاهرة">🏙️ القاهرة</option>
-                                <option value="الجيزة">🏙️ الجيزة</option>
-                                <option value="القليوبية">🏙️ القليوبية</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">المدينة/الحي <span style="color: #ef4444;">*</span></label>
-                            <select class="form-control" name="city" id="city" required>
-                                <option value="">اختر المدينة</option>
-                                <option value="مصر الجديدة">مصر الجديدة</option>
-                                <option value="مدينة نصر">مدينة نصر</option>
-                                <option value="المعادي">المعادي</option>
-                                <option value="حلوان">حلوان</option>
-                                <option value="المقطم">المقطم</option>
-                                <option value="الجيزة">الجيزة</option>
-                                <option value="الدقي">الدقي</option>
-                                <option value="المهندسين">المهندسين</option>
-                                <option value="العجوزة">العجوزة</option>
-                                <option value="الهرم">الهرم</option>
-                                <option value="فيصل">فيصل</option>
-                                <option value="بنها">بنها</option>
-                                <option value="قليوب">قليوب</option>
-                                <option value="القناطر الخيرية">القناطر الخيرية</option>
-                                <option value="شبرا الخيمة">شبرا الخيمة</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">العنوان التفصيلي <span style="color: #ef4444;">*</span></label>
-                        <textarea class="form-control" name="address" placeholder="أدخل العنوان التفصيلي" rows="3" required></textarea>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">الموقع الجغرافي <span style="color: #ef4444;">*</span></label>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <button type="button" id="detect-location-btn" class="btn btn-outline" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>حدد موقعك</span>
-                                </button>
-                                <input type="hidden" id="lat" name="lat">
-                                <input type="hidden" id="lng" name="lng">
-                                <input type="text" class="form-control" id="coordinates" name="coordinates" placeholder="الإحداثيات ستظهر هنا" readonly style="flex: 2;">
-                            </div>
-                            <small style="color: #666; font-size: 12px; margin-top: 4px; display: block;">
-                                اضغط على الزر للحصول على موقعك الجغرافي تلقائياً
-                            </small>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">مواعيد العمل (اختياري)</label>
-                            <input type="text" class="form-control" name="working_hours" placeholder="مثال: 9 صباحاً - 11 مساءً">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Security Section -->
-                <div class="section-content" id="security-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-lock" style="margin-left: 8px; color: #6b7cff;"></i>
-                        الأمان (كلمة المرور)
-                    </h3>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">كلمة المرور <span style="color: #ef4444;">*</span></label>
-                            <input type="password" class="form-control" name="password" id="password" placeholder="أدخل كلمة المرور" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">تأكيد كلمة المرور <span style="color: #ef4444;">*</span></label>
-                            <input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="أكد كلمة المرور" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Documents Section -->
-                <div class="section-content" id="documents-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-file-upload" style="margin-left: 8px; color: #6b7cff;"></i>
-                        المستندات المطلوبة
-                    </h3>
-                    <div id="docs-uploader">
-                        <div style="text-align: center; padding: 20px; color: #666;">
-                            <i class="fas fa-spinner fa-spin" style="margin-left: 8px;"></i>
-                            جاري تحميل أزرار رفع المستندات...
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Review and Submit Section -->
-                <div class="section-content" id="review-section">
-                    <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
-                        <i class="fas fa-check-circle" style="margin-left: 8px; color: #6b7cff;"></i>
-                        تأكيد ومراجعة
-                    </h3>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <input type="checkbox" name="agree_terms" required style="margin-left: 8px;">
-                            أوافق على <a href="terms.html" target="_blank" style="color: #667eea; text-decoration: underline;">الشروط والأحكام</a> و <a href="privacy.html" target="_blank" style="color: #667eea; text-decoration: underline;">سياسة الخصوصية</a> <span style="color: #ef4444;">*</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Navigation Buttons -->
-                <div class="form-actions">
-                    <button type="button" id="prevBtn" class="btn btn-secondary" style="display: none;">
-                        <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
-                        السابق
-                    </button>
-                    <button type="button" id="nextBtn" class="btn btn-primary">
-                        التالي
-                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
-                    </button>
-                    <button type="submit" id="submitBtn" class="btn btn-primary" style="display: none;">
-                        إرسال الطلب
-                        <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </main>
-
-    <!-- Scripts -->
-    <script src="config.js" defer></script>
-    <script type="module" src="js/env.js"></script>
-    <script type="module" src="js/supabase-client.js"></script>
-    <script type="module" src="js/file-upload-manager.js"></script>
-    <script type="module" src="js/signup-init.js"></script>
-    <script type="module" src="js/signup-navigation.js"></script>
-    <script type="module" src="js/theme-manager.js"></script>
-    <script type="module" src="js/translation-manager.js"></script>
-    <script type="module" src="js/navigation-bar.js"></script>
-    <script type="module" src="js/auth.js"></script>
-    <script type="module" src="firebase-app.js"></script>
-    <script src="js/unified-signup-enhanced.js"></script>
-</body>
-</html>

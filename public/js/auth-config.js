@@ -60,6 +60,7 @@ export const ACCOUNT_DASHBOARDS = {
     clinic: 'dashboard/clinic.html',
     courier: 'dashboard/courier.html',
     driver: 'dashboard/driver.html',
+    'master-driver': 'dashboard/driver.html',
     admin: 'dashboard.html'
 };
 

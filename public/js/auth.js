@@ -1,5 +1,71 @@
-import { getSupabase } from './supabase-client.js';
+import { getSupabase, supabaseWithErrorHandling } from './supabase-client.js';
 import { AUTH_CALLBACKS, SUPABASE_AUTH_CONFIG, getDashboardPath } from './auth-config.js';
+
+// Enhanced error handling and user feedback
+const showNotification = (message, type = 'info', duration = 5000) => {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        font-family: 'Cairo', sans-serif;
+        font-size: 14px;
+        max-width: 400px;
+        animation: slideIn 0.3s ease-out;
+    `;
+    
+    // Add animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideIn 0.3s ease-out reverse';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, duration);
+};
+
+// Loading state management
+const setLoadingState = (element, isLoading, text = '') => {
+    if (isLoading) {
+        element.disabled = true;
+        element.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text || 'جاري المعالجة...'}`;
+    } else {
+        element.disabled = false;
+        element.innerHTML = text || element.dataset.originalText || 'إرسال';
+    }
+};
 
 /**
  * معالجة تسجيل المستخدم الجديد
@@ -9,12 +75,29 @@ import { AUTH_CALLBACKS, SUPABASE_AUTH_CONFIG, getDashboardPath } from './auth-c
  * @param {Object} additionalData - بيانات إضافية (اختياري)
  */
 export async function handleRegister(email, password, account, additionalData = {}) {
+    const submitButton = document.querySelector('button[type="submit"]');
+    const originalText = submitButton?.textContent;
+    
     try {
+        // إظهار حالة التحميل
+        if (submitButton) {
+            setLoadingState(submitButton, true, 'جاري إنشاء الحساب...');
+        }
+
         console.log('🔐 Starting registration process...', { email, account });
+
+        // التحقق من صحة البيانات
+        if (!email || !password || !account) {
+            throw new Error('جميع الحقول مطلوبة');
+        }
+
+        if (password.length < 6) {
+            throw new Error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+        }
 
         // تسجيل المستخدم في Supabase Auth
         const supabase = getSupabase();
-        const { data: { user }, error: authError } = await supabase.auth.signUp({
+        const { data: { user }, error: authError } = await supabaseWithErrorHandling.auth.signUp({
             email,
             password,
             options: {
@@ -40,17 +123,20 @@ export async function handleRegister(email, password, account, additionalData = 
         // التحقق من حالة تأكيد البريد
         if (!user.email_confirmed_at) {
             console.log('📧 Email confirmation required');
+            showNotification('تم إرسال رابط التفعيل إلى بريدك الإلكتروني', 'success');
             showEmailConfirmationMessage();
             return { success: true, user, requiresConfirmation: true };
         }
 
         // إنشاء ملف شخصي في جدول profiles
-        const { error: profileError } = await supabase
+        const { error: profileError } = await supabaseWithErrorHandling
             .from('profiles')
             .insert({
                 id: user.id,
                 account: account,
-                city: additionalData.city || null
+                city: additionalData.city || null,
+                full_name: additionalData.fullName || null,
+                phone: additionalData.phone || null
             });
 
         if (profileError) {
@@ -59,16 +145,25 @@ export async function handleRegister(email, password, account, additionalData = 
         }
 
         console.log('✅ Profile created successfully');
+        showNotification('تم إنشاء الحساب بنجاح!', 'success');
 
-        // توجيه المستخدم إلى صفحة اختيار الدور بدلاً من الداشبورد مباشرة
-        console.log('🔄 Redirecting to role selection page');
-        window.location.href = '/choose-role.html';
+        // توجيه المستخدم إلى الصفحة الرئيسية بعد التسجيل
+        console.log('🔄 Redirecting to main page after registration');
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 2000);
 
         return { success: true, user };
 
     } catch (error) {
         console.error('❌ Registration error:', error);
+        showNotification(error.message || 'حدث خطأ في إنشاء الحساب', 'error');
         throw error;
+    } finally {
+        // إعادة تعيين حالة الزر
+        if (submitButton) {
+            setLoadingState(submitButton, false, originalText);
+        }
     }
 }
 
@@ -78,11 +173,24 @@ export async function handleRegister(email, password, account, additionalData = 
  * @param {string} password - كلمة المرور
  */
 export async function handleLogin(email, password) {
+    const submitButton = document.querySelector('button[type="submit"]');
+    const originalText = submitButton?.textContent;
+    
     try {
+        // إظهار حالة التحميل
+        if (submitButton) {
+            setLoadingState(submitButton, true, 'جاري تسجيل الدخول...');
+        }
+
         console.log('🔐 Starting login process...', { email });
 
+        // التحقق من صحة البيانات
+        if (!email || !password) {
+            throw new Error('البريد الإلكتروني وكلمة المرور مطلوبان');
+        }
+
         const supabase = getSupabase();
-        const { data: { user }, error: authError } = await supabase.auth.signInWithPassword({
+        const { data: { user }, error: authError } = await supabaseWithErrorHandling.auth.signInWithPassword({
             email,
             password
         });
@@ -98,10 +206,16 @@ export async function handleLogin(email, password) {
 
         console.log('✅ User logged in successfully:', user.id);
 
+        // التحقق من تأكيد البريد الإلكتروني
+        if (!user.email_confirmed_at) {
+            showNotification('يرجى تأكيد بريدك الإلكتروني أولاً', 'error');
+            return { success: false, requiresConfirmation: true };
+        }
+
         // الحصول على نوع الحساب من جدول profiles
-        const { data: profile, error: profileError } = await supabase
+        const { data: profile, error: profileError } = await supabaseWithErrorHandling
             .from('profiles')
-            .select('account, city')
+            .select('account, city, full_name, phone')
             .eq('id', user.id)
             .single();
 
@@ -109,33 +223,47 @@ export async function handleLogin(email, password) {
             console.error('❌ Profile fetch failed:', profileError);
             // إذا لم يكن هناك ملف شخصي، يوجه إلى صفحة اختيار الدور
             console.log('🔄 No profile found, redirecting to role selection');
-            window.location.href = '/choose-role.html';
+            showNotification('يرجى اختيار نوع النشاط أولاً', 'info');
+            window.location.href = '/choose-activity.html';
             return { success: true, user, requiresRoleSelection: true };
         }
 
         if (!profile) {
             console.log('🔄 No profile found, redirecting to role selection');
-            window.location.href = '/choose-role.html';
+            showNotification('يرجى اختيار نوع النشاط أولاً', 'info');
+            window.location.href = '/choose-activity.html';
             return { success: true, user, requiresRoleSelection: true };
         }
 
         console.log('✅ Profile fetched successfully:', profile);
 
-        // إذا لم يكن لديه دور محدد، يوجه إلى صفحة اختيار الدور
+        // حفظ معلومات المستخدم في localStorage
+        localStorage.setItem('user_profile', JSON.stringify(profile));
+        localStorage.setItem('user_id', user.id);
+
+        // إذا لم يكن لديه دور محدد، يوجه إلى الصفحة الرئيسية
         if (!profile.account) {
-            console.log('🔄 No account type found, redirecting to role selection');
-            window.location.href = '/choose-role.html';
-            return { success: true, user, requiresRoleSelection: true };
+            console.log('🔄 No account type found, redirecting to main page');
+            showNotification('مرحباً بك في LUXBYTE!', 'success');
+            window.location.href = '/';
+            return { success: true, user, requiresActivitySelection: true };
         }
 
         // توجيه المستخدم حسب نوع الحساب
+        showNotification(`مرحباً ${profile.full_name || 'بك'} في LUXBYTE!`, 'success');
         redirectByAccount(profile.account);
 
         return { success: true, user, profile };
 
     } catch (error) {
         console.error('❌ Login error:', error);
+        showNotification(error.message || 'حدث خطأ في تسجيل الدخول', 'error');
         throw error;
+    } finally {
+        // إعادة تعيين حالة الزر
+        if (submitButton) {
+            setLoadingState(submitButton, false, originalText);
+        }
     }
 }
 
@@ -212,19 +340,19 @@ export async function checkAuthAndRedirect() {
             console.log('❌ No active session, redirecting to auth');
             // التحقق من وجود profile في localStorage للعودة السريعة
             const savedProfile = localStorage.getItem('user_profile');
-            if (savedProfile) {
-                try {
-                    const profile = JSON.parse(savedProfile);
-                    if (profile.account) {
-                        console.log('🔄 Found saved profile, redirecting to unified signup');
-                        window.location.href = 'unified-signup.html';
-                        return;
-                    }
-                } catch (e) {
-                    console.warn('Invalid saved profile data');
+        if (savedProfile) {
+            try {
+                const profile = JSON.parse(savedProfile);
+                if (profile.account) {
+                    console.log('🔄 Found saved profile, redirecting to main page');
+                    window.location.href = '/';
+                    return;
                 }
+            } catch (e) {
+                console.warn('Invalid saved profile data');
             }
-            window.location.href = 'auth.html';
+        }
+        window.location.href = 'auth.html';
             return;
         }
 
@@ -246,9 +374,9 @@ export async function checkAuthAndRedirect() {
 
         if (profileError) {
             console.error('❌ Profile fetch failed:', profileError);
-            // إذا لم يوجد profile، توجيه لصفحة التسجيل الموحد
-            console.log('🔄 No profile found, redirecting to unified signup');
-            window.location.href = 'unified-signup.html';
+            // إذا لم يوجد profile، توجيه للصفحة الرئيسية
+            console.log('🔄 No profile found, redirecting to main page');
+            window.location.href = '/';
             return;
         }
 
@@ -258,8 +386,8 @@ export async function checkAuthAndRedirect() {
             localStorage.setItem('user_profile', JSON.stringify(profile));
             redirectByAccount(profile.account);
         } else {
-            console.log('❌ No account type found, redirecting to unified signup');
-            window.location.href = 'unified-signup.html';
+            console.log('❌ No account type found, redirecting to main page');
+            window.location.href = '/';
         }
 
     } catch (error) {

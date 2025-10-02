@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد العيادة - Luxbyte</title>
+    <title>داشبورد العيادة - LUXBYTE</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -19,7 +19,8 @@
     <header class="site-header">
         <div class="header-content">
             <div class="logo">
-                <img src="../assets/images/shopeg_logo.webp" alt="Luxbyte" width="120">
+                <img src="../assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" style="width: 40px; height: 40px; object-fit: contain;">
+                <span style="font-size: 18px; font-weight: 600; color: #333; margin-right: 10px;">LUXBYTE</span>
             </div>
             <nav class="main-nav">
                 <a href="/index.html" class="nav-link">الرئيسية</a>
@@ -124,6 +125,36 @@
                 <!-- Generated dynamically -->
             </div>
         </section>
+
+        <!-- معلومات الاتصال -->
+        <section class="contact-section" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
+            <h3 style="color: #e74c3c; margin-bottom: 15px;">تواصل معنا</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                <div>
+                    <i class="fas fa-phone" style="color: #e74c3c; margin-left: 8px;"></i>
+                    <strong>الهاتف:</strong> 01552997892
+                </div>
+                <div>
+                    <i class="fas fa-envelope" style="color: #e74c3c; margin-left: 8px;"></i>
+                    <strong>البريد:</strong> luxbyte@gmail.com
+                </div>
+                <div>
+                    <i class="fab fa-whatsapp" style="color: #25D366; margin-left: 8px;"></i>
+                    <strong>واتساب:</strong> 01552997892
+                </div>
+            </div>
+            <div style="margin-top: 15px;">
+                <a href="https://facebook.com/luxbyte" target="_blank" style="margin: 0 10px; color: #1877F2; font-size: 1.5rem;">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="https://instagram.com/luxbyte" target="_blank" style="margin: 0 10px; color: #E4405F; font-size: 1.5rem;">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://tiktok.com/@luxbyte" target="_blank" style="margin: 0 10px; color: #000; font-size: 1.5rem;">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+            </div>
+        </section>
     </main>
 
     <script src="../js/dashboard-common.js"></script>
@@ -136,7 +167,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const isProtected = await authGuard.protectPage('clinic');
             if (!isProtected) return;
-            
+
             // تهيئة الداشبورد
             console.log('داشبورد العيادة محمي ومحمي');
         });
