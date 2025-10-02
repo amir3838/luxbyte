@@ -24,7 +24,7 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     flowType: 'pkce'
   },
   global: {
-    headers: { 
+    headers: {
       'x-client-info': 'luxbyte-dashboard-web',
       'x-app-version': '1.0.0'
     }

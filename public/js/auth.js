@@ -11,7 +11,7 @@ const showNotification = (message, type = 'info', duration = 5000) => {
             <span>${message}</span>
         </div>
     `;
-    
+
     // Add styles
     notification.style.cssText = `
         position: fixed;
@@ -28,7 +28,7 @@ const showNotification = (message, type = 'info', duration = 5000) => {
         max-width: 400px;
         animation: slideIn 0.3s ease-out;
     `;
-    
+
     // Add animation styles
     const style = document.createElement('style');
     style.textContent = `
@@ -43,9 +43,9 @@ const showNotification = (message, type = 'info', duration = 5000) => {
         }
     `;
     document.head.appendChild(style);
-    
+
     document.body.appendChild(notification);
-    
+
     setTimeout(() => {
         notification.style.animation = 'slideIn 0.3s ease-out reverse';
         setTimeout(() => {
@@ -77,7 +77,7 @@ const setLoadingState = (element, isLoading, text = '') => {
 export async function handleRegister(email, password, account, additionalData = {}) {
     const submitButton = document.querySelector('button[type="submit"]');
     const originalText = submitButton?.textContent;
-    
+
     try {
         // إظهار حالة التحميل
         if (submitButton) {
@@ -175,7 +175,7 @@ export async function handleRegister(email, password, account, additionalData = 
 export async function handleLogin(email, password) {
     const submitButton = document.querySelector('button[type="submit"]');
     const originalText = submitButton?.textContent;
-    
+
     try {
         // إظهار حالة التحميل
         if (submitButton) {
