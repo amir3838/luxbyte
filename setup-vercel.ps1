@@ -58,12 +58,12 @@ Write-Host "`n🔧 إضافة متغيرات البيئة..." -ForegroundColor Y
 if (Test-Path ".env") {
     $envContent = Get-Content ".env" -Raw
     $lines = $envContent -split "`n"
-    
+
     foreach ($line in $lines) {
         if ($line -match "^([^#][^=]+)=(.*)$") {
             $key = $matches[1].Trim()
             $value = $matches[2].Trim()
-            
+
             if ($key -and $value -and $value -ne "your-project.supabase.co" -and $value -ne "your-anon-key") {
                 Write-Host "إضافة متغير البيئة: $key" -ForegroundColor Cyan
                 try {

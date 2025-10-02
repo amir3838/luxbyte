@@ -8,7 +8,7 @@ Write-Host "🚀 بدء إعداد Supabase لمنصة Luxbyte..." -ForegroundCo
 # التحقق من وجود ملف SQL schema
 if (Test-Path "supabase-schema.sql") {
     Write-Host "✅ ملف supabase-schema.sql موجود" -ForegroundColor Green
-    
+
     # عرض تعليمات إعداد Supabase
     Write-Host "`n📋 تعليمات إعداد Supabase:" -ForegroundColor Yellow
     Write-Host "1. اذهب إلى https://supabase.com" -ForegroundColor White
@@ -17,7 +17,7 @@ if (Test-Path "supabase-schema.sql") {
     Write-Host "4. اذهب إلى SQL Editor" -ForegroundColor White
     Write-Host "5. انسخ محتوى ملف supabase-schema.sql" -ForegroundColor White
     Write-Host "6. شغل الكود في SQL Editor" -ForegroundColor White
-    
+
     # قراءة محتوى ملف SQL
     $sqlContent = Get-Content "supabase-schema.sql" -Raw
     Write-Host "`n📄 محتوى SQL Schema:" -ForegroundColor Cyan
@@ -27,7 +27,7 @@ if (Test-Path "supabase-schema.sql") {
         Write-Host "... (المحتوى مقطوع للعرض)" -ForegroundColor Gray
     }
     Write-Host "=================================" -ForegroundColor Gray
-    
+
     # إنشاء ملف .env.example
     Write-Host "`n📝 إنشاء ملف .env.example..." -ForegroundColor Yellow
     $envContent = @"
@@ -44,16 +44,16 @@ PASSWORD_RESET_URL=https://luxbyte.vercel.app/reset-password.html
 LOGIN_SUCCESS_URL=https://luxbyte.vercel.app/auth-success.html
 COMPLETE_REGISTRATION_URL=https://luxbyte.vercel.app/complete-registration.html
 "@
-    
+
     Set-Content -Path ".env.example" -Value $envContent
     Write-Host "✅ تم إنشاء ملف .env.example" -ForegroundColor Green
-    
+
     Write-Host "`n🎯 الخطوات التالية:" -ForegroundColor Magenta
     Write-Host "1. قم بإعداد Supabase كما هو موضح أعلاه" -ForegroundColor White
     Write-Host "2. انسخ .env.example إلى .env" -ForegroundColor White
     Write-Host "3. أضف قيم Supabase الصحيحة في .env" -ForegroundColor White
     Write-Host "4. شغل setup-vercel.ps1 للنشر على Vercel" -ForegroundColor White
-    
+
 } else {
     Write-Host "❌ ملف supabase-schema.sql غير موجود" -ForegroundColor Red
 }
