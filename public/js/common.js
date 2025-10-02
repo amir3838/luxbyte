@@ -58,7 +58,7 @@
         }
       });
 
-      console.log('✅ تم إنشاء عميل Supabase الوحيد - v1.0.6');
+      console.log('✅ تم إنشاء عميل Supabase الوحيد - v1.0.7');
 
       // فحص إضافي للتأكد من عمل العميل
       if (window.__supabase) {
