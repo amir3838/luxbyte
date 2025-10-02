@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // دالة التشخيص الرئيسية
 async function runDiagnostics() {
     showLoading();
-    
+
     try {
         // تشغيل جميع الفحوصات بالتوازي
         await Promise.all([
@@ -30,7 +30,7 @@ async function runDiagnostics() {
             checkSingleton(),
             checkUploadManager()
         ]);
-        
+
         displayResults();
     } catch (error) {
         console.error('خطأ في التشخيص:', error);
@@ -43,10 +43,10 @@ async function checkEnvironment() {
     try {
         const url = window.__ENV?.SUPABASE_URL || window.NEXT_PUBLIC_SUPABASE_URL;
         const anon = window.__ENV?.SUPABASE_ANON_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-        
+
         const urlOk = typeof url === 'string' && url.startsWith('https://') && url.includes('.supabase.co');
         const anonOk = typeof anon === 'string' && anon.startsWith('eyJ') && anon.length > 100;
-        
+
         if (urlOk && anonOk) {
             diagnostics.env = {
                 status: 'pass',
@@ -71,7 +71,7 @@ async function checkKeyProbe() {
     try {
         const url = window.__ENV?.SUPABASE_URL || window.NEXT_PUBLIC_SUPABASE_URL;
         const anon = window.__ENV?.SUPABASE_ANON_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-        
+
         if (!url || !anon) {
             diagnostics.keyProbe = {
                 status: 'fail',
@@ -79,7 +79,7 @@ async function checkKeyProbe() {
             };
             return;
         }
-        
+
         const response = await fetch(`${url}/auth/v1/signup`, {
             method: 'POST',
             headers: {
@@ -92,7 +92,7 @@ async function checkKeyProbe() {
                 password: 'testpassword123'
             })
         });
-        
+
         if (response.status === 401) {
             diagnostics.keyProbe = {
                 status: 'fail',
@@ -122,7 +122,7 @@ async function checkServiceWorker() {
     try {
         if ('serviceWorker' in navigator) {
             const registration = await navigator.serviceWorker.getRegistration();
-            
+
             if (registration && registration.active) {
                 // محاولة الحصول على الإصدار عبر postMessage
                 const version = await new Promise((resolve) => {
@@ -130,13 +130,13 @@ async function checkServiceWorker() {
                     channel.port1.onmessage = (event) => {
                         resolve(event.data.version || 'غير معروف');
                     };
-                    
+
                     registration.active.postMessage({ type: 'GET_VERSION' }, [channel.port2]);
-                    
+
                     // timeout بعد 2 ثانية
                     setTimeout(() => resolve('v1.1.0'), 2000);
                 });
-                
+
                 diagnostics.swVersion = {
                     status: 'pass',
                     details: `Service Worker نشط - الإصدار: ${version}`
@@ -224,13 +224,13 @@ function displayResults() {
     const results = document.getElementById('results');
     const statusGrid = document.getElementById('statusGrid');
     const timestamp = document.getElementById('timestamp');
-    
+
     loading.style.display = 'none';
     results.style.display = 'block';
-    
+
     // مسح النتائج السابقة
     statusGrid.innerHTML = '';
-    
+
     // إضافة النتائج
     const checks = [
         { key: 'env', title: 'متغيرات البيئة', icon: '🔧' },
@@ -239,13 +239,13 @@ function displayResults() {
         { key: 'singleton', title: 'Supabase Singleton', icon: '🔗' },
         { key: 'uploadManager', title: 'Upload Manager', icon: '📁' }
     ];
-    
+
     checks.forEach(check => {
         const result = diagnostics[check.key];
         const card = createStatusCard(check.title, check.icon, result.status, result.details);
         statusGrid.appendChild(card);
     });
-    
+
     // تحديث الطابع الزمني
     timestamp.textContent = `آخر فحص: ${new Date().toLocaleString('ar-EG')}`;
 }
@@ -254,9 +254,9 @@ function displayResults() {
 function createStatusCard(title, icon, status, details) {
     const card = document.createElement('div');
     card.className = `status-card ${status}`;
-    
+
     const statusIcon = status === 'pass' ? '✅' : status === 'fail' ? '❌' : '⚠️';
-    
+
     card.innerHTML = `
         <div class="status-title">
             <span class="status-icon">${icon}</span>
@@ -265,7 +265,7 @@ function createStatusCard(title, icon, status, details) {
         </div>
         <div class="status-details">${details}</div>
     `;
-    
+
     return card;
 }
 
@@ -273,7 +273,7 @@ function createStatusCard(title, icon, status, details) {
 function showLoading() {
     const loading = document.getElementById('loading');
     const results = document.getElementById('results');
-    
+
     loading.style.display = 'block';
     results.style.display = 'none';
 }
