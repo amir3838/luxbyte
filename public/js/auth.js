@@ -1,5 +1,50 @@
 import { getSupabase, supabaseWithErrorHandling } from './supabase-client.js';
-import { AUTH_CALLBACKS, SUPABASE_AUTH_CONFIG, getDashboardPath } from './auth-config.js';
+import { AUTH_CALLBACKS, SUPABASE_AUTH_CONFIG, getDashboardPath, getCallbackUrl } from './auth-config.js';
+// Initialize file upload manager
+let fileUploadManager = null;
+
+// Function to initialize file upload manager
+const initFileUploadManager = () => {
+    if (typeof FileUploadManager !== 'undefined' && !fileUploadManager) {
+        fileUploadManager = new FileUploadManager();
+    }
+};
+
+
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', initFileUploadManager);
+
+// Function to upload user documents
+const uploadUserDocuments = async (userId, documents) => {
+    if (!fileUploadManager) {
+        throw new Error('File upload manager not initialized');
+    }
+
+    const formData = new FormData();
+    formData.append('userId', userId);
+
+    // Add documents to form data
+    if (Array.isArray(documents)) {
+        documents.forEach((doc, index) => {
+            formData.append(`document_${index}`, doc);
+        });
+    } else {
+        formData.append('document', documents);
+    }
+
+    const response = await fetch('/api/upload-documents', {
+        method: 'POST',
+        body: formData
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to upload documents');
+    }
+
+    return await response.json();
+};
+
 
 // Enhanced error handling and user feedback
 const showNotification = (message, type = 'info', duration = 5000) => {
@@ -101,7 +146,7 @@ export async function handleRegister(email, password, account, additionalData = 
             email,
             password,
             options: {
-                emailRedirectTo: AUTH_CALLBACKS.EMAIL_CONFIRMATION,
+                emailRedirectTo: getCallbackUrl('email-confirmation'),
                 data: {
                     account,
                     ...additionalData
@@ -142,6 +187,17 @@ export async function handleRegister(email, password, account, additionalData = 
         if (profileError) {
             console.error('❌ Profile creation failed:', profileError);
             throw new Error(profileError.message);
+        }
+
+        // رفع المستندات إذا كانت متوفرة
+        if (fileUploadManager && additionalData.documents) {
+            try {
+                await uploadUserDocuments(user.id, additionalData.documents);
+                console.log('✅ Documents uploaded successfully');
+            } catch (uploadError) {
+                console.warn('⚠️ Document upload failed:', uploadError);
+                // لا نوقف العملية إذا فشل رفع المستندات
+            }
         }
 
         console.log('✅ Profile created successfully');
@@ -278,7 +334,7 @@ export async function handlePasswordReset(email) {
 
         const supabase = getSupabase();
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: AUTH_CALLBACKS.PASSWORD_RESET
+            redirectTo: getCallbackUrl('password-reset')
         });
 
         if (error) {

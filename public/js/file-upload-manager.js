@@ -398,6 +398,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for module usage
+export { FileUploadManager };
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = FileUploadManager;
 }

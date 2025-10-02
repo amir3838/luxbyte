@@ -269,25 +269,25 @@
     <main>
         <div class="container">
             <!-- Welcome Card -->
-            <div class="card text-center mb-8">
-                <div class="card-header" style="justify-content: center;">
-                    <div class="card-icon">
+            <div class="lx-card text-center mb-8 reveal">
+                <div class="lx-card__header" style="justify-content: center;">
+                    <div class="lx-card__icon">
                         <i class="fas fa-briefcase"></i>
                     </div>
                     <div>
-                        <h1 class="card-title" style="font-size: 32px; margin-bottom: 8px;">مرحباً بك في LUXBYTE</h1>
-                        <p style="color: #666; font-size: 18px;">منصة شوب إي جي المتكاملة للمنشآت التجارية</p>
-                        <div style="margin-top: 20px;">
-                            <button class="btn btn-primary" onclick="selectActivity('shop-eg')" style="margin: 5px;">
+                        <h1 class="lx-card__title" style="font-size: 32px; margin-bottom: 8px;">مرحباً بك في LUXBYTE</h1>
+                        <p class="lx-card__description" style="font-size: 18px;">منصة شوب إي جي المتكاملة للمنشآت التجارية</p>
+                        <div class="lx-card__actions" style="margin-top: 20px;">
+                            <button class="lx-btn lx-btn--primary" onclick="selectActivity('shop-eg')" style="margin: 5px;">
                                 <img src="assets/images/shopeg_logo.webp" alt="Shop EG" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
                                 شوب إي جي
                             </button>
-                            <button class="btn btn-important" onclick="selectActivity('master-driver')" style="margin: 5px;">
+                            <button class="lx-btn lx-btn--gold" onclick="selectActivity('master-driver')" style="margin: 5px;">
                                 <img src="assets/images/activities/driver.png" alt="Master Driver" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
                                 ماستر درايفر
                             </button>
                             <div style="margin-top: 15px;">
-                                <a href="/auth.html" class="btn btn-outline" style="margin: 5px;">
+                                <a href="/auth.html" class="lx-btn lx-btn--secondary" style="margin: 5px;">
                                     <i class="fas fa-sign-in-alt"></i>
                                     تسجيل الدخول
                                 </a>
@@ -308,18 +308,18 @@
             <!-- Role Cards -->
             <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-top: 30px;">
                 <!-- Restaurant Card -->
-                <div class="card role-card" data-role="restaurant">
-                    <div class="card-header">
-                        <div class="card-icon">
+                <div class="lx-card role-card reveal" data-role="restaurant">
+                    <div class="lx-card__header">
+                        <div class="lx-card__icon">
                             <img src="./assets/images/activities/restaurant.png" alt="مطعم" style="width: 40px; height: 40px; object-fit: contain;">
                         </div>
                         <div>
-                            <h3 class="card-title">مطعم</h3>
+                            <h3 class="lx-card__title">مطعم</h3>
                             <p style="color: #666; font-size: 14px;">إدارة المطاعم والوجبات</p>
                         </div>
                     </div>
 
-                    <p class="card-description">
+                    <p class="lx-card__description">
                         منصة متكاملة لإدارة المطاعم، تتيح لك إدارة قائمة الطعام، الطلبات،
                         العملاء، والتوصيل بسهولة ومرونة.
                     </p>
@@ -353,18 +353,18 @@
                 </div>
 
                 <!-- Supermarket Card -->
-                <div class="card role-card" data-role="supermarket">
-                    <div class="card-header">
-                        <div class="card-icon">
+                <div class="lx-card role-card reveal" data-role="supermarket">
+                    <div class="lx-card__header">
+                        <div class="lx-card__icon">
                             <img src="./assets/images/activities/supermarket.png" alt="سوبر ماركت" style="width: 40px; height: 40px; object-fit: contain;">
                         </div>
                         <div>
-                            <h3 class="card-title">سوبر ماركت</h3>
+                            <h3 class="lx-card__title">سوبر ماركت</h3>
                             <p style="color: #666; font-size: 14px;">إدارة المتاجر الكبرى</p>
                         </div>
                     </div>
 
-                    <p class="card-description">
+                    <p class="lx-card__description">
                         حل متكامل لإدارة السوبر ماركت، يتضمن إدارة المخزون، المبيعات،
                         العملاء، والتوصيل المنزلي.
                     </p>
@@ -398,18 +398,18 @@
                 </div>
 
                 <!-- Pharmacy Card -->
-                <div class="card role-card" data-role="pharmacy">
-                    <div class="card-header">
-                        <div class="card-icon">
+                <div class="lx-card role-card reveal" data-role="pharmacy">
+                    <div class="lx-card__header">
+                        <div class="lx-card__icon">
                             <img src="./assets/images/activities/pharmacy.png" alt="صيدلية" style="width: 40px; height: 40px; object-fit: contain;">
                         </div>
                         <div>
-                            <h3 class="card-title">صيدلية</h3>
+                            <h3 class="lx-card__title">صيدلية</h3>
                             <p style="color: #666; font-size: 14px;">إدارة الصيدليات</p>
                         </div>
                     </div>
 
-                    <p class="card-description">
+                    <p class="lx-card__description">
                         نظام متخصص لإدارة الصيدليات، يتضمن إدارة الأدوية، الوصفات الطبية،
                         العملاء، والتوصيل السريع.
                     </p>
@@ -443,18 +443,18 @@
                 </div>
 
                 <!-- Clinic Card -->
-                <div class="card role-card" data-role="clinic">
-                    <div class="card-header">
-                        <div class="card-icon">
+                <div class="lx-card role-card reveal" data-role="clinic">
+                    <div class="lx-card__header">
+                        <div class="lx-card__icon">
                             <img src="./assets/images/activities/clinic.png" alt="عيادة" style="width: 40px; height: 40px; object-fit: contain;">
                         </div>
                         <div>
-                            <h3 class="card-title">عيادة</h3>
+                            <h3 class="lx-card__title">عيادة</h3>
                             <p style="color: #666; font-size: 14px;">إدارة العيادات الطبية</p>
                         </div>
                     </div>
 
-                    <p class="card-description">
+                    <p class="lx-card__description">
                         نظام متكامل لإدارة العيادات الطبية، يتضمن إدارة المواعيد، المرضى،
                         السجلات الطبية، والوصفات الطبية.
                     </p>
@@ -488,18 +488,18 @@
                 </div>
 
                 <!-- Courier Card -->
-                <div class="card role-card" data-role="courier">
-                    <div class="card-header">
-                        <div class="card-icon">
+                <div class="lx-card role-card reveal" data-role="courier">
+                    <div class="lx-card__header">
+                        <div class="lx-card__icon">
                             <img src="./assets/images/activities/courier.png" alt="مندوب توصيل" style="width: 40px; height: 40px; object-fit: contain;">
                         </div>
                         <div>
-                            <h3 class="card-title">مندوب توصيل</h3>
+                            <h3 class="lx-card__title">مندوب توصيل</h3>
                             <p style="color: #666; font-size: 14px;">خدمات التوصيل</p>
                         </div>
                     </div>
 
-                    <p class="card-description">
+                    <p class="lx-card__description">
                         منصة متخصصة لمندوبي التوصيل، تتيح لك إدارة الطلبات، التتبع،
                         الأرباح، والتواصل مع العملاء.
                     </p>
@@ -581,6 +581,7 @@
     <script type="module" src="js/theme-manager.js"></script>
     <script type="module" src="js/navigation-bar.js"></script>
     <script type="module" src="js/translation-manager.js"></script>
+    <script type="module" src="js/ux-effects.js"></script>
     <script>
         // Activity selection
         async function selectActivity(activity) {

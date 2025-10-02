@@ -50,6 +50,22 @@ export const SUPABASE_AUTH_CONFIG = {
 };
 
 /**
+ * دالة محسنة للحصول على روابط الكول باك
+ * Enhanced function to get callback URLs
+ */
+export const getCallbackUrl = (type) => {
+    const baseUrl = getBaseUrl();
+    const callbacks = {
+        'email-confirmation': `${baseUrl}/email-confirmation.html`,
+        'password-reset': `${baseUrl}/reset-password.html`,
+        'auth-success': `${baseUrl}/auth-success.html`,
+        'complete-registration': `${baseUrl}/complete-registration.html`
+    };
+
+    return callbacks[type] || `${baseUrl}/auth.html`;
+};
+
+/**
  * أنواع الحسابات ومسارات الداشبورد
  * Account Types and Dashboard Paths
  */

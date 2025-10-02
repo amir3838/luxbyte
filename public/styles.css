@@ -4,6 +4,7 @@
 /* Import Dashboard Styles */
 @import url('css/dashboard.css');
 @import url('css/dashboard-fixes.css');
+@import url('css/components/cards.css');
 
 /* Performance Optimizations */
 * {
