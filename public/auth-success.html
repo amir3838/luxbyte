@@ -30,32 +30,32 @@
                 <div class="success-icon" style="font-size: 4rem; color: #28a745; margin-bottom: 20px;">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                
+
                 <h1 style="color: #2c3e50; margin-bottom: 20px;">مرحباً بك في Luxbyte!</h1>
-                
+
                 <div id="loading-message" style="display: none;">
                     <div class="loading-spinner">
                         <i class="fas fa-spinner fa-spin"></i>
                         <p>جاري تحميل لوحة التحكم...</p>
                     </div>
                 </div>
-                
+
                 <div id="success-content">
                     <p style="font-size: 1.1rem; margin-bottom: 30px; color: #666;">
                         تم تسجيل الدخول بنجاح. سيتم توجيهك إلى لوحة التحكم الخاصة بك خلال لحظات.
                     </p>
-                    
+
                     <div id="user-info" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
                         <h3 style="color: #2c3e50; margin-bottom: 15px;">معلومات الحساب</h3>
                         <p><strong>البريد الإلكتروني:</strong> <span id="user-email"></span></p>
                         <p><strong>نوع الحساب:</strong> <span id="account-type"></span></p>
                     </div>
-                    
+
                     <button class="btn btn-primary" onclick="redirectToDashboard()" style="margin: 10px;">
                         <i class="fas fa-tachometer-alt"></i>
                         الذهاب إلى لوحة التحكم
                     </button>
-                    
+
                     <button class="btn btn-outline" onclick="window.location.href='auth.html'" style="margin: 10px;">
                         <i class="fas fa-sign-out-alt"></i>
                         تسجيل الخروج
@@ -104,9 +104,9 @@
                         driver: 'سائق',
                         admin: 'مدير'
                     };
-                    
+
                     accountType.textContent = accountTypeNames[profile.account] || profile.account;
-                    
+
                     // Auto redirect to dashboard after 3 seconds
                     setTimeout(() => {
                         redirectToDashboard(profile.account);

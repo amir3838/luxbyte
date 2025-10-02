@@ -9,13 +9,13 @@ const SUPABASE_ANON_KEY = window?.APP_CONFIG?.SUPABASE_ANON_KEY || 'eyJhbGciOiJI
 
 // Create Supabase client
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: { 
-    persistSession: true, 
+  auth: {
+    persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true
   },
-  global: { 
-    headers: { 'x-client-info': 'luxbyte-dashboard-web' } 
+  global: {
+    headers: { 'x-client-info': 'luxbyte-dashboard-web' }
   },
 });
 
