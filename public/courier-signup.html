@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب مندوب توصيل - LUXBYTE</title>
+    <meta name="description" content="انضم إلى LUXBYTE كمندوب توصيل وابدأ استخدام منصّتنا الآن">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+
+    <style>
+        body {
+            background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .site-header {
+            background: transparent !important;
+        }
+
+        main {
+            background: transparent !important;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .courier-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .courier-icon {
+            font-size: 4rem;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        .btn-primary {
+            background: #e74c3c !important;
+            border: 2px solid #e74c3c !important;
+            color: #000 !important;
+            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #c0392b !important;
+            border-color: #c0392b !important;
+            color: #000 !important;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent !important;
+            border: 2px solid #e74c3c !important;
+            color: #000 !important;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-outline:hover {
+            background: #e74c3c !important;
+            color: #000 !important;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background -->
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="site-header">
+        <div class="container">
+            <div class="brand">
+                <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" style="width: 32px; height: 32px; object-fit: contain;">
+                <span style="font-size: 18px; font-weight: 600; color: #333;">LUXBYTE</span>
+            </div>
+            <nav class="auth-actions">
+                <a href="/" class="btn btn-outline">
+                    <i class="fas fa-home"></i>
+                    الرئيسية
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="card">
+                <div class="courier-header">
+                    <div class="courier-icon">
+                        <i class="fas fa-motorcycle"></i>
+                    </div>
+                    <h1>إنشاء حساب مندوب توصيل</h1>
+                    <p>انضم إلى LUXBYTE كمندوب توصيل وابدأ استخدام منصّتنا الآن</p>
+                </div>
+
+                <form id="courierSignupForm">
+                    <div class="form-group">
+                        <label for="fullName">الاسم الكامل *</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني *</label>
+                        <input type="email" id="email" name="email" autocomplete="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">رقم الهاتف *</label>
+                        <input type="tel" id="phone" name="phone" autocomplete="tel" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">كلمة المرور *</label>
+                        <input type="password" id="password" name="password" autocomplete="new-password" required minlength="8">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">تأكيد كلمة المرور *</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">العنوان *</label>
+                        <textarea id="address" name="address" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">المدينة *</label>
+                        <select id="city" name="city" required>
+                            <option value="">اختر المدينة</option>
+                            <option value="cairo">القاهرة</option>
+                            <option value="alexandria">الإسكندرية</option>
+                            <option value="giza">الجيزة</option>
+                            <option value="shubra">شبرا الخيمة</option>
+                            <option value="port_said">بورسعيد</option>
+                            <option value="suez">السويس</option>
+                            <option value="luxor">الأقصر</option>
+                            <option value="aswan">أسوان</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicleType">نوع المركبة *</label>
+                        <select id="vehicleType" name="vehicleType" required>
+                            <option value="">اختر نوع المركبة</option>
+                            <option value="motorcycle">دراجة نارية</option>
+                            <option value="bicycle">دراجة هوائية</option>
+                            <option value="car">سيارة</option>
+                            <option value="van">فان</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="licenseNumber">رقم رخصة القيادة *</label>
+                        <input type="text" id="licenseNumber" name="licenseNumber" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="workingHours">ساعات العمل</label>
+                        <input type="text" id="workingHours" name="workingHours" placeholder="مثال: 9:00 ص - 11:00 م">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="experience">سنوات الخبرة</label>
+                        <select id="experience" name="experience">
+                            <option value="">اختر سنوات الخبرة</option>
+                            <option value="0-1">أقل من سنة</option>
+                            <option value="1-3">1-3 سنوات</option>
+                            <option value="3-5">3-5 سنوات</option>
+                            <option value="5+">أكثر من 5 سنوات</option>
+                        </select>
+                    </div>
+
+                    <!-- Location Section -->
+                    <div class="form-group">
+                        <label>الموقع الجغرافي *</label>
+                        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                            <input type="text" id="coordinates" name="coordinates" placeholder="سيتم تحديد الموقع تلقائياً" readonly style="flex: 1;">
+                            <button type="button" id="detect-location-btn" class="btn btn-outline" style="white-space: nowrap;">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>حدد موقعك</span>
+                            </button>
+                        </div>
+                        <input type="hidden" id="lat" name="lat">
+                        <input type="hidden" id="lng" name="lng">
+                    </div>
+
+                    <!-- Document Upload Section -->
+                    <div class="form-group">
+                        <label>المستندات القانونية المطلوبة *</label>
+                        <div id="docs-uploader" class="docs-uploader">
+                            <!-- Document upload fields will be generated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="terms" name="terms" required>
+                            أوافق على <a href="/terms.html" target="_blank">شروط الاستخدام</a> و <a href="/privacy.html" target="_blank">سياسة الخصوصية</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        إنشاء حساب مندوب التوصيل
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <p>لديك حساب بالفعل؟</p>
+                    <a href="/auth.html" class="btn btn-outline">
+                        <i class="fas fa-sign-in-alt"></i>
+                        تسجيل الدخول
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script src="js/location-manager.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('courierSignupForm');
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+
+                // التحقق من تطابق كلمات المرور
+                if (data.password !== data.confirmPassword) {
+                    alert('كلمات المرور غير متطابقة');
+                    return;
+                }
+
+                // التحقق من الموافقة على الشروط
+                if (!data.terms) {
+                    alert('يجب الموافقة على الشروط والأحكام');
+                    return;
+                }
+
+                try {
+                    // استخدام دالة التسجيل الموحدة
+                    await window.LX.signUp({
+                        email: data.email,
+                        password: data.password,
+                        meta: {
+                            account: 'courier',
+                            fullName: data.fullName,
+                            phone: data.phone,
+                            address: data.address,
+                            city: data.city,
+                            vehicleType: data.vehicleType,
+                            licenseNumber: data.licenseNumber,
+                            workingHours: data.workingHours,
+                            experience: data.experience
+                        }
+                    );
+
+                    window.toastSuccess('تم إنشاء الحساب! افحص بريدك للتفعيل.');
+
+                } catch (error) {
+                    console.error('خطأ في التسجيل:', error);
+                    window.toastError('خطأ في التسجيل: ' + (error.message || 'تعذر إتمام العملية'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

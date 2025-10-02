@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استكمال التسجيل - LUXBYTE</title>
+    <meta name="description" content="استكمل تسجيلك في منصة LUXBYTE">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        window.APP_CONFIG = {
+            SUPABASE_URL: 'https://qjsvgpvbtrcnbhcjdcci.supabase.co',
+            SUPABASE_ANON_KEY: 'sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e'
+        };
+    </script>
+</head>
+<body class="dashboard">
+    <header class="site-header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" style="width: 40px; height: 40px; object-fit: contain;">
+                <span style="font-size: 18px; font-weight: 600; color: #333; margin-right: 10px;">LUXBYTE</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="card" style="max-width: 600px; margin: 50px auto; padding: 40px;">
+                <div class="complete-icon" style="font-size: 3rem; color: #007bff; margin-bottom: 20px; text-align: center;">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+
+                <h1 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">استكمال التسجيل</h1>
+
+                <div id="loading-message" style="display: none;">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>جاري التحقق من حالة التسجيل...</p>
+                    </div>
+                </div>
+
+                <div id="success-content" style="display: none;">
+                    <div style="color: #28a745; font-size: 1.2rem; margin-bottom: 20px; text-align: center;">
+                        <i class="fas fa-check-circle"></i>
+                        <p>تم تأكيد البريد الإلكتروني بنجاح!</p>
+                    </div>
+
+                    <p style="text-align: center; margin-bottom: 30px; color: #666;">
+                        يمكنك الآن تسجيل الدخول إلى حسابك والوصول إلى لوحة التحكم الخاصة بك.
+                    </p>
+
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="window.location.href='auth.html'" style="margin: 10px;">
+                            <i class="fas fa-sign-in-alt"></i>
+                            تسجيل الدخول
+                        </button>
+                    </div>
+                </div>
+
+                <div id="error-content" style="display: none;">
+                    <div style="color: #dc3545; font-size: 1.2rem; margin-bottom: 20px; text-align: center;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>فشل في التحقق من حالة التسجيل</p>
+                    </div>
+
+                    <p style="text-align: center; margin-bottom: 30px; color: #666;">
+                        يبدو أن هناك مشكلة في التحقق من حالة التسجيل. يرجى المحاولة مرة أخرى.
+                    </p>
+
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="window.location.href='auth.html'" style="margin: 10px;">
+                            <i class="fas fa-arrow-right"></i>
+                            العودة لتسجيل الدخول
+                        </button>
+
+                        <button class="btn btn-outline" onclick="window.location.href='choose-activity.html'" style="margin: 10px;">
+                            <i class="fas fa-user-plus"></i>
+                            إنشاء حساب جديد
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { getSupabase } from './js/supabase-client.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loadingMessage = document.getElementById('loading-message');
+            const successContent = document.getElementById('success-content');
+            const errorContent = document.getElementById('error-content');
+
+            try {
+                loadingMessage.style.display = 'block';
+
+                const supabase = getSupabase();
+                const { data: { session } } = await supabase.auth.getSession();
+
+                if (!session) {
+                    // No session, redirect to auth
+                    window.location.href = 'auth.html';
+                    return;
+                }
+
+                // Check if email is confirmed
+                if (!session.user.email_confirmed_at) {
+                    // Email not confirmed yet, show waiting message
+                    loadingMessage.innerHTML = `
+                        <div class="loading-spinner">
+                            <i class="fas fa-envelope"></i>
+                            <p>يرجى تأكيد البريد الإلكتروني أولاً</p>
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                                تحقق من بريدك الإلكتروني واضغط على الرابط المرسل إليك
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Email is confirmed, check if profile exists
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('user_id', session.user.id)
+                    .single();
+
+                if (profile) {
+                    // Profile exists, show success and redirect to login
+                    loadingMessage.style.display = 'none';
+                    successContent.style.display = 'block';
+
+                    // Auto redirect to login after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = 'auth.html';
+                    }, 3000);
+                } else {
+                    // No profile, show success and redirect to login
+                    loadingMessage.style.display = 'none';
+                    successContent.style.display = 'block';
+
+                    // Auto redirect to login after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = 'auth.html';
+                    }, 3000);
+                }
+
+            } catch (error) {
+                console.error('Complete registration error:', error);
+                loadingMessage.style.display = 'none';
+                errorContent.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

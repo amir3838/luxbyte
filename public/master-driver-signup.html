@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب ماستر درايفر - LUXBYTE</title>
+    <meta name="description" content="انضم إلى LUXBYTE كسائق رئيسي وابدأ استخدام منصّتنا الآن">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+
+    <style>
+        body {
+            background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .site-header {
+            background: transparent !important;
+        }
+
+        main {
+            background: transparent !important;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .master-driver-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .master-driver-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: #e74c3c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .shop-eg-card {
+            width: 120px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-eg-card img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        .btn-primary {
+            background: #e74c3c !important;
+            border: 2px solid #e74c3c !important;
+            color: #000 !important;
+            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #c0392b !important;
+            border-color: #c0392b !important;
+            color: #000 !important;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #000 !important;
+            border: 2px solid #000 !important;
+            color: #fff !important;
+            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background: #333 !important;
+            border-color: #333 !important;
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+
+        .location-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .location-section h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .location-inputs {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .location-btn {
+            background: #e74c3c !important;
+            border: 2px solid #e74c3c !important;
+            color: #000 !important;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .location-btn:hover {
+            background: #c0392b !important;
+            border-color: #c0392b !important;
+        }
+
+        .location-btn:disabled {
+            background: #ccc !important;
+            border-color: #ccc !important;
+            cursor: not-allowed;
+        }
+
+        .docs-uploader {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .docs-uploader h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .upload-item {
+            text-align: center;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-item:hover {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .upload-item.uploaded {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .upload-item i {
+            font-size: 2rem;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+
+        .upload-item.uploaded i {
+            color: #27ae60;
+        }
+
+        .upload-item span {
+            display: block;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .upload-item.uploaded span {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .notification {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .notification.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .notification.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .notification.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .terms-checkbox label {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .terms-checkbox a {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+
+        .terms-checkbox a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .location-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <main class="page" dir="rtl">
+        <section class="card">
+            <div class="master-driver-header">
+                <div class="master-driver-icon">
+                    <img src="assets/images/activities/driver.png" alt="Master Driver" style="width: 50px; height: 50px; object-fit: contain;">
+                </div>
+                <div class="shop-eg-card">
+                    <img src="assets/images/shopeg_logo.webp" alt="Shop EG">
+                </div>
+                <h1>إنشاء حساب ماستر درايفر</h1>
+                <p>انضم إلى منصة LUXBYTE كسائق رئيسي وابدأ رحلتك المهنية</p>
+            </div>
+
+            <form id="masterDriverSignupForm">
+                <!-- معلومات شخصية -->
+                <div class="form-group">
+                    <label for="fullName">الاسم الكامل *</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني *</label>
+                        <input type="email" id="email" name="email" autocomplete="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف *</label>
+                        <input type="tel" id="phone" name="phone" autocomplete="tel" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">كلمة المرور *</label>
+                    <input type="password" id="password" name="password" autocomplete="new-password" required minlength="6">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">تأكيد كلمة المرور *</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" required>
+                </div>
+
+                <!-- معلومات السيارة -->
+                <div class="form-group">
+                    <label for="carModel">موديل السيارة *</label>
+                    <input type="text" id="carModel" name="carModel" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="carYear">سنة الصنع *</label>
+                    <input type="number" id="carYear" name="carYear" required min="1990" max="2024">
+                </div>
+
+                <div class="form-group">
+                    <label for="carColor">لون السيارة *</label>
+                    <input type="text" id="carColor" name="carColor" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="licensePlate">رقم اللوحة *</label>
+                    <input type="text" id="licensePlate" name="licensePlate" required>
+                </div>
+
+                <!-- معلومات الترخيص -->
+                <div class="form-group">
+                    <label for="drivingLicense">رقم رخصة القيادة *</label>
+                    <input type="text" id="drivingLicense" name="drivingLicense" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="licenseExpiry">تاريخ انتهاء الرخصة *</label>
+                    <input type="date" id="licenseExpiry" name="licenseExpiry" required>
+                </div>
+
+                <!-- معلومات العمل -->
+                <div class="form-group">
+                    <label for="experience">سنوات الخبرة *</label>
+                    <select id="experience" name="experience" required>
+                        <option value="">اختر سنوات الخبرة</option>
+                        <option value="0-1">أقل من سنة</option>
+                        <option value="1-3">1-3 سنوات</option>
+                        <option value="3-5">3-5 سنوات</option>
+                        <option value="5+">أكثر من 5 سنوات</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="workingHours">ساعات العمل المفضلة *</label>
+                    <select id="workingHours" name="workingHours" required>
+                        <option value="">اختر ساعات العمل</option>
+                        <option value="morning">صباحي (6 ص - 2 م)</option>
+                        <option value="evening">مسائي (2 م - 10 م)</option>
+                        <option value="night">ليلي (10 م - 6 ص)</option>
+                        <option value="flexible">مرن</option>
+                    </select>
+                </div>
+
+                <!-- معلومات الموقع -->
+                <div class="location-section">
+                    <h3><i class="fas fa-map-marker-alt"></i> الموقع الجغرافي</h3>
+                    <div class="location-inputs">
+                        <div class="form-group">
+                            <label for="coordinates">الإحداثيات</label>
+                            <input type="text" id="coordinates" name="coordinates" placeholder="سيتم ملؤها تلقائياً" readonly>
+                        </div>
+                        <button type="button" class="location-btn" onclick="initializeLocationDetection()">
+                            <i class="fas fa-location-arrow"></i> تحديد الموقع
+                        </button>
+                    </div>
+                    <input type="hidden" id="lat" name="lat">
+                    <input type="hidden" id="lng" name="lng">
+                </div>
+
+                <!-- رفع المستندات -->
+                <div class="docs-uploader">
+                    <h3><i class="fas fa-upload"></i> رفع المستندات المطلوبة</h3>
+                    <div class="upload-grid">
+                        <div class="upload-item" onclick="uploadDocument('driving_license')">
+                            <i class="fas fa-id-card"></i>
+                            <span>رخصة القيادة</span>
+                        </div>
+                        <div class="upload-item" onclick="uploadDocument('car_registration')">
+                            <i class="fas fa-car"></i>
+                            <span>رخصة السيارة</span>
+                        </div>
+                        <div class="upload-item" onclick="uploadDocument('insurance')">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>تأمين السيارة</span>
+                        </div>
+                        <div class="upload-item" onclick="uploadDocument('criminal_record')">
+                            <i class="fas fa-file-alt"></i>
+                            <span>شهادة حسن السيرة</span>
+                        </div>
+                        <div class="upload-item" onclick="uploadDocument('medical_certificate')">
+                            <i class="fas fa-user-md"></i>
+                            <span>الشهادة الطبية</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الموافقة على الشروط -->
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        أوافق على <a href="terms.html" target="_blank">شروط الاستخدام</a>
+                        و <a href="privacy.html" target="_blank">سياسة الخصوصية</a>
+                    </label>
+                </div>
+
+                <!-- أزرار التحكم -->
+                <div class="form-group">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        إنشاء الحساب
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn-secondary" onclick="window.location.href='/choose-activity.html'">
+                        <i class="fas fa-arrow-right"></i>
+                        العودة لاختيار النشاط
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script src="js/location-manager.js"></script>
+    <script type="module" src="js/file-upload-manager.js"></script>
+
+
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Master Driver Signup Page Loaded');
+
+            // Initialize location detection
+            initializeLocationDetection();
+
+            // Initialize document uploader
+            initializeDocumentUploader();
+        });
+
+        // Location detection
+        function initializeLocationDetection() {
+            const locationBtn = document.querySelector('.location-btn');
+            const coordinatesInput = document.getElementById('coordinates');
+            const latInput = document.getElementById('lat');
+            const lngInput = document.getElementById('lng');
+
+            locationBtn.addEventListener('click', () => {
+                if (!navigator.geolocation) {
+                    showNotification('المتصفح لا يدعم تحديد الموقع', 'error');
+                    return;
+                }
+
+                locationBtn.disabled = true;
+                locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحديد...';
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        latInput.value = lat;
+                        lngInput.value = lng;
+                        coordinatesInput.value = `${lat}, ${lng}`;
+
+                        locationBtn.disabled = false;
+                        locationBtn.innerHTML = '<i class="fas fa-check"></i> تم التحديد';
+
+                        showNotification('تم تحديد الموقع بنجاح', 'success');
+                    },
+                    (error) => {
+                        locationBtn.disabled = false;
+                        locationBtn.innerHTML = '<i class="fas fa-location-arrow"></i> تحديد الموقع';
+
+                        let errorMessage = 'فشل في تحديد الموقع';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage = 'تم رفض إذن الموقع';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage = 'معلومات الموقع غير متاحة';
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage = 'انتهت مهلة طلب الموقع';
+                                break;
+                        }
+                        showNotification(errorMessage, 'error');
+                    }
+                );
+            });
+        }
+
+        // Document uploader
+        function initializeDocumentUploader() {
+            // This will be handled by the file upload manager
+        }
+
+        // Upload document function
+        function uploadDocument(docType) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    // Handle file upload
+                    handleDocumentUpload(docType, file);
+                }
+            };
+            input.click();
+        }
+
+        // Handle document upload
+        async function handleDocumentUpload(docType, file) {
+            try {
+                // Show loading
+                const uploadItem = document.querySelector(`[onclick="uploadDocument('${docType}')"]`);
+                uploadItem.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الرفع...';
+
+                // Here you would implement the actual upload logic
+                // For now, just simulate success
+                setTimeout(() => {
+                    uploadItem.classList.add('uploaded');
+                    uploadItem.innerHTML = '<i class="fas fa-check"></i> تم الرفع';
+                    showNotification('تم رفع المستند بنجاح', 'success');
+                }, 2000);
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                showNotification('فشل في رفع المستند', 'error');
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+
+            // Insert after the form
+            const form = document.getElementById('masterDriverSignupForm');
+            form.parentNode.insertBefore(notification, form.nextSibling);
+
+            // Remove after 5 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        // Form submission
+        document.getElementById('masterDriverSignupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // Validate password confirmation
+            if (data.password !== data.confirmPassword) {
+                showNotification('كلمة المرور غير متطابقة', 'error');
+                return;
+            }
+
+            // Validate location
+            if (!data.lat || !data.lng) {
+                showNotification('يرجى تحديد الموقع الجغرافي', 'error');
+                return;
+            }
+
+            // Validate terms
+            if (!data.terms) {
+                showNotification('يرجى الموافقة على الشروط والأحكام', 'error');
+                return;
+            }
+
+            try {
+                // استخدام دالة التسجيل الموحدة
+                await window.LX.signUp({
+                    email: data.email,
+                    password: data.password,
+                    meta: {
+                        account: 'master-driver',
+                        ...data,
+                        role: 'master-driver',
+                        accountType: 'master-driver'
+                    }
+                });
+
+                window.toastSuccess('تم إنشاء الحساب! افحص بريدك للتفعيل.');
+
+                // Redirect to login page after 3 seconds
+                setTimeout(() => {
+                    window.location.href = '/auth.html';
+                }, 3000);
+
+            } catch (error) {
+                console.error('Registration error:', error);
+                window.toastError('خطأ في التسجيل: ' + (error.message || 'تعذر إتمام العملية'));
+            }
+        });
+    </script>
+</body>
+</html>

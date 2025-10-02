@@ -6,7 +6,7 @@
 (() => {
   // عداد لمراقبة إنشاء العملاء
   window.__supabaseClientCount = (window.__supabaseClientCount || 0) + 1;
-  
+
   // تحميل Supabase بشكل ديناميكي
   if (window.__supabase) {
     console.log('✅ Supabase singleton موجود بالفعل');
@@ -16,13 +16,13 @@
   // إعدادات Supabase
   const URL = window.__ENV?.SUPABASE_URL || window.NEXT_PUBLIC_SUPABASE_URL || 'https://qjsvgpvbtrcnbhcjdcci.supabase.co';
   const ANON = window.__ENV?.SUPABASE_ANON_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e';
-  
+
   // فحص صحة الإعدادات
   const okUrl = typeof URL === 'string' && URL.startsWith('https://') && URL.includes('.supabase.co');
   const okAnon = typeof ANON === 'string' && ANON.startsWith('sb_') && ANON.length > 50;
-  
+
   console.log('SB URL ok?', okUrl, 'ANON len:', ANON?.length);
-  
+
   if (!okUrl || !okAnon) {
     console.error('❌ Supabase config invalid', { okUrl, okAnon, URL });
     alert('إعدادات Supabase غير صحيحة: URL/ANON');

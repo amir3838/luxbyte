@@ -8,20 +8,20 @@ window.LX.signUp = async ({ email, password, meta = {}, redirect = `${location.o
   if (!supa) {
     throw new Error('Supabase client غير متوفر');
   }
-  
+
   const { data, error } = await supa.auth.signUp({
-    email, 
+    email,
     password,
-    options: { 
-      emailRedirectTo: redirect, 
-      data: meta 
+    options: {
+      emailRedirectTo: redirect,
+      data: meta
     }
   });
-  
+
   if (error) {
     throw new Error(error.message || error.error_description || 'فشل في التسجيل');
   }
-  
+
   return data;
 };
 

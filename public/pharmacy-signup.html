@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب صيدلية - LUXBYTE</title>
+    <meta name="description" content="انضم إلى LUXBYTE كصيدلية وابدأ استخدام منصّتنا الآن">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+
+    <style>
+        body {
+            background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .site-header {
+            background: transparent !important;
+        }
+
+        main {
+            background: transparent !important;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .pharmacy-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .pharmacy-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: #e74c3c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .shop-eg-card {
+            width: 120px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-eg-card img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        .btn-primary {
+            background: #e74c3c !important;
+            border: 2px solid #e74c3c !important;
+            color: #000 !important;
+            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #c0392b !important;
+            border-color: #c0392b !important;
+            color: #000 !important;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent !important;
+            border: 2px solid #e74c3c !important;
+            color: #000 !important;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-outline:hover {
+            background: #e74c3c !important;
+            color: #000 !important;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Document Upload Styles */
+        .docs-uploader {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        .doc-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .doc-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .doc-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .doc-upload-btn {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .doc-preview img {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+        }
+
+        /* Geolocation Button Styles */
+        #detect-location-btn.is-loading {
+            background: #f3f4f6 !important;
+            color: #6b7280 !important;
+        }
+
+        #detect-location-btn.btn-success {
+            background: #10b981 !important;
+            color: white !important;
+        }
+
+        #detect-location-btn.btn-danger {
+            background: #ef4444 !important;
+            color: white !important;
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .notification-success {
+            background: #10b981;
+        }
+
+        .notification-error {
+            background: #ef4444;
+        }
+
+        .notification-info {
+            background: #3b82f6;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* Upload Progress Styles */
+        .upload-progress-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            max-width: 400px;
+        }
+
+        .upload-progress-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .file-size {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .cancel-upload {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        .progress-status {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .upload-progress-item.completed .progress-fill {
+            background: #10b981;
+        }
+
+        .upload-progress-item.error .progress-fill {
+            background: #ef4444;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background -->
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="site-header">
+        <div class="container">
+            <div class="brand">
+                <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" style="width: 32px; height: 32px; object-fit: contain;">
+                <span style="font-size: 18px; font-weight: 600; color: #333;">LUXBYTE</span>
+            </div>
+            <nav class="auth-actions">
+                <a href="/" class="btn btn-outline">
+                    <i class="fas fa-home"></i>
+                    الرئيسية
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="card">
+                <div class="pharmacy-header">
+                    <div class="pharmacy-icon">
+                        <img src="assets/images/activities/pharmacy.png" alt="صيدلية" style="width: 50px; height: 50px; object-fit: contain;">
+                    </div>
+                    <div class="shop-eg-card">
+                        <img src="assets/images/shopeg_logo.webp" alt="Shop EG">
+                    </div>
+                    <h1>إنشاء حساب صيدلية</h1>
+                    <p>انضم إلى LUXBYTE كصيدلية وابدأ استخدام منصّتنا الآن</p>
+                </div>
+
+                <form id="pharmacySignupForm">
+                    <div class="form-group">
+                        <label for="pharmacyName">اسم الصيدلية *</label>
+                        <input type="text" id="pharmacyName" name="pharmacyName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ownerName">اسم صاحب الصيدلية *</label>
+                        <input type="text" id="ownerName" name="ownerName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني *</label>
+                        <input type="email" id="email" name="email" autocomplete="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">رقم الهاتف *</label>
+                        <input type="tel" id="phone" name="phone" autocomplete="tel" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">كلمة المرور *</label>
+                        <input type="password" id="password" name="password" autocomplete="new-password" required minlength="8">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">تأكيد كلمة المرور *</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">العنوان *</label>
+                        <textarea id="address" name="address" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="licenseNumber">رقم الترخيص *</label>
+                        <input type="text" id="licenseNumber" name="licenseNumber" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">المدينة *</label>
+                        <select id="city" name="city" required>
+                            <option value="">اختر المدينة</option>
+                            <option value="cairo">القاهرة</option>
+                            <option value="alexandria">الإسكندرية</option>
+                            <option value="giza">الجيزة</option>
+                            <option value="shubra">شبرا الخيمة</option>
+                            <option value="port_said">بورسعيد</option>
+                            <option value="suez">السويس</option>
+                            <option value="luxor">الأقصر</option>
+                            <option value="aswan">أسوان</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="workingHours">ساعات العمل</label>
+                        <input type="text" id="workingHours" name="workingHours" placeholder="مثال: 9:00 ص - 11:00 م">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">وصف الصيدلية</label>
+                        <textarea id="description" name="description" rows="3" placeholder="وصف مختصر عن الصيدلية"></textarea>
+                    </div>
+
+                    <!-- Location Section -->
+                    <div class="form-group">
+                        <label>الموقع الجغرافي *</label>
+                        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                            <input type="text" id="coordinates" name="coordinates" placeholder="سيتم تحديد الموقع تلقائياً" readonly style="flex: 1;">
+                            <button type="button" id="detect-location-btn" class="btn btn-outline" style="white-space: nowrap;">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>حدد موقعك</span>
+                            </button>
+                        </div>
+                        <input type="hidden" id="lat" name="lat">
+                        <input type="hidden" id="lng" name="lng">
+                    </div>
+
+                    <!-- Document Upload Section -->
+                    <div class="form-group">
+                        <label>المستندات القانونية المطلوبة *</label>
+                        <div id="docs-uploader" class="docs-uploader">
+                            <!-- Document upload fields will be generated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="terms" name="terms" required>
+                            أوافق على <a href="/terms.html" target="_blank">شروط الاستخدام</a> و <a href="/privacy.html" target="_blank">سياسة الخصوصية</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        إنشاء حساب الصيدلية
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <p>لديك حساب بالفعل؟</p>
+                    <a href="/auth.html" class="btn btn-outline">
+                        <i class="fas fa-sign-in-alt"></i>
+                        تسجيل الدخول
+                    </a>
+                </div>
+
+                <!-- معلومات الاتصال -->
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 30px; text-align: center;">
+                    <h3 style="color: #e74c3c; margin-bottom: 15px;">تواصل معنا</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div>
+                            <i class="fas fa-phone" style="color: #e74c3c; margin-left: 8px;"></i>
+                <strong>الهاتف:</strong> 01552997892
+            </div>
+            <div>
+                <i class="fas fa-envelope" style="color: #e74c3c; margin-left: 8px;"></i>
+                <strong>البريد:</strong> luxbyte@gmail.com
+            </div>
+            <div>
+                <i class="fab fa-whatsapp" style="color: #25D366; margin-left: 8px;"></i>
+                <strong>واتساب:</strong> 01148709609
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <a href="https://facebook.com/luxbyte" target="_blank" style="margin: 0 10px; color: #1877F2; font-size: 1.5rem;">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://instagram.com/luxbyte" target="_blank" style="margin: 0 10px; color: #E4405F; font-size: 1.5rem;">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://tiktok.com/@luxbyte" target="_blank" style="margin: 0 10px; color: #000; font-size: 1.5rem;">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script src="js/location-manager.js"></script>
+    <script src="js/file-upload-manager.js"></script>
+    <script src="js/supabase-client.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎉 Pharmacy Signup Page Loaded');
+
+            // Initialize components
+            initializeLocationDetection();
+            initializeDocumentUploader();
+
+            const form = document.getElementById('pharmacySignupForm');
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+
+                // التحقق من تطابق كلمات المرور
+                if (data.password !== data.confirmPassword) {
+                    showNotification('كلمات المرور غير متطابقة', 'error');
+                    return;
+                }
+
+                // التحقق من الموافقة على الشروط
+                if (!data.terms) {
+                    showNotification('يجب الموافقة على الشروط والأحكام', 'error');
+                    return;
+                }
+
+                // التحقق من الموقع الجغرافي
+                if (!data.lat || !data.lng) {
+                    showNotification('يرجى تحديد الموقع الجغرافي', 'error');
+                    return;
+                }
+
+                try {
+                    // استخدام دالة التسجيل الموحدة
+                    await window.LX.signUp({
+                        email: data.email,
+                        password: data.password,
+                        meta: {
+                            account: 'pharmacy',
+                            pharmacyName: data.pharmacyName,
+                            ownerName: data.ownerName,
+                            phone: data.phone,
+                            address: data.address,
+                            licenseNumber: data.licenseNumber,
+                            city: data.city,
+                            workingHours: data.workingHours,
+                            description: data.description,
+                            lat: data.lat,
+                            lng: data.lng
+                        }
+                    );
+
+                    window.toastSuccess('تم إنشاء الحساب! افحص بريدك للتفعيل.');
+
+                } catch (error) {
+                    console.error('خطأ في التسجيل:', error);
+                    window.toastError('خطأ في التسجيل: ' + (error.message || 'تعذر إتمام العملية'));
+                }
+            });
+        });
+
+        // Location Detection
+        function initializeLocationDetection() {
+            const detectLocationBtn = document.getElementById('detect-location-btn');
+            const latInput = document.getElementById('lat');
+            const lngInput = document.getElementById('lng');
+            const coordinatesDisplay = document.getElementById('coordinates');
+
+            if (!detectLocationBtn || !coordinatesDisplay) return;
+
+            let isRequesting = false;
+
+            detectLocationBtn.addEventListener('click', async function() {
+                if (isRequesting) return;
+
+                // Check HTTPS
+                if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                    showNotification('يجب تفعيل الموقع والمتصفح على اتصال آمن (HTTPS).', 'error');
+                    return;
+                }
+
+                if (!navigator.geolocation) {
+                    showNotification('المتصفح لا يدعم الحصول على الموقع الجغرافي', 'error');
+                    return;
+                }
+
+                isRequesting = true;
+                detectLocationBtn.classList.add('is-loading');
+                detectLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>جاري التحميل…</span>';
+                detectLocationBtn.disabled = true;
+
+                try {
+                    const position = await getCurrentPositionAsync();
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+
+                    // Save coordinates in hidden fields
+                    if (latInput) latInput.value = lat;
+                    if (lngInput) lngInput.value = lng;
+                    coordinatesDisplay.value = `تم تحديد الموقع: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+
+                    detectLocationBtn.innerHTML = '<i class="fas fa-check"></i><span>تم تحديد الموقع</span>';
+                    detectLocationBtn.classList.add('btn-success');
+                    detectLocationBtn.classList.remove('is-loading');
+
+                    showNotification('تم تحديد الموقع بنجاح!', 'success');
+
+                    // Reset after 3 seconds
+                    setTimeout(() => {
+                        detectLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>حدد موقعك</span>';
+                        detectLocationBtn.classList.remove('btn-success');
+                        detectLocationBtn.disabled = false;
+                        isRequesting = false;
+                    }, 3000);
+
+                } catch (error) {
+                    console.error('Error getting location:', error);
+
+                    let errorMessage = 'حدث خطأ في الحصول على الموقع';
+                    let actionMessage = '';
+
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = 'تم رفض إذن الموقع';
+                            actionMessage = 'يرجى السماح بالوصول للموقع في إعدادات المتصفح';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = 'الموقع غير متاح';
+                            actionMessage = 'تأكد من تفعيل GPS في الجهاز';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = 'انتهت مهلة الحصول على الموقع';
+                            actionMessage = 'يرجى المحاولة مرة أخرى';
+                            break;
+                    }
+
+                    detectLocationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>خطأ</span>';
+                    detectLocationBtn.classList.add('btn-danger');
+                    detectLocationBtn.classList.remove('is-loading');
+
+                    showNotification(`${errorMessage}. ${actionMessage}`, 'error');
+
+                    // Reset after 4 seconds
+                    setTimeout(() => {
+                        detectLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>حدد موقعك</span>';
+                        detectLocationBtn.classList.remove('btn-danger');
+                        detectLocationBtn.disabled = false;
+                        isRequesting = false;
+                    }, 4000);
+                }
+            });
+        }
+
+        // Promise-based geolocation
+        function getCurrentPositionAsync() {
+            return new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(
+                    resolve,
+                    reject,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 15000,
+                        maximumAge: 0
+                    }
+                );
+            });
+        }
+
+        // Document Uploader
+        function initializeDocumentUploader() {
+            const docsUploader = document.getElementById('docs-uploader');
+            if (!docsUploader) return;
+
+            // Document requirements for pharmacy
+            const requirements = [
+                { key: 'ph_license', label: 'صورة ترخيص/قيد صيدلي', required: true },
+                { key: 'ph_id_front', label: 'بطاقة الصيدلي المسؤول (وجه)', required: true },
+                { key: 'ph_id_back', label: 'بطاقة الصيدلي المسؤول (ظهر)', required: true },
+                { key: 'ph_cr', label: 'السجل التجاري', required: true }
+            ];
+
+            // Clear existing content
+            docsUploader.innerHTML = '';
+
+            // Create upload fields
+            requirements.forEach((doc, index) => {
+                const docItem = document.createElement('div');
+                docItem.className = 'doc-item';
+                docItem.innerHTML = `
+                    <div class="doc-title">
+                        ${doc.label}
+                        ${doc.required ? '<span style="color: #ef4444;">*</span>' : ''}
+                    </div>
+                    <div class="doc-actions">
+                        <input type="file" class="doc-input" accept="image/*,application/pdf" data-key="${doc.key}" style="display: none;">
+                        <button type="button" class="btn btn-outline doc-upload-btn" data-key="${doc.key}">
+                            <i class="fas fa-upload"></i> رفع ملف
+                        </button>
+                        <div class="doc-preview" style="margin-top: 10px;"></div>
+                    </div>
+                `;
+
+                docsUploader.appendChild(docItem);
+
+                // Add event listeners
+                const uploadBtn = docItem.querySelector('.doc-upload-btn');
+                const fileInput = docItem.querySelector('.doc-input');
+                const preview = docItem.querySelector('.doc-preview');
+
+                uploadBtn.addEventListener('click', () => {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        handleFileUpload(file, uploadBtn, preview, doc);
+                    }
+                });
+            });
+        }
+
+        function handleFileUpload(file, uploadBtn, preview, doc) {
+            // Validate file
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+
+            if (file.size > maxSize) {
+                showNotification('الملف كبير جداً. الحد الأقصى 5 ميجابايت', 'error');
+                return;
+            }
+
+            if (!allowedTypes.includes(file.type)) {
+                showNotification('نوع الملف غير مدعوم. يرجى اختيار JPG, PNG, أو PDF', 'error');
+                return;
+            }
+
+            // Show preview
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.innerHTML = `
+                        <img src="${e.target.result}" style="max-width: 200px; max-height: 150px; border-radius: 8px; border: 2px solid #e5e7eb;">
+                        <p style="margin: 5px 0; color: #28a745; font-size: 14px;">
+                            <i class="fas fa-check"></i> تم رفع الملف بنجاح
+                        </p>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = `
+                    <div style="padding: 10px; background: #f0f9ff; border: 2px solid #0ea5e9; border-radius: 8px; color: #0c4a6e;">
+                        <i class="fas fa-file-pdf"></i> ${file.name}
+                        <p style="margin: 5px 0; color: #28a745; font-size: 14px;">
+                            <i class="fas fa-check"></i> تم رفع الملف بنجاح
+                        </p>
+                    </div>
+                `;
+            }
+
+            uploadBtn.innerHTML = '<i class="fas fa-check"></i> تم الرفع';
+            uploadBtn.classList.add('btn-success');
+            uploadBtn.classList.remove('btn-outline');
+
+            showNotification(`تم رفع ${doc.label} بنجاح`, 'success');
+        }
+
+        // Notification function
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

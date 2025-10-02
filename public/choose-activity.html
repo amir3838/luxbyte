@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختيار النشاط - LUXBYTE</title>
+    <meta name="description" content="اختر النشاط المناسب لك في منصة LUXBYTE">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#d81e1e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="LUXBYTE">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/app_icon/LUXBYTEICON.PNG">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/app_icon/LUXBYTEICON.PNG">
+    <link rel="apple-touch-icon" href="/assets/app_icon/LUXBYTEICON.PNG">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="stylesheet" href="css/components/cards.css">
+
+    <style>
+        body {
+            background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* إخفاء الخلفية البيضاء من styles.css */
+        .site-header {
+            background: transparent !important;
+        }
+
+        main {
+            background: transparent !important;
+        }
+
+        /* الكروت فقط بخلفية بيضاء */
+        .card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* إخفاء اللوجو الكبير */
+        .header .logo {
+            display: none !important;
+        }
+
+        /* تصغير اللوجو في الموقع */
+        .site-header .brand img {
+            width: 40px !important;
+            height: 40px !important;
+        }
+
+        /* تنسيق الكروت */
+        .activity-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .activity-card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .activity-card p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .activity-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #e74c3c;
+        }
+
+        /* أزرار حمراء مع نص أسود */
+        .btn-primary {
+            background: #e74c3c !important;
+            border: 2px solid #e74c3c !important;
+            color: #000 !important;
+            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #c0392b !important;
+            border-color: #c0392b !important;
+            color: #000 !important;
+            transform: translateY(-2px);
+        }
+
+        /* أزرار مهمة سوداء مع نص أبيض */
+        .btn-important {
+            background: #000 !important;
+            border: 2px solid #000 !important;
+            color: #fff !important;
+            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-important:hover {
+            background: #333 !important;
+            border-color: #333 !important;
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+
+        /* أزرار ثانوية حمراء مع نص أسود */
+        .btn-outline {
+            background: transparent !important;
+            border: 2px solid #e74c3c !important;
+            color: #000 !important;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: #e74c3c !important;
+            color: #000 !important;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-title p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .activity-card {
+                padding: 30px 20px;
+                margin: 15px 0;
+            }
+
+            .activity-card h2 {
+                font-size: 1.5rem;
+            }
+
+            .activity-icon {
+                font-size: 3rem;
+            }
+
+            .page-title h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background -->
+    <div class="hero-bg" aria-hidden="true"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="site-header">
+        <div class="container">
+            <div class="brand">
+                <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" style="width: 32px; height: 32px; object-fit: contain;">
+                <span style="font-size: 18px; font-weight: 600; color: #333;">LUXBYTE</span>
+            </div>
+            <nav class="auth-actions">
+                <a href="auth.html" class="btn btn-outline">
+                    <i class="fas fa-sign-in-alt"></i>
+                    تسجيل الدخول
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Welcome Card -->
+            <div class="card text-center mb-8">
+                <div class="card-header" style="justify-content: center;">
+                    <div class="card-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div>
+                        <h1 class="card-title" style="font-size: 32px; margin-bottom: 8px;">مرحباً بك في LUXBYTE</h1>
+                        <p style="color: #666; font-size: 18px;">منصة شوب إي جي المتكاملة للمنشآت التجارية</p>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-primary" onclick="selectActivity('shop-eg')" style="margin: 5px;">
+                                <img src="assets/images/shopeg_logo.webp" alt="Shop EG" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
+                                شوب إي جي
+                            </button>
+                            <button class="btn btn-important" onclick="selectActivity('master-driver')" style="margin: 5px;">
+                                <img src="assets/images/activities/driver.png" alt="Master Driver" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
+                                ماستر درايفر
+                            </button>
+                            <div style="margin-top: 15px;">
+                                <a href="/auth.html" class="btn btn-outline" style="margin: 5px;">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    تسجيل الدخول
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 30px; text-align: center;">
+                <h3 style="color: #e74c3c; margin-bottom: 15px;">تواصل معنا</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <i class="fas fa-phone" style="color: #e74c3c; margin-left: 8px;"></i>
+                        <strong>الهاتف:</strong> 01552997892
+                    </div>
+                    <div>
+                        <i class="fas fa-envelope" style="color: #e74c3c; margin-left: 8px;"></i>
+                        <strong>البريد:</strong> luxbyte@gmail.com
+                    </div>
+                    <div>
+                        <i class="fab fa-whatsapp" style="color: #25D366; margin-left: 8px;"></i>
+                        <strong>واتساب:</strong> 01148709609
+                    </div>
+                    <div>
+                        <i class="fas fa-globe" style="color: #e74c3c; margin-left: 8px;"></i>
+                        <strong>الموقع:</strong> www.luxbyte.site
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <a href="https://facebook.com/luxbyte" target="_blank" style="margin: 0 10px; color: #1877F2; font-size: 1.5rem;">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://instagram.com/luxbyte" target="_blank" style="margin: 0 10px; color: #E4405F; font-size: 1.5rem;">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://tiktok.com/@luxbyte" target="_blank" style="margin: 0 10px; color: #000; font-size: 1.5rem;">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="js/supabase-client.js"></script>
+    <script type="module" src="js/auth-guard.js"></script>
+    <script type="module" src="js/theme-manager.js"></script>
+    <script type="module" src="js/navigation-bar.js"></script>
+    <script type="module" src="js/translation-manager.js"></script>
+    <script>
+        // Activity selection
+        async function selectActivity(activity) {
+            try {
+                // حفظ النشاط المختار في localStorage
+                localStorage.setItem('selectedActivity', activity);
+
+                if (activity === 'shop-eg') {
+                    // توجيه إلى الصفحة الرئيسية (اختيار الدور)
+                    window.location.href = '/';
+                } else if (activity === 'master-driver') {
+                    // توجيه إلى نموذج تسجيل ماستر درايفر
+                    window.location.href = '/master-driver-signup.html';
+                }
+            } catch (error) {
+                console.error('خطأ في اختيار النشاط:', error);
+                alert('حدث خطأ في اختيار النشاط');
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Activity Selection Page Loaded');
+
+            // Initialize LUXBYTE if available
+            if (typeof LUXBYTE !== 'undefined') {
+                await LUXBYTE.init();
+            }
+
+            // Initialize common elements
+            applyI18n();
+        });
+    </script>
+
+    <!-- PWA Scripts -->
+    <script type="module" src="js/common.js"></script>
+    <script type="module" src="js/theme-lang-toggle.js"></script>
+    <script type="module" src="js/ux-effects.js"></script>
+    <script src="js/register-sw.js"></script>
+</body>
+</html>

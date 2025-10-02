@@ -1,0 +1,483 @@
+/**
+ * LUXBYTE Cards Component
+ * مكون البطاقات لـ LUXBYTE
+ *
+ * تصميم عصري للبطاقات مع تأثيرات تفاعلية
+ */
+
+:root {
+  /* ألوان العلامة التجارية */
+  --brand-primary: #d81e1e;
+  --brand-secondary: #c0392b;
+  --brand-gold: #c7a857;
+  --brand-dark: #2c3e50;
+
+  /* ألوان البطاقات */
+  --card-bg-light: rgba(255, 255, 255, 0.95);
+  --card-bg-dark: rgba(20, 20, 20, 0.85);
+  --card-border-light: rgba(0, 0, 0, 0.08);
+  --card-border-dark: rgba(255, 255, 255, 0.12);
+  --card-shadow-light: 0 6px 18px rgba(0, 0, 0, 0.08);
+  --card-shadow-dark: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --card-shadow-hover-light: 0 12px 28px rgba(0, 0, 0, 0.14);
+  --card-shadow-hover-dark: 0 16px 36px rgba(0, 0, 0, 0.35);
+
+  /* ألوان النصوص */
+  --text-primary-light: #2c3e50;
+  --text-primary-dark: #ecf0f1;
+  --text-secondary-light: #7f8c8d;
+  --text-secondary-dark: #bdc3c7;
+  --text-muted-light: #95a5a6;
+  --text-muted-dark: #7f8c8d;
+
+  /* ألوان الأزرار */
+  --btn-primary-bg: var(--brand-primary);
+  --btn-primary-hover: var(--brand-secondary);
+  --btn-secondary-bg: rgba(52, 152, 219, 0.1);
+  --btn-secondary-color: #3498db;
+  --btn-secondary-hover: #3498db;
+
+  /* ألوان الحالات */
+  --success-color: #27ae60;
+  --warning-color: #f39c12;
+  --error-color: #e74c3c;
+  --info-color: #3498db;
+
+  /* المسافات */
+  --card-padding: 20px;
+  --card-radius: 18px;
+  --card-gap: 16px;
+
+  /* الانتقالات */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+/* الثيم الفاتح */
+[data-theme="light"] {
+  --card-bg: var(--card-bg-light);
+  --card-border: var(--card-border-light);
+  --card-shadow: var(--card-shadow-light);
+  --card-shadow-hover: var(--card-shadow-hover-light);
+  --text-primary: var(--text-primary-light);
+  --text-secondary: var(--text-secondary-light);
+  --text-muted: var(--text-muted-light);
+}
+
+/* الثيم الداكن */
+[data-theme="dark"] {
+  --card-bg: var(--card-bg-dark);
+  --card-border: var(--card-border-dark);
+  --card-shadow: var(--card-shadow-dark);
+  --card-shadow-hover: var(--card-shadow-hover-dark);
+  --text-primary: var(--text-primary-dark);
+  --text-secondary: var(--text-secondary-dark);
+  --text-muted: var(--text-muted-dark);
+}
+
+/* البطاقة الأساسية */
+.lx-card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all var(--transition-normal);
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+/* تأثيرات التفاعل */
+.lx-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--brand-primary);
+}
+
+.lx-card:active {
+  transform: translateY(-2px) scale(1.005);
+}
+
+.lx-card:focus-within {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* رأس البطاقة */
+.lx-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.lx-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+  letter-spacing: 0.5px;
+}
+
+.lx-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, var(--brand-gold), #e9d8a6);
+  color: var(--brand-dark);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(199, 168, 87, 0.3);
+}
+
+/* محتوى البطاقة */
+.lx-card__body {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.lx-card__description {
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+  opacity: 0.9;
+}
+
+/* قائمة الميزات */
+.lx-card__features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+.lx-card__features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.lx-card__features li i {
+  color: var(--brand-primary);
+  width: 16px;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+/* أزرار البطاقة */
+.lx-card__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.lx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 2px solid var(--card-border);
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  min-height: 44px;
+}
+
+.lx-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.lx-btn:active {
+  transform: translateY(0);
+}
+
+.lx-btn:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* أنواع الأزرار */
+.lx-btn--primary {
+  background: var(--btn-primary-bg);
+  color: white;
+  border-color: var(--btn-primary-bg);
+}
+
+.lx-btn--primary:hover {
+  background: var(--btn-primary-hover);
+  border-color: var(--btn-primary-hover);
+  color: white;
+}
+
+.lx-btn--secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
+  border-color: var(--btn-secondary-color);
+}
+
+.lx-btn--secondary:hover {
+  background: var(--btn-secondary-hover);
+  color: white;
+}
+
+.lx-btn--outline {
+  background: transparent;
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.lx-btn--outline:hover {
+  background: var(--text-primary);
+  color: var(--card-bg);
+}
+
+.lx-btn--gold {
+  background: linear-gradient(135deg, var(--brand-gold), #e9d8a6);
+  color: var(--brand-dark);
+  border-color: var(--brand-gold);
+}
+
+.lx-btn--gold:hover {
+  background: linear-gradient(135deg, #e9d8a6, var(--brand-gold));
+  transform: translateY(-2px);
+}
+
+/* شبكة البطاقات */
+.lx-grid {
+  display: grid;
+  gap: var(--card-gap);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .lx-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .lx-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* تأثيرات الرسوم المتحركة */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* تطبيق الرسوم المتحركة */
+.lx-card.reveal {
+  animation: reveal 0.5s ease both;
+}
+
+.lx-card.slide-in {
+  animation: slideIn 0.4s ease both;
+}
+
+.lx-card.fade-in {
+  animation: fadeIn 0.3s ease both;
+}
+
+/* تأخير متدرج للرسوم المتحركة */
+.lx-card:nth-child(1) { animation-delay: 0.1s; }
+.lx-card:nth-child(2) { animation-delay: 0.2s; }
+.lx-card:nth-child(3) { animation-delay: 0.3s; }
+.lx-card:nth-child(4) { animation-delay: 0.4s; }
+.lx-card:nth-child(5) { animation-delay: 0.5s; }
+.lx-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* حالات خاصة */
+.lx-card--featured {
+  border: 2px solid var(--brand-primary);
+  background: linear-gradient(135deg, var(--card-bg), rgba(216, 30, 30, 0.05));
+}
+
+.lx-card--featured .lx-card__title {
+  color: var(--brand-primary);
+}
+
+.lx-card--loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.lx-card--loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* استجابة للشاشات الصغيرة */
+@media (max-width: 480px) {
+  .lx-card {
+    padding: 16px;
+    margin: 0 8px 16px 8px;
+  }
+
+  .lx-card__title {
+    font-size: 1.1rem;
+  }
+
+  .lx-card__actions {
+    flex-direction: column;
+  }
+
+  .lx-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .lx-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* دعم prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .lx-card,
+  .lx-btn {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .lx-card:hover {
+    transform: none !important;
+  }
+
+  .lx-btn:hover {
+    transform: none !important;
+  }
+}
+
+/* تحسينات للطباعة */
+@media print {
+  .lx-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+
+  .lx-card__actions {
+    display: none;
+  }
+}
+
+/* دعم RTL */
+[dir="rtl"] .lx-card__header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .lx-card__features li {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .lx-card__actions {
+  flex-direction: row-reverse;
+}
+
+/* تحسينات إضافية */
+.lx-card__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.lx-card__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.lx-card__stat {
+  text-align: center;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.lx-card__stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+  display: block;
+}
+
+.lx-card__stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
