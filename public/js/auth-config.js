@@ -11,7 +11,7 @@ function getBaseUrl() {
     if (typeof window !== 'undefined' && window.location) {
         return window.location.origin;
     }
-    return 'https://luxbyte.vercel.app'; // fallback URL
+    return 'https://luxbyte.site'; // fallback URL
 }
 
 export const AUTH_CALLBACKS = {

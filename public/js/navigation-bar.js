@@ -79,7 +79,7 @@ class NavigationBar {
      */
     getNavbarHTML() {
         const isDashboard = this.currentPage.includes('dashboard') || this.currentPage === 'admin-panel.html';
-        const isAuthPage = this.currentPage === 'auth.html' || this.currentPage === 'unified-signup.html';
+        const isAuthPage = this.currentPage === 'auth.html' || this.currentPage === 'choose-activity.html';
 
         return `
             <div class="navbar-container">
@@ -100,7 +100,7 @@ class NavigationBar {
                         </a>
 
                         ${!isAuthPage ? `
-                            <a href="unified-signup.html" class="nav-link ${this.currentPage === 'unified-signup.html' ? 'active' : ''}">
+                            <a href="choose-activity.html" class="nav-link ${this.currentPage === 'choose-activity.html' ? 'active' : ''}">
                                 <i class="fas fa-user-plus"></i>
                                 <span>انضم إلينا</span>
                             </a>
@@ -156,7 +156,7 @@ class NavigationBar {
                                     <i class="fas fa-sign-in-alt"></i>
                                     تسجيل الدخول
                                 </a>
-                                <a href="unified-signup.html" class="btn btn-primary">
+                                <a href="choose-activity.html" class="btn btn-primary">
                                     <i class="fas fa-user-plus"></i>
                                     إنشاء حساب
                                 </a>
