@@ -23,7 +23,10 @@
     "deploy:all": "chmod +x deploy-all.sh && ./deploy-all.sh",
     "test": "open public/test-comprehensive.html",
     "lint": "echo 'No linting configured'",
-    "format": "echo 'No formatting configured'"
+    "format": "echo 'No formatting configured'",
+    "scan:secrets": "secretlint \"**/*\" -f @secretlint/formatter-stylish",
+    "scan:greps": "node scripts/scan-secrets.js",
+    "precommit": "npm run scan:secrets && npm run scan:greps"
   },
   "keywords": [
     "business",
@@ -70,7 +73,10 @@
     "pg": "^8.16.3"
   },
   "devDependencies": {
-    "vercel": "^32.0.0"
+    "vercel": "^32.0.0",
+    "@secretlint/cli": "^5.0.0",
+    "@secretlint/secretlint-rule-preset-recommend": "^5.0.0",
+    "@secretlint/formatter-stylish": "^5.0.0"
   },
   "engines": {
     "node": ">=18.0.0",

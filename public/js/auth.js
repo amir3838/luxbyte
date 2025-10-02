@@ -179,9 +179,15 @@ export async function handleRegister(email, password, account, additionalData = 
             .insert({
                 id: user.id,
                 account: account,
+                governorate: additionalData.governorate || null,
                 city: additionalData.city || null,
                 full_name: additionalData.fullName || null,
-                phone: additionalData.phone || null
+                phone: additionalData.phone || null,
+                business_name: additionalData.businessName || null,
+                business_type: additionalData.businessType || null,
+                license_number: additionalData.licenseNumber || null,
+                tax_id: additionalData.taxId || null,
+                address: additionalData.address || null
             });
 
         if (profileError) {

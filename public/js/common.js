@@ -1,156 +1,184 @@
 /**
  * LUXBYTE Common Utilities
- * أدوات مشتركة لجميع الصفحات
+ * أدوات LUXBYTE المشتركة
+ *
+ * يحتوي على عميل Supabase الوحيد (singleton) وأدوات مشتركة
  */
 
-// Common utility functions
-const CommonUtils = {
-    /**
-     * Format currency
-     * تنسيق العملة
-     */
-    formatCurrency(amount, currency = 'EGP') {
-        return new Intl.NumberFormat('ar-EG', {
-            style: 'currency',
-            currency: currency
-        }).format(amount);
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+// إعدادات Supabase - فقط المفاتيح العامة
+const SUPABASE_URL = 'https://qjsvgpvbtrcnbhcjdcci.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NzQ0MzQsImV4cCI6MjA1MTI1MDQzNH0.sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e';
+
+// إنشاء عميل Supabase الوحيد (singleton)
+if (!window.__supabase) {
+  window.__supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      flowType: 'pkce'
     },
-
-    /**
-     * Format date
-     * تنسيق التاريخ
-     */
-    formatDate(date, locale = 'ar-EG') {
-        return new Intl.DateTimeFormat(locale, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        }).format(new Date(date));
+    global: {
+      headers: {
+        'x-client-info': 'luxbyte-web',
+        'x-app-version': '1.0.0'
+      }
     },
-
-    /**
-     * Show loading state
-     * إظهار حالة التحميل
-     */
-    showLoading(element) {
-        if (element) {
-            element.innerHTML = '<div class="loading-spinner">جاري التحميل...</div>';
-        }
+    db: {
+      schema: 'public'
     },
-
-    /**
-     * Hide loading state
-     * إخفاء حالة التحميل
-     */
-    hideLoading(element, content = '') {
-        if (element) {
-            element.innerHTML = content;
-        }
-    },
-
-    /**
-     * Show error message
-     * إظهار رسالة خطأ
-     */
-    showError(message, container = null) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.innerHTML = `
-            <i class="fas fa-exclamation-triangle"></i>
-            <span>${message}</span>
-        `;
-
-        if (container) {
-            container.appendChild(errorDiv);
-        } else {
-            document.body.appendChild(errorDiv);
-        }
-
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            errorDiv.remove();
-        }, 5000);
-    },
-
-    /**
-     * Show success message
-     * إظهار رسالة نجاح
-     */
-    showSuccess(message, container = null) {
-        const successDiv = document.createElement('div');
-        successDiv.className = 'success-message';
-        successDiv.innerHTML = `
-            <i class="fas fa-check-circle"></i>
-            <span>${message}</span>
-        `;
-
-        if (container) {
-            container.appendChild(successDiv);
-        } else {
-            document.body.appendChild(successDiv);
-        }
-
-        // Auto remove after 3 seconds
-        setTimeout(() => {
-            successDiv.remove();
-        }, 3000);
-    },
-
-    /**
-     * Validate email
-     * التحقق من صحة البريد الإلكتروني
-     */
-    validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    },
-
-    /**
-     * Validate phone number
-     * التحقق من صحة رقم الهاتف
-     */
-    validatePhone(phone) {
-        const re = /^(\+20|0)?1[0-9]{9}$/;
-        return re.test(phone.replace(/\s/g, ''));
-    },
-
-    /**
-     * Debounce function
-     * تأخير تنفيذ الدالة
-     */
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    },
-
-    /**
-     * Throttle function
-     * تقليل تكرار تنفيذ الدالة
-     */
-    throttle(func, limit) {
-        let inThrottle;
-        return function() {
-            const args = arguments;
-            const context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
+    realtime: {
+      params: {
+        eventsPerSecond: 10
+      }
     }
-};
+  });
 
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CommonUtils;
-} else {
-    window.CommonUtils = CommonUtils;
+  console.log('✅ تم إنشاء عميل Supabase الوحيد');
 }
+
+// تصدير العميل للاستخدام في الملفات الأخرى
+export const supabase = window.__supabase;
+
+// دالة للحصول على العميل
+export function getSupabase() {
+  return window.__supabase;
+}
+
+// دالة للتحقق من وجود جلسة نشطة
+export async function getCurrentUser() {
+  try {
+    const { data: { user }, error } = await window.__supabase.auth.getUser();
+    if (error) throw error;
+    return user;
+  } catch (error) {
+    console.error('خطأ في الحصول على المستخدم الحالي:', error);
+    return null;
+  }
+}
+
+// دالة للتحقق من وجود جلسة
+export async function getCurrentSession() {
+  try {
+    const { data: { session }, error } = await window.__supabase.auth.getSession();
+    if (error) throw error;
+    return session;
+  } catch (error) {
+    console.error('خطأ في الحصول على الجلسة الحالية:', error);
+    return null;
+  }
+}
+
+// دالة للخروج
+export async function signOut() {
+  try {
+    const { error } = await window.__supabase.auth.signOut();
+    if (error) throw error;
+    console.log('تم تسجيل الخروج بنجاح');
+    return true;
+  } catch (error) {
+    console.error('خطأ في تسجيل الخروج:', error);
+    return false;
+  }
+}
+
+// دالة لإظهار الإشعارات
+export function showNotification(message, type = 'info', duration = 5000) {
+  // إنشاء عنصر الإشعار
+  const notification = document.createElement('div');
+  notification.className = `notification notification--${type}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      <i class="fas fa-${type === 'error' ? 'exclamation-circle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+      <span>${message}</span>
+    </div>
+  `;
+
+  // إضافة الإشعار إلى الصفحة
+  document.body.appendChild(notification);
+
+  // إزالة الإشعار بعد المدة المحددة
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.parentNode.removeChild(notification);
+    }
+  }, duration);
+}
+
+// دالة لإدارة حالة التحميل
+export function setLoadingState(element, isLoading, text = '') {
+  if (!element) return;
+
+  if (isLoading) {
+    element.disabled = true;
+    element.dataset.originalText = element.textContent;
+    element.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
+  } else {
+    element.disabled = false;
+    element.textContent = element.dataset.originalText || text;
+    delete element.dataset.originalText;
+  }
+}
+
+// دالة للتحقق من صحة البريد الإلكتروني
+export function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// دالة للتحقق من قوة كلمة المرور
+export function isStrongPassword(password) {
+  return password && password.length >= 6;
+}
+
+// دالة لتنسيق التاريخ
+export function formatDate(date) {
+  return new Intl.DateTimeFormat('ar-EG', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(new Date(date));
+}
+
+// دالة لتنسيق العملة
+export function formatCurrency(amount, currency = 'EGP') {
+  return new Intl.NumberFormat('ar-EG', {
+    style: 'currency',
+    currency: currency
+  }).format(amount);
+}
+
+// دالة للتحقق من دعم المتصفح
+export function checkBrowserSupport() {
+  const features = {
+    serviceWorker: 'serviceWorker' in navigator,
+    localStorage: typeof Storage !== 'undefined',
+    fetch: 'fetch' in window,
+    promises: typeof Promise !== 'undefined',
+    es6: typeof Symbol !== 'undefined'
+  };
+
+  const unsupported = Object.entries(features)
+    .filter(([key, supported]) => !supported)
+    .map(([key]) => key);
+
+  if (unsupported.length > 0) {
+    console.warn('المتصفح لا يدعم الميزات التالية:', unsupported);
+    return false;
+  }
+
+  return true;
+}
+
+// تهيئة التحقق من دعم المتصفح
+document.addEventListener('DOMContentLoaded', () => {
+  if (!checkBrowserSupport()) {
+    showNotification('متصفحك لا يدعم بعض الميزات المطلوبة. يرجى التحديث إلى إصدار أحدث.', 'error', 10000);
+  }
+});
+
+console.log('📦 تم تحميل LUXBYTE Common Utilities');

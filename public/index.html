@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LUXBYTE - منصة الأعمال الذكية</title>
     <meta name="description" content="منصة شوب إي جي المتكاملة للمنشآت التجارية">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#d81e1e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="LUXBYTE">
+    <meta name="msapplication-TileColor" content="#d81e1e">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/app_icon/LUXBYTEICON.PNG">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/app_icon/LUXBYTEICON.PNG">
+    <link rel="apple-touch-icon" href="/assets/app_icon/LUXBYTEICON.PNG">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +30,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/themes.css">
     <link rel="stylesheet" href="css/mobile-fixes.css">
+    <link rel="stylesheet" href="css/components/cards.css">
 
     <style>
         body {
@@ -644,5 +661,11 @@
             }
         });
     </script>
+
+    <!-- PWA Scripts -->
+    <script type="module" src="js/common.js"></script>
+    <script type="module" src="js/theme-lang-toggle.js"></script>
+    <script type="module" src="js/ux-effects.js"></script>
+    <script src="js/register-sw.js"></script>
 </body>
 </html>

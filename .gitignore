@@ -360,3 +360,17 @@ auto-generated/
 
 # Lock files
 yarn.lock
+
+# Security & Secrets
+.env
+.env.*
+*.env
+/public/config.local.json
+/secrets/**
+*.map
+
+# Source maps (optional)
+*.map
+
+# Supabase secrets
+supabase-service-role-key
