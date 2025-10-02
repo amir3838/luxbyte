@@ -15,11 +15,11 @@
 
   // إعدادات Supabase
   const URL = window.__ENV?.SUPABASE_URL || window.NEXT_PUBLIC_SUPABASE_URL || 'https://qjsvgpvbtrcnbhcjdcci.supabase.co';
-  const ANON = window.__ENV?.SUPABASE_ANON_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e';
+  const ANON = window.__ENV?.SUPABASE_ANON_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZi dHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU4NDQ4MDAsImV4cCI6MjA1MTQyMDgwMH0.IgluoeNjdE60qmrjKPyXogFxriG0aQr0Rk65XUROa4LBHQFNfdFt+9V2Oc8UdddNhPGagxwSeIuKv4d8/rdzGQ==';
 
   // فحص صحة الإعدادات
   const okUrl = typeof URL === 'string' && URL.startsWith('https://') && URL.includes('.supabase.co');
-  const okAnon = typeof ANON === 'string' && ANON.startsWith('sb_') && ANON.length > 50;
+  const okAnon = typeof ANON === 'string' && (ANON.startsWith('sb_') || ANON.startsWith('eyJ')) && ANON.length > 50;
 
   console.log('SB URL ok?', okUrl, 'ANON len:', ANON?.length);
 

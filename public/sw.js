@@ -5,7 +5,7 @@
  * إدارة التخزين المؤقت والوضع غير المتصل
  */
 
-const VERSION = 'v1.0.8';
+const VERSION = 'v1.1.0';
 const CACHE_NAME = `luxbyte-${VERSION}`;
 const STATIC_CACHE = `luxbyte-static-${VERSION}`;
 const DYNAMIC_CACHE = `luxbyte-dynamic-${VERSION}`;
@@ -79,22 +79,26 @@ self.addEventListener('install', (event) => {
       caches.open(STATIC_CACHE).then(cache => {
         console.log('📦 تخزين الملفات الثابتة...');
         return Promise.allSettled(
-          STATIC_FILES.map(url =>
-            fetch(url)
-              .then(response => {
-                if (response.ok) {
-                  return cache.put(url, response);
-                } else {
-                  console.warn(`⚠️ تخطي ملف غير متاح: ${url} (${response.status})`);
-                }
-              })
-              .catch(error => {
-                console.warn(`⚠️ تخطي ملف بسبب خطأ: ${url}`, error.message);
-              })
-          )
+          STATIC_FILES.map(async url => {
+            try {
+              const response = await fetch(url);
+              if (response.ok && response.type === 'basic') {
+                const clonedResponse = response.clone();
+                await cache.put(url, clonedResponse);
+                console.log(`✅ تم تخزين: ${url}`);
+                return { success: true, url };
+              } else {
+                console.warn(`⚠️ تخطي ملف غير متاح: ${url} (${response.status})`);
+                return { success: false, url, reason: 'not_ok' };
+              }
+            } catch (error) {
+              console.warn(`⚠️ تخطي ملف بسبب خطأ: ${url}`, error.message);
+              return { success: false, url, reason: error.message };
+            }
+          })
         ).then(results => {
-          const successful = results.filter(r => r.status === 'fulfilled').length;
-          const failed = results.filter(r => r.status === 'rejected').length;
+          const successful = results.filter(r => r.status === 'fulfilled' && r.value.success).length;
+          const failed = results.filter(r => r.status === 'rejected' || (r.status === 'fulfilled' && !r.value.success)).length;
           console.log(`✅ تم تخزين ${successful} ملف، تخطي ${failed} ملف`);
         });
       }),
@@ -202,8 +206,12 @@ async function networkFirst(request, strategy) {
 
     if (networkResponse && networkResponse.ok) {
       // تخزين الاستجابة في الكاش
-      const cache = await caches.open(strategy.cacheName);
-      cache.put(request, networkResponse.clone());
+      try {
+        const cache = await caches.open(strategy.cacheName);
+        await cache.put(request, networkResponse.clone());
+      } catch (cacheError) {
+        console.warn('⚠️ فشل في تخزين الكاش:', cacheError.message);
+      }
       return networkResponse;
     }
   } catch (error) {
@@ -232,7 +240,11 @@ async function staleWhileRevalidate(request, strategy) {
   fetchWithTimeout(request, 10000)
     .then(networkResponse => {
       if (networkResponse && networkResponse.ok) {
-        cache.put(request, networkResponse.clone());
+        try {
+          cache.put(request, networkResponse.clone());
+        } catch (cacheError) {
+          console.warn('⚠️ فشل في تحديث الكاش:', cacheError.message);
+        }
       }
     })
     .catch(error => {
