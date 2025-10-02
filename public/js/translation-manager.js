@@ -28,6 +28,16 @@ const fallbackDict = {
     "home.features_block.reports_title": "تقارير مفصلة",
     "home.features_block.reports_desc": "احصل على تقارير مفصلة عن أداء عملك واتخاذ قرارات مدروسة",
     "home.cta_block.title": "جاهز للبدء؟",
+    
+    // Choose Role translations
+    "choose_role.heading": "اختر نوع النشاط",
+    "choose_role.helper": "اختر النشاط المناسب لك في منصة شوب إي جي",
+    "choose_role.restaurant.title": "مطعم",
+    "choose_role.supermarket.title": "سوبر ماركت",
+    "choose_role.pharmacy.title": "صيدلية",
+    "choose_role.clinic.title": "عيادة",
+    "choose_role.courier.title": "مندوب توصيل",
+    "choose_role.driver.title": "سائق",
     "home.cta_block.desc": "انضم إلى آلاف العملاء الذين يثقون في لوكس بايت لتطوير أعمالهم",
     "home.cta_block.start_now": "ابدأ الآن",
     "home.cta_block.contact_us": "تواصل معنا",

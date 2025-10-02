@@ -7,6 +7,32 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/themes.css">
 
+    <style>
+        /* إجبار ظهور الخلفية */
+        html {
+            background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed !important;
+        }
+
+        body {
+            background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed !important;
+            min-height: 100vh;
+        }
+
+        /* إزالة أي خلفية بيضاء من العناصر */
+        .container {
+            background: transparent !important;
+        }
+
+        /* الكروت فقط بخلفية بيضاء */
+        .card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="assets/app_icon/LUXBYTEICON.PNG" type="image/png">
 </head>

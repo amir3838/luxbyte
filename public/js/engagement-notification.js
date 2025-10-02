@@ -1,297 +1,380 @@
 /**
- * Engagement Notification System
- * نظام إشعارات التفاعل - لوكس بايت
+ * LUXBYTE Engagement Notification System
+ * نظام إشعارات التفاعل
  */
 
-class EngagementNotificationManager {
-  constructor() {
-    this.timer = null;
-    this.hasShownNotification = false;
-    this.isUserLoggedIn = false;
-    this.engagementTime = 20000; // 20 seconds
-    this.init();
-  }
-
-  /**
-   * Initialize the engagement notification system
-   * تهيئة نظام إشعارات التفاعل
-   */
-  init() {
-    // Check if user is already logged in
-    this.checkUserStatus();
-
-    // Start engagement timer
-    this.startEngagementTimer();
-
-    // Listen for user interactions
-    this.setupInteractionListeners();
-
-    // Listen for theme changes
-    this.setupThemeListener();
-
-    console.log('Engagement notification system initialized');
-  }
-
-  /**
-   * Setup theme change listener
-   * إعداد مستمع تغيير الألوان
-   */
-  setupThemeListener() {
-    window.addEventListener('themeChanged', (event) => {
-      // Update notification colors if it's currently visible
-      const notification = document.getElementById('engagement-notification');
-      if (notification) {
-        this.updateNotificationColors();
-      }
-    });
-  }
-
-  /**
-   * Update notification colors based on current theme
-   * تحديث ألوان الإشعار حسب الوضع الحالي
-   */
-  updateNotificationColors() {
-    const notification = document.getElementById('engagement-notification');
-    if (!notification) return;
-
-    const isLight = document.body.classList.contains('light-theme');
-
-    if (isLight) {
-      // Light theme colors
-      notification.style.background = 'linear-gradient(135deg, #ffffff, #f8f9fa)';
-      notification.style.borderColor = 'rgba(0, 0, 0, 0.1)';
-      notification.style.color = '#1a1a1a';
-
-      // Update text colors
-      const h3 = notification.querySelector('h3');
-      const p = notification.querySelector('p');
-      if (h3) h3.style.color = '#1a1a1a';
-      if (p) p.style.color = '#333333';
-
-      // Update button colors
-      const secondaryBtn = notification.querySelector('.engagement-btn-secondary');
-      const closeBtn = notification.querySelector('.engagement-btn-close');
-      if (secondaryBtn) {
-        secondaryBtn.style.background = 'rgba(255, 255, 255, 0.95)';
-        secondaryBtn.style.color = '#1a1a1a';
-        secondaryBtn.style.borderColor = 'rgba(0, 0, 0, 0.1)';
-      }
-      if (closeBtn) {
-        closeBtn.style.background = 'rgba(255, 255, 255, 0.95)';
-        closeBtn.style.color = '#666666';
-      }
-    } else {
-      // Dark theme colors
-      notification.style.background = 'linear-gradient(135deg, #1a1a1a, #2a2a2a)';
-      notification.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-      notification.style.color = '#ffffff';
-
-      // Update text colors
-      const h3 = notification.querySelector('h3');
-      const p = notification.querySelector('p');
-      if (h3) h3.style.color = '#ffffff';
-      if (p) p.style.color = '#e5e5e5';
-
-      // Update button colors
-      const secondaryBtn = notification.querySelector('.engagement-btn-secondary');
-      const closeBtn = notification.querySelector('.engagement-btn-close');
-      if (secondaryBtn) {
-        secondaryBtn.style.background = 'rgba(255, 255, 255, 0.05)';
-        secondaryBtn.style.color = '#ffffff';
-        secondaryBtn.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-      }
-      if (closeBtn) {
-        closeBtn.style.background = 'rgba(255, 255, 255, 0.05)';
-        closeBtn.style.color = '#cccccc';
-      }
-    }
-  }
-
-  /**
-   * Check if user is logged in
-   * التحقق من حالة تسجيل الدخول
-   */
-  async checkUserStatus() {
-    try {
-      if (typeof window !== 'undefined' && window.LUXBYTE && window.LUXBYTE.supabase) {
-        const { data: { user } } = await window.LUXBYTE.supabase.auth.getUser();
-        this.isUserLoggedIn = !!user;
-      }
-    } catch (error) {
-      console.log('Could not check user status:', error);
-      this.isUserLoggedIn = false;
-    }
-  }
-
-  /**
-   * Start the engagement timer
-   * بدء مؤقت التفاعل
-   */
-  startEngagementTimer() {
-    // Clear existing timer
-    if (this.timer) {
-      clearTimeout(this.timer);
+class EngagementNotification {
+    constructor() {
+        this.notifications = [];
+        this.permission = 'default';
+        this.soundEnabled = true;
+        this.init();
     }
 
-    // Start new timer
-    this.timer = setTimeout(() => {
-      this.showEngagementNotification();
-    }, this.engagementTime);
-  }
-
-  /**
-   * Setup interaction listeners to reset timer
-   * إعداد مستمعي التفاعل لإعادة تعيين المؤقت
-   */
-  setupInteractionListeners() {
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-
-    events.forEach(event => {
-      document.addEventListener(event, () => {
-        this.resetTimer();
-      }, { passive: true });
-    });
-  }
-
-  /**
-   * Reset the engagement timer
-   * إعادة تعيين مؤقت التفاعل
-   */
-  resetTimer() {
-    // Only reset if user is not logged in and notification hasn't been shown
-    if (!this.isUserLoggedIn && !this.hasShownNotification) {
-      this.startEngagementTimer();
-    }
-  }
-
-  /**
-   * Show engagement notification
-   * عرض إشعار التفاعل
-   */
-  showEngagementNotification() {
-    // Don't show if user is logged in or already shown
-    if (this.isUserLoggedIn || this.hasShownNotification) {
-      return;
+    /**
+     * Initialize notification system
+     * تهيئة نظام الإشعارات
+     */
+    async init() {
+        await this.requestPermission();
+        this.setupEventListeners();
+        this.loadSettings();
+        console.log('🔔 Engagement notification system initialized');
     }
 
-    // Mark as shown
-    this.hasShownNotification = true;
-
-    // Create notification element
-    this.createNotificationElement();
-  }
-
-  /**
-   * Create the notification element
-   * إنشاء عنصر الإشعار
-   */
-  createNotificationElement() {
-    // Remove existing notification if any
-    const existingNotification = document.getElementById('engagement-notification');
-    if (existingNotification) {
-      existingNotification.remove();
+    /**
+     * Request notification permission
+     * طلب إذن الإشعارات
+     */
+    async requestPermission() {
+        if ('Notification' in window) {
+            this.permission = await Notification.requestPermission();
+        }
     }
 
-    // Create notification container
-    const notification = document.createElement('div');
-    notification.id = 'engagement-notification';
-    notification.className = 'engagement-notification';
-    notification.setAttribute('dir', 'rtl');
-    notification.setAttribute('lang', 'ar');
+    /**
+     * Setup event listeners
+     * إعداد مستمعي الأحداث
+     */
+    setupEventListeners() {
+        // Listen for visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.scheduleNotifications();
+            } else {
+                this.clearScheduledNotifications();
+            }
+        });
 
-    // Apply theme colors
-    this.updateNotificationColors();
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            this.showNotification('تم استعادة الاتصال', 'success');
+        });
 
-    // Create notification content
-    notification.innerHTML = `
-      <div class="engagement-notification-content">
-        <div class="engagement-notification-icon">
-          <i class="fas fa-user-plus"></i>
-        </div>
-        <div class="engagement-notification-text">
-          <h3>هل ليس لديك حساب؟</h3>
-          <p>إذا كانت تطبق عليك الشروط اشترك وسجل الآن!</p>
-        </div>
-        <div class="engagement-notification-actions">
-          <button class="engagement-btn engagement-btn-primary" onclick="window.engagementNotification.goToSignup()">
-            <i class="fas fa-user-plus"></i>
-            إنشاء حساب
-          </button>
-          <button class="engagement-btn engagement-btn-secondary" onclick="window.engagementNotification.goToLogin()">
-            <i class="fas fa-sign-in-alt"></i>
-            تسجيل الدخول
-          </button>
-          <button class="engagement-btn engagement-btn-close" onclick="window.engagementNotification.close()">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-    `;
-
-    // Add to page
-    document.body.appendChild(notification);
-
-    // Apply theme colors after DOM insertion
-    setTimeout(() => {
-      this.updateNotificationColors();
-    }, 50);
-
-    // Show with animation
-    setTimeout(() => {
-      notification.classList.add('show');
-    }, 100);
-
-    // Auto-hide after 30 seconds
-    setTimeout(() => {
-      this.close();
-    }, 30000);
-  }
-
-  /**
-   * Go to signup page
-   * الذهاب إلى صفحة التسجيل
-   */
-  goToSignup() {
-    window.location.href = 'choose-role.html';
-  }
-
-  /**
-   * Go to login page
-   * الذهاب إلى صفحة تسجيل الدخول
-   */
-  goToLogin() {
-    window.location.href = 'auth.html';
-  }
-
-  /**
-   * Close the notification
-   * إغلاق الإشعار
-   */
-  close() {
-    const notification = document.getElementById('engagement-notification');
-    if (notification) {
-      notification.classList.add('hide');
-      setTimeout(() => {
-        notification.remove();
-      }, 300);
+        window.addEventListener('offline', () => {
+            this.showNotification('فقدان الاتصال بالإنترنت', 'warning');
+        });
     }
-  }
 
-  /**
-   * Reset the system (for testing)
-   * إعادة تعيين النظام (للاختبار)
-   */
-  reset() {
-    this.hasShownNotification = false;
-    this.close();
-    this.startEngagementTimer();
-  }
+    /**
+     * Load notification settings
+     * تحميل إعدادات الإشعارات
+     */
+    loadSettings() {
+        const settings = localStorage.getItem('notification-settings');
+        if (settings) {
+            const parsed = JSON.parse(settings);
+            this.soundEnabled = parsed.soundEnabled !== false;
+        }
+    }
+
+    /**
+     * Save notification settings
+     * حفظ إعدادات الإشعارات
+     */
+    saveSettings() {
+        const settings = {
+            soundEnabled: this.soundEnabled
+        };
+        localStorage.setItem('notification-settings', JSON.stringify(settings));
+    }
+
+    /**
+     * Show notification
+     * إظهار إشعار
+     */
+    showNotification(title, message, type = 'info', options = {}) {
+        // Browser notification
+        if (this.permission === 'granted') {
+            const notification = new Notification(title, {
+                body: message,
+                icon: '/assets/images/logo.png',
+                badge: '/assets/images/badge.png',
+                tag: 'luxbyte-notification',
+                ...options
+            });
+
+            // Auto close after 5 seconds
+            setTimeout(() => {
+                notification.close();
+            }, 5000);
+
+            // Handle click
+            notification.onclick = () => {
+                window.focus();
+                notification.close();
+            };
+        }
+
+        // In-app notification
+        this.showInAppNotification(title, message, type);
+
+        // Play sound
+        if (this.soundEnabled) {
+            this.playNotificationSound(type);
+        }
+    }
+
+    /**
+     * Show in-app notification
+     * إظهار إشعار داخل التطبيق
+     */
+    showInAppNotification(title, message, type) {
+        const notification = document.createElement('div');
+        notification.className = `in-app-notification notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <div class="notification-icon">
+                    <i class="fas fa-${this.getNotificationIcon(type)}"></i>
+                </div>
+                <div class="notification-text">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+
+        // Add to container
+        let container = document.getElementById('notification-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'notification-container';
+            container.className = 'notification-container';
+            document.body.appendChild(container);
+        }
+
+        container.appendChild(notification);
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 5000);
+
+        // Store reference
+        this.notifications.push(notification);
+    }
+
+    /**
+     * Get notification icon
+     * الحصول على أيقونة الإشعار
+     */
+    getNotificationIcon(type) {
+        const icons = {
+            success: 'check-circle',
+            error: 'exclamation-circle',
+            warning: 'exclamation-triangle',
+            info: 'info-circle',
+            order: 'shopping-cart',
+            message: 'envelope',
+            system: 'cog'
+        };
+        return icons[type] || 'bell';
+    }
+
+    /**
+     * Play notification sound
+     * تشغيل صوت الإشعار
+     */
+    playNotificationSound(type) {
+        const audio = new Audio();
+        const sounds = {
+            success: '/assets/sounds/success.mp3',
+            error: '/assets/sounds/error.mp3',
+            warning: '/assets/sounds/warning.mp3',
+            info: '/assets/sounds/info.mp3',
+            order: '/assets/sounds/order.mp3',
+            message: '/assets/sounds/message.mp3'
+        };
+
+        audio.src = sounds[type] || sounds.info;
+        audio.volume = 0.3;
+        audio.play().catch(() => {
+            // Ignore audio play errors
+        });
+    }
+
+    /**
+     * Schedule notifications
+     * جدولة الإشعارات
+     */
+    scheduleNotifications() {
+        // Schedule engagement reminders
+        this.scheduleEngagementReminder();
+        this.scheduleOrderReminders();
+        this.scheduleSystemAlerts();
+    }
+
+    /**
+     * Schedule engagement reminder
+     * جدولة تذكير التفاعل
+     */
+    scheduleEngagementReminder() {
+        // Remind user to check dashboard after 30 minutes of inactivity
+        setTimeout(() => {
+            if (document.hidden) {
+                this.showNotification(
+                    'تذكير التفاعل',
+                    'لديك تحديثات جديدة في لوحة التحكم',
+                    'info'
+                );
+            }
+        }, 30 * 60 * 1000); // 30 minutes
+    }
+
+    /**
+     * Schedule order reminders
+     * جدولة تذكيرات الطلبات
+     */
+    scheduleOrderReminders() {
+        // Check for pending orders every 5 minutes
+        setInterval(async () => {
+            if (document.hidden) {
+                try {
+                    const pendingOrders = await this.getPendingOrders();
+                    if (pendingOrders.length > 0) {
+                        this.showNotification(
+                            'طلبات جديدة',
+                            `لديك ${pendingOrders.length} طلب جديد`,
+                            'order'
+                        );
+                    }
+                } catch (error) {
+                    console.warn('Failed to check pending orders:', error);
+                }
+            }
+        }, 5 * 60 * 1000); // 5 minutes
+    }
+
+    /**
+     * Schedule system alerts
+     * جدولة تنبيهات النظام
+     */
+    scheduleSystemAlerts() {
+        // Check system status every 10 minutes
+        setInterval(async () => {
+            try {
+                const systemStatus = await this.checkSystemStatus();
+                if (!systemStatus.healthy) {
+                    this.showNotification(
+                        'تنبيه النظام',
+                        systemStatus.message,
+                        'warning'
+                    );
+                }
+            } catch (error) {
+                console.warn('Failed to check system status:', error);
+            }
+        }, 10 * 60 * 1000); // 10 minutes
+    }
+
+    /**
+     * Clear scheduled notifications
+     * مسح الإشعارات المجدولة
+     */
+    clearScheduledNotifications() {
+        // Clear all timeouts and intervals
+        for (let i = 1; i < 99999; i++) {
+            window.clearTimeout(i);
+            window.clearInterval(i);
+        }
+    }
+
+    /**
+     * Get pending orders
+     * الحصول على الطلبات المعلقة
+     */
+    async getPendingOrders() {
+        try {
+            const { getSupabase } = await import('./supabase-client.js');
+            const supabase = getSupabase();
+
+            const { data, error } = await supabase
+                .from('orders')
+                .select('*')
+                .eq('status', 'pending')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching pending orders:', error);
+            return [];
+        }
+    }
+
+    /**
+     * Check system status
+     * فحص حالة النظام
+     */
+    async checkSystemStatus() {
+        try {
+            const response = await fetch('/api/health');
+            const data = await response.json();
+            return {
+                healthy: response.ok,
+                message: data.message || 'النظام يعمل بشكل طبيعي'
+            };
+        } catch (error) {
+            return {
+                healthy: false,
+                message: 'فشل في الاتصال بالخادم'
+            };
+        }
+    }
+
+    /**
+     * Toggle sound
+     * تبديل الصوت
+     */
+    toggleSound() {
+        this.soundEnabled = !this.soundEnabled;
+        this.saveSettings();
+
+        this.showNotification(
+            'إعدادات الصوت',
+            this.soundEnabled ? 'تم تفعيل الصوت' : 'تم إيقاف الصوت',
+            'info'
+        );
+    }
+
+    /**
+     * Clear all notifications
+     * مسح جميع الإشعارات
+     */
+    clearAllNotifications() {
+        this.notifications.forEach(notification => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        });
+        this.notifications = [];
+    }
+
+    /**
+     * Get notification history
+     * الحصول على تاريخ الإشعارات
+     */
+    getNotificationHistory() {
+        return this.notifications.map(notification => ({
+            title: notification.querySelector('.notification-title')?.textContent,
+            message: notification.querySelector('.notification-message')?.textContent,
+            type: notification.className.match(/notification-(\w+)/)?.[1],
+            timestamp: new Date()
+        }));
+    }
 }
 
-// Create global instance
-window.engagementNotification = new EngagementNotificationManager();
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.engagementNotification = new EngagementNotification();
+});
 
-// Export for module use
+// Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = EngagementNotificationManager;
+    module.exports = EngagementNotification;
 }

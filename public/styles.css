@@ -1,4 +1,36 @@
 /* LUXBYTE Unified Theme - ثيم موحد */
+
+/* Import Dashboard Styles */
+@import url('css/dashboard.css');
+@import url('css/dashboard-fixes.css');
+
+/* Global Background */
+body {
+    background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed;
+    min-height: 100vh;
+}
+
+/* إخفاء الخلفية البيضاء من العناصر الأخرى */
+.site-header {
+    background: transparent !important;
+}
+
+main {
+    background: transparent !important;
+}
+
+.container {
+    background: transparent !important;
+}
+
+/* الكروت فقط بخلفية بيضاء */
+.card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
 :root {
   /* الألوان الأساسية */
   --primary: #21808d;

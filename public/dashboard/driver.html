@@ -3,644 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم السائق الرئيسي - Luxbyte</title>
+    <title>داشبورد السائق - Luxbyte</title>
+    <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/driver-dashboard.css">
-    <link rel="stylesheet" href="../css/themes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        window.APP_CONFIG = {
+            SUPABASE_URL: 'https://qjsvgpvbtrcnbhcjdcci.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NzQ0MzQsImV4cCI6MjA1MTI1MDQzNH0.sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e'
+        };
+    </script>
 </head>
-<body>
-    <!-- Navigation will be injected by js/navigation-bar.js -->
-    <div class="dashboard-container">
-        <!-- Header -->
-        <header class="dashboard-header">
-            <div class="header-content">
-                <div class="logo-section">
-                    <img src="../assets/app_icon/LUXBYTEicon.png" alt="Luxbyte" class="logo">
-                    <h1>لوحة تحكم السائق الرئيسي</h1>
+<body class="dashboard">
+    <header class="site-header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="../assets/images/shopeg_logo.webp" alt="Luxbyte" width="120">
+            </div>
+            <nav class="main-nav">
+                <a href="/index.html" class="nav-link">الرئيسية</a>
+                <a href="/auth.html" class="nav-link">تسجيل الخروج</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Overview Section -->
+        <section id="overview" class="section">
+            <h2>نظرة عامة</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>المستندات</h3>
+                    <div class="stat-value">0/5</div>
+                    <div class="progress-bar"></div>
                 </div>
-                <div class="user-section">
-                    <div class="user-info">
-                        <span class="user-name">أحمد محمد</span>
-                        <span class="user-role">سائق رئيسي</span>
-                    </div>
-                    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+                <div class="stat-card">
+                    <h3>الحالة</h3>
+                    <div class="stat-value">غير مفعل</div>
+                </div>
+                <div class="stat-card">
+                    <h3>الرحلات</h3>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>الأرباح</h3>
+                    <div class="stat-value">0 ج.م</div>
                 </div>
             </div>
-        </header>
+            <div class="section-actions">
+                <button class="btn btn-primary">رفع مستندات جديدة</button>
+                <button class="btn btn-secondary" onclick="startShift()">بدء الدوام</button>
+                <button class="btn btn-secondary" onclick="endShift()">إنهاء الدوام</button>
+                <button class="btn btn-secondary" onclick="updateLocation()">تحديث الموقع</button>
+            </div>
+        </section>
 
-        <!-- Navigation -->
-        <nav class="dashboard-nav">
-            <ul class="nav-list">
-                <li><a href="#overview" class="nav-link active">نظرة عامة</a></li>
-                <li><a href="#documents" class="nav-link">المستندات</a></li>
-                <li><a href="#trips" class="nav-link">الرحلات</a></li>
-                <li><a href="#earnings" class="nav-link">الأرباح</a></li>
-                <li><a href="#vehicle" class="nav-link">المركبة</a></li>
-                <li><a href="#passengers" class="nav-link">الركاب</a></li>
-                <li><a href="#reports" class="nav-link">التقارير</a></li>
-                <li><a href="#settings" class="nav-link">الإعدادات</a></li>
-            </ul>
-        </nav>
+        <!-- Documents Section -->
+        <section id="documents" class="section">
+            <h2>المستندات</h2>
+            <div class="documents-grid">
+                <!-- Generated dynamically -->
+            </div>
+            <div class="section-actions">
+                <button class="btn btn-primary">رفع مستند</button>
+            </div>
+        </section>
 
-        <!-- Main Content -->
-        <main class="dashboard-main">
-            <!-- Overview Section -->
-            <section id="overview" class="dashboard-section active">
-                <div class="section-header">
-                    <h2>نظرة عامة</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="uploadDocuments()">رفع مستندات جديدة</button>
-                    </div>
-                </div>
+        <!-- Rides Section -->
+        <section id="rides" class="section">
+            <h2>الرحلات</h2>
+            <div class="filter-controls">
+                <select class="filter-select">
+                    <option value="all">جميع الحالات</option>
+                    <option value="pending">في الانتظار</option>
+                    <option value="accepted">مقبولة</option>
+                    <option value="in-progress">قيد التنفيذ</option>
+                    <option value="completed">مكتملة</option>
+                </select>
+            </div>
+            <div class="rides-list">
+                <!-- Generated dynamically -->
+            </div>
+            <div class="section-actions">
+                <button class="btn btn-primary">تحديث القائمة</button>
+            </div>
+        </section>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">📋</div>
-                        <div class="stat-content">
-                            <h3>المستندات المطلوبة</h3>
-                            <div class="stat-value">6/6</div>
-                            <div class="stat-progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Vehicle Section -->
+        <section id="vehicle" class="section">
+            <h2>المركبة</h2>
+            <div class="vehicle-details">
+                <h3>مركبة - </h3>
+                <p><strong>رقم اللوحة:</strong> -</p>
+                <p><strong>الموديل:</strong> -</p>
+                <p><strong>اللون:</strong> -</p>
+            </div>
+        </section>
 
-                    <div class="stat-card">
-                        <div class="stat-icon">✅</div>
-                        <div class="stat-content">
-                            <h3>حالة التفعيل</h3>
-                            <div class="stat-value active">مفعل</div>
-                            <div class="stat-description">جميع المستندات مكتملة</div>
-                        </div>
-                    </div>
+        <!-- Earnings Section -->
+        <section id="earnings" class="section">
+            <h2>الأرباح</h2>
+            <canvas id="earningsChart" width="400" height="200"></canvas>
+        </section>
+    </main>
 
-                    <div class="stat-card">
-                        <div class="stat-icon">🚗</div>
-                        <div class="stat-content">
-                            <h3>الرحلات اليوم</h3>
-                            <div class="stat-value">8</div>
-                            <div class="stat-description">+1 من أمس</div>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">💰</div>
-                        <div class="stat-content">
-                            <h3>الأرباح اليوم</h3>
-                            <div class="stat-value">650 ج.م</div>
-                            <div class="stat-description">+20% من أمس</div>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">⏰</div>
-                        <div class="stat-content">
-                            <h3>ساعات العمل</h3>
-                            <div class="stat-value">10.5</div>
-                            <div class="stat-description">ساعة اليوم</div>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">⭐</div>
-                        <div class="stat-content">
-                            <h3>التقييم</h3>
-                            <div class="stat-value">4.9</div>
-                            <div class="stat-description">من 5 نجوم</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="quick-actions">
-                    <h3>إجراءات سريعة</h3>
-                    <div class="actions-grid">
-                        <button class="action-btn" onclick="viewDocuments()">
-                            <i class="icon">📄</i>
-                            <span>عرض المستندات</span>
-                        </button>
-                        <button class="action-btn" onclick="viewTrips()">
-                            <i class="icon">🚗</i>
-                            <span>الرحلات الجديدة</span>
-                        </button>
-                        <button class="action-btn" onclick="startShift()">
-                            <i class="icon">▶️</i>
-                            <span>بدء الدوام</span>
-                        </button>
-                        <button class="action-btn" onclick="endShift()">
-                            <i class="icon">⏹️</i>
-                            <span>إنهاء الدوام</span>
-                        </button>
-                        <button class="action-btn" onclick="viewEarnings()">
-                            <i class="icon">💰</i>
-                            <span>عرض الأرباح</span>
-                        </button>
-                        <button class="action-btn" onclick="updateLocation()">
-                            <i class="icon">📍</i>
-                            <span>تحديث الموقع</span>
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Documents Section -->
-            <section id="documents" class="dashboard-section">
-                <div class="section-header">
-                    <h2>إدارة المستندات</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="uploadNewDocument()">رفع مستند جديد</button>
-                    </div>
-                </div>
-
-                <div class="documents-grid">
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>صورة البطاقة (الوجه الأمامي)</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>JPG</p>
-                            <p class="file-name">id_front.jpg</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>صورة البطاقة (الوجه الخلفي)</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>JPG</p>
-                            <p class="file-name">id_back.jpg</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>رخصة القيادة</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>JPG/PDF</p>
-                            <p class="file-name">driving_license.jpg</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>صورة المركبة + اللوحة</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>JPG واضحة</p>
-                            <p class="file-name">vehicle_photo.jpg</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>رخصة المركبة</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>PDF/JPG</p>
-                            <p class="file-name">vehicle_license.pdf</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>تأمين ساري</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>PDF/JPG</p>
-                            <p class="file-name">insurance.pdf</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card optional">
-                        <div class="document-header">
-                            <h4>صحيفة الحالة الجنائية</h4>
-                            <span class="status-badge pending">اختياري</span>
-                        </div>
-                        <div class="document-info">
-                            <p>PDF/JPG</p>
-                            <p class="file-name">غير مرفوع</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-primary">رفع</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Trips Section -->
-            <section id="trips" class="dashboard-section">
-                <div class="section-header">
-                    <h2>إدارة الرحلات</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="refreshTrips()">تحديث</button>
-                        <button class="btn btn-secondary" onclick="viewMap()">عرض الخريطة</button>
-                    </div>
-                </div>
-
-                <div class="trips-filters">
-                    <select class="filter-select">
-                        <option value="all">جميع الرحلات</option>
-                        <option value="pending">في الانتظار</option>
-                        <option value="accepted">مقبولة</option>
-                        <option value="in-progress">قيد التنفيذ</option>
-                        <option value="completed">مكتملة</option>
-                        <option value="cancelled">ملغية</option>
-                    </select>
-                    <input type="date" class="date-input" placeholder="من تاريخ">
-                    <input type="date" class="date-input" placeholder="إلى تاريخ">
-                </div>
-
-                <div class="trips-list">
-                    <div class="trip-card">
-                        <div class="trip-header">
-                            <span class="trip-id">#TRIP-001</span>
-                            <span class="trip-status pending">في الانتظار</span>
-                            <span class="trip-time">منذ 3 دقائق</span>
-                        </div>
-                        <div class="trip-details">
-                            <p><strong>من:</strong> مطار القاهرة</p>
-                            <p><strong>إلى:</strong> فندق النيل هيلتون</p>
-                            <p><strong>الركاب:</strong> 2 شخص</p>
-                            <p><strong>المسافة:</strong> 25 كم</p>
-                            <p><strong>المدة المتوقعة:</strong> 45 دقيقة</p>
-                            <p><strong>الرسوم:</strong> 120 ج.م</p>
-                        </div>
-                        <div class="trip-actions">
-                            <button class="btn btn-sm btn-primary">قبول</button>
-                            <button class="btn btn-sm btn-secondary">عرض التفاصيل</button>
-                            <button class="btn btn-sm btn-danger">رفض</button>
-                        </div>
-                    </div>
-
-                    <div class="trip-card">
-                        <div class="trip-header">
-                            <span class="trip-id">#TRIP-002</span>
-                            <span class="trip-status in-progress">قيد التنفيذ</span>
-                            <span class="trip-time">منذ 15 دقيقة</span>
-                        </div>
-                        <div class="trip-details">
-                            <p><strong>من:</strong> مدينة نصر</p>
-                            <p><strong>إلى:</strong> المعادي</p>
-                            <p><strong>الركاب:</strong> 1 شخص</p>
-                            <p><strong>المسافة:</strong> 18 كم</p>
-                            <p><strong>المدة المتوقعة:</strong> 35 دقيقة</p>
-                            <p><strong>الرسوم:</strong> 85 ج.م</p>
-                        </div>
-                        <div class="trip-actions">
-                            <button class="btn btn-sm btn-success">تم الوصول</button>
-                            <button class="btn btn-sm btn-secondary">عرض التفاصيل</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Earnings Section -->
-            <section id="earnings" class="dashboard-section">
-                <div class="section-header">
-                    <h2>الأرباح والمكافآت</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="requestPayout()">طلب سحب</button>
-                        <button class="btn btn-secondary" onclick="viewEarningsHistory()">عرض السجل</button>
-                    </div>
-                </div>
-
-                <div class="earnings-summary">
-                    <div class="earnings-card">
-                        <h3>الأرباح اليوم</h3>
-                        <div class="earnings-amount">650 ج.م</div>
-                        <div class="earnings-breakdown">
-                            <p>الرحلات: 8 × 80 ج.م = 640 ج.م</p>
-                            <p>المكافآت: 10 ج.م</p>
-                        </div>
-                    </div>
-
-                    <div class="earnings-card">
-                        <h3>الأرباح هذا الأسبوع</h3>
-                        <div class="earnings-amount">4,200 ج.م</div>
-                        <div class="earnings-breakdown">
-                            <p>الرحلات: 56 × 75 ج.م = 4,200 ج.م</p>
-                            <p>المكافآت: 0 ج.م</p>
-                        </div>
-                    </div>
-
-                    <div class="earnings-card">
-                        <h3>الأرباح هذا الشهر</h3>
-                        <div class="earnings-amount">18,500 ج.م</div>
-                        <div class="earnings-breakdown">
-                            <p>الرحلات: 240 × 75 ج.م = 18,000 ج.م</p>
-                            <p>المكافآت: 500 ج.م</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="earnings-chart">
-                    <h3>رسم بياني للأرباح</h3>
-                    <div class="chart-container">
-                        <canvas id="earningsChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="payout-section">
-                    <h3>طلب سحب الأرباح</h3>
-                    <div class="payout-form">
-                        <div class="form-group">
-                            <label>المبلغ المطلوب</label>
-                            <input type="number" placeholder="أدخل المبلغ" max="18500">
-                        </div>
-                        <div class="form-group">
-                            <label>طريقة السحب</label>
-                            <select>
-                                <option value="bank">حساب بنكي</option>
-                                <option value="wallet">محفظة إلكترونية</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary">طلب السحب</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Vehicle Section -->
-            <section id="vehicle" class="dashboard-section">
-                <div class="section-header">
-                    <h2>إدارة المركبة</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="updateVehicleInfo()">تحديث معلومات المركبة</button>
-                    </div>
-                </div>
-
-                <div class="vehicle-info">
-                    <div class="vehicle-card">
-                        <div class="vehicle-image">
-                            <img src="../assets/images/vehicles/sedan.jpg" alt="السيارة">
-                        </div>
-                        <div class="vehicle-details">
-                            <h3>سيارة سيدان - تويوتا كامري</h3>
-                            <p><strong>رقم اللوحة:</strong> أ ب ج 5678</p>
-                            <p><strong>الموديل:</strong> 2021</p>
-                            <p><strong>اللون:</strong> أبيض</p>
-                            <p><strong>حالة المركبة:</strong> <span class="status-excellent">ممتازة</span></p>
-                        </div>
-                    </div>
-
-                    <div class="vehicle-maintenance">
-                        <h3>صيانة المركبة</h3>
-                        <div class="maintenance-item">
-                            <span>آخر صيانة</span>
-                            <span>2025-09-01</span>
-                        </div>
-                        <div class="maintenance-item">
-                            <span>الصيانة القادمة</span>
-                            <span>2025-12-01</span>
-                        </div>
-                        <div class="maintenance-item">
-                            <span>عدد الكيلومترات</span>
-                            <span>45,000 كم</span>
-                        </div>
-                        <div class="maintenance-item">
-                            <span>استهلاك الوقود</span>
-                            <span>8 لتر/100 كم</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Passengers Section -->
-            <section id="passengers" class="dashboard-section">
-                <div class="section-header">
-                    <h2>إدارة الركاب</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="viewPassengerHistory()">عرض سجل الركاب</button>
-                    </div>
-                </div>
-
-                <div class="passengers-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">إجمالي الركاب:</span>
-                        <span class="stat-value">1,250</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">ركاب اليوم:</span>
-                        <span class="stat-value success">12</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">ركاب جدد:</span>
-                        <span class="stat-value info">3</span>
-                    </div>
-                </div>
-
-                <div class="passengers-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>الاسم</th>
-                                <th>الهاتف</th>
-                                <th>عدد الرحلات</th>
-                                <th>آخر رحلة</th>
-                                <th>التقييم</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>أحمد محمد</td>
-                                <td>01234567890</td>
-                                <td>25</td>
-                                <td>2025-09-28</td>
-                                <td>⭐⭐⭐⭐⭐</td>
-                                <td>
-                                    <button class="btn btn-sm btn-secondary">عرض</button>
-                                    <button class="btn btn-sm btn-primary">رسالة</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>فاطمة أحمد</td>
-                                <td>01234567891</td>
-                                <td>18</td>
-                                <td>2025-09-27</td>
-                                <td>⭐⭐⭐⭐⭐</td>
-                                <td>
-                                    <button class="btn btn-sm btn-secondary">عرض</button>
-                                    <button class="btn btn-sm btn-primary">رسالة</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Reports Section -->
-            <section id="reports" class="dashboard-section">
-                <div class="section-header">
-                    <h2>التقارير والإحصائيات</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="generateReport()">توليد تقرير</button>
-                        <button class="btn btn-secondary" onclick="exportData()">تصدير البيانات</button>
-                    </div>
-                </div>
-
-                <div class="reports-grid">
-                    <div class="report-card">
-                        <h4>تقرير الرحلات اليومية</h4>
-                        <div class="report-chart">
-                            <canvas id="tripsChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="report-card">
-                        <h4>إحصائيات الأداء</h4>
-                        <div class="report-stats">
-                            <div class="report-stat">
-                                <span>متوسط الرحلات/يوم</span>
-                                <span>8</span>
-                            </div>
-                            <div class="report-stat">
-                                <span>متوسط المسافة/يوم</span>
-                                <span>120 كم</span>
-                            </div>
-                            <div class="report-stat">
-                                <span>معدل الرضا</span>
-                                <span>4.9/5</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="report-card">
-                        <h4>أكثر المناطق طلباً</h4>
-                        <div class="report-list">
-                            <div class="report-item">
-                                <span>مطار القاهرة</span>
-                                <span>35 رحلة</span>
-                            </div>
-                            <div class="report-item">
-                                <span>المعادي</span>
-                                <span>28 رحلة</span>
-                            </div>
-                            <div class="report-item">
-                                <span>مدينة نصر</span>
-                                <span>22 رحلة</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Settings Section -->
-            <section id="settings" class="dashboard-section">
-                <div class="section-header">
-                    <h2>الإعدادات</h2>
-                </div>
-
-                <div class="settings-sections">
-                    <div class="settings-section">
-                        <h4>معلومات السائق</h4>
-                        <form class="settings-form">
-                            <div class="form-group">
-                                <label>الاسم الكامل</label>
-                                <input type="text" value="أحمد محمد">
-                            </div>
-                            <div class="form-group">
-                                <label>رقم الهاتف</label>
-                                <input type="tel" value="01234567890">
-                            </div>
-                            <div class="form-group">
-                                <label>العنوان</label>
-                                <textarea>شارع التحرير، القاهرة</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>ساعات العمل المفضلة</label>
-                                <input type="text" value="8:00 ص - 8:00 م">
-                            </div>
-                            <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
-                        </form>
-                    </div>
-
-                    <div class="settings-section">
-                        <h4>إعدادات النظام</h4>
-                        <div class="settings-options">
-                            <div class="setting-item">
-                                <label>إشعارات الرحلات الجديدة</label>
-                                <input type="checkbox" checked>
-                            </div>
-                            <div class="setting-item">
-                                <label>تحديث الموقع التلقائي</label>
-                                <input type="checkbox" checked>
-                            </div>
-                            <div class="setting-item">
-                                <label>إشعارات الأرباح</label>
-                                <input type="checkbox" checked>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Navigation and Theme Scripts -->
-    <script type="module" src="../js/navigation-bar.js"></script>
-    <!-- تم إزالة مديري الثيم والترجمة - ثيم موحد -->
-
-    <!-- Dashboard Scripts -->
     <script type="module" src="../js/supabase-client.js"></script>
-    <script src="../js/dashboard.js"></script>
-    <script src="../js/dashboard-interactive.js"></script>
-    <script src="../js/driver-dashboard.js"></script>
-
-    <script>
-        // تهيئة لوحة تحكم السائق الرئيسي التفاعلية
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                console.log('🚚 تهيئة لوحة تحكم السائق التفاعلية');
-
-                // انتظار تحميل جميع المودولات
-                await new Promise(resolve => setTimeout(resolve, 100));
-
-                // تهيئة لوحة التحكم التفاعلية
-                if (typeof InteractiveDashboard !== 'undefined') {
-                    window.interactiveDashboard = new InteractiveDashboard();
-                } else {
-                    console.error('InteractiveDashboard class not found');
-                }
-
-                // تهيئة لوحة التحكم التقليدية
-                if (typeof DriverDashboard !== 'undefined') {
-                    window.driverDashboard = new DriverDashboard();
-                } else {
-                    console.error('DriverDashboard class not found');
-                }
-            } catch (error) {
-                console.error('خطأ في تهيئة لوحة تحكم السائق الرئيسي:', error);
-            }
-        });
-    </script>
+    <script type="module" src="../js/driver/api/driver.js"></script>
+    <script type="module" src="../js/driver/driver-dashboard.js"></script>
 </body>
 </html>

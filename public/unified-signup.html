@@ -3,17 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="reg.title">إنشاء حساب جديد - LUXBYTE</title>
+    <title>إنشاء حساب جديد - LUXBYTE</title>
     <meta name="description" content="انضم إلى LUXBYTE وابدأ استخدام منصّتنا الآن. رجاءً املأ البيانات بدقّة وارفع المستندات المطلوبة لمراجعة طلبك بسرعة.">
-
-    <!-- Permissions for Camera and Location -->
-    <meta name="theme-color" content="#6b7cff">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-
-    <!-- Location and Camera Permissions -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,126 +13,54 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/dashboard-fixes.css">
+    <link rel="stylesheet" href="css/unified-signup-improvements.css">
+    <link rel="stylesheet" href="css/unified-signup-enhanced.css">
+    <link rel="stylesheet" href="css/unified-signup-theme.css">
 
-    <link rel="icon" href="assets/app_icon/LUXBYTEICON.PNG" type="image/png">
-    <link rel="apple-touch-icon" href="/assets/app_icon/LUXBYTEICON.PNG">
-
-    <!-- Custom Styles for Tabs -->
     <style>
-        .progress-tabs {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 24px;
+        /* إجبار ظهور الخلفية */
+        html {
+            background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed !important;
         }
-
-        .tab-container {
-            display: flex;
-            justify-content: space-between;
-            overflow-x: auto;
-            gap: 8px;
+        
+        body {
+            background: url('assets/images/backgrounds/screen-1.png') center/cover no-repeat fixed !important;
+            min-height: 100vh;
         }
-
-        .tab {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 12px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-            text-align: center;
-            background: #f8fafc;
-            border: 2px solid transparent;
+        
+        /* إزالة أي خلفية بيضاء من العناصر */
+        .site-header {
+            background: transparent !important;
         }
-
-        .tab.active {
-            background: #6b7cff;
-            color: white;
-            border-color: #5a6fd8;
+        
+        main {
+            background: transparent !important;
         }
-
-        .tab:hover:not(.active) {
-            background: #e2e8f0;
-            border-color: #cbd5e1;
+        
+        .container {
+            background: transparent !important;
         }
-
-        .tab i {
-            font-size: 18px;
-            margin-bottom: 8px;
-        }
-
-        .tab span {
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .form-note {
-            display: flex;
-            align-items: center;
-            margin: 16px 0;
-        }
-
-        .form-note i {
-            margin-left: 8px;
-        }
-
-        .section-content {
-            display: none;
-        }
-
-        .section-content.active {
-            display: block;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .tab-container {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .tab {
-                min-width: auto;
-                flex-direction: row;
-                justify-content: flex-start;
-                padding: 12px 16px;
-            }
-
-            .tab i {
-                margin-bottom: 0;
-                margin-left: 8px;
-            }
+        
+        /* الكروت فقط بخلفية بيضاء */
+        .card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
     </style>
+
+    <link rel="icon" href="assets/app_icon/LUXBYTEICON.PNG" type="image/png">
+    <link rel="apple-touch-icon" href="assets/app_icon/LUXBYTEICON.PNG">
 
     <!-- Inline Configuration for immediate access -->
     <script type="application/json" id="app-config">
     {
         "SUPABASE_URL": "https://qjsvgpvbtrcnbhcjdcci.supabase.co",
-        "SUPABASE_ANON_KEY": "sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e",
+        "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NzQ0MzQsImV4cCI6MjA1MTI1MDQzNH0.sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e",
         "STORAGE_BUCKET": "kyc_docs",
         "MAX_UPLOAD_MB": 10,
         "ALLOWED_MIME": ["image/jpeg", "image/png", "application/pdf"],
@@ -157,20 +76,18 @@
 </head>
 
 <body>
-    <!-- Navigation will be injected by js/navigation-bar.js -->
-
     <!-- Top Navigation Bar -->
     <header class="site-header">
         <div class="container">
             <div class="brand">
-                <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE" style="width: 32px; height: 32px; object-fit: contain;">
-                <span style="font-size: 18px; font-weight: 600; color: #333;">LUXBYTE</span>
+                <img src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE">
+                <span>LUXBYTE</span>
             </div>
             <nav class="auth-actions">
-                <a href="/auth.html" class="btn" style="padding: 8px 16px; font-size: 14px; background: rgba(255, 255, 255, 0.2); color: #333; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 8px; text-decoration: none;">
+                <a href="auth.html" class="btn btn-outline">
                     تسجيل الدخول
                 </a>
-                <a href="/choose-role.html" class="btn" style="padding: 8px 16px; font-size: 14px; background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; text-decoration: none;">
+                <a href="choose-role.html" class="btn btn-primary">
                     إنشاء حساب
                 </a>
             </nav>
@@ -178,7 +95,7 @@
     </header>
 
     <!-- Background Logo -->
-    <img id="bg-corner-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE">
+    <!-- <img id="bg-corner-logo" src="assets/app_icon/LUXBYTEICON.PNG" alt="LUXBYTE"> -->
 
     <main class="container" style="margin-top: 100px; padding: 0 20px;">
         <!-- Page Header -->
@@ -188,8 +105,8 @@
                     <i class="fas fa-user-plus"></i>
                 </div>
                 <div>
-                    <h1 class="card-title" style="font-size: 32px; margin-bottom: 8px;" data-i18n="reg.heading">إنشاء حساب جديد</h1>
-                    <p style="color: #666; font-size: 18px; line-height: 1.6;" data-i18n="reg.subheading">
+                    <h1 class="card-title" style="font-size: 32px; margin-bottom: 8px;">إنشاء حساب جديد</h1>
+                    <p style="color: #666; font-size: 18px; line-height: 1.6;">
                         انضم إلى LUXBYTE وابدأ استخدام منصّتنا الآن.<br>
                         املأ البيانات الأساسية وسنرسل لك رابط التحقق لإكمال التسجيل.
                     </p>
@@ -202,27 +119,27 @@
             <div class="tab-container">
                 <div class="tab active" data-tab="personal">
                     <i class="fas fa-user"></i>
-                    <span data-i18n="reg.personal.title">البيانات الشخصية</span>
+                    <span>البيانات الشخصية</span>
                 </div>
                 <div class="tab" data-tab="business">
                     <i class="fas fa-building"></i>
-                    <span data-i18n="reg.business.title">بيانات النشاط</span>
+                    <span>بيانات النشاط</span>
                 </div>
                 <div class="tab" data-tab="location">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span data-i18n="reg.location.title">الموقع</span>
+                    <span>الموقع</span>
                 </div>
                 <div class="tab" data-tab="security">
                     <i class="fas fa-lock"></i>
-                    <span data-i18n="reg.security.title">الأمان</span>
+                    <span>الأمان</span>
                 </div>
                 <div class="tab" data-tab="documents">
                     <i class="fas fa-file-upload"></i>
-                    <span data-i18n="reg.documents.title">المستندات</span>
+                    <span>المستندات</span>
                 </div>
                 <div class="tab" data-tab="review">
                     <i class="fas fa-check-circle"></i>
-                    <span data-i18n="reg.review.title">تأكيد ومراجعة</span>
+                    <span>تأكيد ومراجعة</span>
                 </div>
             </div>
         </div>
@@ -234,44 +151,39 @@
                 <div class="section-content active" id="personal-section">
                     <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
                         <i class="fas fa-user" style="margin-left: 8px; color: #6b7cff;"></i>
-                        <span data-i18n="reg.personal.title">البيانات الشخصية</span>
+                        البيانات الشخصية
                     </h3>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" data-i18n="reg.first_name">الاسم الأول <span style="color: #ef4444;">*</span></label>
-                            <input type="text" class="form-control" name="first_name" data-i18n="reg.first_name_ph" placeholder="أدخل اسمك الأول" required>
+                            <label class="form-label">الاسم الأول <span style="color: #ef4444;">*</span></label>
+                            <input type="text" class="form-control" name="first_name" placeholder="أدخل اسمك الأول" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" data-i18n="reg.last_name">اسم العائلة <span style="color: #ef4444;">*</span></label>
-                            <input type="text" class="form-control" name="last_name" data-i18n="reg.last_name_ph" placeholder="أدخل اسم العائلة" required>
+                            <label class="form-label">اسم العائلة <span style="color: #ef4444;">*</span></label>
+                            <input type="text" class="form-control" name="last_name" placeholder="أدخل اسم العائلة" required>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" data-i18n="reg.email">البريد الإلكتروني <span style="color: #ef4444;">*</span></label>
+                            <label class="form-label">البريد الإلكتروني <span style="color: #ef4444;">*</span></label>
                             <input type="email" class="form-control" name="email" placeholder="example@email.com" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" data-i18n="reg.phone">رقم الهاتف (موبايل واتساب إن أمكن) <span style="color: #ef4444;">*</span></label>
-                            <input type="tel" class="form-control" name="phone" data-i18n="reg.phone_ph" placeholder="01xxxxxxxxx" required>
+                            <label class="form-label">رقم الهاتف <span style="color: #ef4444;">*</span></label>
+                            <input type="tel" class="form-control" name="phone" placeholder="01xxxxxxxxx" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="reg.user_role">صفة المتقدّم <span style="color: #ef4444;">*</span></label>
-                        <select class="form-control" name="user_role" required title="اختر صفتك">
-                            <option value="" data-i18n="reg.user_role_ph">اختر صفتك</option>
-                            <option value="owner" data-i18n="reg.user_role.owner">مالك</option>
-                            <option value="manager" data-i18n="reg.user_role.manager">مدير مسؤول</option>
-                            <option value="delegate" data-i18n="reg.user_role.delegate">مفوض</option>
+                        <label class="form-label">صفة المتقدّم <span style="color: #ef4444;">*</span></label>
+                        <select class="form-control" name="user_role" required>
+                            <option value="">اختر صفتك</option>
+                            <option value="owner">مالك</option>
+                            <option value="manager">مدير مسؤول</option>
+                            <option value="delegate">مفوض</option>
                         </select>
-                    </div>
-
-                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
-                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
-                        <span style="color: #0c4a6e; font-size: 14px;">سنستخدم هذه البيانات للتواصل ومتابعة طلبك فقط.</span>
                     </div>
                 </div>
 
@@ -279,41 +191,25 @@
                 <div class="section-content" id="business-section">
                     <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
                         <i class="fas fa-building" style="margin-left: 8px; color: #6b7cff;"></i>
-                        <span data-i18n="reg.business.title">بيانات النشاط</span>
+                        بيانات النشاط
                     </h3>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="reg.account_type">نوع الحساب <span style="color: #ef4444;">*</span></label>
-                        <select class="form-control" name="account_type" id="accountType" required title="اختر نوع الحساب">
-                            <option value="" data-i18n="reg.account_type_ph">اختر نوع الحساب</option>
-                            <option value="pharmacy" data-i18n="choose_role.pharmacy.title">صيدلية</option>
-                            <option value="supermarket" data-i18n="choose_role.supermarket.title">سوبرماركت</option>
-                            <option value="restaurant" data-i18n="choose_role.restaurant.title">مطعم</option>
-                            <option value="clinic" data-i18n="choose_role.clinic.title">عيادة</option>
-                            <option value="courier" data-i18n="choose_role.courier.title">مندوب توصيل</option>
-                            <option value="driver" data-i18n="choose_role.driver.title">سائق</option>
+                        <label class="form-label">نوع الحساب <span style="color: #ef4444;">*</span></label>
+                        <select class="form-control" name="account_type" id="accountType" required>
+                            <option value="">اختر نوع الحساب</option>
+                            <option value="pharmacy">صيدلية</option>
+                            <option value="supermarket">سوبرماركت</option>
+                            <option value="restaurant">مطعم</option>
+                            <option value="clinic">عيادة</option>
+                            <option value="courier">مندوب توصيل</option>
+                            <option value="driver">سائق</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="reg.business_name">اسم النشاط التجاري (اسم المحل/المنشأة كما سيظهر للعملاء) <span style="color: #ef4444;">*</span></label>
-                        <input type="text" class="form-control" name="business_name" data-i18n="reg.business_name_ph" placeholder="أدخل اسم النشاط التجاري" required>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="reg.commercial_register">رقم السجل التجاري (إن وجد)</label>
-                            <input type="text" class="form-control" name="commercial_register" data-i18n="reg.commercial_register_ph" placeholder="رقم السجل التجاري">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" data-i18n="reg.tax_number">رقم البطاقة الضريبية (إن وجدت للكيان)</label>
-                            <input type="text" class="form-control" name="tax_number" data-i18n="reg.tax_number_ph" placeholder="رقم البطاقة الضريبية">
-                        </div>
-                    </div>
-
-                    <div class="form-note" style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-top: 16px;">
-                        <i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-left: 8px;"></i>
-                        <span style="color: #92400e; font-size: 14px;">إن لم تكن السجل/الضريبة جاهزين الآن، ارفع ما يثبت هوية المالك ومقر النشاط وسيتم قبول طلبك مبدئيًا لحين الاستكمال.</span>
+                        <label class="form-label">اسم النشاط التجاري <span style="color: #ef4444;">*</span></label>
+                        <input type="text" class="form-control" name="business_name" placeholder="أدخل اسم النشاط التجاري" required>
                     </div>
                 </div>
 
@@ -321,81 +217,45 @@
                 <div class="section-content" id="location-section">
                     <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
                         <i class="fas fa-map-marker-alt" style="margin-left: 8px; color: #6b7cff;"></i>
-                        <span data-i18n="reg.location.title">الموقع</span>
+                        الموقع
                     </h3>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" data-i18n="reg.governorate">المحافظة <span style="color: #ef4444;">*</span></label>
-                            <select class="form-control" name="governorate" id="governorate" required title="اختر المحافظة">
-                                <option value="" data-i18n="reg.governorate_ph">اختر المحافظة</option>
+                            <label class="form-label">المحافظة <span style="color: #ef4444;">*</span></label>
+                            <select class="form-control" name="governorate" id="governorate" required>
+                                <option value="">اختر المحافظة</option>
                                 <option value="القاهرة">🏙️ القاهرة</option>
                                 <option value="الجيزة">🏙️ الجيزة</option>
                                 <option value="القليوبية">🏙️ القليوبية</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" data-i18n="reg.city">المدينة/الحي <span style="color: #ef4444;">*</span></label>
-                            <select class="form-control" name="city" id="city" required title="اختر المدينة">
-                                <option value="" data-i18n="reg.city_ph">اختر المدينة</option>
-                                <!-- القاهرة -->
-                                <optgroup label="🏙️ القاهرة">
-                                    <option value="مصر الجديدة">مصر الجديدة</option>
-                                    <option value="مدينة نصر">مدينة نصر</option>
-                                    <option value="المعادي">المعادي</option>
-                                    <option value="حلوان">حلوان</option>
-                                    <option value="المقطم">المقطم</option>
-                                    <option value="عين شمس">عين شمس</option>
-                                    <option value="المرج">المرج</option>
-                                    <option value="المطرية">المطرية</option>
-                                    <option value="شبرا">شبرا</option>
-                                    <option value="الساحل">الساحل</option>
-                                    <option value="الشرابية">الشرابية</option>
-                                    <option value="بولاق أبو العلا">بولاق أبو العلا</option>
-                                    <option value="الوايلي">الوايلي</option>
-                                    <option value="الزيتون">الزيتون</option>
-                                    <option value="السلام">السلام</option>
-                                    <option value="البساتين">البساتين</option>
-                                    <option value="دار السلام">دار السلام</option>
-                                    <option value="القاهرة الجديدة">القاهرة الجديدة (التجمع الأول – التجمع الثالث – التجمع الخامس)</option>
-                                </optgroup>
-                                <!-- الجيزة -->
-                                <optgroup label="🏙️ الجيزة">
-                                    <option value="الجيزة">الجيزة (المدينة نفسها)</option>
-                                    <option value="الدقي">الدقي</option>
-                                    <option value="المهندسين">المهندسين</option>
-                                    <option value="العجوزة">العجوزة</option>
-                                    <option value="الهرم">الهرم</option>
-                                    <option value="فيصل">فيصل</option>
-                                    <option value="بولاق الدكرور">بولاق الدكرور</option>
-                                    <option value="إمبابة">إمبابة</option>
-                                    <option value="الوراق">الوراق</option>
-                                    <option value="أكتوبر">أكتوبر (6 أكتوبر – الشيخ زايد)</option>
-                                    <option value="الصف">الصف</option>
-                                    <option value="أطفيح">أطفيح</option>
-                                    <option value="البدرشين">البدرشين</option>
-                                    <option value="الحوامدية">الحوامدية</option>
-                                    <option value="العياط">العياط</option>
-                                    <option value="كرداسة">كرداسة</option>
-                                    <option value="أوسيم">أوسيم</option>
-                                </optgroup>
-                                <!-- القليوبية -->
-                                <optgroup label="🏙️ القليوبية">
-                                    <option value="بنها">بنها (العاصمة)</option>
-                                    <option value="قليوب">قليوب</option>
-                                    <option value="القناطر الخيرية">القناطر الخيرية</option>
-                                    <option value="شبرا الخيمة">شبرا الخيمة</option>
-                                    <option value="الخانكة">الخانكة</option>
-                                    <option value="العبور">العبور</option>
-                                    <option value="العبور الجديدة">العبور الجديدة</option>
-                                </optgroup>
+                            <label class="form-label">المدينة/الحي <span style="color: #ef4444;">*</span></label>
+                            <select class="form-control" name="city" id="city" required>
+                                <option value="">اختر المدينة</option>
+                                <option value="مصر الجديدة">مصر الجديدة</option>
+                                <option value="مدينة نصر">مدينة نصر</option>
+                                <option value="المعادي">المعادي</option>
+                                <option value="حلوان">حلوان</option>
+                                <option value="المقطم">المقطم</option>
+                                <option value="الجيزة">الجيزة</option>
+                                <option value="الدقي">الدقي</option>
+                                <option value="المهندسين">المهندسين</option>
+                                <option value="العجوزة">العجوزة</option>
+                                <option value="الهرم">الهرم</option>
+                                <option value="فيصل">فيصل</option>
+                                <option value="بنها">بنها</option>
+                                <option value="قليوب">قليوب</option>
+                                <option value="القناطر الخيرية">القناطر الخيرية</option>
+                                <option value="شبرا الخيمة">شبرا الخيمة</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" data-i18n="reg.address">العنوان التفصيلي <span style="color: #ef4444;">*</span></label>
-                        <textarea class="form-control" name="address" data-i18n="reg.address_ph" placeholder="أدخل العنوان التفصيلي" rows="3" required></textarea>
+                        <label class="form-label">العنوان التفصيلي <span style="color: #ef4444;">*</span></label>
+                        <textarea class="form-control" name="address" placeholder="أدخل العنوان التفصيلي" rows="3" required></textarea>
                     </div>
 
                     <div class="form-row">
@@ -415,14 +275,9 @@
                             </small>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" data-i18n="reg.working_hours">مواعيد العمل (اختياري)</label>
-                            <input type="text" class="form-control" name="working_hours" data-i18n="reg.working_hours_ph" placeholder="مثال: 9 صباحاً - 11 مساءً">
+                            <label class="form-label">مواعيد العمل (اختياري)</label>
+                            <input type="text" class="form-control" name="working_hours" placeholder="مثال: 9 صباحاً - 11 مساءً">
                         </div>
-                    </div>
-
-                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
-                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
-                        <span style="color: #0c4a6e; font-size: 14px;">من الأفضل التقاط الصور مع تفعيل الموقع الجغرافي في الهاتف.</span>
                     </div>
                 </div>
 
@@ -430,48 +285,18 @@
                 <div class="section-content" id="security-section">
                     <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
                         <i class="fas fa-lock" style="margin-left: 8px; color: #6b7cff;"></i>
-                        <span data-i18n="reg.security.title">الأمان (كلمة المرور)</span>
+                        الأمان (كلمة المرور)
                     </h3>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" data-i18n="reg.password">كلمة المرور <span style="color: #ef4444;">*</span></label>
-                            <div style="position: relative;">
-                                <input type="password" class="form-control" name="password" id="password" data-i18n="reg.password_ph" placeholder="أدخل كلمة المرور" dir="ltr" autocomplete="new-password" required>
-                                <button type="button" onclick="togglePassword('password')" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
-                                    <i class="fas fa-eye" id="password-eye"></i>
-                                </button>
-                            </div>
-                            <div id="password-requirements" style="margin-top: 8px; font-size: 12px; color: #666;">
-                                <div id="req-length" style="color: #ef4444;">• 8 أحرف على الأقل</div>
-                                <div id="req-upper" style="color: #ef4444;">• حرف كبير واحد على الأقل</div>
-                                <div id="req-lower" style="color: #ef4444;">• حرف صغير واحد على الأقل</div>
-                                <div id="req-digit" style="color: #ef4444;">• رقم واحد على الأقل</div>
-                                <div id="req-special" style="color: #ef4444;">• رمز خاص واحد على الأقل</div>
-                            </div>
+                            <label class="form-label">كلمة المرور <span style="color: #ef4444;">*</span></label>
+                            <input type="password" class="form-control" name="password" id="password" placeholder="أدخل كلمة المرور" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" data-i18n="reg.password_confirm">تأكيد كلمة المرور <span style="color: #ef4444;">*</span></label>
-                            <div style="position: relative;">
-                                <input type="password" class="form-control" name="confirm_password" id="confirm_password" data-i18n="reg.password_confirm_ph" placeholder="أكد كلمة المرور" dir="ltr" autocomplete="new-password" required>
-                                <button type="button" onclick="togglePassword('confirm_password')" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer;">
-                                    <i class="fas fa-eye" id="confirm_password-eye"></i>
-                                </button>
-                            </div>
-                            <div id="password-match" style="margin-top: 8px; font-size: 12px; color: #ef4444; display: none;">كلمات المرور غير متطابقة</div>
+                            <label class="form-label">تأكيد كلمة المرور <span style="color: #ef4444;">*</span></label>
+                            <input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="أكد كلمة المرور" required>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            <input type="checkbox" name="enable_2fa" style="margin-left: 8px;">
-                            <span data-i18n="reg.enable_2fa">تفعيل المصادقة عبر البريد لاحقًا</span>
-                        </label>
-                    </div>
-
-                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
-                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
-                        <span style="color: #0c4a6e; font-size: 14px;">استخدم كلمة مرور قوية لا تقل عن 8 أحرف وتحتوي على أرقام وحروف.</span>
                     </div>
                 </div>
 
@@ -479,30 +304,13 @@
                 <div class="section-content" id="documents-section">
                     <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
                         <i class="fas fa-file-upload" style="margin-left: 8px; color: #6b7cff;"></i>
-                        <span data-i18n="reg.documents.title">المستندات المطلوبة</span>
+                        المستندات المطلوبة
                     </h3>
                     <div id="docs-uploader">
-                        <!-- Dynamic upload fields will be generated here by js/signup-init.js -->
                         <div style="text-align: center; padding: 20px; color: #666;">
                             <i class="fas fa-spinner fa-spin" style="margin-left: 8px;"></i>
                             جاري تحميل أزرار رفع المستندات...
                         </div>
-                    </div>
-                    <div class="upload-instructions" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 16px; margin-top: 20px;">
-                        <h4 style="color: #0c4a6e; margin-bottom: 12px;">
-                            <i class="fas fa-info-circle" style="margin-left: 8px;"></i>
-                            تعليمات رفع المستندات
-                        </h4>
-                        <ul style="color: #0c4a6e; margin: 0; padding-right: 20px;">
-                            <li>يمكنك استخدام الكاميرا لالتقاط الصور مباشرة أو اختيار ملفات من الجهاز</li>
-                            <li>أنواع الملفات المدعومة: JPG، PNG، PDF</li>
-                            <li>الحد الأقصى لحجم الملف: 5 ميجابايت</li>
-                            <li>تأكد من وضوح الصور وجودة المستندات</li>
-                        </ul>
-                    </div>
-                    <div class="form-note" style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 12px; margin-top: 16px;">
-                        <i class="fas fa-info-circle" style="color: #0ea5e9; margin-left: 8px;"></i>
-                        <span style="color: #0c4a6e; font-size: 14px;" data-i18n="reg.documents.instructions">إرشادات الرفع: JPG/PNG أو PDF - الحد الأقصى 5MB للملف - صور حديثة وواضحة.</span>
                     </div>
                 </div>
 
@@ -510,36 +318,28 @@
                 <div class="section-content" id="review-section">
                     <h3 style="margin-bottom: 24px; color: #333; border-bottom: 2px solid #e5e7eb; padding-bottom: 12px;">
                         <i class="fas fa-check-circle" style="margin-left: 8px; color: #6b7cff;"></i>
-                        <span data-i18n="reg.review.title">تأكيد ومراجعة</span>
+                        تأكيد ومراجعة
                     </h3>
 
                     <div class="form-group">
                         <label class="form-label">
                             <input type="checkbox" name="agree_terms" required style="margin-left: 8px;">
-                            <span data-i18n="reg.review.agree_terms">أوافق على الشروط والأحكام وسياسة الخصوصية <span style="color: #ef4444;">*</span></span>
+                            أوافق على <a href="terms.html" target="_blank" style="color: #667eea; text-decoration: underline;">الشروط والأحكام</a> و <a href="privacy.html" target="_blank" style="color: #667eea; text-decoration: underline;">سياسة الخصوصية</a> <span style="color: #ef4444;">*</span>
                         </label>
-                    </div>
-
-                    <div class="review-summary" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-top: 24px;">
-                        <h4 style="color: #333; margin-bottom: 16px;" data-i18n="reg.review.summary">ملخص بياناتك:</h4>
-                        <div id="review-details">
-                            <!-- Dynamic review details will be inserted here -->
-                            <p style="color: #666;">لا توجد بيانات للمراجعة بعد. يرجى ملء الأقسام السابقة.</p>
-                        </div>
                     </div>
                 </div>
 
                 <!-- Navigation Buttons -->
                 <div class="form-actions">
-                    <button type="button" id="prevBtn" class="btn btn-secondary" style="display: none;" data-i18n="reg.nav.previous">
+                    <button type="button" id="prevBtn" class="btn btn-secondary" style="display: none;">
                         <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
                         السابق
                     </button>
-                    <button type="button" id="nextBtn" class="btn btn-primary" data-i18n="reg.nav.next">
+                    <button type="button" id="nextBtn" class="btn btn-primary">
                         التالي
                         <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
                     </button>
-                    <button type="submit" id="submitBtn" class="btn btn-primary" style="display: none;" data-i18n="reg.nav.submit">
+                    <button type="submit" id="submitBtn" class="btn btn-primary" style="display: none;">
                         إرسال الطلب
                         <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>
                     </button>
@@ -548,365 +348,18 @@
         </div>
     </main>
 
-    <!-- Core Scripts - Load in correct order -->
+    <!-- Scripts -->
     <script src="config.js" defer></script>
     <script type="module" src="js/env.js"></script>
     <script type="module" src="js/supabase-client.js"></script>
     <script type="module" src="js/file-upload-manager.js"></script>
     <script type="module" src="js/signup-init.js"></script>
     <script type="module" src="js/signup-navigation.js"></script>
-
-    <!-- Navigation and Theme Scripts -->
     <script type="module" src="js/theme-manager.js"></script>
     <script type="module" src="js/translation-manager.js"></script>
     <script type="module" src="js/navigation-bar.js"></script>
-
-    <!-- Auth Scripts -->
     <script type="module" src="js/auth.js"></script>
-
-    <!-- Firebase Setup with Analytics -->
     <script type="module" src="firebase-app.js"></script>
-
-    <!-- Tab Navigation Script - Handled by js/signup-navigation.js -->
-    <script>
-        // All tab navigation and form handling is managed by js/signup-navigation.js
-
-        // Location functionality and city filtering
-        document.addEventListener('DOMContentLoaded', function() {
-            const getLocationBtn = document.getElementById('getLocationBtn');
-            const coordinatesInput = document.getElementById('coordinates');
-            const governorateSelect = document.getElementById('governorate');
-            const citySelect = document.getElementById('city');
-
-            // City filtering based on governorate
-            if (governorateSelect && citySelect) {
-                governorateSelect.addEventListener('change', function() {
-                    const selectedGov = this.value;
-                    const cityOptions = citySelect.querySelectorAll('option');
-
-                    // Hide all options first
-                    cityOptions.forEach(option => {
-                        option.style.display = 'none';
-                    });
-
-                    // Show relevant optgroups and options
-                    if (selectedGov === 'القاهرة') {
-                        const cairoGroup = citySelect.querySelector('optgroup[label="🏙️ القاهرة"]');
-                        if (cairoGroup) {
-                            cairoGroup.style.display = 'block';
-                            cairoGroup.querySelectorAll('option').forEach(option => {
-                                option.style.display = 'block';
-                            });
-                        }
-                    } else if (selectedGov === 'الجيزة') {
-                        const gizaGroup = citySelect.querySelector('optgroup[label="🏙️ الجيزة"]');
-                        if (gizaGroup) {
-                            gizaGroup.style.display = 'block';
-                            gizaGroup.querySelectorAll('option').forEach(option => {
-                                option.style.display = 'block';
-                            });
-                        }
-                    } else if (selectedGov === 'القليوبية') {
-                        const qalyubiaGroup = citySelect.querySelector('optgroup[label="🏙️ القليوبية"]');
-                        if (qalyubiaGroup) {
-                            qalyubiaGroup.style.display = 'block';
-                            qalyubiaGroup.querySelectorAll('option').forEach(option => {
-                                option.style.display = 'block';
-                            });
-                        }
-                    }
-
-                    // Reset city selection
-                    citySelect.value = '';
-                });
-            }
-
-            // تحسين زر تحديد الموقع
-            const detectLocationBtn = document.getElementById('detect-location-btn');
-            const latInput = document.getElementById('lat');
-            const lngInput = document.getElementById('lng');
-            const coordinatesDisplay = document.getElementById('coordinates');
-
-            if (detectLocationBtn && coordinatesDisplay) {
-                let isRequesting = false;
-
-                detectLocationBtn.addEventListener('click', function() {
-                    if (isRequesting) return;
-
-                    // التحقق من HTTPS
-                    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-                        showNotification('يجب تفعيل الموقع والمتصفح على اتصال آمن (HTTPS).', 'error');
-                        return;
-                    }
-
-                    if (!navigator.geolocation) {
-                        showNotification('المتصفح لا يدعم الحصول على الموقع الجغرافي', 'error');
-                        return;
-                    }
-
-                    isRequesting = true;
-                    detectLocationBtn.classList.add('is-loading');
-                    detectLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>جاري التحميل…</span>';
-                    detectLocationBtn.disabled = true;
-
-                    navigator.geolocation.getCurrentPosition(
-                        function(position) {
-                            const lat = position.coords.latitude;
-                            const lng = position.coords.longitude;
-
-                            // حفظ الإحداثيات في الحقول المخفية
-                            if (latInput) latInput.value = lat;
-                            if (lngInput) lngInput.value = lng;
-                            coordinatesDisplay.value = `تم تحديد الموقع: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-
-                            detectLocationBtn.innerHTML = '<i class="fas fa-check"></i><span>تم تحديد الموقع</span>';
-                            detectLocationBtn.style.background = '#10b981';
-                            detectLocationBtn.style.color = 'white';
-
-                            showNotification('تم تحديد الموقع بنجاح!', 'success');
-
-                            // Reset after 3 seconds
-                            setTimeout(() => {
-                                detectLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>حدد موقعك</span>';
-                                detectLocationBtn.style.background = '';
-                                detectLocationBtn.style.color = '';
-                                detectLocationBtn.disabled = false;
-                                detectLocationBtn.classList.remove('is-loading');
-                                isRequesting = false;
-                            }, 3000);
-                        },
-                        function(error) {
-                            console.error('Error getting location:', error);
-
-                            let errorMessage = 'حدث خطأ في الحصول على الموقع';
-                            let actionMessage = '';
-
-                            switch(error.code) {
-                                case error.PERMISSION_DENIED:
-                                    errorMessage = 'تم رفض إذن الموقع';
-                                    actionMessage = 'يرجى السماح بالوصول للموقع في إعدادات المتصفح';
-                                    break;
-                                case error.POSITION_UNAVAILABLE:
-                                    errorMessage = 'الموقع غير متاح';
-                                    actionMessage = 'تأكد من تفعيل GPS في الجهاز';
-                                    break;
-                                case error.TIMEOUT:
-                                    errorMessage = 'انتهت مهلة الحصول على الموقع';
-                                    actionMessage = 'يرجى المحاولة مرة أخرى';
-                                    break;
-                            }
-
-                            detectLocationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>خطأ</span>';
-                            detectLocationBtn.style.background = '#ef4444';
-                            detectLocationBtn.style.color = 'white';
-
-                            showNotification(`${errorMessage}. ${actionMessage}`, 'error');
-
-                            // Reset after 4 seconds
-                            setTimeout(() => {
-                                detectLocationBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i><span>حدد موقعك</span>';
-                                detectLocationBtn.style.background = '';
-                                detectLocationBtn.style.color = '';
-                                detectLocationBtn.disabled = false;
-                                detectLocationBtn.classList.remove('is-loading');
-                                isRequesting = false;
-                            }, 4000);
-                        },
-                        {
-                            enableHighAccuracy: true,
-                            timeout: 15000,
-                            maximumAge: 0
-                        }
-                    );
-                });
-            }
-
-            // دالة إظهار الإشعارات
-            function showNotification(message, type = 'info') {
-                const notification = document.createElement('div');
-                notification.className = `notification notification-${type}`;
-                notification.innerHTML = `
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                    <span>${message}</span>
-                `;
-
-                // إضافة الأنماط
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 16px 20px;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: 500;
-                    z-index: 10000;
-                    max-width: 400px;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                    animation: slideInRight 0.3s ease;
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                `;
-
-                // تحديد لون الإشعار
-                const colors = {
-                    success: '#10b981',
-                    error: '#ef4444',
-                    warning: '#f59e0b',
-                    info: '#3b82f6'
-                };
-
-                notification.style.backgroundColor = colors[type] || colors.info;
-
-                document.body.appendChild(notification);
-
-                // إزالة الإشعار بعد 5 ثوان
-                setTimeout(() => {
-                    notification.style.animation = 'slideOutRight 0.3s ease';
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            notification.remove();
-                        }
-                    }, 300);
-                }, 5000);
-            }
-
-            // إضافة CSS للرسوم المتحركة
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideInRight {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOutRight {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
-
-            // التحقق من صحة البريد الإلكتروني
-            const emailInput = document.querySelector('input[name="email"]');
-            if (emailInput) {
-                emailInput.addEventListener('blur', function() {
-                    const email = this.value.trim();
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                    if (email && !emailRegex.test(email)) {
-                        this.style.borderColor = '#ef4444';
-                        showFieldError(this, 'البريد الإلكتروني غير صحيح');
-                    } else {
-                        this.style.borderColor = '';
-                        hideFieldError(this);
-                    }
-                });
-            }
-
-            // التحقق من صحة كلمة المرور
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirm_password');
-
-            if (passwordInput) {
-                passwordInput.addEventListener('input', function() {
-                    validatePassword(this.value);
-                });
-            }
-
-            if (confirmPasswordInput) {
-                confirmPasswordInput.addEventListener('input', function() {
-                    validatePasswordMatch();
-                });
-            }
-
-            // دالة التحقق من كلمة المرور
-            function validatePassword(password) {
-                const requirements = {
-                    length: password.length >= 8,
-                    upper: /[A-Z]/.test(password),
-                    lower: /[a-z]/.test(password),
-                    digit: /\d/.test(password),
-                    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
-                };
-
-                // تحديث مؤشرات المتطلبات
-                Object.keys(requirements).forEach(req => {
-                    const element = document.getElementById(`req-${req}`);
-                    if (element) {
-                        element.style.color = requirements[req] ? '#10b981' : '#ef4444';
-                    }
-                });
-
-                return Object.values(requirements).every(Boolean);
-            }
-
-            // دالة التحقق من تطابق كلمات المرور
-            function validatePasswordMatch() {
-                const password = passwordInput?.value || '';
-                const confirmPassword = confirmPasswordInput?.value || '';
-                const matchElement = document.getElementById('password-match');
-
-                if (confirmPassword && password !== confirmPassword) {
-                    if (matchElement) matchElement.style.display = 'block';
-                    if (confirmPasswordInput) confirmPasswordInput.style.borderColor = '#ef4444';
-                    return false;
-                } else {
-                    if (matchElement) matchElement.style.display = 'none';
-                    if (confirmPasswordInput) confirmPasswordInput.style.borderColor = '';
-                    return true;
-                }
-            }
-
-            // دالة إظهار/إخفاء كلمة المرور
-            window.togglePassword = function(fieldId) {
-                const field = document.getElementById(fieldId);
-                const eye = document.getElementById(fieldId + '-eye');
-
-                if (field && eye) {
-                    if (field.type === 'password') {
-                        field.type = 'text';
-                        eye.className = 'fas fa-eye-slash';
-                    } else {
-                        field.type = 'password';
-                        eye.className = 'fas fa-eye';
-                    }
-                }
-            };
-
-            // دالة إظهار خطأ الحقل
-            function showFieldError(field, message) {
-                hideFieldError(field);
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'error-text';
-                errorDiv.textContent = message;
-                errorDiv.style.marginTop = '4px';
-                field.parentNode.appendChild(errorDiv);
-            }
-
-            // دالة إخفاء خطأ الحقل
-            function hideFieldError(field) {
-                const existingError = field.parentNode.querySelector('.error-text');
-                if (existingError) {
-                    existingError.remove();
-                }
-            }
-        });
-    </script>
-
-    <!-- Force docs uploader initialization -->
-    <script>
-        // Force initialization after page load
-        window.addEventListener('load', function() {
-            console.log('🔄 Page loaded, forcing docs uploader init...');
-            setTimeout(function() {
-                const host = document.getElementById('docs-uploader');
-                if (host && host.innerHTML.includes('جاري تحميل')) {
-                    console.log('⚠️ Docs uploader still loading, forcing render...');
-                    // Force render by triggering a custom event
-                    const event = new CustomEvent('forceDocsRender');
-                    document.dispatchEvent(event);
-                }
-            }, 3000);
-        });
-    </script>
+    <script src="js/unified-signup-enhanced.js"></script>
 </body>
 </html>

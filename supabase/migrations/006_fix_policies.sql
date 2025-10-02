@@ -203,3 +203,4 @@ using (auth.uid()::text = (storage.foldername(name))[1]);
 
 -- Success message
 select 'LUXBYTE database updates applied successfully!' as status;
+

@@ -3,636 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم العيادة - Luxbyte</title>
+    <title>داشبورد العيادة - Luxbyte</title>
+    <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/clinic-dashboard.css">
-    <link rel="stylesheet" href="../css/themes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        window.APP_CONFIG = {
+            SUPABASE_URL: 'https://qjsvgpvbtrcnbhcjdcci.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NzQ0MzQsImV4cCI6MjA1MTI1MDQzNH0.sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e'
+        };
+    </script>
 </head>
-<body>
-    <!-- Navigation will be injected by js/navigation-bar.js -->
-    <div class="dashboard-container">
-        <!-- Header -->
-        <header class="dashboard-header">
-            <div class="header-content">
-                <div class="logo-section">
-                    <img src="../assets/app_icon/LUXBYTEicon.png" alt="Luxbyte" class="logo">
-                    <h1>لوحة تحكم العيادة</h1>
+<body class="dashboard">
+    <header class="site-header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="../assets/images/shopeg_logo.webp" alt="Luxbyte" width="120">
+            </div>
+            <nav class="main-nav">
+                <a href="/index.html" class="nav-link">الرئيسية</a>
+                <a href="/auth.html" class="nav-link">تسجيل الخروج</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Overview Section -->
+        <section id="overview" class="section">
+            <h2>نظرة عامة</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>المستندات</h3>
+                    <div class="stat-value">0/6</div>
+                    <div class="progress-bar"></div>
                 </div>
-                <div class="user-section">
-                    <div class="user-info">
-                        <span class="user-name">د. أحمد محمد</span>
-                        <span class="user-role">طبيب استشاري</span>
-                    </div>
-                    <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+                <div class="stat-card">
+                    <h3>الحالة</h3>
+                    <div class="stat-value">غير مفعل</div>
+                </div>
+                <div class="stat-card">
+                    <h3>مرضى اليوم</h3>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>الإيرادات</h3>
+                    <div class="stat-value">0 ج.م</div>
+                </div>
+                <div class="stat-card">
+                    <h3>المواعيد</h3>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>الغرف</h3>
+                    <div class="stat-value">0/0</div>
                 </div>
             </div>
-        </header>
+            <div class="section-actions">
+                <button class="btn btn-primary">رفع مستندات جديدة</button>
+            </div>
+        </section>
 
-        <!-- Navigation -->
-        <nav class="dashboard-nav">
-            <ul class="nav-list">
-                <li><a href="#overview" class="nav-link active">نظرة عامة</a></li>
-                <li><a href="#documents" class="nav-link">المستندات</a></li>
-                <li><a href="#patients" class="nav-link">المرضى</a></li>
-                <li><a href="#appointments" class="nav-link">المواعيد</a></li>
-                <li><a href="#medical-records" class="nav-link">السجلات الطبية</a></li>
-                <li><a href="#staff" class="nav-link">الموظفين</a></li>
-                <li><a href="#reports" class="nav-link">التقارير</a></li>
-                <li><a href="#settings" class="nav-link">الإعدادات</a></li>
-            </ul>
-        </nav>
+        <!-- Documents Section -->
+        <section id="documents" class="section">
+            <h2>المستندات</h2>
+            <div class="documents-grid">
+                <!-- Generated dynamically -->
+            </div>
+            <div class="section-actions">
+                <button class="btn btn-primary">رفع مستند</button>
+            </div>
+        </section>
 
-        <!-- Main Content -->
-        <main class="dashboard-main">
-            <!-- Overview Section -->
-            <section id="overview" class="dashboard-section active">
-                <div class="section-header">
-                    <h2>نظرة عامة</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="uploadDocuments()">رفع مستندات جديدة</button>
-                    </div>
-                </div>
+        <!-- Patients Section -->
+        <section id="patients" class="section">
+            <h2>المرضى</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>العمر</th>
+                        <th>الهاتف</th>
+                        <th>التشخيص</th>
+                        <th>آخر زيارة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Generated dynamically -->
+                </tbody>
+            </table>
+            <div class="section-actions">
+                <button class="btn btn-primary">إضافة مريض</button>
+            </div>
+        </section>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">📋</div>
-                        <div class="stat-content">
-                            <h3>المستندات المطلوبة</h3>
-                            <div class="stat-value">5/5</div>
-                            <div class="stat-progress">
-                                <div class="progress-bar" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Appointments Section -->
+        <section id="appointments" class="section">
+            <h2>المواعيد</h2>
+            <div class="appointments-list">
+                <!-- Generated dynamically -->
+            </div>
+            <div class="section-actions">
+                <button class="btn btn-primary">إضافة موعد</button>
+            </div>
+        </section>
 
-                    <div class="stat-card">
-                        <div class="stat-icon">✅</div>
-                        <div class="stat-content">
-                            <h3>حالة التفعيل</h3>
-                            <div class="stat-value active">مفعل</div>
-                            <div class="stat-description">جميع المستندات مكتملة</div>
-                        </div>
-                    </div>
+        <!-- Medical Records Section -->
+        <section id="medical-records" class="section">
+            <h2>السجلات الطبية</h2>
+            <div class="medical-records-list">
+                <!-- Generated dynamically -->
+            </div>
+        </section>
 
-                    <div class="stat-card">
-                        <div class="stat-icon">👥</div>
-                        <div class="stat-content">
-                            <h3>المرضى اليوم</h3>
-                            <div class="stat-value">18</div>
-                            <div class="stat-description">+3 من أمس</div>
-                        </div>
-                    </div>
+        <!-- Staff Section -->
+        <section id="staff" class="section">
+            <h2>الموظفين</h2>
+            <div class="staff-grid">
+                <!-- Generated dynamically -->
+            </div>
+        </section>
+    </main>
 
-                    <div class="stat-card">
-                        <div class="stat-icon">💰</div>
-                        <div class="stat-content">
-                            <h3>الإيرادات اليوم</h3>
-                            <div class="stat-value">3,200 ج.م</div>
-                            <div class="stat-description">+12% من أمس</div>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">📅</div>
-                        <div class="stat-content">
-                            <h3>المواعيد اليوم</h3>
-                            <div class="stat-value">15</div>
-                            <div class="stat-description">3 مواعيد متبقية</div>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">🏥</div>
-                        <div class="stat-content">
-                            <h3>الغرف المتاحة</h3>
-                            <div class="stat-value">3/5</div>
-                            <div class="stat-description">غرف متاحة</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="quick-actions">
-                    <h3>إجراءات سريعة</h3>
-                    <div class="actions-grid">
-                        <button class="action-btn" onclick="viewDocuments()">
-                            <i class="icon">📄</i>
-                            <span>عرض المستندات</span>
-                        </button>
-                        <button class="action-btn" onclick="addPatient()">
-                            <i class="icon">👥</i>
-                            <span>إضافة مريض جديد</span>
-                        </button>
-                        <button class="action-btn" onclick="viewAppointments()">
-                            <i class="icon">📅</i>
-                            <span>إدارة المواعيد</span>
-                        </button>
-                        <button class="action-btn" onclick="viewMedicalRecords()">
-                            <i class="icon">📋</i>
-                            <span>السجلات الطبية</span>
-                        </button>
-                        <button class="action-btn" onclick="manageStaff()">
-                            <i class="icon">👨‍⚕️</i>
-                            <span>إدارة الموظفين</span>
-                        </button>
-                        <button class="action-btn" onclick="generateReport()">
-                            <i class="icon">📊</i>
-                            <span>تقرير العيادة</span>
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Documents Section -->
-            <section id="documents" class="dashboard-section">
-                <div class="section-header">
-                    <h2>إدارة المستندات</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="uploadNewDocument()">رفع مستند جديد</button>
-                    </div>
-                </div>
-
-                <div class="documents-grid">
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>لوجو العيادة أو صورة الطبيب</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>PNG/JPG 512×512</p>
-                            <p class="file-name">clinic_logo.png</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>واجهة/الاستقبال</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>JPG 1280px+</p>
-                            <p class="file-name">clinic_facade.jpg</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>رخصة العيادة</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>PDF/JPG</p>
-                            <p class="file-name">clinic_license.pdf</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>بطاقة الطبيب (الوجه الأمامي)</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>JPG واضح</p>
-                            <p class="file-name">doctor_id_front.jpg</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card required">
-                        <div class="document-header">
-                            <h4>بطاقة الطبيب (الوجه الخلفي)</h4>
-                            <span class="status-badge completed">مكتمل</span>
-                        </div>
-                        <div class="document-info">
-                            <p>JPG واضح</p>
-                            <p class="file-name">doctor_id_back.jpg</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تحديث</button>
-                        </div>
-                    </div>
-
-                    <div class="document-card optional">
-                        <div class="document-header">
-                            <h4>شهادة مزاولة/زمالة</h4>
-                            <span class="status-badge pending">اختياري</span>
-                        </div>
-                        <div class="document-info">
-                            <p>PDF/JPG</p>
-                            <p class="file-name">غير مرفوع</p>
-                        </div>
-                        <div class="document-actions">
-                            <button class="btn btn-sm btn-primary">رفع</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Patients Section -->
-            <section id="patients" class="dashboard-section">
-                <div class="section-header">
-                    <h2>إدارة المرضى</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="addPatient()">إضافة مريض جديد</button>
-                        <button class="btn btn-secondary" onclick="searchPatients()">بحث في المرضى</button>
-                    </div>
-                </div>
-
-                <div class="patients-filters">
-                    <input type="text" placeholder="البحث في المرضى..." class="search-input">
-                    <select class="filter-select">
-                        <option value="all">جميع المرضى</option>
-                        <option value="active">نشطين</option>
-                        <option value="inactive">غير نشطين</option>
-                        <option value="new">جدد</option>
-                    </select>
-                </div>
-
-                <div class="patients-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">إجمالي المرضى:</span>
-                        <span class="stat-value">1,250</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">مرضى اليوم:</span>
-                        <span class="stat-value success">18</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">مرضى جدد:</span>
-                        <span class="stat-value info">5</span>
-                    </div>
-                </div>
-
-                <div class="patients-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>الاسم</th>
-                                <th>العمر</th>
-                                <th>الهاتف</th>
-                                <th>التشخيص</th>
-                                <th>آخر زيارة</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>أحمد محمد</td>
-                                <td>35</td>
-                                <td>01234567890</td>
-                                <td>ضغط الدم</td>
-                                <td>2025-09-28</td>
-                                <td>
-                                    <button class="btn btn-sm btn-secondary">عرض</button>
-                                    <button class="btn btn-sm btn-primary">تعديل</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>فاطمة أحمد</td>
-                                <td>28</td>
-                                <td>01234567891</td>
-                                <td>سكري</td>
-                                <td>2025-09-27</td>
-                                <td>
-                                    <button class="btn btn-sm btn-secondary">عرض</button>
-                                    <button class="btn btn-sm btn-primary">تعديل</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Appointments Section -->
-            <section id="appointments" class="dashboard-section">
-                <div class="section-header">
-                    <h2>إدارة المواعيد</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="addAppointment()">إضافة موعد جديد</button>
-                        <button class="btn btn-secondary" onclick="viewCalendar()">عرض التقويم</button>
-                    </div>
-                </div>
-
-                <div class="appointments-calendar">
-                    <div class="calendar-header">
-                        <button class="btn btn-sm btn-secondary">السابق</button>
-                        <h3>سبتمبر 2025</h3>
-                        <button class="btn btn-sm btn-secondary">التالي</button>
-                    </div>
-                    <div class="calendar-grid">
-                        <!-- سيتم ملؤها بواسطة JavaScript -->
-                    </div>
-                </div>
-
-                <div class="appointments-list">
-                    <h3>مواعيد اليوم</h3>
-                    <div class="appointment-item">
-                        <div class="appointment-time">9:00 ص</div>
-                        <div class="appointment-details">
-                            <h4>أحمد محمد</h4>
-                            <p>فحص دوري - غرفة 1</p>
-                            <p>01234567890</p>
-                        </div>
-                        <div class="appointment-status confirmed">مؤكد</div>
-                        <div class="appointment-actions">
-                            <button class="btn btn-sm btn-secondary">تعديل</button>
-                            <button class="btn btn-sm btn-success">بدء الكشف</button>
-                        </div>
-                    </div>
-
-                    <div class="appointment-item">
-                        <div class="appointment-time">10:30 ص</div>
-                        <div class="appointment-details">
-                            <h4>فاطمة أحمد</h4>
-                            <p>متابعة - غرفة 2</p>
-                            <p>01234567891</p>
-                        </div>
-                        <div class="appointment-status pending">في الانتظار</div>
-                        <div class="appointment-actions">
-                            <button class="btn btn-sm btn-success">تأكيد</button>
-                            <button class="btn btn-sm btn-secondary">تعديل</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Medical Records Section -->
-            <section id="medical-records" class="dashboard-section">
-                <div class="section-header">
-                    <h2>السجلات الطبية</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="addMedicalRecord()">إضافة سجل جديد</button>
-                        <button class="btn btn-secondary" onclick="exportRecords()">تصدير السجلات</button>
-                    </div>
-                </div>
-
-                <div class="medical-records-filters">
-                    <select class="filter-select">
-                        <option value="all">جميع السجلات</option>
-                        <option value="today">اليوم</option>
-                        <option value="week">هذا الأسبوع</option>
-                        <option value="month">هذا الشهر</option>
-                    </select>
-                    <input type="text" placeholder="البحث في السجلات..." class="search-input">
-                </div>
-
-                <div class="medical-records-list">
-                    <div class="record-card">
-                        <div class="record-header">
-                            <h4>أحمد محمد</h4>
-                            <span class="record-date">2025-09-28</span>
-                        </div>
-                        <div class="record-details">
-                            <p><strong>التشخيص:</strong> ضغط الدم المرتفع</p>
-                            <p><strong>العلاج:</strong> دواء ضغط الدم</p>
-                            <p><strong>الملاحظات:</strong> تحسن في الحالة</p>
-                        </div>
-                        <div class="record-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تعديل</button>
-                        </div>
-                    </div>
-
-                    <div class="record-card">
-                        <div class="record-header">
-                            <h4>فاطمة أحمد</h4>
-                            <span class="record-date">2025-09-27</span>
-                        </div>
-                        <div class="record-details">
-                            <p><strong>التشخيص:</strong> سكري النوع الثاني</p>
-                            <p><strong>العلاج:</strong> الأنسولين</p>
-                            <p><strong>الملاحظات:</strong> يحتاج متابعة</p>
-                        </div>
-                        <div class="record-actions">
-                            <button class="btn btn-sm btn-secondary">عرض</button>
-                            <button class="btn btn-sm btn-primary">تعديل</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Staff Section -->
-            <section id="staff" class="dashboard-section">
-                <div class="section-header">
-                    <h2>إدارة الموظفين</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="addStaff()">إضافة موظف</button>
-                        <button class="btn btn-secondary" onclick="viewSchedule()">عرض الجدولة</button>
-                    </div>
-                </div>
-
-                <div class="staff-grid">
-                    <div class="staff-card">
-                        <div class="staff-avatar">
-                            <img src="../assets/images/staff/doctor.jpg" alt="الطبيب">
-                        </div>
-                        <div class="staff-info">
-                            <h4>د. أحمد محمد</h4>
-                            <p>طبيب استشاري</p>
-                            <p>01234567890</p>
-                            <div class="staff-status active">نشط</div>
-                        </div>
-                        <div class="staff-actions">
-                            <button class="btn btn-sm btn-secondary">تعديل</button>
-                            <button class="btn btn-sm btn-primary">عرض التفاصيل</button>
-                        </div>
-                    </div>
-
-                    <div class="staff-card">
-                        <div class="staff-avatar">
-                            <img src="../assets/images/staff/nurse.jpg" alt="الممرضة">
-                        </div>
-                        <div class="staff-info">
-                            <h4>مريم أحمد</h4>
-                            <p>ممرضة</p>
-                            <p>01234567891</p>
-                            <div class="staff-status active">نشط</div>
-                        </div>
-                        <div class="staff-actions">
-                            <button class="btn btn-sm btn-secondary">تعديل</button>
-                            <button class="btn btn-sm btn-primary">عرض التفاصيل</button>
-                        </div>
-                    </div>
-
-                    <div class="staff-card">
-                        <div class="staff-avatar">
-                            <img src="../assets/images/staff/receptionist.jpg" alt="الاستقبال">
-                        </div>
-                        <div class="staff-info">
-                            <h4>سارة محمد</h4>
-                            <p>موظف استقبال</p>
-                            <p>01234567892</p>
-                            <div class="staff-status inactive">غير نشط</div>
-                        </div>
-                        <div class="staff-actions">
-                            <button class="btn btn-sm btn-secondary">تعديل</button>
-                            <button class="btn btn-sm btn-primary">عرض التفاصيل</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Reports Section -->
-            <section id="reports" class="dashboard-section">
-                <div class="section-header">
-                    <h2>التقارير والإحصائيات</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-primary" onclick="generateReport()">توليد تقرير</button>
-                        <button class="btn btn-secondary" onclick="exportData()">تصدير البيانات</button>
-                    </div>
-                </div>
-
-                <div class="reports-grid">
-                    <div class="report-card">
-                        <h4>تقرير المرضى اليومي</h4>
-                        <div class="report-chart">
-                            <canvas id="patientsChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="report-card">
-                        <h4>أكثر التشخيصات شيوعاً</h4>
-                        <div class="report-list">
-                            <div class="report-item">
-                                <span>ضغط الدم</span>
-                                <span>25 حالة</span>
-                            </div>
-                            <div class="report-item">
-                                <span>السكري</span>
-                                <span>18 حالة</span>
-                            </div>
-                            <div class="report-item">
-                                <span>نزلات البرد</span>
-                                <span>15 حالة</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="report-card">
-                        <h4>إحصائيات المواعيد</h4>
-                        <div class="report-stats">
-                            <div class="report-stat">
-                                <span>مواعيد اليوم</span>
-                                <span>15</span>
-                            </div>
-                            <div class="report-stat">
-                                <span>معدل الإشغال</span>
-                                <span>80%</span>
-                            </div>
-                            <div class="report-stat">
-                                <span>متوسط الكشف</span>
-                                <span>200 ج.م</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Settings Section -->
-            <section id="settings" class="dashboard-section">
-                <div class="section-header">
-                    <h2>الإعدادات</h2>
-                </div>
-
-                <div class="settings-sections">
-                    <div class="settings-section">
-                        <h4>معلومات العيادة</h4>
-                        <form class="settings-form">
-                            <div class="form-group">
-                                <label>اسم العيادة</label>
-                                <input type="text" value="عيادة النور">
-                            </div>
-                            <div class="form-group">
-                                <label>العنوان</label>
-                                <textarea>شارع التحرير، القاهرة</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>رقم الهاتف</label>
-                                <input type="tel" value="01234567890">
-                            </div>
-                            <div class="form-group">
-                                <label>ساعات العمل</label>
-                                <input type="text" value="9:00 ص - 5:00 م">
-                            </div>
-                            <div class="form-group">
-                                <label>عدد الغرف</label>
-                                <input type="number" value="5">
-                            </div>
-                            <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
-                        </form>
-                    </div>
-
-                    <div class="settings-section">
-                        <h4>إعدادات النظام</h4>
-                        <div class="settings-options">
-                            <div class="setting-item">
-                                <label>إشعارات المواعيد</label>
-                                <input type="checkbox" checked>
-                            </div>
-                            <div class="setting-item">
-                                <label>تذكير الكشوفات</label>
-                                <input type="checkbox" checked>
-                            </div>
-                            <div class="setting-item">
-                                <label>إشعارات الموظفين</label>
-                                <input type="checkbox" checked>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Navigation and Theme Scripts -->
-    <script type="module" src="../js/navigation-bar.js"></script>
-    <!-- تم إزالة مديري الثيم والترجمة - ثيم موحد -->
-
-    <!-- Dashboard Scripts -->
+    <script src="../js/dashboard-common.js"></script>
     <script type="module" src="../js/supabase-client.js"></script>
-    <script src="../js/dashboard.js"></script>
-    <script src="../js/dashboard-interactive.js"></script>
-    <script src="../js/clinic-dashboard.js"></script>
-
-    <script>
-        // تهيئة لوحة تحكم العيادة التفاعلية
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                console.log('🏥 تهيئة لوحة تحكم العيادة التفاعلية');
-
-                // انتظار تحميل جميع المودولات
-                await new Promise(resolve => setTimeout(resolve, 100));
-
-                // تهيئة لوحة التحكم التفاعلية
-                if (typeof InteractiveDashboard !== 'undefined') {
-                    window.interactiveDashboard = new InteractiveDashboard();
-                } else {
-                    console.error('InteractiveDashboard class not found');
-                }
-
-                // تهيئة لوحة التحكم التقليدية
-                if (typeof ClinicDashboard !== 'undefined') {
-                    window.clinicDashboard = new ClinicDashboard();
-                } else {
-                    console.error('ClinicDashboard class not found');
-                }
-            } catch (error) {
-                console.error('خطأ في تهيئة لوحة تحكم العيادة:', error);
-            }
-        });
-    </script>
+    <script type="module" src="../js/clinic/api/clinic.js"></script>
+    <script type="module" src="../js/clinic/clinic-dashboard.js"></script>
+    <script src="../js/test-dashboard.js"></script>
 </body>
 </html>
