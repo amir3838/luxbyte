@@ -16,7 +16,7 @@
 
   // إعدادات Supabase - فقط المفاتيح العامة
   const SUPABASE_URL = window.__ENV?.SUPABASE_URL || window.NEXT_PUBLIC_SUPABASE_URL || 'https://qjsvgpvbtrcnbhcjdcci.supabase.co';
-  const SUPABASE_ANON_KEY = window.__ENV?.SUPABASE_ANON_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NzQ0MzQsImV4cCI6MjA1MTI1MDQzNH0.sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e';
+  const SUPABASE_ANON_KEY = window.__ENV?.SUPABASE_ANON_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e';
 
   // فحص صحة الإعدادات
   const okUrl = SUPABASE_URL && SUPABASE_URL.startsWith('https://') && SUPABASE_URL.includes('.supabase.co');

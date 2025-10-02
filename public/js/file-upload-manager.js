@@ -398,8 +398,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for module usage
-export { FileUploadManager };
-
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = FileUploadManager;
 }
+
+// ES6 export
+if (typeof window !== 'undefined') {
+    window.FileUploadManager = FileUploadManager;
+}
+
+// Export for ES6 modules
+export { FileUploadManager };
