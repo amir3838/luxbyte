@@ -5,47 +5,60 @@
  * يحتوي على عميل Supabase الوحيد (singleton) وأدوات مشتركة
  */
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+// LUXBYTE Supabase Singleton
+// عميل Supabase الوحيد لتجنب Multiple GoTrueClient
+(() => {
+  // تحميل Supabase بشكل ديناميكي لتجنب التكرار
+  if (window.__supabase) {
+    console.log('✅ عميل Supabase موجود بالفعل');
+    return;
+  }
 
-// إعدادات Supabase - فقط المفاتيح العامة
-const SUPABASE_URL = 'https://qjsvgpvbtrcnbhcjdcci.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NzQ0MzQsImV4cCI6MjA1MTI1MDQzNH0.sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e';
+  // إعدادات Supabase - فقط المفاتيح العامة
+  const SUPABASE_URL = window.__ENV?.SUPABASE_URL || window.NEXT_PUBLIC_SUPABASE_URL || 'https://qjsvgpvbtrcnbhcjdcci.supabase.co';
+  const SUPABASE_ANON_KEY = window.__ENV?.SUPABASE_ANON_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NzQ0MzQsImV4cCI6MjA1MTI1MDQzNH0.sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e';
 
-// إنشاء عميل Supabase الوحيد (singleton)
-if (!window.__supabase) {
-  window.__supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-      flowType: 'pkce'
-    },
-    global: {
-      headers: {
-        'x-client-info': 'luxbyte-web',
-        'x-app-version': '1.0.0'
-      }
-    },
-    db: {
-      schema: 'public'
-    },
-    realtime: {
-      params: {
-        eventsPerSecond: 10
-      }
+  // تحميل Supabase بشكل ديناميكي
+  import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm').then(({ createClient }) => {
+    if (!window.__supabase) {
+      window.__supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: { 
+          storageKey: 'luxbyte-auth', 
+          persistSession: true, 
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          flowType: 'pkce'
+        },
+        global: {
+          headers: {
+            'x-client-info': 'luxbyte-web',
+            'x-app-version': '1.0.0'
+          }
+        },
+        db: {
+          schema: 'public'
+        },
+        realtime: {
+          params: {
+            eventsPerSecond: 10
+          }
+        }
+      });
+      
+      console.log('✅ تم إنشاء عميل Supabase الوحيد');
     }
+  }).catch(error => {
+    console.error('❌ فشل في تحميل Supabase:', error);
   });
-
-  console.log('✅ تم إنشاء عميل Supabase الوحيد');
-}
-
-// تصدير العميل للاستخدام في الملفات الأخرى
-export const supabase = window.__supabase;
+})();
 
 // دالة للحصول على العميل
 export function getSupabase() {
   return window.__supabase;
 }
+
+// تصدير العميل للاستخدام في الملفات الأخرى
+export const supabase = window.__supabase;
 
 // دالة للتحقق من وجود جلسة نشطة
 export async function getCurrentUser() {

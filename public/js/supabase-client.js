@@ -1,12 +1,7 @@
 // ===============================
 // LUXBYTE Supabase Client - Enhanced Version
 // ===============================
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-
-// Supabase configuration with fallbacks
-const SUPABASE_URL = window?.APP_CONFIG?.SUPABASE_URL || 'https://qjsvgpvbtrcnbhcjdcci.supabase.co';
-const SUPABASE_ANON_KEY = window?.APP_CONFIG?.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NzQ0MzQsImV4cCI6MjA1MTI1MDQzNH0.sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e';
-// Service Role Key يجب أن يكون في متغيرات البيئة فقط - لا يظهر في الكود العام
+// هذا الملف يستخدم الآن الـ singleton من common.js
 
 // Error handling and logging
 const logLevel = window.location.hostname === 'localhost' ? 'debug' : 'error';
@@ -15,29 +10,8 @@ const log = (level, message, data = null) => {
     console[level](`[LUXBYTE] ${message}`, data || '');
 };
 
-// Create Supabase client with enhanced configuration
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-    flowType: 'pkce'
-  },
-  global: {
-    headers: {
-      'x-client-info': 'luxbyte-dashboard-web',
-      'x-app-version': '1.0.0'
-    }
-  },
-  db: {
-    schema: 'public'
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10
-    }
-  }
-});
+// استخدام الـ singleton من common.js
+const supabase = window.getSupabase ? window.getSupabase() : window.__supabase;
 
 // Enhanced error handling wrapper
 export const supabaseWithErrorHandling = {
