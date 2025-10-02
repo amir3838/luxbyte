@@ -17,14 +17,27 @@
   // إعدادات Supabase - فقط المفاتيح العامة
   const SUPABASE_URL = window.__ENV?.SUPABASE_URL || window.NEXT_PUBLIC_SUPABASE_URL || 'https://qjsvgpvbtrcnbhcjdcci.supabase.co';
   const SUPABASE_ANON_KEY = window.__ENV?.SUPABASE_ANON_KEY || window.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFqc3ZncHZidHJjbmJoY2pkY2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU2NzQ0MzQsImV4cCI6MjA1MTI1MDQzNH0.sb_publishable_vAyh05NeO33SYgua07vvIQ_M6nfrx7e';
+  
+  // فحص صحة الإعدادات
+  const okUrl = SUPABASE_URL && SUPABASE_URL.startsWith('https://') && SUPABASE_URL.includes('.supabase.co');
+  const ANON = SUPABASE_ANON_KEY;
+  console.log('SB URL ok?', okUrl, 'ANON len:', ANON?.length);
+  
+  if (!okUrl) {
+    console.error('❌ خطأ في إعدادات Supabase URL:', SUPABASE_URL);
+  }
+  
+  if (!ANON || ANON.length < 100) {
+    console.error('❌ خطأ في إعدادات Supabase ANON KEY:', ANON?.length || 0);
+  }
 
   // تحميل Supabase بشكل ديناميكي
   import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm').then(({ createClient }) => {
     if (!window.__supabase) {
       window.__supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: { 
-          storageKey: 'luxbyte-auth', 
-          persistSession: true, 
+        auth: {
+          storageKey: 'luxbyte-auth',
+          persistSession: true,
           autoRefreshToken: true,
           detectSessionInUrl: true,
           flowType: 'pkce'
@@ -46,6 +59,13 @@
       });
       
       console.log('✅ تم إنشاء عميل Supabase الوحيد');
+      
+      // فحص إضافي للتأكد من عمل العميل
+      if (window.__supabase) {
+        console.log('✅ عميل Supabase جاهز للاستخدام');
+      } else {
+        console.error('❌ فشل في إنشاء عميل Supabase');
+      }
     }
   }).catch(error => {
     console.error('❌ فشل في تحميل Supabase:', error);

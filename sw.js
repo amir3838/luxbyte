@@ -5,7 +5,7 @@
  * إدارة التخزين المؤقت والوضع غير المتصل
  */
 
-const VERSION = 'v1.0.4';
+const VERSION = 'v1.0.5';
 const CACHE_NAME = `luxbyte-${VERSION}`;
 const STATIC_CACHE = `luxbyte-static-${VERSION}`;
 const DYNAMIC_CACHE = `luxbyte-dynamic-${VERSION}`;
